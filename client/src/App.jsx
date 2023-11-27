@@ -42,7 +42,9 @@ import AddResult from "./components/Staff/ResultsHandale/ResultsHandaleComponent
 import ReportsController from "./components/Staff/ReportsHandale/ReportsController.jsx";
 import ReportsPreview from "./components/Staff/ReportsHandale/ReportsHandaleComponents/ResultsPreview/ReportsPreviewContainer.jsx";
 import MakeReport from "./components/Staff/ReportsHandale/ReportsHandaleComponents/MakeReport.jsx";
-
+/* PaymentsController */
+import PaymentsController from "./components/Staff/PaymenysHandale/PaymentsController.jsx";
+import AddAPayment from "./components/Staff/PaymenysHandale/PaymentsHandaleComponents/AddAPayment.jsx";
 //ullits components
 import Footer from "./ulitls/Footer/Footer";
 import Navbar from "./ulitls/Navbar/Navbar.jsx";
@@ -65,6 +67,7 @@ export default function App() {
   const staffNavBarValues = [
     { id: 1, text: "Home", path: "/Staff/dashboard" },
     { id: 2, text: "Users", path: "/Staff/UsersController" },
+    { id: 8, text: "Payments", path: "/Staff/PaymentsController" },
     { id: 5, text: "Results", path: "/Staff/ResultsController" },
     { id: 7, text: "Reports", path: "/Staff/ReportsController" },
     { id: 3, text: "Anlysis", path: "/Staff/AnlysisController" },
@@ -253,6 +256,15 @@ export default function App() {
                   <Route
                     path="/Staff/ResultsController/ResultsPreview"
                     element={<ResultsPreview setIsFormOpen={setIsFormOpen} />}
+                  />
+                </Route>
+                <Route
+                  path="/Staff/PaymentsController"
+                  element={<PaymentsController />}
+                >
+                  <Route
+                    path="/Staff/PaymentsController/AddAPayment"
+                    element={<AddAPayment />}
                   />
                 </Route>
                 <Route

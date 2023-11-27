@@ -50,19 +50,14 @@ export default function ResultDetails() {
             date={resultDetails.detailsAnalyze.date}
           />
         </div>
-        <ResultsTable
-          darkMode={darkMode}
-          resultDetails={resultDetails.detailsAnalyze}
-        />
+        <ResultsTable darkMode={darkMode} resultDetails={resultDetails} />
       </>
     );
   }
   useEffect(() => {
     getResultDetails();
   }, []);
-  useEffect(() => {
-    console.log("resultdetails: ", resultDetails);
-  }, [resultDetails]);
+
   return (
     <>
       <div className="section my-2">
