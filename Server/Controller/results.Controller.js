@@ -111,6 +111,30 @@ module.exports.getResultsById = asyncHandler(async (req, res) => {
 });
 
 /**--------------------------------
+ * @desc get resuls by staffIdent
+ * @router /api/result/getResults/staffIdent
+ * @method GET
+ * @access private (staff or admin)
+ * ------------------------------------------ */
+module.exports.getResultsByIdStaff = asyncHandler(async (req, res) => {
+  let analysArray = [];
+
+  const detailsAnalyze = await analyzeResult.find({staffIdent:req.body.staffIdent});
+  console.log(detailsAnalyze);
+  for(let i=0;i<detailsAnalyze.length;i++){
+    const analyzeComp= await analyze.findById(detailsAnalyze[i].resultSet[0].anlyzeId);
+    analysArray.push(analyzeComp);
+  }
+
+  //send a response to client
+  res.status(201).json({
+    analysArray,
+    detailsAnalyze,
+    message: "done...........",
+  });
+});
+
+/**--------------------------------
  * @desc get resuls by ident of patient
  * @router /api/result/getPatientAnzlyze
  * @method GET
