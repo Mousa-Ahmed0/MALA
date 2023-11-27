@@ -75,9 +75,13 @@ module.exports.getResults = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.getResultsById = asyncHandler(async (req, res) => {
   const detailsAnalyze = await analyzeResult.findById(req.params.id);
+  let analysArray = [];
 
   //analyze id componet
-  const analyzeComp= await analyze.findById(detailsAnalyze.resultSet[0].anlyzeId);
+  for(let i=0;i<detailsAnalyze.resultSet.length;i++){
+    const analyzeComp= await analyze.findById(detailsAnalyze.resultSet[i].anlyzeId);
+    analysArray.push(analyzeComp);
+  }
   //user staff
   const usersStaff = await user
     .findOne({ ident: detailsAnalyze.staffIdent })
@@ -101,11 +105,11 @@ module.exports.getResultsById = asyncHandler(async (req, res) => {
 
   //send a response to client
   res.status(201).json({
+    analysArray,
     detailsAnalyze,
     usersStaff,
     usersDoctor,
     usersPatint,
-    analyzeComp,
     message: "done...........",
   });
 });
