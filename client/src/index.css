@@ -96,10 +96,24 @@ i {
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background-color: lightgrey;
+  background-color: grey;
   border-radius: 20px;
 }
 
+canvas {
+  width: 100% !important;
+  height: auto !important;
+}
+.overflow-yAxis {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.maxHeight-part {
+  max-height: 47.875rem;
+}
+.maxHeight-inhert {
+  max-height: inherit;
+}
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
 }

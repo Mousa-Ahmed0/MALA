@@ -5,6 +5,22 @@ import { useDarkMode } from "../../context/DarkModeContext";
 export default function DashboardHome({ user }) {
   const { darkMode } = useDarkMode();
   const width = "-webkit-fill-available";
+  // Create a new Date object
+  const currentDate = new Date();
+  const daysOfWeek = ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"];
+  // Get the current time
+  const currentTime = currentDate.getTime();
+  const hours = currentDate.getHours();
+  const minutes = currentDate.getMinutes();
+  const seconds = currentDate.getSeconds();
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth() + 1;
+  const day = currentDate.getDate();
+  const dayOfWeek = daysOfWeek[currentDate.getDay()];
+
+  let time = `${hours}:${minutes}`;
+  let date = `${day}/${month}/${year}`;
+
   //BarChart
   const [chartLabels, setChartLabels] = useState([
     ["Staff"],
@@ -17,7 +33,9 @@ export default function DashboardHome({ user }) {
     ["green"],
   ]);
   const [chartData, setChartData] = useState([[3], [25], [5]]);
-
+  useEffect(() => {
+    console.log(currentDate);
+  }, []);
   return (
     <div className="ST-section ST-Dashboard">
       <div className="w-100 d-flex justify-content-between align-items-center">
@@ -27,13 +45,22 @@ export default function DashboardHome({ user }) {
             {user.firstname} {user.lastname}
           </span>
         </div>
-        <div
+        {/*  <div
           className={`btn d-flex align-items-center gap-2 border ${
             darkMode ? "border-white text-white" : "border-black"
           }`}
         >
-          <i class="fa-regular fa-message"></i>{" "}
+         /  <i class="fa-regular fa-message"></i>{" "}
           <span className="h3 mid-bold colorMain">{2}</span>
+        </div>*/}
+        <div className="d-flex flex-column">
+          <span className="h2 high-bold">
+            {time}
+            <span className="h4 mid-bold"> {hours <= 12 ? "AM" : "PM"}</span>
+          </span>
+          <span>
+            {dayOfWeek}, {date}
+          </span>
         </div>
       </div>
       <hr className="my-4" />
@@ -123,17 +150,54 @@ export default function DashboardHome({ user }) {
         </div>
       </div>
       <hr className="my-4" />
-      <div className="row">
+      <div className="row maxHeight-part">
         <div
           className={`p-4 col-12 col-md-7 ${
             darkMode ? " spic-dark-mode" : " bg-white"
           }`}
         >
-          <h1 className="h3 mb-4 mid-bold">Our Payments:</h1>
+          <h1 className="h5">Our Payments - Last 6 Months:</h1>
+          <h1 className="h1 mt-2 mb-4 colorMain mid-bold">
+            4,800.00{" "}
+            <span className={`${darkMode ? "text-white" : "text-black"} h5`}>
+              NIS
+            </span>
+          </h1>
           <LineChart darkMode={darkMode} />
         </div>
-        <div className="col-12 col-md-5"></div>
+        <div className="col-md-1"></div>
+        <div
+          className={`maxHeight-inhert overflow-hidden p-4 col-12 col-md-4 ${
+            darkMode ? " spic-dark-mode" : " bg-white"
+          }`}
+        >
+          <h1 className="h5 mb-4">Recent Messages:</h1>
+          <div className="maxHeight-inhert overflow-yAxis message-Box">
+            <div className="row detailes-size d-flex align-items-center">
+              <div className="col-1">1</div>
+              <div className="col-9">
+                <div className="d-flex align-items-center gap-2">
+                  <img
+                    loading="lazy"
+                    className={`nav-profile-img mx-2 img-fluid border ${
+                      darkMode ? "border-white" : "border-black"
+                    } border-rounded`}
+                    src={"./images/logo.png"}
+                    alt="nav-profile-img"
+                    style={{ objectFit: "cover" }}
+                  />
+                  <p className="h6 m-0 text-truncate">{"Omar Khaled"}</p>
+                </div>
+              </div>
+              <div style={{ cursor: "pointer" }} className="col-1">
+                <i class="fa-solid fa-circle-chevron-right fa-beat-fade"></i>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+      <hr className="my-4" />
+
       {/*<MyChart
         darkMode={darkMode}
         chartLabels={chartLabels}
