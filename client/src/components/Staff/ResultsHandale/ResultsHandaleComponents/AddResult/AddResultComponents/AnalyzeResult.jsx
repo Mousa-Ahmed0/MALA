@@ -11,7 +11,7 @@ export default function AnalyzeResult({
 }) {
   //Object to save result of one anlyze
   const [anlyseResult, setAnlyseResult] = useState({
-    anlyzeID: "",
+    anlyzeId: "",
     result: [],
   });
   //array to handale results of component of one anlyze
@@ -172,7 +172,7 @@ export default function AnalyzeResult({
               darkMode ? " spic-dark-mode" : ""
             }`}
             aria-label="Default select example"
-            name="anlyzeID"
+            name="anlyzeId"
             onChange={getAnalyzeResultDetails}
             value={selectValue}
           >
