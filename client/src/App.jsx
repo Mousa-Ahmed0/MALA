@@ -50,6 +50,7 @@ import Footer from "./ulitls/Footer/Footer";
 import Navbar from "./ulitls/Navbar/Navbar.jsx";
 
 import { useDarkMode } from "./context/DarkModeContext.jsx";
+import PaymentsPreviewContainer from "./components/Staff/PaymenysHandale/PaymentsHandaleComponents/PaymentsPreview/PaymentsPreviewContainer.jsx";
 
 export default function App() {
   let [isFormOpen, setIsFormOpen] = useState(false);
@@ -262,6 +263,10 @@ export default function App() {
                   path="/Staff/PaymentsController"
                   element={<PaymentsController />}
                 >
+                  <Route
+                    path="/Staff/PaymentsController/PaymentsPreview"
+                    element={<PaymentsPreviewContainer />}
+                  />
                   <Route
                     path="/Staff/PaymentsController/AddAPayment"
                     element={<AddAPayment />}

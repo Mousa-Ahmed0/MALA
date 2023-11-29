@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import BackBtn from "../../../BackBtn";
 import { useDarkMode } from "../../../../context/DarkModeContext";
 
+import { addPayment } from "../../../../apis/ApisHandale";
+
 export default function AddAPayment() {
   const { darkMode } = useDarkMode();
   const [isInsuranceComp, setIsInsuranceComp] = useState(false);
@@ -19,6 +21,25 @@ export default function AddAPayment() {
     let newPayment = { ...payment };
     newPayment[e.target.name] = e.target.value;
     setPayment(newPayment);
+  }
+  /* Send New Payment to DB */
+  async function onSubmitForm(e) {
+    e.preventDefault();
+    try {
+      const response = await addPayment(payment);
+      setApiMessage(response.data.message);
+    } catch (error) {
+      console.error("Error from addPayment: ", error);
+    }
+    setPayment({
+      identPatient: "",
+      payDate: new Date(),
+      InsuranceCompName: "",
+      InsuranceCompPers: 0,
+      value: 0,
+      discountedValue: 0,
+    });
+    setIsInsuranceComp(false);
   }
   useEffect(() => {
     console.log(payment);
@@ -43,7 +64,7 @@ export default function AddAPayment() {
             ) : (
               ""
             )}
-            <form className="mx-5" onSubmit={getNewPayment}>
+            <form className="mx-5" onSubmit={onSubmitForm}>
               <div className="row">
                 <div className="col-12 col-md-4">
                   <label
@@ -58,6 +79,7 @@ export default function AddAPayment() {
                     type="text"
                     name="identPatient"
                     className="form-control"
+                    value={payment.identPatient}
                   />
                 </div>
                 <div className="col-12 col-md-4">
@@ -73,6 +95,7 @@ export default function AddAPayment() {
                     type="number"
                     name="value"
                     className="form-control"
+                    value={payment.value}
                   />
                 </div>
                 <div className="col-12 col-md-4">
@@ -88,6 +111,7 @@ export default function AddAPayment() {
                     type="date"
                     name="payDate"
                     className="form-control"
+                    value={payment.payDate}
                   />
                 </div>
               </div>
@@ -99,9 +123,12 @@ export default function AddAPayment() {
                       type="checkbox"
                       className="custom-control-input"
                       id="customCheck1"
+                      checked={isInsuranceComp}
                     />
                     <label
-                      className="custom-control-label mx-2"
+                      className={`custom-control-label mx-2 ${
+                        darkMode ? " spic-dark-mode" : ""
+                      }`}
                       htmlFor="customCheck1"
                     >
                       Insurance Company?
@@ -127,6 +154,7 @@ export default function AddAPayment() {
                         type="text"
                         name="InsuranceCompName"
                         className="form-control"
+                        value={payment.InsuranceCompName}
                       />
                     </div>
                     <div className="col-12 col-md-6">

@@ -122,6 +122,18 @@ export const getResultByID = async (id) => {
     },
   });
 };
+/* Patments API`s */
+export const addPayment = async (newPayment) => {
+  return await axios.post(
+    "http://localhost:5000/api/payment/addPayment",
+    newPayment,
+    {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    }
+  );
+};
 //////////////
 const ApisHandale = () => {
   return <div>ApisHandle Component</div>;
