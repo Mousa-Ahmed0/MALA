@@ -7,7 +7,7 @@ export default function PaymentsController() {
     {
       id: 1,
       text: "Preview",
-      path: "/Staff/ResultsController/ResultsPreview",
+      path: "/Staff/PaymentsController/PaymentsPreview",
     },
     {
       id: 2,
