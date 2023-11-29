@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import MyChart from "../MyChart";
 import LineChart from "../LineChart";
 import { useDarkMode } from "../../context/DarkModeContext";
+import { getPaymentsFromTo } from "../../apis/ApisHandale";
 export default function DashboardHome({ user }) {
   const { darkMode } = useDarkMode();
   const width = "-webkit-fill-available";
@@ -9,10 +10,11 @@ export default function DashboardHome({ user }) {
   const currentDate = new Date();
   const daysOfWeek = ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"];
   // Get the current time
-  const currentTime = currentDate.getTime();
+  const sixMonthsAgo = new Date(currentDate);
+  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+
   const hours = currentDate.getHours();
   const minutes = currentDate.getMinutes();
-  const seconds = currentDate.getSeconds();
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth() + 1;
   const day = currentDate.getDate();
@@ -20,7 +22,24 @@ export default function DashboardHome({ user }) {
 
   let time = `${hours}:${minutes}`;
   let date = `${day}/${month}/${year}`;
+  let currentDat = `${year}-${month}-${day}`;
+  const sixMonthsAgoFormatted = `${sixMonthsAgo.getFullYear()}-${
+    sixMonthsAgo.getMonth() + 1
+  }-${sixMonthsAgo.getDate()}`;
 
+  const dateForApi = {
+    sixMonthsAgoFormatted,
+    currentDat,
+  };
+
+  async function getPayments() {
+    try {
+      let response = await getPaymentsFromTo(dateForApi);
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+    }
+  }
   //BarChart
   const [chartLabels, setChartLabels] = useState([
     ["Staff"],
@@ -34,7 +53,7 @@ export default function DashboardHome({ user }) {
   ]);
   const [chartData, setChartData] = useState([[3], [25], [5]]);
   useEffect(() => {
-    console.log(currentDate);
+    getPayments();
   }, []);
   return (
     <div className="ST-section ST-Dashboard">

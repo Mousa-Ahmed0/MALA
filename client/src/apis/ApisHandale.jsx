@@ -134,6 +134,28 @@ export const addPayment = async (newPayment) => {
     }
   );
 };
+export const getAllPayments = async () => {
+  return await axios.get(
+    "http://localhost:5000/api/payment/getPayment",
+
+    {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    }
+  );
+};
+export const getPaymentsFromTo = async (date) => {
+  return await axios.get(
+    "http://localhost:5000/api/payment/getFromToDate",
+    date,
+    {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    }
+  );
+};
 //////////////
 const ApisHandale = () => {
   return <div>ApisHandle Component</div>;
