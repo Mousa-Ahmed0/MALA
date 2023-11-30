@@ -22,7 +22,13 @@ export default function PatientHome({ user }) {
               </span>{" "}
               Last Results:
             </h1>
-            <div className="maxHeight-inhert overflow-yAxis"></div>
+            <hr className="my-4" />
+            <div className="row details-size mx-4">
+              <div className="col-md-4">A. Name:</div>
+              <div className="col-md-5">A. Date:</div>
+              <div className="col-md-3">More:</div>
+            </div>
+            <div className="maxHeight-inhert overflow-yAxis mx-4"></div>
             <div className="d-flex justify-content-end mt-4">
               <Link className="btn btn-primary">All Results</Link>
             </div>
@@ -39,7 +45,14 @@ export default function PatientHome({ user }) {
               </span>{" "}
               Last Payments:
             </h1>
-            <div className="maxHeight-inhert overflow-yAxis"></div>
+            <hr className="my-4" />
+            <div className="row details-size mx-4">
+              <div className="col-md-3">A. Name:</div>
+              <div className="col-md-3">P. Date:</div>
+              <div className="col-md-3">Value:</div>
+              <div className="col-md-3">More:</div>
+            </div>
+            <div className="maxHeight-inhert overflow-yAxis mx-4"></div>
             <div className="d-flex justify-content-end mt-4">
               <Link className="btn btn-primary">All Payments</Link>
             </div>
