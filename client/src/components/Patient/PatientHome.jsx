@@ -23,12 +23,26 @@ export default function PatientHome({ user }) {
               Last Results:
             </h1>
             <hr className="my-4" />
-            <div className="row details-size mx-4">
-              <div className="col-md-4">A. Name:</div>
-              <div className="col-md-5">A. Date:</div>
-              <div className="col-md-3">More:</div>
+            <div className="row details-size mt-2 mb-4">
+              <div className="col-md-5 mid-bold">A. Name:</div>
+              <div className="col-md-4 mid-bold">A. Date:</div>
+              <div className="col-md-3 mid-bold">More:</div>
             </div>
-            <div className="maxHeight-inhert overflow-yAxis mx-4"></div>
+            <div className="maxHeight-inhert overflow-yAxis ">
+              <div className="row detailes-size d-flex align-items-center">
+                <div className="col-5 d-flex align-items-center text-truncate">
+                  Complete Blood Count( CBC )
+                </div>
+                <div className="col-4 d-flex align-items-center">
+                  08/11/2023
+                </div>
+                <div className="col-3 d-flex align-items-center">
+                  <Link className="btn m-0 nav-link position-relative">
+                    More Details
+                  </Link>
+                </div>
+              </div>
+            </div>
             <div className="d-flex justify-content-end mt-4">
               <Link className="btn btn-primary">All Results</Link>
             </div>
@@ -46,13 +60,24 @@ export default function PatientHome({ user }) {
               Last Payments:
             </h1>
             <hr className="my-4" />
-            <div className="row details-size mx-4">
-              <div className="col-md-3">A. Name:</div>
-              <div className="col-md-3">P. Date:</div>
-              <div className="col-md-3">Value:</div>
-              <div className="col-md-3">More:</div>
+            <div className="row details-size  mt-2 mb-4">
+              <div className="col-md-5 mid-bold">A. Name:</div>
+              <div className="col-md-2 mid-bold">P. Date:</div>
+              <div className="col-md-2 mid-bold">Value:</div>
+              <div className="col-md-3 mid-bold">More:</div>
             </div>
-            <div className="maxHeight-inhert overflow-yAxis mx-4"></div>
+            <div className="row maxHeight-inhert overflow-yAxis">
+              <div className="col-5 d-flex align-items-center text-truncate">
+                Complete Blood Count( CBC )
+              </div>
+              <div className="col-2 d-flex align-items-center">08/11/2023</div>
+              <div className="col-2 d-flex align-items-center">235</div>
+              <div className="col-3 d-flex align-items-center">
+                <Link className="btn m-0 nav-link position-relative">
+                  More Details
+                </Link>
+              </div>
+            </div>
             <div className="d-flex justify-content-end mt-4">
               <Link className="btn btn-primary">All Payments</Link>
             </div>
