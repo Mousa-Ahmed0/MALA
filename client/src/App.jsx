@@ -44,13 +44,21 @@ import ReportsPreview from "./components/Staff/ReportsHandale/ReportsHandaleComp
 import MakeReport from "./components/Staff/ReportsHandale/ReportsHandaleComponents/MakeReport.jsx";
 /* PaymentsController */
 import PaymentsController from "./components/Staff/PaymenysHandale/PaymentsController.jsx";
+import PaymentsPreviewContainer from "./components/Staff/PaymenysHandale/PaymentsHandaleComponents/PaymentsPreview/PaymentsPreviewContainer.jsx";
 import AddAPayment from "./components/Staff/PaymenysHandale/PaymentsHandaleComponents/AddAPayment.jsx";
 //ullits components
 import Footer from "./ulitls/Footer/Footer";
 import Navbar from "./ulitls/Navbar/Navbar.jsx";
 
+//Patient
+/* PatientHome */
+import PatientHome from "./components/Patient/PatientHome.jsx";
+import HealthCalculators from "./components/Patient/PatientComponents/HealthCalcs/HealthCalcsController.jsx";
+import BMR from "./components/Patient/PatientComponents/HealthCalcs/HealthCalcsComponenets/BMR.jsx";
+import BMI from "./components/Patient/PatientComponents/HealthCalcs/HealthCalcsComponenets/BMI.jsx";
+import BFC from "./components/Patient/PatientComponents/HealthCalcs/HealthCalcsComponenets/BFC.jsx";
+
 import { useDarkMode } from "./context/DarkModeContext.jsx";
-import PaymentsPreviewContainer from "./components/Staff/PaymenysHandale/PaymentsHandaleComponents/PaymentsPreview/PaymentsPreviewContainer.jsx";
 
 export default function App() {
   let [isFormOpen, setIsFormOpen] = useState(false);
@@ -76,7 +84,8 @@ export default function App() {
     { id: 6, text: "|", path: null },
   ];
   const PatientNavBarValues = [
-    { id: 1, text: "Home", path: "/Patient/dashboard" },
+    { id: 1, text: "Home", path: "/Patient/PatientHome" },
+    { id: 2, text: "Healthy Calculators", path: "/Patient/HealthCalculators" },
     { id: 3, text: "Anlysis", path: "/Patient/Anlysis" },
     { id: 6, text: "|", path: null },
   ];
@@ -156,6 +165,8 @@ export default function App() {
                     userDetails.usertype === "Staff" ||
                     userDetails.usertype === "Admin" ? (
                       <DashboardHome user={userDetails} />
+                    ) : userDetails.usertype === "Patient" ? (
+                      <PatientHome user={userDetails} />
                     ) : (
                       <Home />
                     )
@@ -288,6 +299,27 @@ export default function App() {
                 <Route path="*" element={<Error />} />
               </Route>
               <Route path="/Patient" element={<Patient />}>
+                <Route
+                  path="/Patient/PatientHome"
+                  element={<PatientHome user={userDetails} />}
+                />
+                <Route
+                  path="/Patient/HealthCalculators"
+                  element={<HealthCalculators />}
+                >
+                  <Route
+                    path="/Patient/HealthCalculators/BMR"
+                    element={<BMR />}
+                  />
+                  <Route
+                    path="/Patient/HealthCalculators/BMI"
+                    element={<BMI />}
+                  />
+                  <Route
+                    path="/Patient/HealthCalculators/BFC"
+                    element={<BFC />}
+                  />
+                </Route>
                 <Route path="/Patient/Anlysis" element={<Anlysis />} />
               </Route>
               <Route path="*" element={<Error />} />

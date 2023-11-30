@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useDarkMode } from "../context/DarkModeContext";
@@ -7,6 +7,9 @@ export default function UserDashbordNav({ values }) {
   let [activeId, setActiveId] = useState();
   const { darkMode } = useDarkMode();
 
+  useEffect(() => {
+    console.log(activeId);
+  }, [activeId]);
   return (
     <nav
       className={`${

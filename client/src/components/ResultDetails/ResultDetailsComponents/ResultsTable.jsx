@@ -2,17 +2,22 @@ import React, { useEffect } from "react";
 export default function ResultsTable({ darkMode, resultDetails }) {
   function renderComponentsResult(anlyze, noOfAnlyze) {
     return anlyze.result.map((comp, index) => {
+      console.log("Comp", comp);
       return (
         <tr key={index}>
           <td>{comp.name}</td>
           <td>{comp.value}</td>
           <td className="normal-range">
-            {
-              resultDetails.analysArray[noOfAnlyze].compnents[index]
-                .healthyValue
-            }
+            {resultDetails.analysArray[noOfAnlyze]
+              ? resultDetails.analysArray[noOfAnlyze].compnents[index]
+                  .healthyValue
+              : "Not Found"}
           </td>
-          <td>{resultDetails.analysArray[noOfAnlyze].compnents[index].unit}</td>
+          <td>
+            {resultDetails.analysArray[noOfAnlyze]
+              ? resultDetails.analysArray[noOfAnlyze].compnents[index].unit
+              : "Not Found"}
+          </td>
         </tr>
       );
     });
@@ -54,6 +59,8 @@ export default function ResultsTable({ darkMode, resultDetails }) {
       return <div>Loding....</div>;
     }
   }
-
+  useEffect(() => {
+    console.log("rr: ", resultDetails);
+  }, []);
   return <>{resultDetails ? renderResult() : ""}</>;
 }
