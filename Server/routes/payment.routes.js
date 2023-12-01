@@ -1,5 +1,13 @@
-const router=require("express").Router();
-const { addPayment, getPayment, countPayment, getPaymentIdentPatient, getByDate, getFromToDate, test } = require("../Controller/payments.Controller");
+const router = require("express").Router();
+const {
+  addPayment,
+  getPayment,
+  countPayment,
+  getPaymentIdentPatient,
+  getByDate,
+  getFromToDate,
+  test,
+} = require("../Controller/payments.Controller");
 const validateObjectId = require("../middlewares/validateObjectId");
 const { verifyToken, ifAdminOrStaff } = require("../middlewares/verifyToken");
 router.post('/addPayment',ifAdminOrStaff,addPayment);

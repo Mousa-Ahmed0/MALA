@@ -1,25 +1,12 @@
 import React, { useEffect, useState } from "react";
+import DashboardWelcome from "../DashboardWelcome";
 import MyChart from "../MyChart";
 import LineChart from "../LineChart";
 import { useDarkMode } from "../../context/DarkModeContext";
+import { getPaymentsFromTo } from "../../apis/ApisHandale";
 export default function DashboardHome({ user }) {
   const { darkMode } = useDarkMode();
   const width = "-webkit-fill-available";
-  // Create a new Date object
-  const currentDate = new Date();
-  const daysOfWeek = ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"];
-  // Get the current time
-  const currentTime = currentDate.getTime();
-  const hours = currentDate.getHours();
-  const minutes = currentDate.getMinutes();
-  const seconds = currentDate.getSeconds();
-  const year = currentDate.getFullYear();
-  const month = currentDate.getMonth() + 1;
-  const day = currentDate.getDate();
-  const dayOfWeek = daysOfWeek[currentDate.getDay()];
-
-  let time = `${hours}:${minutes}`;
-  let date = `${day}/${month}/${year}`;
 
   //BarChart
   const [chartLabels, setChartLabels] = useState([
@@ -33,36 +20,10 @@ export default function DashboardHome({ user }) {
     ["green"],
   ]);
   const [chartData, setChartData] = useState([[3], [25], [5]]);
-  useEffect(() => {
-    console.log(currentDate);
-  }, []);
+  useEffect(() => {}, []);
   return (
     <div className="ST-section ST-Dashboard">
-      <div className="w-100 d-flex justify-content-between align-items-center">
-        <div className="h2 d-flex flex-column">
-          <span className="h5 mid-bold m-0">Welcome</span>
-          <span className="high-bold colorMain">
-            {user.firstname} {user.lastname}
-          </span>
-        </div>
-        {/*  <div
-          className={`btn d-flex align-items-center gap-2 border ${
-            darkMode ? "border-white text-white" : "border-black"
-          }`}
-        >
-         /  <i class="fa-regular fa-message"></i>{" "}
-          <span className="h3 mid-bold colorMain">{2}</span>
-        </div>*/}
-        <div className="d-flex flex-column">
-          <span className="h2 high-bold">
-            {time}
-            <span className="h4 mid-bold"> {hours <= 12 ? "AM" : "PM"}</span>
-          </span>
-          <span>
-            {dayOfWeek}, {date}
-          </span>
-        </div>
-      </div>
+      <DashboardWelcome user={user} />
       <hr className="my-4" />
       <div className="d-flex flex-column flex-md-row justify-content-between align-items-center gap-4 my-4">
         <div

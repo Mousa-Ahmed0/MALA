@@ -188,9 +188,4 @@ module.exports.test = asyncHandler(async (req, res) => {
       res.status(400).json({ message: "Can't find report" });
     }
   }
-
-
-
-
-
 });
