@@ -8,6 +8,7 @@ export default function DashboardHome({ user }) {
   const { darkMode } = useDarkMode();
   const width = "-webkit-fill-available";
 
+  function getPaymentChartDetails() {}
   //BarChart
   const [chartLabels, setChartLabels] = useState([
     ["Staff"],

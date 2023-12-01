@@ -6,7 +6,7 @@ function SearchBarContainer({ handaleSearchVlue }) {
 
   return (
     <>
-      <div className="search w-50 gap-1 d-flex flex-column flex-md-row flex-wrap justify-content-start justify-content-md-between g-4 g-md-0 align-items-md-center my-4">
+      <div className="search w-100 gap-1 d-flex flex-column flex-md-row flex-wrap justify-content-start justify-content-md-between g-4 g-md-0 align-items-md-center my-4">
         <div
           className={`input-group ${darkMode ? "" : "light"} bg-transparent`}
         >

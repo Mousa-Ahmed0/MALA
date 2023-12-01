@@ -8,6 +8,8 @@ import UserFilter from "../../../../UserFilter/UserFilter";
 import { getAllPayments } from "../../../../../apis/ApisHandale";
 export default function PaymentsPreviewContainer() {
   const { darkMode } = useDarkMode();
+  const [isInsuranceComp, setIsInsuranceComp] = useState(false);
+
   let [allPayments, setAllPayments] = useState([]);
   let [visiblePayments, setVisiblePayments] = useState([]);
   //search & filter variables
@@ -179,93 +181,154 @@ export default function PaymentsPreviewContainer() {
     <div className="ST-section my-2 p-0">
       <div className="container">
         <div className="row searchSection mb-5">
-          <div className="col-sm-12 col-md-8 d-flex align-items-center p-0">
+          <div className="col-sm-12 col-md-6 d-flex align-items-center p-0">
             <SearchBar handaleSearchVlue={handaleSearchVlue} />
           </div>
-          <div className="col-sm-12 col-md-4 d-flex justify-content-md-end align-items-center p-0">
-            <UserFilter
-              filterOptions={filterOptions}
-              handaleFilterOption={handaleFilterOption}
-            />
+          <div className={`col-sm-12 col-md-4 d-flex align-items-center p-0`}>
+            <div className="row w-100">
+              <div
+                className={`col-12 ${
+                  isInsuranceComp ? "d-none" : ""
+                } d-flex justify-content-end`}
+              >
+                <UserFilter
+                  filterOptions={filterOptions}
+                  handaleFilterOption={handaleFilterOption}
+                />
+              </div>
+              <div
+                className={`col-12 ${
+                  !isInsuranceComp ? "d-none" : ""
+                } d-flex justify-content-end gap-4`}
+              >
+                <div className="col-6">
+                  <label
+                    className={`form-label ${
+                      darkMode ? " spic-dark-mode" : ""
+                    }`}
+                  >
+                    From
+                  </label>
+                  <input
+                    type="date"
+                    name="InsuranceCompName"
+                    className="form-control"
+                  />
+                </div>
+                <div className="col-6">
+                  <label
+                    className={`form-label ${
+                      darkMode ? " spic-dark-mode" : ""
+                    }`}
+                  >
+                    to
+                  </label>
+                  <input
+                    type="date"
+                    name="InsuranceCompName"
+                    className="form-control"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="col-sm-12 col-md-2 d-flex justify-content-md-end align-items-center p-0">
+            <div className="custom-control custom-checkbox d-flex gap-2">
+              <input
+                onChange={() => setIsInsuranceComp(!isInsuranceComp)}
+                type="checkbox"
+                className="custom-control-input"
+                id="customCheck1"
+                checked={isInsuranceComp}
+              />
+              <label
+                className={`custom-control-label mx-2 ${
+                  darkMode ? " text-white" : ""
+                }`}
+                htmlFor="customCheck1"
+              >
+                Custome Date?
+              </label>
+            </div>
           </div>
         </div>
-        <section className="px-4">
-          <div className="row my-0 d-none d-md-block">
-            <div className="col-lg-12">
-              <div className="card border-0 bg-transparent">
-                <div className="card-body">
-                  <div className="row">
-                    <div
-                      className={`col-md-1 text-truncate text-muted p-0 ${
-                        darkMode ? " dark-theme" : ""
-                      }`}
-                    >
-                      #:
-                    </div>
-                    <div
-                      className={`col-md-3 text-truncate text-muted p-0 ${
-                        darkMode ? " dark-theme" : ""
-                      }`}
-                    >
-                      Patient Name:
-                    </div>
-                    <div
-                      className={`col-md-1 text-truncate text-muted p-0 ${
-                        darkMode ? " dark-theme" : ""
-                      }`}
-                    >
-                      Value:
-                    </div>
-                    <div
-                      className={`col-md-3 text-truncate text-muted p-0 ${
-                        darkMode ? " dark-theme" : ""
-                      }`}
-                    >
-                      IC Name:
-                    </div>
-                    <div
-                      className={`col-md-2 text-truncate text-muted p-0 ${
-                        darkMode ? " dark-theme" : ""
-                      }`}
-                    >
-                      Dsicount Value:
-                    </div>
-                    <div
-                      className={`col-md-1 text-truncate text-muted p-0 ${
-                        darkMode ? " dark-theme" : ""
-                      }`}
-                    >
-                      Paid Value:
-                    </div>
-                    <div
-                      className={`col-md-1 text-truncate text-muted p-0 ${
-                        darkMode ? " dark-theme" : ""
-                      }`}
-                    >
-                      More:
-                    </div>
+      </div>
+      <section className="px-4">
+        <div className="row my-0 d-none d-md-block">
+          <div className="col-lg-12">
+            <div className="card border-0 bg-transparent">
+              <div className="card-body">
+                <div className="row">
+                  <div
+                    className={`col-md-1 text-truncate text-muted p-0 ${
+                      darkMode ? " dark-theme" : ""
+                    }`}
+                  >
+                    #:
+                  </div>
+                  <div
+                    className={`col-md-3 text-truncate text-muted p-0 ${
+                      darkMode ? " dark-theme" : ""
+                    }`}
+                  >
+                    Patient Name:
+                  </div>
+                  <div
+                    className={`col-md-1 text-truncate text-muted p-0 ${
+                      darkMode ? " dark-theme" : ""
+                    }`}
+                  >
+                    Value:
+                  </div>
+                  <div
+                    className={`col-md-3 text-truncate text-muted p-0 ${
+                      darkMode ? " dark-theme" : ""
+                    }`}
+                  >
+                    IC Name:
+                  </div>
+                  <div
+                    className={`col-md-2 text-truncate text-muted p-0 ${
+                      darkMode ? " dark-theme" : ""
+                    }`}
+                  >
+                    Dsicount Value:
+                  </div>
+                  <div
+                    className={`col-md-1 text-truncate text-muted p-0 ${
+                      darkMode ? " dark-theme" : ""
+                    }`}
+                  >
+                    Paid Value:
+                  </div>
+                  <div
+                    className={`col-md-1 text-truncate text-muted p-0 ${
+                      darkMode ? " dark-theme" : ""
+                    }`}
+                  >
+                    More:
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div className="row ">
-            {Array.isArray(visiblePayments) && visiblePayments.length > 0 ? (
-              displayUsers
-            ) : apiError ? (
-              apiErrorMessage
-            ) : noResults ? (
-              <div className="my-4 mid-bold">No results Found.</div>
-            ) : (
-              <div className="d-flex justify-content-center align-items-center my-4">
-                <div className="spinner-border text-primary" role="status">
-                  <span className="sr-only">Loading...</span>
-                </div>
+        </div>
+        <div className="row ">
+          {Array.isArray(visiblePayments) && visiblePayments.length > 0 ? (
+            displayUsers
+          ) : apiError ? (
+            apiErrorMessage
+          ) : noResults ? (
+            <div className="my-4 mid-bold">No results Found.</div>
+          ) : (
+            <div className="d-flex justify-content-center align-items-center my-4">
+              <div className="spinner-border text-primary" role="status">
+                <span className="sr-only">Loading...</span>
               </div>
-            )}
-          </div>
-        </section>
-      </div>
+            </div>
+          )}
+        </div>
+      </section>
     </div>
   );
 }
