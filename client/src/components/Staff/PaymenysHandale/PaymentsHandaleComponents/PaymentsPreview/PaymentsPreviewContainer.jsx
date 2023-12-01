@@ -184,12 +184,14 @@ export default function PaymentsPreviewContainer() {
           <div className="col-sm-12 col-md-6 d-flex align-items-center p-0">
             <SearchBar handaleSearchVlue={handaleSearchVlue} />
           </div>
-          <div className={`col-sm-12 col-md-4 d-flex align-items-center p-0`}>
-            <div className="row w-100">
+          <div
+            className={`col-sm-12 col-md-4 d-flex justify-content-md-end align-items-center p-0`}
+          >
+            <div className="a w-100">
               <div
                 className={`col-12 ${
                   isInsuranceComp ? "d-none" : ""
-                } d-flex justify-content-end`}
+                } d-flex justify-content-md-end`}
               >
                 <UserFilter
                   filterOptions={filterOptions}
@@ -199,7 +201,7 @@ export default function PaymentsPreviewContainer() {
               <div
                 className={`col-12 ${
                   !isInsuranceComp ? "d-none" : ""
-                } d-flex justify-content-end gap-4`}
+                } d-flex justify-content-md-end gap-4`}
               >
                 <div className="col-6">
                   <label
