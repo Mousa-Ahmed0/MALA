@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const { payments } = require("../models/payments");
+const { user } = require("../models/user");
 
 /**-----------------------------------
  * @desc add payments
@@ -25,7 +26,7 @@ module.exports.addPayment = asyncHandler(async (req, res) => {
     newPayment.value = newPayment.value - newPayment.value * pers; //value
   }
   await newPayment.save();
-  res.status(201).json({ newPayment, message: "done....." });
+  res.status(201).json({ newPayment, message: "Reports generated successfully." });
 });
 /**-----------------------------------
  * @desc get all  payments
@@ -44,7 +45,7 @@ module.exports.getPayment = asyncHandler(async (req, res) => {
     for (let i = 0; i < getAllPayment.length; i++) {
       count += getAllPayment[i].value;
     }
-    res.status(201).json({ count, getAllPayment, message: "done....." });
+    res.status(201).json({ count, getAllPayment, message: "Reports generated successfully." });
   } else res.status(400).json({ message: "Can't find repoet" });
 });
 
@@ -59,7 +60,7 @@ module.exports.getPayment = asyncHandler(async (req, res) => {
 module.exports.countPayment = asyncHandler(async (req, res) => {
   //vaildition @front end
   const count = await payments.count();
-  if (count) res.status(201).json({ count, message: "done....." });
+  if (count) res.status(201).json({ count, message: "Reports generated successfully." });
   else res.status(400).json({ message: "Can't find repoet" });
 });
 
@@ -76,12 +77,13 @@ module.exports.getPaymentIdentPatient = asyncHandler(async (req, res) => {
   const getPayment = await payments.find({
     identPatient: req.body.identPatient,
   });
+
   if (getPayment) {
     let count = 0;
     for (let i = 0; i < getPayment.length; i++) {
       count += getPayment[i].value;
     }
-    res.status(201).json({ count, getPayment, message: "done....." });
+    res.status(201).json({ count, getPayment, message: "Reports generated successfully." });
   } else res.status(400).json({ message: "Can't find repoet" });
 });
 
@@ -97,13 +99,13 @@ module.exports.getByDate = asyncHandler(async (req, res) => {
   //vaildition @front end
   const paymentDate = new Date(req.body.payDate);
   const getPayment = await payments.find({ payDate: paymentDate });
-  console.log(getPayment)
+  console.log(getPayment.value);
   if (getPayment) {
     let count = 0;
     for (let i = 0; i < getPayment.length; i++) {
       count += getPayment[i].value;
     }
-    res.status(201).json({ count, getPayment, message: "done....." });
+    res.status(201).json({ count, getPayment, message: "Reports generated successfully." });
   } else res.status(400).json({ message: "Can't find repoet" });
 });
 
@@ -127,9 +129,11 @@ module.exports.getFromToDate = asyncHandler(async (req, res) => {
     for (let i = 0; i < getPayment.length; i++) {
       count += getPayment[i].value;
     }
-    res.status(201).json({ count, getPayment, message: "done....." });
+    res.status(201).json({ count, getPayment, message: "Reports generated successfully." });
   } else res.status(400).json({ message: "Can't find repoet" });
 });
+
+
 /**-----------------------------------
  * @desc get payments  by identPatient
  * @router /api/payment/getByDate
@@ -140,19 +144,53 @@ module.exports.getFromToDate = asyncHandler(async (req, res) => {
  * -----------------------------------*/
 module.exports.test = asyncHandler(async (req, res) => {
   //vaildition @front end
-  const paymentDate = new Date(req.body.payDate);
-  console.log(paymentDate.getDate());
-  console.log(paymentDate.getMonth() + 1);
-  console.log(paymentDate.getFullYear() );
-  // const getPayment = await payments.find({ payDate: paymentDate });
-  // console.log(getPayment)
-  // if (getPayment) {
-  //   let count = 0;
-  //   for (let i = 0; i < getPayment.length; i++) {
-  //     count += getPayment[i].value;
-  //   }
-  //   res.status(201).json({ count, getPayment, message: "done....." });
-  // } else res.status(400).json({ message: "Can't find repoet" });
-  res.status(400).json({ message: "Can't find repoet" });
+  const number = req.body.number;
+  const currentDate = new Date(req.body.payDate);
+  const startDate = new Date(currentDate);
+
+  let usersArray = [];
+ 
+  if (number == 0) {//week
+    startDate.setDate(currentDate.getDate() - 6);
+    const getAllPayment = await payments.find({
+      payDate: { $gte: startDate, $lte: currentDate }
+    });
+
+    if (getAllPayment) {
+      let count = 0;
+      for (let i = 0; i < getAllPayment.length; i++) {
+        const userinfo = await user.findOne({ ident: getAllPayment[i].identPatient });
+        usersArray.push(userinfo);
+        count += getAllPayment[i].value;
+      }
+      res.status(201).json({ count,usersArray, getAllPayment, message: "Reports generated successfully." });
+
+    } else {
+      res.status(400).json({ message: "Can't find report" });
+    }
+  }
+  else {//number of month
+    startDate.setMonth(currentDate.getMonth() - number);
+    console.log(startDate);
+
+    const getAllPayment = await payments.find({
+      payDate: { $gte: startDate, $lte: currentDate }
+    });
+
+    if (getAllPayment) {
+      let count = 0;
+      for (let i = 0; i < getAllPayment.length; i++) {
+        count += getAllPayment[i].value;
+      }
+      res.status(201).json({ count, getAllPayment, message: "Reports generated successfully." });
+
+    } else {
+      res.status(400).json({ message: "Can't find report" });
+    }
+  }
+
+
+
+
 
 });

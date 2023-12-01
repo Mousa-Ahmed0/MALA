@@ -7,5 +7,6 @@ router.get('/getPayment',ifAdminOrStaff,getPayment);
 router.get('/countPayment',ifAdminOrStaff,countPayment);
 router.get('/getPaymentIdentPatient',ifAdminOrStaff,getPaymentIdentPatient);
 router.get('/getByDate',ifAdminOrStaff,getByDate);
+router.get('/week',ifAdminOrStaff,test);//test 
 router.get('/getFromToDate',ifAdminOrStaff,getFromToDate);
 module.exports=router;
