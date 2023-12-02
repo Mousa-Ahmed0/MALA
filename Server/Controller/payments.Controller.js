@@ -116,6 +116,34 @@ module.exports.getPaymentIdentPatient = asyncHandler(async (req, res) => {
 });
 
 /**-----------------------------------
+ * @desc get payments  by _id
+ * @router /api/payment/getPaymentIdentPatient/:id
+ * @method GET
+ *  year/month/day
+ * 2023/09/05
+ * @access private (staff or admin )
+ * -----------------------------------*/
+module.exports.getPaymentId = asyncHandler(async (req, res) => {
+  //vaildition @front end  
+  const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+  const getPayment = await payments.findById(req.params.id);
+  if (getPayment) {
+      const userinfo = await user.findOne({ ident: getPayment.identPatient });
+      const dayOfWeek = (getPayment.payDate).getDay();//find day
+      const dayName = daysOfWeek[dayOfWeek];//find name of day
+      const pymentDetails = {
+        day: dayName,
+        date: getPayment.payDate,
+        value: getPayment.value,
+        payment: getPayment,
+        info: userinfo,
+      }
+    
+    res.status(201).json({ pymentDetails, message: "Reports generated successfully." });
+  } else res.status(400).json({ message: "Can't find repoet" });
+});
+/**-----------------------------------
  * @desc get payments  by identPatient
  * @router /api/payment/getByDate
  * @method GET 
