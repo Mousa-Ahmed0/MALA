@@ -12,6 +12,7 @@ export default function PaymentsPreviewContainer() {
 
   let [allPayments, setAllPayments] = useState([]);
   let [visiblePayments, setVisiblePayments] = useState([]);
+  const [paymentsUser, setPaymentsUser] = useState([]);
   //search & filter variables
   let [val, setVal] = useState(""); //search value
   let [filterOption, setFilterOption] = useState("noValue");
@@ -45,6 +46,7 @@ export default function PaymentsPreviewContainer() {
       console.log(response);
       setAllPayments(response.data.getAllPayment);
       setVisiblePayments(response.data.getAllPayment);
+      setPaymentsUser(response.data.usersArray);
     } catch (error) {
       console.error("Error from disply all pyments: ", error);
     }
@@ -52,6 +54,21 @@ export default function PaymentsPreviewContainer() {
   //Display the VisibleUsers
   function displayUsers() {
     return visiblePayments.map((payment, index) => {
+      const dateString = payment.payDate;
+      const dateObject = new Date(dateString);
+
+      // Extract year, month, and day
+      const year = dateObject.getFullYear();
+      const month = (dateObject.getMonth() + 1).toString().padStart(2, "0"); // Months are zero-based
+      const day = dateObject.getDate().toString().padStart(2, "0");
+
+      // Create the formatted date string as year-month-day
+      const formattedDate = `${year}/${month}/${day}`;
+      const allValue = payment.discountedValue + payment.value;
+      const percentage = Math.floor(
+        (payment.discountedValue / payment.value) * 100
+      );
+
       return (
         <div key={index} className="col-lg-12">
           <div
@@ -59,41 +76,47 @@ export default function PaymentsPreviewContainer() {
               darkMode ? " spic-dark-mode" : ""
             }`}
           >
-            <div className={`card-body`}>
-              <div className="row">
+            <div className={`card-body p-0`}>
+              <div className="row  pt-4 px-0">
                 <div className="col-sm-12 col-md-1 d-flex align-items-center p-0">
                   <p className="mb-0 text-truncate">#{index + 1}:</p>
                 </div>
-                <div className="col-5 col-sm-4 col-md-3 d-flex  justify-content-md-start align-items-center p-0">
-                  <img
-                    loading="lazy"
-                    className="nav-profile-img mx-2 img-fluid"
-                    src={"user.profilePhoto.url"}
-                    alt="nav-profile-img"
-                    style={{ objectFit: "cover" }}
-                  />
+                <div className="col-5 col-sm-2 col-md-2 d-flex  justify-content-md-start align-items-center p-0">
                   <Link
                     style={{ cursor: "pointer" }}
                     to={`/Profile/`}
                     className="position-relative nav-link mb-0 text-truncate"
                   >
-                    dsv
+                    {paymentsUser[index] ? paymentsUser[index].firstname : "fn"}{" "}
+                    {paymentsUser[index] ? paymentsUser[index].lastname : "ln"}
                   </Link>
                 </div>
                 <div className="col-sm-12 col-md-1 d-md-flex d-none align-items-center p-0">
-                  <p className="mb-0 text-truncate">{"value"}</p>
+                  <p className="mb-0 text-truncate">{formattedDate}</p>
+                </div>
+                <div className="col-sm-12 col-md-1 d-md-flex d-none align-items-center p-0">
+                  <p className="mb-0 text-truncate">{allValue}NIS</p>
                 </div>
                 <div className="col-2 col-md-3 d-flex justify-content-center justify-content-md-start  align-items-center p-0">
-                  <p className="mb-0 text-truncate">{"IC Name"}</p>
+                  <p className="mb-0 text-truncate">
+                    {payment.InsuranceCompName === ""
+                      ? "..."
+                      : payment.InsuranceCompName}
+                  </p>
                 </div>
+
                 <div className="col-sm-12 col-md-1 d-md-flex d-none align-items-center p-0">
-                  <p className="mb-0 text-truncate">{"dicount"}</p>
+                  <p className="mb-0 text-truncate">{percentage}%</p>
                 </div>
-                <div className="col-sm-12 col-md-1 d-md-flex d-none align-items-center p-0">
-                  <p className="mb-0 text-truncate">{"paid"}</p>
+                <div className="col-sm-12 col-md-2 d-md-flex d-none align-items-center p-0">
+                  <p className="mb-0 text-truncate">{payment.value}NIS</p>
                 </div>
                 <div className="col-5 col-md-1 d-flex flex-row-reverse flex-md-row align-items-center">
-                  <p>print</p>
+                  <Link
+                    className={`position-relative nav-link mb-0 text-truncate`}
+                  >
+                    Print
+                  </Link>
                 </div>
               </div>
             </div>
@@ -269,7 +292,7 @@ export default function PaymentsPreviewContainer() {
                     #:
                   </div>
                   <div
-                    className={`col-md-3 text-truncate text-muted p-0 ${
+                    className={`col-md-2 text-truncate text-muted p-0 ${
                       darkMode ? " dark-theme" : ""
                     }`}
                   >
@@ -280,7 +303,14 @@ export default function PaymentsPreviewContainer() {
                       darkMode ? " dark-theme" : ""
                     }`}
                   >
-                    Value:
+                    Date:
+                  </div>
+                  <div
+                    className={`col-md-1 text-truncate text-muted p-0 ${
+                      darkMode ? " dark-theme" : ""
+                    }`}
+                  >
+                    value:
                   </div>
                   <div
                     className={`col-md-3 text-truncate text-muted p-0 ${
@@ -290,19 +320,20 @@ export default function PaymentsPreviewContainer() {
                     IC Name:
                   </div>
                   <div
-                    className={`col-md-2 text-truncate text-muted p-0 ${
+                    className={`col-md-1 text-truncate text-muted p-0 ${
                       darkMode ? " dark-theme" : ""
                     }`}
                   >
-                    Dsicount Value:
+                    Dsicount:
                   </div>
                   <div
-                    className={`col-md-1 text-truncate text-muted p-0 ${
+                    className={`col-md-2 text-truncate text-muted p-0 ${
                       darkMode ? " dark-theme" : ""
                     }`}
                   >
                     Paid Value:
                   </div>
+
                   <div
                     className={`col-md-1 text-truncate text-muted p-0 ${
                       darkMode ? " dark-theme" : ""
@@ -317,7 +348,7 @@ export default function PaymentsPreviewContainer() {
         </div>
         <div className="row ">
           {Array.isArray(visiblePayments) && visiblePayments.length > 0 ? (
-            displayUsers
+            displayUsers()
           ) : apiError ? (
             apiErrorMessage
           ) : noResults ? (
