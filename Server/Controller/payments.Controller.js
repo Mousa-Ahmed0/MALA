@@ -39,13 +39,16 @@ module.exports.addPayment = asyncHandler(async (req, res) => {
 module.exports.getPayment = asyncHandler(async (req, res) => {
   //vaildition @front end
   // const getAllPayment = await payments.find().select("value -_id ");
+  let usersArray = [];
   const getAllPayment = await payments.find();
   if (getAllPayment) {
     let count = 0;
     for (let i = 0; i < getAllPayment.length; i++) {
+      const userinfo = await user.findOne({ ident: getAllPayment[i].identPatient });
+      usersArray.push(userinfo);
       count += getAllPayment[i].value;
     }
-    res.status(201).json({ count, getAllPayment, message: "Reports generated successfully." });
+    res.status(201).json({ count,usersArray, getAllPayment, message: "Reports generated successfully." });
   } else res.status(400).json({ message: "Can't find repoet" });
 });
 
@@ -73,7 +76,9 @@ module.exports.countPayment = asyncHandler(async (req, res) => {
  * @access private (staff or admin )
  * -----------------------------------*/
 module.exports.getPaymentIdentPatient = asyncHandler(async (req, res) => {
-  //vaildition @front end
+  //vaildition @front end  
+  let usersArray = [];
+
   const getPayment = await payments.find({
     identPatient: req.body.identPatient,
   });
@@ -81,9 +86,11 @@ module.exports.getPaymentIdentPatient = asyncHandler(async (req, res) => {
   if (getPayment) {
     let count = 0;
     for (let i = 0; i < getPayment.length; i++) {
+      const userinfo = await user.findOne({ ident: getAllPayment[i].identPatient });
+      usersArray.push(userinfo);
       count += getPayment[i].value;
     }
-    res.status(201).json({ count, getPayment, message: "Reports generated successfully." });
+    res.status(201).json({ count, usersArray,getPayment, message: "Reports generated successfully." });
   } else res.status(400).json({ message: "Can't find repoet" });
 });
 
@@ -99,13 +106,15 @@ module.exports.getByDate = asyncHandler(async (req, res) => {
   //vaildition @front end
   const paymentDate = new Date(req.body.payDate);
   const getPayment = await payments.find({ payDate: paymentDate });
-  console.log(getPayment.value);
+  let usersArray = [];
   if (getPayment) {
     let count = 0;
     for (let i = 0; i < getPayment.length; i++) {
+      const userinfo = await user.findOne({ ident: getAllPayment[i].identPatient });
+      usersArray.push(userinfo);
       count += getPayment[i].value;
     }
-    res.status(201).json({ count, getPayment, message: "Reports generated successfully." });
+    res.status(201).json({ count, usersArray,getPayment, message: "Reports generated successfully." });
   } else res.status(400).json({ message: "Can't find repoet" });
 });
 
@@ -121,15 +130,18 @@ module.exports.getFromToDate = asyncHandler(async (req, res) => {
   //vaildition @front end
   const firstDate = new Date(req.body.firstDate);
   const secondtDate = new Date(req.body.secondtDate);
+  let usersArray = [];
   const getPayment = await payments.find({
     payDate: { $gte: firstDate, $lte: secondtDate }
   });
   if (getPayment) {
     let count = 0;
     for (let i = 0; i < getPayment.length; i++) {
+      const userinfo = await user.findOne({ ident: getAllPayment[i].identPatient });
+      usersArray.push(userinfo);
       count += getPayment[i].value;
     }
-    res.status(201).json({ count, getPayment, message: "Reports generated successfully." });
+    res.status(201).json({ count, usersArray,getPayment, message: "Reports generated successfully." });
   } else res.status(400).json({ message: "Can't find repoet" });
 });
 
