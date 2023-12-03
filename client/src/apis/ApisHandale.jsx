@@ -146,6 +146,7 @@ export const getAllPayments = async () => {
   );
 };
 export const getPaymentsFromTo = async (date) => {
+  console.log(" custome date: ", date);
   return await axios.get(
     "http://localhost:5000/api/payment/getFromToDate",
     date,

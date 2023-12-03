@@ -1,3 +1,11 @@
+@media print {
+  /* Hide the navbar when printing */
+
+  .searchSection,
+  .preview-section {
+    display: none;
+  }
+}
 /************* Section **************/
 .ST-section {
   margin: var(--main-margin-top) 0;

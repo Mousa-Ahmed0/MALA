@@ -4,7 +4,7 @@ import { useDarkMode } from "../../context/DarkModeContext";
 function UserFilter(props) {
   const { darkMode } = useDarkMode(); //dark mode
   const filterOptions = props.filterOptions;
-  const [filterLabel, setFilterLabel] = useState("Filter By");
+  const filterLabel = props.filterLabel;
 
   function handaleChange(event) {
     let regionValue = event.target.value;
@@ -20,7 +20,7 @@ function UserFilter(props) {
       name="region"
     >
       <option value={"noValue"} hidden>
-        {filterLabel}
+        {filterLabel ? filterLabel : "Filter by:"}
       </option>
       {filterOptions.map((choise, index) => (
         <option key={index} value={choise}>

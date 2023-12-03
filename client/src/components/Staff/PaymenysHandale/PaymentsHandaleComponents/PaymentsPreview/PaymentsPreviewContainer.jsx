@@ -5,17 +5,21 @@ import { Link } from "react-router-dom";
 
 import SearchBar from "../../../../SearchBar/SearchBar";
 import UserFilter from "../../../../UserFilter/UserFilter";
-import { getAllPayments } from "../../../../../apis/ApisHandale";
+import {
+  getAllPayments,
+  getPaymentsFromTo,
+} from "../../../../../apis/ApisHandale";
+import PaymentsArrayPrint from "../../../../PaymentsReport/PaymentsArrayPrint/PaymentsArrayPrint";
 export default function PaymentsPreviewContainer() {
   const { darkMode } = useDarkMode();
-  const [isInsuranceComp, setIsInsuranceComp] = useState(false);
+  const [isCustomeDate, setIsCustomeDate] = useState(false);
 
   let [allPayments, setAllPayments] = useState([]);
   let [visiblePayments, setVisiblePayments] = useState([]);
-  const [paymentsUser, setPaymentsUser] = useState([]);
   //search & filter variables
   let [val, setVal] = useState(""); //search value
   let [filterOption, setFilterOption] = useState("noValue");
+  let [srchFilterOption, setSrchFilterOption] = useState("Patient");
   let [searchResults, setSearchResults] = useState([]);
   const filterOptions = [
     "noValue",
@@ -25,6 +29,7 @@ export default function PaymentsPreviewContainer() {
     "Last 6 Months",
     "Last Year",
   ];
+  const srchFilterOptions = ["Patient", "IC"];
   //Errors variables
   let [apiError, setApiError] = useState(false);
   let [noResults, setNoResults] = useState(false);
@@ -44,17 +49,18 @@ export default function PaymentsPreviewContainer() {
     try {
       let response = await getAllPayments();
       console.log(response);
-      setAllPayments(response.data.getAllPayment);
-      setVisiblePayments(response.data.getAllPayment);
-      setPaymentsUser(response.data.usersArray);
+      setAllPayments(response.data.paumentArray);
+      setVisiblePayments(response.data.paumentArray);
     } catch (error) {
       console.error("Error from disply all pyments: ", error);
     }
   }
   //Display the VisibleUsers
   function displayUsers() {
-    return visiblePayments.map((payment, index) => {
-      const dateString = payment.payDate;
+    console.log(visiblePayments);
+
+    return visiblePayments.map((p, index) => {
+      const dateString = p.payment.payDate;
       const dateObject = new Date(dateString);
 
       // Extract year, month, and day
@@ -63,10 +69,10 @@ export default function PaymentsPreviewContainer() {
       const day = dateObject.getDate().toString().padStart(2, "0");
 
       // Create the formatted date string as year-month-day
-      const formattedDate = `${year}/${month}/${day}`;
-      const allValue = payment.discountedValue + payment.value;
+      const formDate = `${year}/${month}/${day}`;
+      const allValue = p.payment.discountedValue + p.payment.value;
       const percentage = Math.floor(
-        (payment.discountedValue / payment.value) * 100
+        (p.payment.discountedValue / p.payment.value) * 100
       );
 
       return (
@@ -77,7 +83,7 @@ export default function PaymentsPreviewContainer() {
             }`}
           >
             <div className={`card-body p-0`}>
-              <div className="row  pt-4 px-0">
+              <div className="row  pt-4 pb-1 px-0">
                 <div className="col-sm-12 col-md-1 d-flex align-items-center p-0">
                   <p className="mb-0 text-truncate">#{index + 1}:</p>
                 </div>
@@ -87,21 +93,21 @@ export default function PaymentsPreviewContainer() {
                     to={`/Profile/`}
                     className="position-relative nav-link mb-0 text-truncate"
                   >
-                    {paymentsUser[index] ? paymentsUser[index].firstname : "fn"}{" "}
-                    {paymentsUser[index] ? paymentsUser[index].lastname : "ln"}
+                    {p.info ? p.info.firstname : "fn"}{" "}
+                    {p.info ? p.info.lastname : "ln"}
                   </Link>
                 </div>
                 <div className="col-sm-12 col-md-1 d-md-flex d-none align-items-center p-0">
-                  <p className="mb-0 text-truncate">{formattedDate}</p>
+                  <p className="mb-0 text-truncate">{formDate}</p>
                 </div>
                 <div className="col-sm-12 col-md-1 d-md-flex d-none align-items-center p-0">
                   <p className="mb-0 text-truncate">{allValue}NIS</p>
                 </div>
                 <div className="col-2 col-md-3 d-flex justify-content-center justify-content-md-start  align-items-center p-0">
                   <p className="mb-0 text-truncate">
-                    {payment.InsuranceCompName === ""
+                    {p.payment.InsuranceCompName === ""
                       ? "..."
-                      : payment.InsuranceCompName}
+                      : p.payment.InsuranceCompName}
                   </p>
                 </div>
 
@@ -109,7 +115,7 @@ export default function PaymentsPreviewContainer() {
                   <p className="mb-0 text-truncate">{percentage}%</p>
                 </div>
                 <div className="col-sm-12 col-md-2 d-md-flex d-none align-items-center p-0">
-                  <p className="mb-0 text-truncate">{payment.value}NIS</p>
+                  <p className="mb-0 text-truncate">{p.payment.value}NIS</p>
                 </div>
                 <div className="col-5 col-md-1 d-flex flex-row-reverse flex-md-row align-items-center">
                   <Link
@@ -127,28 +133,51 @@ export default function PaymentsPreviewContainer() {
     });
   }
   /** ====================== filter Section ====================== **/
+  const endDate = new Date(); // current date
+  const formatDate = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  const [dateRange, setDateRange] = useState({
+    firstDate: formatDate(endDate),
+    secondDate: "",
+  });
+  useEffect(() => {
+    console.log("data range: ", dateRange);
+  }, [dateRange]);
+
   function clearResults() {
     setVisiblePayments(allPayments);
   }
 
-  function handaleFilterOption(option) {
+  function searchFilterOption(option) {
+    setSrchFilterOption(option);
+  }
+  async function handaleFilterOption(option) {
     setFilterOption(option);
-    const roleOptions = ["Staff", "Patient", "Doctor"];
-    console.log("filter Function: ", searchResults);
+    const startDate = new Date();
+
     // No Search has been done
     if (searchResults.length === 0 || !searchResults || val === "") {
+      console.log("first step");
       if (option === "noValue") {
         clearResults();
-      } else if (roleOptions.includes(option)) {
-        /*const filteredUsers = allUsers.filter(
-          (user) => user.usertype === option
-        );
-        setVisibleUsers(filteredUsers);*/
+      } else if (option === "Last Week") {
+        console.log("second step");
+        /*startDate.setDate(endDate.getDate() - 7);
+        let newDateRange = { ...dateRange, secondDate: formatDate(endDate) };
+        let response;
+        console.log("third step");
+        response = await getPaymentsFromTo(newDateRange);
+        console.log("response from filter function: ", response);*/
       }
     } else {
       if (option === "noValue") {
         setVisiblePayments(searchResults);
-      } else if (roleOptions.includes(option)) {
+      } else if (option === "Last Week") {
         /* const filteredUsers = searchResults.filter(
           (user) => user.usertype === option
         );
@@ -160,7 +189,16 @@ export default function PaymentsPreviewContainer() {
     }
   }
 
+  function hadaleDateFilters() {
+    setIsCustomeDate(!isCustomeDate);
+  }
   /** ====================== Search Section ====================== **/
+  useEffect(() => {
+    console.log("all Payments: ", allPayments);
+  }, [allPayments]);
+  useEffect(() => {
+    console.log("val: ", val);
+  }, [val]);
   function handaleSearchVlue(value) {
     if (value === "") {
       clearResults();
@@ -170,6 +208,32 @@ export default function PaymentsPreviewContainer() {
   async function searchForAUser() {
     if (val.trim() === "") {
       return;
+    } else {
+      if (srchFilterOption === "noValue" || srchFilterOption === "Patient") {
+        let srchResultsArray = allPayments.filter((p) =>
+          p.info ? p.info.ident.toString().includes(val) : false
+        );
+        if (srchResultsArray.length === 0) {
+          setVisiblePayments([]);
+          setNoResults(true);
+        } else {
+          setSearchResults(srchResultsArray);
+        }
+      } else if (srchFilterOption === "IC") {
+        let srchResultsArray = allPayments.filter((p) =>
+          p.payment
+            ? p.payment.InsuranceCompName.toLowerCase().includes(
+                val.toLowerCase()
+              )
+            : false
+        );
+        if (srchResultsArray.length === 0) {
+          setVisiblePayments([]);
+          setNoResults(true);
+        } else {
+          setSearchResults(srchResultsArray);
+        }
+      }
     }
     /* let srchResultsArray = allPayments.filter((user) =>
       (user.firstname.toLowerCase() + user.lastname.toLowerCase()).includes(
@@ -191,8 +255,10 @@ export default function PaymentsPreviewContainer() {
   }, []);
 
   useEffect(() => {
-    // Filter and display users when the filter option or data changes
-    handaleFilterOption(filterOption);
+    // Filter and display users when the filter option or data changes and sure that not custom date
+    if (!isCustomeDate) {
+      handaleFilterOption(filterOption);
+    }
   }, [filterOption, searchResults]);
 
   useEffect(() => {
@@ -200,11 +266,29 @@ export default function PaymentsPreviewContainer() {
     searchForAUser();
   }, [val]);
 
+  useEffect(() => {
+    if (isCustomeDate) {
+      console.log("Custome Date Function");
+    } else {
+      handaleFilterOption(filterOption);
+    }
+  }, [isCustomeDate]);
   return (
     <div className="ST-section my-2 p-0">
       <div className="container">
+        <div className="d-none payments-array-print">
+          <PaymentsArrayPrint
+            paymentsArr={visiblePayments}
+            darkMode={darkMode}
+          />
+        </div>
         <div className="row searchSection mb-5">
-          <div className="col-sm-12 col-md-6 d-flex align-items-center p-0">
+          <div className="col-sm-12 col-md-6 d-flex gap-4 align-items-center p-0">
+            <UserFilter
+              filterLabel={"Search for:"}
+              filterOptions={srchFilterOptions}
+              handaleFilterOption={searchFilterOption}
+            />
             <SearchBar handaleSearchVlue={handaleSearchVlue} />
           </div>
           <div
@@ -213,7 +297,7 @@ export default function PaymentsPreviewContainer() {
             <div className="a w-100">
               <div
                 className={`col-12 ${
-                  isInsuranceComp ? "d-none" : ""
+                  isCustomeDate ? "d-none" : ""
                 } d-flex justify-content-md-end`}
               >
                 <UserFilter
@@ -223,7 +307,7 @@ export default function PaymentsPreviewContainer() {
               </div>
               <div
                 className={`col-12 ${
-                  !isInsuranceComp ? "d-none" : ""
+                  !isCustomeDate ? "d-none" : ""
                 } d-flex justify-content-md-end gap-4`}
               >
                 <div className="col-6">
@@ -260,11 +344,11 @@ export default function PaymentsPreviewContainer() {
           <div className="col-sm-12 col-md-2 d-flex justify-content-md-end align-items-center p-0">
             <div className="custom-control custom-checkbox d-flex gap-2">
               <input
-                onChange={() => setIsInsuranceComp(!isInsuranceComp)}
+                onChange={() => hadaleDateFilters()}
                 type="checkbox"
                 className="custom-control-input"
                 id="customCheck1"
-                checked={isInsuranceComp}
+                checked={isCustomeDate}
               />
               <label
                 className={`custom-control-label mx-2 ${
@@ -278,7 +362,7 @@ export default function PaymentsPreviewContainer() {
           </div>
         </div>
       </div>
-      <section className="px-4">
+      <section className="px-4 preview-section">
         <div className="row my-0 d-none d-md-block">
           <div className="col-lg-12">
             <div className="card border-0 bg-transparent">
@@ -348,7 +432,17 @@ export default function PaymentsPreviewContainer() {
         </div>
         <div className="row ">
           {Array.isArray(visiblePayments) && visiblePayments.length > 0 ? (
-            displayUsers()
+            <>
+              {displayUsers()}
+              <div className="d-flex align-items-center justify-content-center print-button mt-4">
+                <button
+                  className="btn btn-info text-white p-3"
+                  onClick={() => window.print()}
+                >
+                  <span className="h4 mid-bold">Print</span>
+                </button>
+              </div>
+            </>
           ) : apiError ? (
             apiErrorMessage
           ) : noResults ? (
