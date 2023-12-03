@@ -26,7 +26,9 @@ module.exports.addPayment = asyncHandler(async (req, res) => {
     newPayment.value = newPayment.value - newPayment.value * pers; //value
   }
   await newPayment.save();
-  res.status(201).json({ newPayment, message: "Reports generated successfully." });
+  res
+    .status(201)
+    .json({ newPayment, message: "Reports generated successfully." });
 });
 /**-----------------------------------
  * @desc get all  payments
@@ -39,27 +41,41 @@ module.exports.addPayment = asyncHandler(async (req, res) => {
 module.exports.getPayment = asyncHandler(async (req, res) => {
   //vaildition @front end
   // const getAllPayment = await payments.find().select("value -_id ");
-  const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const daysOfWeek = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
 
   const getPayment = await payments.find();
   let paumentArray = [];
   if (getPayment.length) {
     let count = 0;
     for (let i = 0; i < getPayment.length; i++) {
-      const userinfo = await user.findOne({ ident: getPayment[i].identPatient });
-      const dayOfWeek = (getPayment[i].payDate).getDay();//find day
-      const dayName = daysOfWeek[dayOfWeek];//find name of day
+      const userinfo = await user.findOne({
+        ident: getPayment[i].identPatient,
+      });
+      const dayOfWeek = getPayment[i].payDate.getDay(); //find day
+      const dayName = daysOfWeek[dayOfWeek]; //find name of day
       const pymentDetails = {
         day: dayName,
         date: getPayment[i].payDate,
         value: getPayment[i].value,
         payment: getPayment[i],
         info: userinfo,
-      }
+      };
       paumentArray.push(pymentDetails);
       count += getPayment[i].value;
     }
-    res.status(201).json({ count, paumentArray, message: "Reports generated successfully." });
+    res.status(201).json({
+      count,
+      paumentArray,
+      message: "Reports generated successfully.",
+    });
   } else res.status(400).json({ message: "Can't find repoet" });
 });
 
@@ -74,7 +90,8 @@ module.exports.getPayment = asyncHandler(async (req, res) => {
 module.exports.countPayment = asyncHandler(async (req, res) => {
   //vaildition @front end
   const count = await payments.count();
-  if (count) res.status(201).json({ count, message: "Reports generated successfully." });
+  if (count)
+    res.status(201).json({ count, message: "Reports generated successfully." });
   else res.status(400).json({ message: "Can't find repoet" });
 });
 
@@ -87,31 +104,45 @@ module.exports.countPayment = asyncHandler(async (req, res) => {
  * @access private (staff or admin )
  * -----------------------------------*/
 module.exports.getPaymentIdentPatient = asyncHandler(async (req, res) => {
-  //vaildition @front end  
-  const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  //vaildition @front end
+  const daysOfWeek = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
 
   const getPayment = await payments.find({
-    identPatient: req.body.identPatient,
+    identPatient: req.query.identPatient,
   });
 
   let paumentArray = [];
   if (getPayment.length) {
     let count = 0;
     for (let i = 0; i < getPayment.length; i++) {
-      const userinfo = await user.findOne({ ident: getPayment[i].identPatient });
-      const dayOfWeek = (getPayment[i].payDate).getDay();//find day
-      const dayName = daysOfWeek[dayOfWeek];//find name of day
+      const userinfo = await user.findOne({
+        ident: getPayment[i].identPatient,
+      });
+      const dayOfWeek = getPayment[i].payDate.getDay(); //find day
+      const dayName = daysOfWeek[dayOfWeek]; //find name of day
       const pymentDetails = {
         day: dayName,
         date: getPayment[i].payDate,
         value: getPayment[i].value,
         payment: getPayment[i],
         info: userinfo,
-      }
+      };
       paumentArray.push(pymentDetails);
       count += getPayment[i].value;
     }
-    res.status(201).json({ count, paumentArray, message: "Reports generated successfully." });
+    res.status(201).json({
+      count,
+      paumentArray,
+      message: "Reports generated successfully.",
+    });
   } else res.status(400).json({ message: "Can't find repoet" });
 });
 
@@ -124,57 +155,81 @@ module.exports.getPaymentIdentPatient = asyncHandler(async (req, res) => {
  * @access private (staff or admin )
  * -----------------------------------*/
 module.exports.getPaymentId = asyncHandler(async (req, res) => {
-  //vaildition @front end  
-  const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  //vaildition @front end
+  const daysOfWeek = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
 
   const getPayment = await payments.findById(req.params.id);
   if (getPayment) {
-      const userinfo = await user.findOne({ ident: getPayment.identPatient });
-      const dayOfWeek = (getPayment.payDate).getDay();//find day
-      const dayName = daysOfWeek[dayOfWeek];//find name of day
-      const pymentDetails = {
-        day: dayName,
-        date: getPayment.payDate,
-        value: getPayment.value,
-        payment: getPayment,
-        info: userinfo,
-      }
-    
-    res.status(201).json({ pymentDetails, message: "Reports generated successfully." });
+    const userinfo = await user.findOne({ ident: getPayment.identPatient });
+    const dayOfWeek = getPayment.payDate.getDay(); //find day
+    const dayName = daysOfWeek[dayOfWeek]; //find name of day
+    const pymentDetails = {
+      day: dayName,
+      date: getPayment.payDate,
+      value: getPayment.value,
+      payment: getPayment,
+      info: userinfo,
+    };
+
+    res
+      .status(201)
+      .json({ pymentDetails, message: "Reports generated successfully." });
   } else res.status(400).json({ message: "Can't find repoet" });
 });
 /**-----------------------------------
  * @desc get payments  by identPatient
  * @router /api/payment/getByDate
- * @method GET 
+ * @method GET
  * year/month/day
  * 2023/09/05
  * @access private (staff or admin )
  * -----------------------------------*/
 module.exports.getByDate = asyncHandler(async (req, res) => {
   //vaildition @front end
-  const paymentDate = new Date(req.body.payDate);
-  const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const paymentDate = new Date(req.query.payDate);
+  const daysOfWeek = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
 
   const getPayment = await payments.find({ payDate: paymentDate });
   let paumentArray = [];
   if (getPayment.length) {
     let count = 0;
     for (let i = 0; i < getPayment.length; i++) {
-      const userinfo = await user.findOne({ ident: getPayment[i].identPatient });
-      const dayOfWeek = (getPayment[i].payDate).getDay();//find day
-      const dayName = daysOfWeek[dayOfWeek];//find name of day
+      const userinfo = await user.findOne({
+        ident: getPayment[i].identPatient,
+      });
+      const dayOfWeek = getPayment[i].payDate.getDay(); //find day
+      const dayName = daysOfWeek[dayOfWeek]; //find name of day
       const pymentDetails = {
         day: dayName,
         date: getPayment[i].payDate,
         value: getPayment[i].value,
         payment: getPayment[i],
         info: userinfo,
-      }
+      };
       paumentArray.push(pymentDetails);
       count += getPayment[i].value;
     }
-    res.status(201).json({ count, paumentArray, message: "Reports generated successfully." });
+    res.status(201).json({
+      count,
+      paumentArray,
+      message: "Reports generated successfully.",
+    });
   } else res.status(400).json({ message: "Can't find repoet" });
 });
 
@@ -188,40 +243,51 @@ module.exports.getByDate = asyncHandler(async (req, res) => {
  * -----------------------------------*/
 module.exports.getFromToDate = asyncHandler(async (req, res) => {
   //vaildition @front end
-  const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  const firstDate = new Date(req.body.firstDate);
-  const secondtDate = new Date(req.body.secondtDate);
+  const daysOfWeek = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+  const firstDate = new Date(req.query.firstDate);
+  const secondtDate = new Date(req.query.secondtDate);
 
   let paumentArray = [];
   let count = 0;
 
   const getAllPayment = await payments.find({
-    payDate: { $gte: firstDate, $lte: secondtDate }
+    payDate: { $gte: firstDate, $lte: secondtDate },
   });
   if (getAllPayment.length) {
     let count = 0;
     for (let i = 0; i < getAllPayment.length; i++) {
-      const userinfo = await user.findOne({ ident: getAllPayment[i].identPatient });
-      const dayOfWeek = (getAllPayment[i].payDate).getDay();//find day
-      const dayName = daysOfWeek[dayOfWeek];//find name of day
+      const userinfo = await user.findOne({
+        ident: getAllPayment[i].identPatient,
+      });
+      const dayOfWeek = getAllPayment[i].payDate.getDay(); //find day
+      const dayName = daysOfWeek[dayOfWeek]; //find name of day
       const pymentDetails = {
         day: dayName,
         date: getAllPayment[i].payDate,
         value: getAllPayment[i].value,
         payment: getAllPayment[i],
         info: userinfo,
-      }
+      };
       paumentArray.push(pymentDetails);
       count += getAllPayment[i].value;
     }
-    res.status(201).json({ count, paumentArray, message: "Reports generated successfully." });
-
+    res.status(201).json({
+      count,
+      paumentArray,
+      message: "Reports generated successfully.",
+    });
   } else {
     res.status(400).json({ message: "Can't find report" });
   }
-
 });
-
 
 /**-----------------------------------
  * @desc get payments  by identPatient
@@ -233,67 +299,87 @@ module.exports.getFromToDate = asyncHandler(async (req, res) => {
  * -----------------------------------*/
 module.exports.test = asyncHandler(async (req, res) => {
   //vaildition @front end
-  const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-
-  const number = req.body.number;
-  const currentDate = new Date(req.body.payDate);
+  const daysOfWeek = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+  console.log(req.query.number);
+  const number = req.query.number;
+  const currentDate = new Date(req.query.payDate);
   const startDate = new Date(currentDate);
   let paumentArray = [];
-
-  if (number == 0) {//week
+  console.log("currentDate: ", currentDate);
+  console.log("number: ", number);
+  if (number == 0) {
+    //week
     startDate.setDate(currentDate.getDate() - 6);
     const getAllPayment = await payments.find({
-      payDate: { $gte: startDate, $lte: currentDate }
+      payDate: { $gte: startDate, $lte: currentDate },
     });
 
     if (getAllPayment.length) {
       let count = 0;
       for (let i = 0; i < getAllPayment.length; i++) {
-        const userinfo = await user.findOne({ ident: getAllPayment[i].identPatient });
-        const dayOfWeek = (getAllPayment[i].payDate).getDay();//find day
-        const dayName = daysOfWeek[dayOfWeek];//find name of day
+        const userinfo = await user.findOne({
+          ident: getAllPayment[i].identPatient,
+        });
+        const dayOfWeek = getAllPayment[i].payDate.getDay(); //find day
+        const dayName = daysOfWeek[dayOfWeek]; //find name of day
         const pymentDetails = {
           day: dayName,
           date: getAllPayment[i].payDate,
           value: getAllPayment[i].value,
           payment: getAllPayment[i],
           info: userinfo,
-        }
+        };
         paumentArray.push(pymentDetails);
         count += getAllPayment[i].value;
       }
-      res.status(201).json({ count, paumentArray, message: "Reports generated successfully." });
-
+      res.status(201).json({
+        count,
+        paumentArray,
+        message: "Reports generated successfully.",
+      });
     } else {
       res.status(400).json({ message: "Can't find report" });
     }
-  }
-  else {//number of month
+  } else {
+    //number of month
     startDate.setMonth(currentDate.getMonth() - number);
     console.log(startDate);
 
     const getAllPayment = await payments.find({
-      payDate: { $gte: startDate, $lte: currentDate }
+      payDate: { $gte: startDate, $lte: currentDate },
     });
 
     if (getAllPayment.length) {
       let count = 0;
       for (let i = 0; i < getAllPayment.length; i++) {
-        const userinfo = await user.findOne({ ident: getAllPayment[i].identPatient });
-        const dayOfWeek = (getAllPayment[i].payDate).getDay();//find day
-        const dayName = daysOfWeek[dayOfWeek];//find name of day
+        const userinfo = await user.findOne({
+          ident: getAllPayment[i].identPatient,
+        });
+        const dayOfWeek = getAllPayment[i].payDate.getDay(); //find day
+        const dayName = daysOfWeek[dayOfWeek]; //find name of day
         const pymentDetails = {
           day: dayName,
           date: getAllPayment[i].payDate,
           value: getAllPayment[i].value,
           payment: getAllPayment[i],
           info: userinfo,
-        }
+        };
         paumentArray.push(pymentDetails);
         count += getAllPayment[i].value;
       }
-      res.status(201).json({ count, paumentArray, message: "Reports generated successfully." });
-
+      res.status(201).json({
+        count,
+        paumentArray,
+        message: "Reports generated successfully.",
+      });
     } else {
       res.status(400).json({ message: "Can't find report" });
     }

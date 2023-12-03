@@ -149,7 +149,9 @@ export const getPaymentsFromTo = async (date) => {
   console.log(" custome date: ", date);
   return await axios.get(
     "http://localhost:5000/api/payment/getFromToDate",
-    date,
+    {
+      params: date, // Use 'params' to send data as query parameters
+    },
     {
       headers: {
         Authorization: "Bearer " + localStorage.getItem("token"),

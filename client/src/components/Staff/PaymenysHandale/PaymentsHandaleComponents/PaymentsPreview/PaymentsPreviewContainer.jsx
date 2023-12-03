@@ -10,6 +10,7 @@ import {
   getPaymentsFromTo,
 } from "../../../../../apis/ApisHandale";
 import PaymentsArrayPrint from "../../../../PaymentsReport/PaymentsArrayPrint/PaymentsArrayPrint";
+import axios from "axios";
 export default function PaymentsPreviewContainer() {
   const { darkMode } = useDarkMode();
   const [isCustomeDate, setIsCustomeDate] = useState(false);
@@ -136,14 +137,14 @@ export default function PaymentsPreviewContainer() {
   const endDate = new Date(); // current date
   const formatDate = (date) => {
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
     return `${year}-${month}-${day}`;
   };
 
   const [dateRange, setDateRange] = useState({
-    firstDate: formatDate(endDate),
-    secondDate: "",
+    firstDate: "",
+    secondtDate: formatDate(endDate),
   });
   useEffect(() => {
     console.log("data range: ", dateRange);
@@ -167,12 +168,31 @@ export default function PaymentsPreviewContainer() {
         clearResults();
       } else if (option === "Last Week") {
         console.log("second step");
-        /*startDate.setDate(endDate.getDate() - 7);
-        let newDateRange = { ...dateRange, secondDate: formatDate(endDate) };
-        let response;
-        console.log("third step");
-        response = await getPaymentsFromTo(newDateRange);
-        console.log("response from filter function: ", response);*/
+        startDate.setDate(endDate.getDate() - 6);
+        let newDateRange = { ...dateRange, firstDate: formatDate(startDate) };
+        console.log("newDateRange:", newDateRange);
+        let dd = {
+          payDate: formatDate(new Date()),
+          number: 0,
+        };
+        try {
+          /*let response = await axios.get(
+            "http://localhost:5000/api/payment/week",
+            {
+              params: dd, // Use 'params' to send data as query parameters
+            },
+            {
+              headers: {
+                Authorization: "Bearer " + localStorage.getItem("token"),
+              },
+            }
+          );*/
+          let response = await getPaymentsFromTo(newDateRange);
+          console.log(response);
+          setVisiblePayments(response.data.paumentArray);
+        } catch (error) {
+          console.error("error", error);
+        }
       }
     } else {
       if (option === "noValue") {
