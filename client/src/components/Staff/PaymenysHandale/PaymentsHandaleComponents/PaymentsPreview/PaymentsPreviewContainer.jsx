@@ -78,9 +78,8 @@ export default function PaymentsPreviewContainer() {
       return (
         <div key={index} className="col-lg-12">
           <div
-            className={`card mb-4 border-0 px-3 ${
-              darkMode ? " spic-dark-mode" : ""
-            }`}
+            className={`card mb-4 border-0 px-3 ${darkMode ? " spic-dark-mode" : ""
+              }`}
           >
             <div className={`card-body p-0`}>
               <div className="row  pt-4 pb-1 px-0">
@@ -166,13 +165,15 @@ export default function PaymentsPreviewContainer() {
       if (option === "noValue") {
         clearResults();
       } else if (option === "Last Week") {
+   
         console.log("second step");
-        /*startDate.setDate(endDate.getDate() - 7);
+        startDate.setDate(endDate.getDate() - 7);
+
         let newDateRange = { ...dateRange, secondDate: formatDate(endDate) };
         let response;
         console.log("third step");
         response = await getPaymentsFromTo(newDateRange);
-        console.log("response from filter function: ", response);*/
+        console.log("response from filter function: ", response);
       }
     } else {
       if (option === "noValue") {
@@ -223,8 +224,8 @@ export default function PaymentsPreviewContainer() {
         let srchResultsArray = allPayments.filter((p) =>
           p.payment
             ? p.payment.InsuranceCompName.toLowerCase().includes(
-                val.toLowerCase()
-              )
+              val.toLowerCase()
+            )
             : false
         );
         if (srchResultsArray.length === 0) {
@@ -296,9 +297,8 @@ export default function PaymentsPreviewContainer() {
           >
             <div className="a w-100">
               <div
-                className={`col-12 ${
-                  isCustomeDate ? "d-none" : ""
-                } d-flex justify-content-md-end`}
+                className={`col-12 ${isCustomeDate ? "d-none" : ""
+                  } d-flex justify-content-md-end`}
               >
                 <UserFilter
                   filterOptions={filterOptions}
@@ -306,15 +306,13 @@ export default function PaymentsPreviewContainer() {
                 />
               </div>
               <div
-                className={`col-12 ${
-                  !isCustomeDate ? "d-none" : ""
-                } d-flex justify-content-md-end gap-4`}
+                className={`col-12 ${!isCustomeDate ? "d-none" : ""
+                  } d-flex justify-content-md-end gap-4`}
               >
                 <div className="col-6">
                   <label
-                    className={`form-label ${
-                      darkMode ? " spic-dark-mode" : ""
-                    }`}
+                    className={`form-label ${darkMode ? " spic-dark-mode" : ""
+                      }`}
                   >
                     From
                   </label>
@@ -326,9 +324,8 @@ export default function PaymentsPreviewContainer() {
                 </div>
                 <div className="col-6">
                   <label
-                    className={`form-label ${
-                      darkMode ? " spic-dark-mode" : ""
-                    }`}
+                    className={`form-label ${darkMode ? " spic-dark-mode" : ""
+                      }`}
                   >
                     to
                   </label>
@@ -351,9 +348,8 @@ export default function PaymentsPreviewContainer() {
                 checked={isCustomeDate}
               />
               <label
-                className={`custom-control-label mx-2 ${
-                  darkMode ? " text-white" : ""
-                }`}
+                className={`custom-control-label mx-2 ${darkMode ? " text-white" : ""
+                  }`}
                 htmlFor="customCheck1"
               >
                 Custome Date?
@@ -369,59 +365,51 @@ export default function PaymentsPreviewContainer() {
               <div className="card-body">
                 <div className="row">
                   <div
-                    className={`col-md-1 text-truncate text-muted p-0 ${
-                      darkMode ? " dark-theme" : ""
-                    }`}
+                    className={`col-md-1 text-truncate text-muted p-0 ${darkMode ? " dark-theme" : ""
+                      }`}
                   >
                     #:
                   </div>
                   <div
-                    className={`col-md-2 text-truncate text-muted p-0 ${
-                      darkMode ? " dark-theme" : ""
-                    }`}
+                    className={`col-md-2 text-truncate text-muted p-0 ${darkMode ? " dark-theme" : ""
+                      }`}
                   >
                     Patient Name:
                   </div>
                   <div
-                    className={`col-md-1 text-truncate text-muted p-0 ${
-                      darkMode ? " dark-theme" : ""
-                    }`}
+                    className={`col-md-1 text-truncate text-muted p-0 ${darkMode ? " dark-theme" : ""
+                      }`}
                   >
                     Date:
                   </div>
                   <div
-                    className={`col-md-1 text-truncate text-muted p-0 ${
-                      darkMode ? " dark-theme" : ""
-                    }`}
+                    className={`col-md-1 text-truncate text-muted p-0 ${darkMode ? " dark-theme" : ""
+                      }`}
                   >
                     value:
                   </div>
                   <div
-                    className={`col-md-3 text-truncate text-muted p-0 ${
-                      darkMode ? " dark-theme" : ""
-                    }`}
+                    className={`col-md-3 text-truncate text-muted p-0 ${darkMode ? " dark-theme" : ""
+                      }`}
                   >
                     IC Name:
                   </div>
                   <div
-                    className={`col-md-1 text-truncate text-muted p-0 ${
-                      darkMode ? " dark-theme" : ""
-                    }`}
+                    className={`col-md-1 text-truncate text-muted p-0 ${darkMode ? " dark-theme" : ""
+                      }`}
                   >
                     Dsicount:
                   </div>
                   <div
-                    className={`col-md-2 text-truncate text-muted p-0 ${
-                      darkMode ? " dark-theme" : ""
-                    }`}
+                    className={`col-md-2 text-truncate text-muted p-0 ${darkMode ? " dark-theme" : ""
+                      }`}
                   >
                     Paid Value:
                   </div>
 
                   <div
-                    className={`col-md-1 text-truncate text-muted p-0 ${
-                      darkMode ? " dark-theme" : ""
-                    }`}
+                    className={`col-md-1 text-truncate text-muted p-0 ${darkMode ? " dark-theme" : ""
+                      }`}
                   >
                     More:
                   </div>

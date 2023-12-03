@@ -193,7 +193,6 @@ module.exports.getFromToDate = asyncHandler(async (req, res) => {
   const secondtDate = new Date(req.body.secondtDate);
 
   let paumentArray = [];
-  let count = 0;
 
   const getAllPayment = await payments.find({
     payDate: { $gte: firstDate, $lte: secondtDate }
