@@ -50,7 +50,6 @@ export default function PaymentsPreviewContainer() {
   async function getPayments() {
     try {
       let response = await getAllPayments();
-      console.log(response);
       setAllPayments(response.data.paumentArray);
       setVisiblePayments(response.data.paumentArray);
     } catch (error) {
@@ -59,8 +58,6 @@ export default function PaymentsPreviewContainer() {
   }
   //Display the VisibleUsers
   function displayUsers() {
-    console.log(visiblePayments);
-
     return visiblePayments.map((p, index) => {
       const dateString = p.payment.payDate;
       const dateObject = new Date(dateString);
@@ -169,15 +166,15 @@ export default function PaymentsPreviewContainer() {
           payDate: formatDate(new Date()),
           number: 0,
         });
-        setfillterdResults(response.data.paumentArray);
-        setVisiblePayments(response.data.paumentArray);
+        if (response.data.paumentArray) {
+          setfillterdResults(response.data.paumentArray);
+          setVisiblePayments(response.data.paumentArray);
+        } else {
+          setNoResults(true);
+          setfillterdResults([]);
+        }
       } catch (error) {
         console.error("error", error);
-      }
-      if (fillterdResults.length === 0) {
-        setNoResults(true);
-        setfillterdResults([]);
-        setVisiblePayments([]);
       }
     }
   }
@@ -194,72 +191,27 @@ export default function PaymentsPreviewContainer() {
     setVal(value);
   }
   async function searchForAUser() {
-    console.log("Search In: ", visiblePayments);
     if (val.trim() === "") {
+      console.log("search out");
       return;
     } else {
-      if (fillterdResults.length === 0 || !fillterdResults || val === "") {
+      console.log("search in");
+      if (
+        fillterdResults.length === 0 ||
+        !fillterdResults ||
+        option === "noValue"
+      ) {
         if (srchFilterOption === "noValue" || srchFilterOption === "Patient") {
-          console.log("Search Step one");
-          let srchResultsArray = allPayments.filter((p) =>
-            p.info ? p.info.ident.toString().includes(val) : false
-          );
-          if (srchResultsArray.length === 0) {
-            setNoResults(true);
-            setVisiblePayments([]);
-          } else {
-            console.log("Search Step final");
-            setVisiblePayments(srchResultsArray);
-          }
         } else if (srchFilterOption === "IC") {
-          let srchResultsArray = allPayments.filter((p) =>
-            p.payment
-              ? p.payment.InsuranceCompName.toLowerCase().includes(
-                  val.toLowerCase()
-                )
-              : false
-          );
-          if (srchResultsArray.length === 0) {
-            setNoResults(true);
-            setVisiblePayments([]);
-          } else {
-            setVisiblePayments(srchResultsArray);
-          }
         }
       } else {
         if (srchFilterOption === "noValue" || srchFilterOption === "Patient") {
-          console.log("Search Step one");
-          let srchResultsArray = fillterdResults.filter((p) =>
-            p.info ? p.info.ident.toString().includes(val) : false
-          );
-          if (srchResultsArray.length === 0) {
-            setNoResults(true);
-            setVisiblePayments([]);
-          } else {
-            console.log("Search Step final");
-            setVisiblePayments(srchResultsArray);
-          }
         } else if (srchFilterOption === "IC") {
-          let srchResultsArray = fillterdResults.filter((p) =>
-            p.payment
-              ? p.payment.InsuranceCompName.toLowerCase().includes(
-                  val.toLowerCase()
-                )
-              : false
-          );
-          if (srchResultsArray.length === 0) {
-            setNoResults(true);
-            setVisiblePayments([]);
-          } else {
-            setVisiblePayments(srchResultsArray);
-          }
         }
       }
     }
   }
-  useEffect(() => {
-    console.log("search Results: ", fillterdResults);
-  }, [fillterdResults]);
+
   //initial rendring
   useEffect(() => {
     // Fetch all payments when the component mounts
@@ -289,6 +241,12 @@ export default function PaymentsPreviewContainer() {
       handaleFilterOption(filterOption);
     }
   }, [isCustomeDate]);
+  useEffect(() => {
+    console.log("fillterdResults: ", fillterdResults);
+  }, [fillterdResults]);
+  useEffect(() => {
+    console.log("visiblePayments: ", visiblePayments);
+  }, [visiblePayments]);
   return (
     <div className="ST-section my-2 p-0">
       <div className="container">
