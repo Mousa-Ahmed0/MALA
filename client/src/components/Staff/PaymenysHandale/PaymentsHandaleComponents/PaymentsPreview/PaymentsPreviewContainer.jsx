@@ -7,6 +7,7 @@ import SearchBar from "../../../../SearchBar/SearchBar";
 import UserFilter from "../../../../UserFilter/UserFilter";
 import {
   getAllPayments,
+  getPaymentsFiltered,
   getPaymentsFromTo,
 } from "../../../../../apis/ApisHandale";
 import PaymentsArrayPrint from "../../../../PaymentsReport/PaymentsArrayPrint/PaymentsArrayPrint";
@@ -21,7 +22,7 @@ export default function PaymentsPreviewContainer() {
   let [val, setVal] = useState(""); //search value
   let [filterOption, setFilterOption] = useState("noValue");
   let [srchFilterOption, setSrchFilterOption] = useState("Patient");
-  let [searchResults, setSearchResults] = useState([]);
+  let [fillterdResults, setfillterdResults] = useState([]);
   const filterOptions = [
     "noValue",
     "Last Week",
@@ -146,66 +147,38 @@ export default function PaymentsPreviewContainer() {
     firstDate: "",
     secondtDate: formatDate(endDate),
   });
-  useEffect(() => {
-    console.log("data range: ", dateRange);
-  }, [dateRange]);
 
   function clearResults() {
     setVisiblePayments(allPayments);
+    setfillterdResults([]); // Reset the filtered results
+    setNoResults(false); // Reset the noResults state
   }
 
   function searchFilterOption(option) {
     setSrchFilterOption(option);
   }
   async function handaleFilterOption(option) {
+    setVal("");
     setFilterOption(option);
-    const startDate = new Date();
 
-    // No Search has been done
-    if (searchResults.length === 0 || !searchResults || val === "") {
-      console.log("first step");
-      if (option === "noValue") {
-        clearResults();
-      } else if (option === "Last Week") {
-        console.log("second step");
-        startDate.setDate(endDate.getDate() - 6);
-        let newDateRange = { ...dateRange, firstDate: formatDate(startDate) };
-        console.log("newDateRange:", newDateRange);
-        let dd = {
+    if (option === "noValue") {
+      clearResults();
+    } else if (option === "Last Week") {
+      try {
+        let response = await getPaymentsFiltered({
           payDate: formatDate(new Date()),
           number: 0,
-        };
-        try {
-          /*let response = await axios.get(
-            "http://localhost:5000/api/payment/week",
-            {
-              params: dd, // Use 'params' to send data as query parameters
-            },
-            {
-              headers: {
-                Authorization: "Bearer " + localStorage.getItem("token"),
-              },
-            }
-          );*/
-          let response = await getPaymentsFromTo(newDateRange);
-          console.log(response);
-          setVisiblePayments(response.data.paumentArray);
-        } catch (error) {
-          console.error("error", error);
-        }
+        });
+        setfillterdResults(response.data.paumentArray);
+        setVisiblePayments(response.data.paumentArray);
+      } catch (error) {
+        console.error("error", error);
       }
-    } else {
-      if (option === "noValue") {
-        setVisiblePayments(searchResults);
-      } else if (option === "Last Week") {
-        /* const filteredUsers = searchResults.filter(
-          (user) => user.usertype === option
-        );
-        setVisibleUsers(filteredUsers);*/
+      if (fillterdResults.length === 0) {
+        setNoResults(true);
+        setfillterdResults([]);
+        setVisiblePayments([]);
       }
-    }
-    if (visiblePayments.length === 0) {
-      setNoResults(true);
     }
   }
 
@@ -213,80 +186,103 @@ export default function PaymentsPreviewContainer() {
     setIsCustomeDate(!isCustomeDate);
   }
   /** ====================== Search Section ====================== **/
-  useEffect(() => {
-    console.log("all Payments: ", allPayments);
-  }, [allPayments]);
-  useEffect(() => {
-    console.log("val: ", val);
-  }, [val]);
   function handaleSearchVlue(value) {
     if (value === "") {
       clearResults();
+      setVal("");
     }
     setVal(value);
   }
   async function searchForAUser() {
+    console.log("Search In: ", visiblePayments);
     if (val.trim() === "") {
       return;
     } else {
-      if (srchFilterOption === "noValue" || srchFilterOption === "Patient") {
-        let srchResultsArray = allPayments.filter((p) =>
-          p.info ? p.info.ident.toString().includes(val) : false
-        );
-        if (srchResultsArray.length === 0) {
-          setVisiblePayments([]);
-          setNoResults(true);
-        } else {
-          setSearchResults(srchResultsArray);
+      if (fillterdResults.length === 0 || !fillterdResults || val === "") {
+        if (srchFilterOption === "noValue" || srchFilterOption === "Patient") {
+          console.log("Search Step one");
+          let srchResultsArray = allPayments.filter((p) =>
+            p.info ? p.info.ident.toString().includes(val) : false
+          );
+          if (srchResultsArray.length === 0) {
+            setNoResults(true);
+            setVisiblePayments([]);
+          } else {
+            console.log("Search Step final");
+            setVisiblePayments(srchResultsArray);
+          }
+        } else if (srchFilterOption === "IC") {
+          let srchResultsArray = allPayments.filter((p) =>
+            p.payment
+              ? p.payment.InsuranceCompName.toLowerCase().includes(
+                  val.toLowerCase()
+                )
+              : false
+          );
+          if (srchResultsArray.length === 0) {
+            setNoResults(true);
+            setVisiblePayments([]);
+          } else {
+            setVisiblePayments(srchResultsArray);
+          }
         }
-      } else if (srchFilterOption === "IC") {
-        let srchResultsArray = allPayments.filter((p) =>
-          p.payment
-            ? p.payment.InsuranceCompName.toLowerCase().includes(
-                val.toLowerCase()
-              )
-            : false
-        );
-        if (srchResultsArray.length === 0) {
-          setVisiblePayments([]);
-          setNoResults(true);
-        } else {
-          setSearchResults(srchResultsArray);
+      } else {
+        if (srchFilterOption === "noValue" || srchFilterOption === "Patient") {
+          console.log("Search Step one");
+          let srchResultsArray = fillterdResults.filter((p) =>
+            p.info ? p.info.ident.toString().includes(val) : false
+          );
+          if (srchResultsArray.length === 0) {
+            setNoResults(true);
+            setVisiblePayments([]);
+          } else {
+            console.log("Search Step final");
+            setVisiblePayments(srchResultsArray);
+          }
+        } else if (srchFilterOption === "IC") {
+          let srchResultsArray = fillterdResults.filter((p) =>
+            p.payment
+              ? p.payment.InsuranceCompName.toLowerCase().includes(
+                  val.toLowerCase()
+                )
+              : false
+          );
+          if (srchResultsArray.length === 0) {
+            setNoResults(true);
+            setVisiblePayments([]);
+          } else {
+            setVisiblePayments(srchResultsArray);
+          }
         }
       }
     }
-    /* let srchResultsArray = allPayments.filter((user) =>
-      (user.firstname.toLowerCase() + user.lastname.toLowerCase()).includes(
-        val.toLowerCase()
-      )
-    );
-    if (srchResultsArray.length === 0) {
-      setVisiblePayments([]);
-      setNoResults(true);
-    } else {
-      setSearchResults(srchResultsArray);
-    }*/
   }
-
+  useEffect(() => {
+    console.log("search Results: ", fillterdResults);
+  }, [fillterdResults]);
   //initial rendring
   useEffect(() => {
     // Fetch all payments when the component mounts
     getPayments();
+    console.log("useEffect 1");
   }, []);
 
   useEffect(() => {
     // Filter and display users when the filter option or data changes and sure that not custom date
-    if (!isCustomeDate) {
-      handaleFilterOption(filterOption);
-    }
-  }, [filterOption, searchResults]);
+    handaleFilterOption(filterOption);
+    console.log("useEffect 2");
+  }, [filterOption]);
 
   useEffect(() => {
     // Search for users when the search value changes
+    console.log("useEffect 3");
+
     searchForAUser();
-  }, [val]);
+  }, [val, fillterdResults]);
 
   useEffect(() => {
+    console.log("useEffect 4");
+
     if (isCustomeDate) {
       console.log("Custome Date Function");
     } else {
@@ -309,7 +305,7 @@ export default function PaymentsPreviewContainer() {
               filterOptions={srchFilterOptions}
               handaleFilterOption={searchFilterOption}
             />
-            <SearchBar handaleSearchVlue={handaleSearchVlue} />
+            <SearchBar handaleSearchVlue={handaleSearchVlue} val={val} />
           </div>
           <div
             className={`col-sm-12 col-md-4 d-flex justify-content-md-end align-items-center p-0`}
