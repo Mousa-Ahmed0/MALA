@@ -146,8 +146,12 @@ export default function PaymentsPreviewContainer() {
   });
 
   function clearResults() {
-    setVisiblePayments(allPayments);
-    setfillterdResults([]); // Reset the filtered results
+    if (filterOption === "noValue") {
+      setVisiblePayments(allPayments);
+      setfillterdResults([]); // Reset the filtered results
+    } else {
+      setVisiblePayments(fillterdResults);
+    }
     setNoResults(false); // Reset the noResults state
   }
 
@@ -199,14 +203,58 @@ export default function PaymentsPreviewContainer() {
       if (
         fillterdResults.length === 0 ||
         !fillterdResults ||
-        option === "noValue"
+        filterOption === "noValue"
       ) {
         if (srchFilterOption === "noValue" || srchFilterOption === "Patient") {
+          let srchResultsArray = allPayments.filter((p) =>
+            p.info ? p.info.ident.toString().includes(val) : false
+          );
+          if (srchResultsArray.length === 0) {
+            setNoResults(true);
+            setVisiblePayments([]);
+          } else {
+            setVisiblePayments(srchResultsArray);
+          }
         } else if (srchFilterOption === "IC") {
+          let srchResultsArray = allPayments.filter((p) =>
+            p.payment
+              ? p.payment.InsuranceCompName.toLowerCase().includes(
+                  val.toLowerCase()
+                )
+              : false
+          );
+          if (srchResultsArray.length === 0) {
+            setNoResults(true);
+            setVisiblePayments([]);
+          } else {
+            setVisiblePayments(srchResultsArray);
+          }
         }
       } else {
         if (srchFilterOption === "noValue" || srchFilterOption === "Patient") {
+          let srchResultsArray = fillterdResults.filter((p) =>
+            p.info ? p.info.ident.toString().includes(val) : false
+          );
+          if (srchResultsArray.length === 0) {
+            setNoResults(true);
+            setVisiblePayments([]);
+          } else {
+            setVisiblePayments(srchResultsArray);
+          }
         } else if (srchFilterOption === "IC") {
+          let srchResultsArray = fillterdResults.filter((p) =>
+            p.payment
+              ? p.payment.InsuranceCompName.toLowerCase().includes(
+                  val.toLowerCase()
+                )
+              : false
+          );
+          if (srchResultsArray.length === 0) {
+            setNoResults(true);
+            setVisiblePayments([]);
+          } else {
+            setVisiblePayments(srchResultsArray);
+          }
         }
       }
     }
