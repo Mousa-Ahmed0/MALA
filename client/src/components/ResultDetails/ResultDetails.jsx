@@ -7,8 +7,24 @@ import ResultsTable from "./ResultDetailsComponents/ResultsTable";
 import { getResultByID } from "../../apis/ApisHandale.jsx";
 
 import { useParams } from "react-router-dom";
+import html2pdf from "html2pdf.js";
 
 export default function ResultDetails() {
+  const exportToPDF = () => {
+    const element = document.getElementById("pdf-export");
+
+    if (element) {
+      const options = {
+        margin: 10,
+        filename: "exported-document.pdf",
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+      };
+
+      html2pdf().from(element).set(options).save();
+    }
+  };
   const { darkMode } = useDarkMode();
   const { id } = useParams();
   let [apiError, setApiError] = useState(false);
@@ -35,7 +51,7 @@ export default function ResultDetails() {
 
   function renderDetails() {
     return (
-      <>
+      <div id="print-section container">
         <div className="print-resultReport-header mb-1">
           <ReportsHeader darkMode={darkMode} />
           <DetailsInformation
@@ -51,7 +67,7 @@ export default function ResultDetails() {
           />
         </div>
         <ResultsTable darkMode={darkMode} resultDetails={resultDetails} />
-      </>
+      </div>
     );
   }
   useEffect(() => {
@@ -79,6 +95,12 @@ export default function ResultDetails() {
             onClick={() => window.print()}
           >
             <span className="h4 mid-bold">Print</span>
+          </button>
+          <button
+            className="btn btn-success text-white p-3 ml-2"
+            onClick={exportToPDF}
+          >
+            <span className="h4 mid-bold">Export to PDF</span>
           </button>
         </div>
       </div>
