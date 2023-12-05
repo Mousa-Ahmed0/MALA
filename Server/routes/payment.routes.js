@@ -16,7 +16,7 @@ router.get("/getPayment", ifAdminOrStaff, getPayment);
 router.get("/countPayment", ifAdminOrStaff, countPayment);
 router.get("/getPaymentIdentPatient", ifAdminOrStaff, getPaymentIdentPatient);
 router.get("/getByDate", ifAdminOrStaff, getByDate);
-router.get("/week", ifAdminOrStaff, test); //test
+router.get("/week", test); //test
 router.get("/getFromToDate", getFromToDate);
 router.get("/getPaymentId/:id", validateObjectId, ifAdminOrStaff, getPaymentId);
 module.exports = router;

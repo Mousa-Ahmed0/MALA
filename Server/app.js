@@ -35,7 +35,24 @@ app.use(errorHandler);
 
 //Connection to database
 dbConnection();
-//Running the server
+
+///
+const accountSid = 'AC3e755fbf415654279f10b6898afb8da5';
+const authToken = '0ccb4e0abd6cbc287e7991a045a54e27';
+const client = require('twilio')(accountSid, authToken);
+// client.validationRequests.create({ friendlyName: 'My Home Phone Number', phoneNumber: '+12485748165' })
+//   .then(validation_request => console.log(validation_request.friendlyName));
+
+// client.messages
+//   .create({
+//     body: 'hi',
+//     from: '+12485748165',
+//     to: '+970597405700'
+//   })
+//   .then(message => console.log(message.sid))
+//   .catch(error => console.error(error));
+
+//Running the server 
 app.listen(port, () => console.log(`http://localhost:${port}`));
 
 //

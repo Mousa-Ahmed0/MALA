@@ -5,7 +5,12 @@ import DetailsInformationTable from "../DetailsInformationTable";
 export default function PaymentsArrayPrint({ darkMode, paymentsArr }) {
   function renderTables() {
     return paymentsArr.map((p, index) => {
-      return <DetailsInformationTable p={p} key={index} darkMode={darkMode} />;
+      return (
+        <>
+          <DetailsInformationTable p={p} key={index} darkMode={darkMode} />
+          <hr />
+        </>
+      );
     });
   }
   return (
