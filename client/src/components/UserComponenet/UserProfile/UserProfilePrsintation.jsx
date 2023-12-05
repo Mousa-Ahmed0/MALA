@@ -19,6 +19,7 @@ export default function UserProfilePrsintation({
   apiError,
   getNewData,
   updateUser,
+  loader,
 }) {
   return (
     <>
@@ -75,7 +76,7 @@ export default function UserProfilePrsintation({
                     onClick={() => updatePhoto()}
                     className="btn btn-primary"
                   >
-                    Update
+                    {loader ? <span>Loading...</span> : "Update"}
                   </button>
                 </div>
               </div>

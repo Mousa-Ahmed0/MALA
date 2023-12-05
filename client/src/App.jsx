@@ -198,6 +198,7 @@ export default function App() {
                       userDetails={userDetails}
                       isFormOpen={isFormOpen}
                       setIsFormOpen={setIsFormOpen}
+                      setUserDetails={setUserDetails}
                     />
                   }
                 />
