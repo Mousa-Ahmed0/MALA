@@ -7,6 +7,7 @@ const {
 const bcrypt = require("bcrypt");
 const path = require("path");
 const fs = require("fs");
+const { jwt } = require("twilio");
 /**--------------------------------
  * @desc Get all Users
  * @router /api/users/
@@ -154,7 +155,21 @@ module.exports.updateUser = asyncHandler(async (req, res) => {
     { new: true }
   );
   if (updateU) {
-    res.status(200).json({ updateU, message: "User is Updated" });
+    const token=jwt.singn(    {
+      id: updateU._id,
+      ident: updateU.ident,
+      usertype: updateU.usertype,
+      city: updateU.city,
+      birthday: updateU.birthday,
+      profilePhoto: updateU.profilePhoto,
+      email: updateU.email,
+      phone: updateU.phone,
+      firstname: updateU.firstname,
+      lastname: updateU.lastname,
+      sex: updateU.sex,
+      isAdmin: updateU.isAdmin,
+    },process.env.SECRET_KEY);
+    res.status(200).json({ updateU,token, message: "User is Updated" });
   } else {
     res.status(404).json({ message: "User not found" });
   }

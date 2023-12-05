@@ -1,7 +1,7 @@
 import React from "react";
 import { useDarkMode } from "../../context/DarkModeContext";
 
-function SearchBarContainer({ handaleSearchVlue }) {
+function SearchBarContainer({ handaleSearchVlue, val }) {
   const { darkMode } = useDarkMode();
 
   return (
@@ -33,6 +33,7 @@ function SearchBarContainer({ handaleSearchVlue }) {
                 type="search"
                 placeholder="Search..."
                 aria-label="Search"
+                value={val}
               />
             </div>
           </div>

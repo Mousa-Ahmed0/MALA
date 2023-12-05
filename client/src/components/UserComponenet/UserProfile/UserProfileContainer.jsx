@@ -7,7 +7,11 @@ import { getUserByID } from "../../../apis/ApisHandale";
 import { updateAUser } from "../../../apis/ApisHandale";
 import { updateProfilePhoto } from "../../../apis/ApisHandale";
 
-export default function UserProfileContainer({ userDetails, setIsFormOpen }) {
+export default function UserProfileContainer({
+  userDetails,
+  setIsFormOpen,
+  setUserDetails,
+}) {
   const { darkMode } = useDarkMode();
   const { id } = useParams();
   const [user, setUser] = useState({});
@@ -45,6 +49,7 @@ export default function UserProfileContainer({ userDetails, setIsFormOpen }) {
     try {
       const response = await getUserByID(id);
       setUser(response.data.profile);
+      setUserDetails(response.data.profile);
     } catch (error) {
       setApiError(true);
       console.error("Error:", error);

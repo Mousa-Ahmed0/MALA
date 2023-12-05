@@ -159,6 +159,20 @@ export const getPaymentsFromTo = async (date) => {
     }
   );
 };
+export const getPaymentsFiltered = async (date) => {
+  console.log(" custome date: ", date);
+  return await axios.get(
+    "http://localhost:5000/api/payment/week",
+    {
+      params: date, // Use 'params' to send data as query parameters
+    },
+    {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    }
+  );
+};
 //////////////
 const ApisHandale = () => {
   return <div>ApisHandle Component</div>;

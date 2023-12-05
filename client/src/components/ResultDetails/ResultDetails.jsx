@@ -7,8 +7,11 @@ import ResultsTable from "./ResultDetailsComponents/ResultsTable";
 import { getResultByID } from "../../apis/ApisHandale.jsx";
 
 import { useParams } from "react-router-dom";
-
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 export default function ResultDetails() {
+  const [loader, setLoader] = useState(false);
+  const exportToPDF = () => {};
   const { darkMode } = useDarkMode();
   const { id } = useParams();
   let [apiError, setApiError] = useState(false);
@@ -35,7 +38,7 @@ export default function ResultDetails() {
 
   function renderDetails() {
     return (
-      <>
+      <div className="print-section container">
         <div className="print-resultReport-header mb-1">
           <ReportsHeader darkMode={darkMode} />
           <DetailsInformation
@@ -51,7 +54,7 @@ export default function ResultDetails() {
           />
         </div>
         <ResultsTable darkMode={darkMode} resultDetails={resultDetails} />
-      </>
+      </div>
     );
   }
   useEffect(() => {
@@ -79,6 +82,16 @@ export default function ResultDetails() {
             onClick={() => window.print()}
           >
             <span className="h4 mid-bold">Print</span>
+          </button>
+          <button
+            className="btn btn-success text-white p-3 ml-2"
+            onClick={exportToPDF}
+          >
+            {loader ? (
+              <span className="h4 mid-bold">Loading ... </span>
+            ) : (
+              <span className="h4 mid-bold">Export to PDF</span>
+            )}{" "}
           </button>
         </div>
       </div>
