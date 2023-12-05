@@ -24,7 +24,7 @@ router.get("/getResult", ifAdminOrStaff, getResults);
 router.get("/getResults/staffIdent", ifAdminOrStaff, getResultsByIdStaff);
 
 router.get("/getResults/:id", validateId, getResultsById);
-router.get("/getPatientAnalyze", ifAdminOrStaff, getResultsPatient);
+router.get("/getPatientAnalyze", getResultsPatient);
 router.get("/getDoctorAnzlyze", ifAdminOrStaff, getResultsDoctor);
 router.get("/getStaffAnzlyze", ifAdminOrStaff, getResultsStaff);
 module.exports = router;

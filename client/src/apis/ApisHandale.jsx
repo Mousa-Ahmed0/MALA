@@ -122,6 +122,19 @@ export const getResultByID = async (id) => {
     },
   });
 };
+export const getPateinrResults = async (ident) => {
+  return await axios.get(
+    `http://localhost:5000/api/result/getPatientAnalyze`,
+    {
+      params: ident, // Use 'params' to send data as query parameters
+    },
+    {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    }
+  );
+};
 /* Patments API`s */
 export const addPayment = async (newPayment) => {
   return await axios.post(
@@ -165,6 +178,19 @@ export const getPaymentsFiltered = async (date) => {
     "http://localhost:5000/api/payment/week",
     {
       params: date, // Use 'params' to send data as query parameters
+    },
+    {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    }
+  );
+};
+export const getPateinrPayments = async (ident) => {
+  return await axios.get(
+    `http://localhost:5000/api/payment/getPaymentIdentPatient`,
+    {
+      params: ident, // Use 'params' to send data as query parameters
     },
     {
       headers: {
