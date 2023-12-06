@@ -175,10 +175,38 @@ module.exports.getResultsPatient = asyncHandler(async (req, res) => {
   const detailsAnalyze = await analyzeResult.find({
     patientIdent: req.query.patientIdent,
   });
-  if (detailsAnalyze != "") {
+  let usersArray = [];
+
+  if (detailsAnalyze.length) {
+    for (let i = 0; i < detailsAnalyze.length; i++) {
+      //user staff
+      const usersStaff = await user
+        .findOne({ ident: detailsAnalyze[i].staffIdent })
+        .select("firstname lastname -_id ");
+  
+      //user patient
+      const usersPatint = await user
+        .findOne({ ident: detailsAnalyze[i].patientIdent })
+        .select("firstname lastname sex birthday -_id ");
+      //user doctor
+      let usersDoctor = null;
+      if (detailsAnalyze[i].doctorIdent != "")
+        usersDoctor = await user
+          .findOne({ ident: detailsAnalyze[i].doctorIdent })
+          .select("firstname lastname -_id");
+      // Create an object with the required properties
+      const userDetails = {
+        detailsAnalyze: detailsAnalyze[i],
+        usersPatient: usersPatint,
+        usersStaff: usersStaff,
+        usersDoctor: usersDoctor,
+      };
+      // Push the object to the array
+      usersArray.push(userDetails);
+    }
     //send a response to client
     res.status(201).json({
-      detailsAnalyze,
+      usersArray,
       message: "done...........",
     });
   } else res.status(404).json({ message: "User not found" });
