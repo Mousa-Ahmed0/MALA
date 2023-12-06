@@ -1,14 +1,12 @@
 import ResultsPreviewPresintation from "./ResultsPreviewPresintation";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 
 import { useDarkMode } from "../../../../../context/DarkModeContext";
 import { getAllResults } from "../../../../../apis/ApisHandale";
 
 export default function AddResult({ setIsFormOpen }) {
   const { darkMode } = useDarkMode();
-  const navigate = useNavigate();
 
   const [isUpdateFormOpen, setIsUpdateFormOpen] = useState(false);
   const [allResults, setAllResults] = useState([]);

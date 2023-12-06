@@ -57,8 +57,10 @@ import HealthCalculators from "./components/Patient/PatientComponents/HealthCalc
 import BMR from "./components/Patient/PatientComponents/HealthCalcs/HealthCalcsComponenets/BMR.jsx";
 import BMI from "./components/Patient/PatientComponents/HealthCalcs/HealthCalcsComponenets/BMI.jsx";
 import BFC from "./components/Patient/PatientComponents/HealthCalcs/HealthCalcsComponenets/BFC.jsx";
+import PatResultsPreviewContainer from "./components/Patient/PatientComponents/PatResultsPreview/PatResultsPreviewContainer.jsx";
 
 import { useDarkMode } from "./context/DarkModeContext.jsx";
+import PatPaymentsPreviewContainer from "./components/Patient/PatientComponents/PatPaymentsPreview/PatPaymentsPreviewContainer.jsx";
 
 export default function App() {
   let [isFormOpen, setIsFormOpen] = useState(false);
@@ -321,6 +323,14 @@ export default function App() {
                     element={<BFC />}
                   />
                 </Route>
+                <Route
+                  path="/Patient/ResultsPreview/:ident"
+                  element={<PatResultsPreviewContainer />}
+                />
+                <Route
+                  path="/Patient/PaymentsReview/:ident"
+                  element={<PatPaymentsPreviewContainer />}
+                />
                 <Route path="/Patient/Anlysis" element={<Anlysis />} />
               </Route>
               <Route path="*" element={<Error />} />

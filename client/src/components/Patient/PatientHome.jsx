@@ -25,7 +25,8 @@ export default function PatientHome({ user }) {
   async function getResults() {
     try {
       let response = await getPateinrResults({ patientIdent: user.ident });
-      setAllResults(response.data.detailsAnalyze);
+      setAllResults(response.data.usersArray);
+      console.log(response);
       setResultError(false);
     } catch (error) {
       setResultError(true);
@@ -53,14 +54,18 @@ export default function PatientHome({ user }) {
           <div className="maxHeight-inhert overflow-yAxis ">
             <div className="row detailes-size d-flex align-items-center">
               <div className="col-3 d-flex align-items-center text-truncate">
-                {<FormateDate date={result.date} />}
+                {<FormateDate date={result.detailsAnalyze.date} />}
               </div>
               <div className="col-6 d-flex align-items-center">
-                {result.doctorName.length > 0 ? result.doctorName : "SomeOne"}
+                {result.detailsAnalyze.doctorName.length > 0
+                  ? result.detailsAnalyze.doctorName
+                  : result.usersDoctor.fname +
+                    " " +
+                    result.usersDoctor.lastname}
               </div>
               <div className="col-3 d-flex align-items-center">
                 <Link
-                  to={`/ResultDetails/${result.id}`}
+                  to={`/ResultDetails/${result.detailsAnalyze.id}`}
                   className="btn m-0 nav-link position-relative"
                 >
                   More Details
@@ -69,7 +74,12 @@ export default function PatientHome({ user }) {
             </div>
           </div>
           <div className="d-flex justify-content-end mt-4">
-            <Link className="btn btn-primary">All Results</Link>
+            <Link
+              to={`/Patient/ResultsPreview/${user.ident}`}
+              className="btn btn-primary"
+            >
+              All Results
+            </Link>
           </div>
         </>
       );
@@ -120,7 +130,12 @@ export default function PatientHome({ user }) {
             </div>
           </div>
           <div className="d-flex justify-content-end mt-4">
-            <Link className="btn btn-primary">All Payments</Link>
+            <Link
+              to={`/Patient/PaymentsReview/${user.ident}`}
+              className="btn btn-primary"
+            >
+              All Payments
+            </Link>
           </div>
         </>
       );
