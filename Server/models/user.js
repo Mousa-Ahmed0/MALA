@@ -81,7 +81,7 @@ const UserSchema = new mongoose.Schema(
 //     foreignField:"user",
 //     localField:"_id",
 // });
-//generate auth token
+//generate auth token 
 UserSchema.methods.generateAuthToken = function () {
   return jwt.sign(
     {

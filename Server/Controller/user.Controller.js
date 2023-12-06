@@ -7,7 +7,7 @@ const {
 const bcrypt = require("bcrypt");
 const path = require("path");
 const fs = require("fs");
-const { jwt } = require("twilio");
+const jwt = require("jsonwebtoken");
 /**--------------------------------
  * @desc Get all Users
  * @router /api/users/
@@ -154,8 +154,8 @@ module.exports.updateUser = asyncHandler(async (req, res) => {
     },
     { new: true }
   );
-  if (updateU) {
-    const token=jwt.singn(    {
+  if (updateU) {    
+    const token=jwt.sign(    {
       id: updateU._id,
       ident: updateU.ident,
       usertype: updateU.usertype,

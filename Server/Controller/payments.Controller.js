@@ -307,13 +307,11 @@ module.exports.test = asyncHandler(async (req, res) => {
     "Friday",
     "Saturday",
   ];
-  console.log(req.query.number);
   const number = req.query.number;
   const currentDate = new Date(req.query.payDate);
   const startDate = new Date(currentDate);
   let paumentArray = [];
-  console.log("currentDate: ", currentDate);
-  console.log("number: ", number);
+
   if (number == 0) {
     //week
     startDate.setDate(currentDate.getDate() - 6);
@@ -350,8 +348,6 @@ module.exports.test = asyncHandler(async (req, res) => {
   } else {
     //number of month
     startDate.setMonth(currentDate.getMonth() - number);
-    console.log(startDate);
-
     const getAllPayment = await payments.find({
       payDate: { $gte: startDate, $lte: currentDate },
     });
