@@ -126,20 +126,41 @@ module.exports.getResultsByIdStaff = asyncHandler(async (req, res) => {
   let analysArray = [];
 
   const detailsAnalyze = await analyzeResult.find({
-    staffIdent: req.body.staffIdent,
+    staffIdent: req.query.staffIdent,
   });
-  console.log(detailsAnalyze);
-  for (let i = 0; i < detailsAnalyze.length; i++) {
-    const analyzeComp = await analyze.findById(
-      detailsAnalyze[i].resultSet[0].anlyzeId
-    );
-    analysArray.push(analyzeComp);
+  if (detailsAnalyze.length) {
+    for (let i = 0; i < detailsAnalyze.length; i++) {
+      //user staff
+      const usersStaff = await user
+        .findOne({ ident: detailsAnalyze[i].staffIdent })
+        .select("firstname lastname -_id ");
+
+      //user patient
+      const usersPatint = await user
+        .findOne({ ident: detailsAnalyze[i].patientIdent })
+        .select("firstname lastname sex birthday -_id ");
+      //user doctor
+      let usersDoctor = null;
+      if (detailsAnalyze[i].doctorIdent != "")
+        usersDoctor = await user
+          .findOne({ ident: detailsAnalyze[i].doctorIdent })
+          .select("firstname lastname -_id");
+      // Create an object with the required properties
+      const userDetails = {
+        detailsAnalyze: detailsAnalyze[i],
+        usersPatient: usersPatint,
+        usersStaff: usersStaff,
+        usersDoctor: usersDoctor,
+      };
+      // Push the object to the array
+      analysArray.push(userDetails);
+    }
   }
+
 
   //send a response to client
   res.status(201).json({
     analysArray,
-    detailsAnalyze,
     message: "done...........",
   });
 });
