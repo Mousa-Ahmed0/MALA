@@ -10,6 +10,7 @@ export default function AddAnlyze() {
     code: "",
     cost: 0,
     description: "",
+    isAvailable: true,
     compnents: [],
   });
   let [No, setNo] = useState(1);
@@ -56,6 +57,12 @@ export default function AddAnlyze() {
       newAnlyze[e.target.name] = e.target.value;
       setAnlyze(newAnlyze);
     }
+  }
+  //handale avilabillty
+  function handaleAvailablity(e) {
+    let newAnlyze = { ...anlyze };
+    newAnlyze.isAvailable = e.target.value;
+    setAnlyze(newAnlyze);
   }
   /* Get New ComponenetsData Function */
   function getNewComponentData(e) {
@@ -255,6 +262,26 @@ export default function AddAnlyze() {
               className="form-control"
               id="a_code"
             />
+          </div>
+          <div className="mb-3">
+            <label
+              className={`w-100 m-0 form-label ${
+                darkMode ? " spic-dark-mode" : ""
+              }`}
+            >
+              isAvailable?
+            </label>
+            <select
+              className={`all-Mid-shadow ${
+                darkMode ? " spic-dark-mode" : ""
+              } w-100`}
+              aria-label="Default select example"
+              name="isAvailable"
+              onChange={(e) => handaleAvailablity(e)}
+            >
+              <option value={true}>Avilable</option>
+              <option value={false}>Not Avilable</option>
+            </select>
           </div>
         </div>
         <div>
