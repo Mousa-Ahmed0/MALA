@@ -16,7 +16,7 @@ const jwt = require("jsonwebtoken");
  * ------------------------------------------ */
 module.exports.getAllUsers = asyncHandler(async (req, res) => {
   const users = await user.find().select("-password");
-  res.status(200).json(users);
+  res.status(200).json(users); 
 });
 /**--------------------------------
  * @desc Get  Users Count
@@ -66,7 +66,10 @@ module.exports.getUsersCountDoctor = asyncHandler(async (req, res) => {
  * @access private admin or Staff
  * ------------------------------------------ */
 module.exports.getAllDoctorPatient = asyncHandler(async (req, res) => {
-  const users = await user.find({ usertype: { $in: ["Patient", "Doctor"] } }).select("-password").sort({createdAt: -1});
+  const users = await user
+    .find({ usertype: { $in: ["Patient", "Doctor"] } })
+    .select("-password")
+    .sort({ createdAt: -1 });
   if (users) {
     res.status(200).json(users);
   } else {
@@ -80,7 +83,10 @@ module.exports.getAllDoctorPatient = asyncHandler(async (req, res) => {
  * @access public
  * ------------------------------------------ */
 module.exports.getAllDoctor = asyncHandler(async (req, res) => {
-  const users = await user.find({ usertype:  "Doctor"}).select("-password").sort({createdAt: -1});
+  const users = await user
+    .find({ usertype: "Doctor" })
+    .select("-password")
+    .sort({ createdAt: -1 });
   if (users) {
     res.status(200).json(users);
   } else {
@@ -95,7 +101,10 @@ module.exports.getAllDoctor = asyncHandler(async (req, res) => {
  * @access public
  * ------------------------------------------ */
 module.exports.getAllStuffAdmin = asyncHandler(async (req, res) => {
-  const users = await user.find({ usertype:  { $in: ["Admin", "Staff"] }}).select("-password").sort({createdAt: -1});
+  const users = await user
+    .find({ usertype: { $in: ["Admin", "Staff"] } })
+    .select("-password")
+    .sort({ createdAt: -1 });
   if (users) {
     res.status(200).json(users);
   } else {
@@ -154,22 +163,25 @@ module.exports.updateUser = asyncHandler(async (req, res) => {
     },
     { new: true }
   );
-  if (updateU) {    
-    const token=jwt.sign(    {
-      id: updateU._id,
-      ident: updateU.ident,
-      usertype: updateU.usertype,
-      city: updateU.city,
-      birthday: updateU.birthday,
-      profilePhoto: updateU.profilePhoto,
-      email: updateU.email,
-      phone: updateU.phone,
-      firstname: updateU.firstname,
-      lastname: updateU.lastname,
-      sex: updateU.sex,
-      isAdmin: updateU.isAdmin,
-    },process.env.SECRET_KEY);
-    res.status(200).json({ updateU,token, message: "User is Updated" });
+  if (updateU) {
+    const token = jwt.sign(
+      {
+        id: updateU._id,
+        ident: updateU.ident,
+        usertype: updateU.usertype,
+        city: updateU.city,
+        birthday: updateU.birthday,
+        profilePhoto: updateU.profilePhoto,
+        email: updateU.email,
+        phone: updateU.phone,
+        firstname: updateU.firstname,
+        lastname: updateU.lastname,
+        sex: updateU.sex,
+        isAdmin: updateU.isAdmin,
+      },
+      process.env.SECRET_KEY
+    );
+    res.status(200).json({ updateU, token, message: "User is Updated" });
   } else {
     res.status(404).json({ message: "User not found" });
   }

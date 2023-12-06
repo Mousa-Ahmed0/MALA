@@ -14,7 +14,7 @@ const { verifyToken, ifAdminOrStaff } = require("../middlewares/verifyToken");
 router.post("/addPayment", ifAdminOrStaff, addPayment);
 router.get("/getPayment", ifAdminOrStaff, getPayment);
 router.get("/countPayment", ifAdminOrStaff, countPayment);
-router.get("/getPaymentIdentPatient", ifAdminOrStaff, getPaymentIdentPatient);
+router.get("/getPaymentIdentPatient", getPaymentIdentPatient);
 router.get("/getByDate", ifAdminOrStaff, getByDate);
 router.get("/week", test); //test
 router.get("/getFromToDate", getFromToDate);

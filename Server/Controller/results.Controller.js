@@ -78,8 +78,10 @@ module.exports.getResultsById = asyncHandler(async (req, res) => {
   let analysArray = [];
 
   //analyze id componet
-  for(let i=0;i<detailsAnalyze.resultSet.length;i++){
-    const analyzeComp= await analyze.findById(detailsAnalyze.resultSet[i].anlyzeId);
+  for (let i = 0; i < detailsAnalyze.resultSet.length; i++) {
+    const analyzeComp = await analyze.findById(
+      detailsAnalyze.resultSet[i].anlyzeId
+    );
     analysArray.push(analyzeComp);
   }
   //user staff
@@ -123,10 +125,14 @@ module.exports.getResultsById = asyncHandler(async (req, res) => {
 module.exports.getResultsByIdStaff = asyncHandler(async (req, res) => {
   let analysArray = [];
 
-  const detailsAnalyze = await analyzeResult.find({staffIdent:req.body.staffIdent});
+  const detailsAnalyze = await analyzeResult.find({
+    staffIdent: req.body.staffIdent,
+  });
   console.log(detailsAnalyze);
-  for(let i=0;i<detailsAnalyze.length;i++){
-    const analyzeComp= await analyze.findById(detailsAnalyze[i].resultSet[0].anlyzeId);
+  for (let i = 0; i < detailsAnalyze.length; i++) {
+    const analyzeComp = await analyze.findById(
+      detailsAnalyze[i].resultSet[0].anlyzeId
+    );
     analysArray.push(analyzeComp);
   }
 
@@ -146,7 +152,7 @@ module.exports.getResultsByIdStaff = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.getResultsPatient = asyncHandler(async (req, res) => {
   const detailsAnalyze = await analyzeResult.find({
-    patientIdent: req.body.patientIdent,
+    patientIdent: req.query.patientIdent,
   });
   if (detailsAnalyze != "") {
     //send a response to client

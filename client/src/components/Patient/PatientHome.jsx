@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
 import DashboardWelcome from "../DashboardWelcome";
-
+import FormateDate from "../FormateDate";
 import { useDarkMode } from "../../context/DarkModeContext";
 import { Link } from "react-router-dom";
-import { getResultByID } from "../../apis/ApisHandale";
+import { getPateinrPayments, getPateinrResults } from "../../apis/ApisHandale";
 export default function PatientHome({ user }) {
   const { darkMode } = useDarkMode();
   const [allResults, setAllResults] = useState([]);
   const [resultError, setResultError] = useState(false);
+  const [allPayments, setAllPayments] = useState([]);
+  const [paymentError, setPaymentError] = useState(false);
   let apiErrorMessage = (
     <div class="w-100 h-100 d-flex flex-column align-items-center">
       <div class="alert alert-danger my-4 mid-bold w-100 d-flex justify-content-center">
@@ -18,19 +20,117 @@ export default function PatientHome({ user }) {
       </div>
     </div>
   );
+
+  //get patient results
   async function getResults() {
     try {
-      let response = await getResultByID(user.id);
-      console.log(user.id);
+      let response = await getPateinrResults({ patientIdent: user.ident });
+      setAllResults(response.data.detailsAnalyze);
+      setResultError(false);
     } catch (error) {
       setResultError(true);
       console.error("Error From getResults - patienthome: ", error);
     }
   }
 
+  //display patient results
+  function displayResults() {
+    return allResults.map((result, index) => {
+      return (
+        <>
+          <h1 className="h5" key={index}>
+            <span>
+              <i class="fa-solid fa-droplet"></i>
+            </span>{" "}
+            Last Results:
+          </h1>
+          <hr className="my-4" />
+          <div className="row details-size mt-2 mb-4">
+            <div className="col-md-3 mid-bold">A. Date:</div>
+            <div className="col-md-6 mid-bold">Doctor:</div>
+            <div className="col-md-3 mid-bold">More:</div>
+          </div>
+          <div className="maxHeight-inhert overflow-yAxis ">
+            <div className="row detailes-size d-flex align-items-center">
+              <div className="col-3 d-flex align-items-center text-truncate">
+                {<FormateDate date={result.date} />}
+              </div>
+              <div className="col-6 d-flex align-items-center">
+                {result.doctorName.length > 0 ? result.doctorName : "SomeOne"}
+              </div>
+              <div className="col-3 d-flex align-items-center">
+                <Link
+                  to={`/ResultDetails/${result.id}`}
+                  className="btn m-0 nav-link position-relative"
+                >
+                  More Details
+                </Link>
+              </div>
+            </div>
+          </div>
+          <div className="d-flex justify-content-end mt-4">
+            <Link className="btn btn-primary">All Results</Link>
+          </div>
+        </>
+      );
+    });
+  }
+
+  //get patient Payments
+  async function getPayments() {
+    try {
+      let response = await getPateinrPayments({ identPatient: user.ident });
+      setAllPayments(response.data.paumentArray);
+      setPaymentError(false);
+    } catch (error) {
+      setPaymentError(true);
+      console.error("Error From getResults - patienthome: ", error);
+    }
+  }
+
+  //display patient results
+  function displayPayments() {
+    return allPayments.map((payment, index) => {
+      return (
+        <>
+          <h1 className="h5" key={index}>
+            <span>
+              <i class="fa-solid fa-file-invoice-dollar"></i>
+            </span>{" "}
+            Last Payments:
+          </h1>
+          <hr className="my-4" />
+          <div className="row details-size  mt-2 mb-4">
+            <div className="col-md-3 mid-bold">P. Date:</div>
+            <div className="col-md-6 mid-bold">Paid Value:</div>
+            <div className="col-md-3 mid-bold">More:</div>
+          </div>
+          <div className="row maxHeight-inhert overflow-yAxis detailes-size">
+            <div className="col-3 d-flex align-items-center text-truncate">
+              {<FormateDate date={payment.date} />}
+            </div>
+            <div className="col-6 d-flex align-items-center">
+              {payment.value}
+              <span style={{ fontSize: "0.758rem" }}>NIS</span>
+            </div>
+            <div className="col-3 d-flex align-items-center">
+              <Link className="btn m-0 nav-link position-relative">
+                More Details
+              </Link>
+            </div>
+          </div>
+          <div className="d-flex justify-content-end mt-4">
+            <Link className="btn btn-primary">All Payments</Link>
+          </div>
+        </>
+      );
+    });
+  }
+
   /////////
   useEffect(() => {
     getResults();
+    getPayments();
   }, []);
   return (
     <>
@@ -44,38 +144,7 @@ export default function PatientHome({ user }) {
             }`}
           >
             {allResults.length !== 0 ? (
-              <>
-                <h1 className="h5">
-                  <span>
-                    <i class="fa-solid fa-droplet"></i>
-                  </span>{" "}
-                  Last Results:
-                </h1>
-                <hr className="my-4" />
-                <div className="row details-size mt-2 mb-4">
-                  <div className="col-md-3 mid-bold">A. Date:</div>
-                  <div className="col-md-6 mid-bold">Doctor:</div>
-                  <div className="col-md-3 mid-bold">More:</div>
-                </div>
-                <div className="maxHeight-inhert overflow-yAxis ">
-                  <div className="row detailes-size d-flex align-items-center">
-                    <div className="col-3 d-flex align-items-center text-truncate">
-                      08/11/2023
-                    </div>
-                    <div className="col-6 d-flex align-items-center">
-                      Dr. {"Docror One"}
-                    </div>
-                    <div className="col-3 d-flex align-items-center">
-                      <Link className="btn m-0 nav-link position-relative">
-                        More Details
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-                <div className="d-flex justify-content-end mt-4">
-                  <Link className="btn btn-primary">All Results</Link>
-                </div>
-              </>
+              displayResults()
             ) : resultError ? (
               apiErrorMessage
             ) : (
@@ -92,34 +161,17 @@ export default function PatientHome({ user }) {
               darkMode ? " spic-dark-mode" : " bg-white"
             }`}
           >
-            <h1 className="h5">
-              <span>
-                <i class="fa-solid fa-file-invoice-dollar"></i>
-              </span>{" "}
-              Last Payments:
-            </h1>
-            <hr className="my-4" />
-            <div className="row details-size  mt-2 mb-4">
-              <div className="col-md-3 mid-bold">P. Date:</div>
-              <div className="col-md-6 mid-bold">Paid Value:</div>
-              <div className="col-md-3 mid-bold">More:</div>
-            </div>
-            <div className="row maxHeight-inhert overflow-yAxis detailes-size">
-              <div className="col-3 d-flex align-items-center text-truncate">
-                08/11/2023
+            {allPayments.length !== 0 ? (
+              displayPayments()
+            ) : paymentError ? (
+              apiErrorMessage
+            ) : (
+              <div className="d-flex justify-content-center align-items-center">
+                <div className="spinner-border text-primary" role="status">
+                  <span className="sr-only">Loading...</span>
+                </div>
               </div>
-              <div className="col-6 d-flex align-items-center">
-                235<span style={{ fontSize: "0.758rem" }}>NIS</span>
-              </div>
-              <div className="col-3 d-flex align-items-center">
-                <Link className="btn m-0 nav-link position-relative">
-                  More Details
-                </Link>
-              </div>
-            </div>
-            <div className="d-flex justify-content-end mt-4">
-              <Link className="btn btn-primary">All Payments</Link>
-            </div>
+            )}
           </div>
         </div>
         <hr />
