@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useDarkMode } from "../../context/DarkModeContext";
 import BackBtn from "../BackBtn";
 import DetailsInformation from "./ResultDetailsComponents/DetailsInformation";
@@ -9,6 +9,7 @@ import { getResultByID } from "../../apis/ApisHandale.jsx";
 import { useParams } from "react-router-dom";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+
 export default function ResultDetails() {
   const [loader, setLoader] = useState(false);
   const exportToPDF = () => {};
@@ -38,7 +39,7 @@ export default function ResultDetails() {
 
   function renderDetails() {
     return (
-      <div className="print-section container">
+      <div className="print-section">
         <div className="print-resultReport-header mb-1">
           <ReportsHeader darkMode={darkMode} />
           <DetailsInformation
@@ -57,6 +58,32 @@ export default function ResultDetails() {
       </div>
     );
   }
+
+  const downloadPDF = () => {
+    const capture = document.querySelector(".print-section");
+    capture.style.padding = "20px 100px"; // Padding
+
+    setLoader(true);
+    html2canvas(capture).then((canvas) => {
+      const imgData = canvas.toDataURL("img/png");
+      const doc = new jsPDF("p", "px", "a4");
+      const componentWidth = doc.internal.pageSize.getWidth();
+      const componentHeight = doc.internal.pageSize.getHeight();
+
+      doc.setFontSize(12);
+
+      doc.addImage(
+        imgData,
+        "PNG",
+        0,
+        0,
+        componentWidth * 1,
+        componentHeight * 0.4
+      );
+      setLoader(false);
+      doc.save("receipt.pdf");
+    });
+  };
   useEffect(() => {
     getResultDetails();
   }, []);
@@ -76,23 +103,27 @@ export default function ResultDetails() {
             </div>
           </div>
         )}
-        <div className="d-flex align-items-center justify-content-center print-button mt-4">
+        <div className="d-flex align-items-center justify-content-center gap-4 print-button mt-4">
           <button
-            className="btn btn-info text-white p-3"
+            className="btn btn-info text-white p-2"
             onClick={() => window.print()}
           >
-            <span className="h4 mid-bold">Print</span>
+            <span className="h4 mid-bold m-0">Print</span>
           </button>
-          <button
-            className="btn btn-success text-white p-3 ml-2"
-            onClick={exportToPDF}
-          >
-            {loader ? (
-              <span className="h4 mid-bold">Loading ... </span>
-            ) : (
-              <span className="h4 mid-bold">Export to PDF</span>
-            )}{" "}
-          </button>
+          {loader ? (
+            <span className="h4 mid-bold m-0">Loading ... </span>
+          ) : (
+            <button
+              className="btn btn-success text-white p-2"
+              onClick={downloadPDF}
+            >
+              {loader ? (
+                <span className="h4 mid-bold m-0">Loading ... </span>
+              ) : (
+                <span className="h4 mid-bold m-0">Export to PDF</span>
+              )}
+            </button>
+          )}{" "}
         </div>
       </div>
     </>
