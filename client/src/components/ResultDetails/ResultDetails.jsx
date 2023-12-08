@@ -12,7 +12,6 @@ import jsPDF from "jspdf";
 
 export default function ResultDetails() {
   const [loader, setLoader] = useState(false);
-  const exportToPDF = () => {};
   const { darkMode } = useDarkMode();
   const { id } = useParams();
   let [apiError, setApiError] = useState(false);

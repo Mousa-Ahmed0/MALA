@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router";
 import { useDarkMode } from "../../../../context/DarkModeContext";
-import {
-  getPateinrPayments,
-  getPateinrResults,
-} from "../../../../apis/ApisHandale";
+import { getPateinrPayments } from "../../../../apis/ApisHandale";
 import { Link } from "react-router-dom";
 import BackBtn from "../../../BackBtn";
 import SearchBar from "../../../SearchBar/SearchBar";
 import FormateDate from "../../../FormateDate";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+import ResultToPDF from "../../../ResultToPDF";
 
 export default function PatPaymentsPreviewContainer() {
   const patientIdent = useParams("ident").ident;
@@ -31,6 +31,7 @@ export default function PatPaymentsPreviewContainer() {
       </div>
     </div>
   );
+
   //get patient results
   async function getPayments() {
     try {
@@ -86,14 +87,7 @@ export default function PatPaymentsPreviewContainer() {
                         </Link>
                       </div>
                       <div className="col-6 col-md-1 d-flex justify-content-end align-items-center">
-                        <button className="delete-btn btn d-flex justify-content-center align-items-center">
-                          {" "}
-                          <i
-                            className={`fas fa-download mb-0 text-truncate ${
-                              darkMode ? " dark-theme" : ""
-                            }`}
-                          ></i>
-                        </button>
+                        <ResultToPDF darkMode={darkMode} />
                       </div>
                     </div>
                   </div>
@@ -140,6 +134,7 @@ export default function PatPaymentsPreviewContainer() {
       }
     }
   }*/
+
   useEffect(() => {
     getPayments();
   }, []);

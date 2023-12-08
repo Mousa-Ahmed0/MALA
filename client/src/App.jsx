@@ -26,6 +26,7 @@ import DashboardHome from "./components/Staff/DashboardHome.jsx";
 import AnlysisController from "./components/Staff/AnlysisHandale/AnlysisController.jsx";
 import AddAnlyze from "./components/Staff/AnlysisHandale/AnlysisHandaleComponenets/AddAnlyze.jsx";
 import PreviewAnlysis from "./components/Staff/AnlysisHandale/AnlysisHandaleComponenets/PreviewAnlysis/PreviewAnlysisContainer.jsx";
+import UpdateAnlyze from "./components/Staff/AnlysisHandale/AnlysisHandaleComponenets/PreviewAnlysis/PreviewAnlysisComponents/UpdateAnlyze.jsx";
 /* UsersController */
 import UsersController from "./components/Staff/UsersHandale/UsersController.jsx";
 import UsersPreview from "./components/Staff/UsersHandale/UsersHandaleComponenets/UserPreview/UsersPreview.jsx";
@@ -244,7 +245,11 @@ export default function App() {
                   />
                   <Route
                     path="/Staff/AnlysisController/PreviewAnlysis"
-                    element={<PreviewAnlysis setIsFormOpen={setIsFormOpen} />}
+                    element={<PreviewAnlysis />}
+                  />
+                  <Route
+                    path="/Staff/AnlysisController/UpdateAnlyze/:code"
+                    element={<UpdateAnlyze />}
                   />
                 </Route>
                 <Route

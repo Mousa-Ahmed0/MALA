@@ -38,7 +38,6 @@ export default function AnlyiseDetails() {
   }
   useEffect(() => {
     getAnalyzeDetails();
-    console.log(code);
   }, []);
   useEffect(() => {
     console.log(Analyze);

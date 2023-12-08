@@ -1,14 +1,15 @@
 import PreviewAnlysisPresintation from "./PreviewAnlysisPresintation";
 
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 import { useDarkMode } from "../../../../../context/DarkModeContext";
 import { getAllAnalysis } from "../../../../../apis/ApisHandale";
 
-export default function PreviewAnlysisContainer({ setIsFormOpen }) {
+export default function PreviewAnlysisContainer() {
   const { darkMode } = useDarkMode();
+  const navigate = useNavigate();
   let [allAnlysis, setAllAnlysis] = useState([]);
   let [visibleAnlysis, setVisibleAnlysis] = useState([]);
   let [apiError, setApiError] = useState(false);
@@ -37,16 +38,10 @@ export default function PreviewAnlysisContainer({ setIsFormOpen }) {
 
   /* *************** Handale Pop Forms *************** */
   //update form open
-  function handaleUpdateFormOpen(a) {
-    setIsFormOpen(true);
-    setIsUpdateFormOpen(true);
-    setAnlyze(a);
+  function handaleUpdateFormOpen(code) {
+    navigate(`/Staff/AnlysisController/UpdateAnlyze/${code}`);
   }
 
-  function closeUpdateForm() {
-    setIsFormOpen(false);
-    setIsUpdateFormOpen(false);
-  }
   //get All Anlysis
   async function getAnalysis() {
     try {
@@ -106,7 +101,7 @@ export default function PreviewAnlysisContainer({ setIsFormOpen }) {
                       </div>
                       <div className="col-6 col-md-5 d-flex align-items-center">
                         <button
-                          onClick={() => handaleUpdateFormOpen(Analyze)}
+                          onClick={() => handaleUpdateFormOpen(Analyze.code)}
                           className="delete-btn btn d-flex justify-content-center align-items-center"
                         >
                           {" "}
@@ -176,10 +171,6 @@ export default function PreviewAnlysisContainer({ setIsFormOpen }) {
       apiError={apiError}
       apiErrorMessage={apiErrorMessage}
       noResults={noResults}
-      closeUpdateForm={closeUpdateForm}
-      isUpdateFormOpen={isUpdateFormOpen}
-      Anlyze={Anlyze}
-      setAnlyze={setAnlyze}
     />
   );
 }
