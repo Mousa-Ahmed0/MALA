@@ -54,7 +54,7 @@ export default function AnlyiseDetails() {
                 Analyze.isAvailable ? "alert-success" : "alert-danger"
               }`}
             >
-              Available!
+              {Analyze.isAvailable ? " Available!" : " Not Available!"}
             </div>
             <h2 className="anl-name mb-4">
               {Analyze.name} ({Analyze.code})

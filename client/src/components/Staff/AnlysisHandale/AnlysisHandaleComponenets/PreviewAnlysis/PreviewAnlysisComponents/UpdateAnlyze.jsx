@@ -8,7 +8,9 @@ import { getOneAnalyze } from "../../../../../../apis/ApisHandale";
 export default function UpdateAnlyze() {
   const { darkMode } = useDarkMode();
   let [tempAnlyze, setTempAnlyze] = useState({});
-  let [components, setComponents] = useState([]);
+  let [tempComponents, setTempComponents] = useState([]);
+  let [apiMessage, setApiMessage] = useState("");
+
   const { code } = useParams();
 
   //get anlyze
@@ -16,7 +18,13 @@ export default function UpdateAnlyze() {
     try {
       let response = await getOneAnalyze(code);
       setTempAnlyze(response.data);
-      setComponents(response.data.compnents);
+      response.data.compnents.map((comp, index) => {
+        setTempComponents((prevComponents) => {
+          const updatedComponents = [...prevComponents];
+          updatedComponents.push({ index, comp });
+          return updatedComponents;
+        });
+      });
     } catch (error) {
       console.error("Error: ", error);
     }
@@ -24,6 +32,11 @@ export default function UpdateAnlyze() {
   //update User Details
   async function updateAnlyze(e) {
     e.preventDefault();
+    let newAnlyze = {
+      ...tempAnlyze,
+      compnents: tempComponents.map((component) => component.comp),
+    };
+    console.log(newAnlyze);
     try {
       let response = await axios.put(
         "http://localhost:5000/api/analyze/updateAnalyze",
@@ -35,21 +48,44 @@ export default function UpdateAnlyze() {
         }
       );
       console.log(response);
+      setApiMessage(response.data.message);
     } catch (error) {
       console.error("Error from Updating Anlyze: ", error);
     }
   }
-  // get new userDetails
+  // get new anlyzeDetails
   function getNewData(e) {
+    if (apiMessage.length > 0) setApiMessage("");
     let newAnlyze = { ...tempAnlyze };
     newAnlyze[e.target.name] = e.target.value;
     setTempAnlyze(newAnlyze);
   }
-  //handale avilabillty
+  //handale avilabillty of anlyze
   function handaleAvailablity(e) {
+    if (apiMessage.length > 0) setApiMessage("");
     let newAnlyze = { ...tempAnlyze };
     newAnlyze.isAvailable = e.target.value;
     setTempAnlyze(newAnlyze);
+  }
+  /* Get New ComponenetsData Function */
+  async function getNewComponentData(e, index) {
+    if (apiMessage.length > 0) setApiMessage("");
+    console.log("Index is: ", index, " and e: ", e);
+    await setTempComponents((prevComponents) => {
+      const updatedComponents = [...prevComponents];
+      const existingComponentIndex = updatedComponents.findIndex(
+        (component) => component.index === index
+      );
+
+      if (existingComponentIndex !== -1) {
+        updatedComponents[existingComponentIndex].comp[e.target.name] =
+          e.target.value;
+      } else {
+        //updatedComponents.push({ index, component });
+        console.log("Errroro!!");
+      }
+      return updatedComponents;
+    });
   }
 
   useEffect(() => {
@@ -58,9 +94,13 @@ export default function UpdateAnlyze() {
   useEffect(() => {
     console.log("tempAnlyze:", tempAnlyze);
   }, [tempAnlyze]);
+  useEffect(() => {
+    console.log("tempComponents:", tempComponents);
+  }, [tempComponents]);
+
   //renderAnlyzeComponents
   function renderAnlyzeComponents() {
-    return components.map((component) => {
+    return tempComponents.map((component, index) => {
       return (
         <>
           <div className="row">
@@ -73,7 +113,8 @@ export default function UpdateAnlyze() {
               <input
                 className="form-control"
                 name="nameC"
-                value={component.nameC}
+                value={component.comp.nameC}
+                onChange={(e) => getNewComponentData(e, index)}
               />
             </div>
             <div className="col-3 mb-3">
@@ -85,7 +126,8 @@ export default function UpdateAnlyze() {
               <input
                 className="form-control"
                 name="healthyValue"
-                value={component.healthyValue}
+                value={component.comp.healthyValue}
+                onChange={(e) => getNewComponentData(e, index)}
               />
             </div>
             <div className="col-3 mb-3">
@@ -97,7 +139,8 @@ export default function UpdateAnlyze() {
               <input
                 className="form-control"
                 name="unit"
-                value={component.unit}
+                value={component.comp.unit}
+                onChange={(e) => getNewComponentData(e, index)}
               />
             </div>
           </div>
@@ -136,6 +179,11 @@ export default function UpdateAnlyze() {
                 >
                   Edit Anlyze:
                 </h1>
+                {apiMessage.length > 0 ? (
+                  <div className="alert alert-info">{apiMessage}</div>
+                ) : (
+                  ""
+                )}
                 <div className="d-flex gap-4 flex-column flex-md-row">
                   <div className="mb-3">
                     <label

@@ -38,7 +38,7 @@ module.exports.addAnalyze = asyncHandler(async (req, res) => {
 module.exports.updateAnalyze = asyncHandler(async (req, res) => {
   //vaildation front end
   const updateA = await analyze.findOneAndUpdate(
-    { code: req.body.codeName },
+    { code: req.body.code },
     {
       $set: {
         name: req.body.name,
