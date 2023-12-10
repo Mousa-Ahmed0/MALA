@@ -12,28 +12,9 @@ export default function PreviewAnlysisPresintation({
   apiError,
   apiErrorMessage,
   noResults,
-  isUpdateFormOpen,
-  closeUpdateForm,
-  Anlyze,
-  setAnlyze,
 }) {
   return (
     <>
-      <div
-        className={`position-relative my-4 ${
-          isUpdateFormOpen ? "d-flex" : "d-none"
-        } ${
-          darkMode ? " spic-dark-mode border-0" : "bg-white"
-        } justify-content-center align-items-center h-100 w-100 z-200`}
-      >
-        <UpdateAnlyze
-          Anlyze={Anlyze}
-          setAnlyze={setAnlyze}
-          isUpdateFormOpen={isUpdateFormOpen}
-          darkMode={darkMode}
-          closeUpdateForm={closeUpdateForm}
-        />
-      </div>
       <BackBtn />
       <div className="row my-5">
         <div className="row">

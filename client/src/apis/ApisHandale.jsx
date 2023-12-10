@@ -12,6 +12,7 @@ export const getAllAnalysis = async () => {
   });
 };
 export const getOneAnalyze = async (code) => {
+  console.log(code);
   return await axios.get(
     `http://localhost:5000/api/analyze/getAnalyzesOne/${code}`
   );

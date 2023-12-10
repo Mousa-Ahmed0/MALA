@@ -14,7 +14,9 @@ function UserFilter(props) {
   // Return Elements:
   return (
     <select
-      className={`form-select ${darkMode ? "spic-dark-mode" : "light"}`}
+      className={`form-select ${
+        darkMode ? "spic-dark-mode" : "light"
+      } selectpicker`}
       aria-label="Default select example"
       onChange={handaleChange}
       name="region"
