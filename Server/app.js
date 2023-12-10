@@ -25,6 +25,7 @@ app.use("/api/user", require("./routes/user.routes"));
 app.use("/api/storage", require("./routes/storage.routes"));
 app.use("/api/result", require("./routes/results.routes"));
 app.use("/api/payment", require("./routes/payment.routes"));
+app.use("/api/advertisements", require("./routes/advertisements.routes"));
 // app.use('/api/posts',require('./routes/post.routes'));
 // app.use('/api/comments',require('./routes/comment.routes'));
 // app.use('/api/category',require('./routes/category.routes'));
