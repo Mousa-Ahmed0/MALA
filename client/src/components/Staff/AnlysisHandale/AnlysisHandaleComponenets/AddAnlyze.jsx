@@ -12,6 +12,7 @@ export default function AddAnlyze() {
     cost: 0,
     description: "",
     isAvailable: true,
+    analyzeCategory: "",
     compnents: [],
   });
   let [No, setNo] = useState(1);
@@ -24,6 +25,13 @@ export default function AddAnlyze() {
   let [errorMessage, setErrorMessage] = useState("");
   let [apiMessage, setApiMessage] = useState("");
   let [apiError, setApiError] = useState(false);
+  //Category
+  const [avilableCategories, setAvilableCategories] = useState([
+    "Blood Tests",
+    "Endocrinology",
+    "Clinical Chemistry",
+  ]);
+  const [isCategoryChoosen, setisCategoryChoosen] = useState(false);
 
   async function onAnlyzeFormSubmit(e) {
     e.preventDefault();
@@ -66,86 +74,28 @@ export default function AddAnlyze() {
     setAnlyze(newAnlyze);
   }
   /* Get New ComponenetsData Function */
-  function getNewComponentData(e) {
-    let newComponent = { ...component };
-    newComponent[e.target.name] = e.target.value;
-
-    setComponent(newComponent);
-  }
-  async function addNewComponent(e, i) {
+  async function getNewComponentData(e, i) {
     e.preventDefault();
-
     await setComponents((prevComponents) => {
+      const newComponent = { ...component };
+      newComponent[e.target.name] = e.target.value;
       const updatedComponents = [...prevComponents];
       const existingComponentIndex = updatedComponents.findIndex(
         (component) => component.i === i
       );
 
       if (existingComponentIndex !== -1) {
-        updatedComponents[existingComponentIndex].component = component;
+        updatedComponents[existingComponentIndex].component[e.target.name] =
+          newComponent[e.target.name];
       } else {
         updatedComponents.push({ i, component });
       }
       return updatedComponents;
     });
   }
+
   /* Render Componenets Details */
   function renderComponentsRows() {
-    let componentRow = (
-      <>
-        <div className="">
-          <label
-            htmlFor="nameC"
-            className={`form-label text-truncate ${
-              darkMode ? " spic-dark-mode" : ""
-            }`}
-          >
-            Component Name:
-          </label>
-          <input
-            onChange={getNewComponentData}
-            type="text"
-            name="nameC"
-            className="form-control"
-            id="nameC"
-          />
-        </div>
-        <div className="">
-          <label
-            htmlFor="unit"
-            className={`form-label text-truncate ${
-              darkMode ? " spic-dark-mode" : ""
-            }`}
-          >
-            Component Unit:
-          </label>
-          <input
-            onChange={getNewComponentData}
-            type="text"
-            name="unit"
-            className="form-control"
-            id="unit"
-          />
-        </div>
-        <div className="">
-          <label
-            htmlFor="healthyValue"
-            className={`form-label text-truncate ${
-              darkMode ? " spic-dark-mode" : ""
-            }`}
-          >
-            Normal Range:
-          </label>
-          <input
-            onChange={getNewComponentData}
-            type="text"
-            name="healthyValue"
-            className="form-control"
-            id="healthyValue"
-          />
-        </div>
-      </>
-    );
     let rows = [];
     for (let i = 0; i < No; i++) {
       let result = (
@@ -160,15 +110,59 @@ export default function AddAnlyze() {
           <div className="d-flex my-4 gap-4  flex-column flex-md-row">
             <div className="d-flex gap-4 flex-column flex-md-row">
               {" "}
-              {componentRow}
-              <div className="d-flex flex-column-reverse">
-                <button
-                  onClick={(e) => addNewComponent(e, i)}
-                  className="btn btn-primary d-flex justify-content-center align-items-center BTN-Bold"
-                >
-                  Save
-                </button>
-              </div>
+              <>
+                <div className="">
+                  <label
+                    htmlFor="nameC"
+                    className={`form-label text-truncate ${
+                      darkMode ? " spic-dark-mode" : ""
+                    }`}
+                  >
+                    Component Name:
+                  </label>
+                  <input
+                    onChange={(e) => getNewComponentData(e, i)}
+                    type="text"
+                    name="nameC"
+                    className="form-control"
+                    id="nameC"
+                  />
+                </div>
+                <div className="">
+                  <label
+                    htmlFor="unit"
+                    className={`form-label text-truncate ${
+                      darkMode ? " spic-dark-mode" : ""
+                    }`}
+                  >
+                    Component Unit:
+                  </label>
+                  <input
+                    onChange={(e) => getNewComponentData(e, i)}
+                    type="text"
+                    name="unit"
+                    className="form-control"
+                    id="unit"
+                  />
+                </div>
+                <div className="">
+                  <label
+                    htmlFor="healthyValue"
+                    className={`form-label text-truncate ${
+                      darkMode ? " spic-dark-mode" : ""
+                    }`}
+                  >
+                    Normal Range:
+                  </label>
+                  <input
+                    onChange={(e) => getNewComponentData(e, i)}
+                    type="text"
+                    name="healthyValue"
+                    className="form-control"
+                    id="healthyValue"
+                  />
+                </div>
+              </>
             </div>
             <br />
           </div>
@@ -178,6 +172,26 @@ export default function AddAnlyze() {
       rows.push(result);
     }
     return rows;
+  }
+  /* Render renderCategoriesArray */
+  function renderCategoriesArray() {
+    return avilableCategories.map((category, index) => {
+      return (
+        <option key={index} value={category}>
+          {category}
+        </option>
+      );
+    });
+  }
+  /* handale category changes */
+  function handaleCategory(e) {
+    setisCategoryChoosen(true);
+    if (e.target.value === "") {
+      setisCategoryChoosen(false);
+    }
+    let newAnlyze = { ...anlyze };
+    newAnlyze.analyzeCategory = e.target.value;
+    setAnlyze(newAnlyze);
   }
   useEffect(() => {
     console.log(anlyze);
@@ -276,10 +290,10 @@ export default function AddAnlyze() {
                   id="a_code"
                 />
               </div>
-              <div className="col-1 d-none d-md-flex justify-content-center align-items-center">
+              <div className="col-1 d-none d-md-flex justify-content-center align-items-center ">
                 |
               </div>
-              <div className="col-12 col-md-3 ">
+              <div className="col-12 col-md-3 custom-select">
                 <label
                   className={`w-100  form-label ${
                     darkMode ? " spic-dark-mode" : ""
@@ -288,7 +302,7 @@ export default function AddAnlyze() {
                   isAvailable?
                 </label>
                 <select
-                  className={` ${darkMode ? " spic-dark-mode" : ""} w-100`}
+                  className={`${darkMode ? " spic-dark-mode" : ""} w-100 `}
                   aria-label="Default select example"
                   name="isAvailable"
                   onChange={(e) => handaleAvailablity(e)}
@@ -306,33 +320,35 @@ export default function AddAnlyze() {
                     darkMode ? " spic-dark-mode" : ""
                   }`}
                 >
-                  Analyze Type:
+                  Category:
                 </label>
                 <select
                   className={` ${darkMode ? " spic-dark-mode" : ""} w-100`}
                   aria-label="Default select example"
-                  name="isAvailable"
-                  onChange={(e) => handaleAvailablity(e)}
+                  name="analyzeCategory"
+                  onChange={(e) => handaleCategory(e)}
                 >
-                  <option value={true}>Avilable</option>
-                  <option value={false}>Not Avilable</option>
+                  <option value={""} hidden>
+                    Choose:
+                  </option>
+                  <option value="">Others ...</option>
+                  {renderCategoriesArray()}
                 </select>
               </div>
               <div className="col-12 col-md-3">
                 <label
-                  htmlFor="a_cost"
                   className={`form-label text-truncate ${
                     darkMode ? " spic-dark-mode" : ""
                   }`}
                 >
-                  New Type?
+                  New Category?
                 </label>
                 <input
                   onChange={getNewAnlyzeData}
-                  type="number"
-                  name="cost"
+                  type="text"
+                  name="analyzeCategory"
                   className="form-control"
-                  id="a_cost"
+                  disabled={isCategoryChoosen}
                 />
               </div>
               <div className="col-1 d-none d-md-flex justify-content-center align-items-center">
