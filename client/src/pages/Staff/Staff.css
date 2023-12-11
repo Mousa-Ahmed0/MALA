@@ -9,18 +9,17 @@
 /************* Section **************/
 .ST-section {
   margin: var(--main-margin-top) 0;
-  padding: var(--main-padding-top) 0;
   width: 100%;
   height: 100%;
 }
 /* Width: 742px  */
-@media (max-width: 742px) {
+/*@media (max-width: 742px) {
   .ST-section {
     margin-top: calc(var(--main-margin-top) / 2);
     margin-bottom: calc(var(--main-margin-bottom) / 2);
     padding: calc(var(--main-padding-top) / 2);
   }
-}
+}*/
 
 /* ------------------------------------------------------- ST-Register -------------------------------------------------------  */
 
@@ -72,33 +71,4 @@
 /* ------------------------------------------------------- AddAnlyze -------------------------------------------------------  */
 .componenet-No-Label {
   transform: translateY(50%) !important;
-}
-
-/* Search Section */
-
-select {
-  height: calc(var(--height-form) + 8px) !important;
-  width: 30% !important;
-  padding: 0 25px !important;
-  border: none !important;
-  border-radius: 3px !important;
-}
-.custome-search {
-  width: 75% !important;
-  height: calc(var(--height-form) + 8px) !important;
-  border: none !important;
-  border-radius: 3px !important;
-}
-.search .input-group .custome-search .form-floating input {
-  min-width: 100% !important;
-}
-.search .input-group .custome-search .form-floating input[type="search"]:focus {
-  border-color: black !important;
-}
-.form-control::placeholder {
-  color: #495057 !important;
-  opacity: 1 !important;
-}
-.form-floating > .form-control:focus {
-  padding: 0 10px !important;
 }

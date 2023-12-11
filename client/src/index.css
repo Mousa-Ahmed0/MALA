@@ -91,6 +91,7 @@ i {
 .container {
   padding: 0 1rem !important;
 }
+
 /* Scroll */
 ::-webkit-scrollbar {
   width: 0.5rem;
@@ -115,6 +116,7 @@ canvas {
   overflow-y: auto;
   overflow-x: hidden;
 }
+
 .maxHeight-part {
   max-height: 47.875rem;
 }
@@ -395,6 +397,53 @@ Footer .fot-Details li i {
 
 .normal-range {
   max-width: 10rem !important;
+}
+
+/* Search Section */
+
+select {
+  height: calc(var(--height-form) + 8px) !important;
+  width: 30% !important;
+  border: none !important;
+  border-radius: 3px !important;
+}
+.custome-search {
+  width: 75% !important;
+  height: calc(var(--height-form) + 8px) !important;
+  border: none !important;
+  border-radius: 3px !important;
+}
+@media (max-width: 1200px) {
+  select {
+    width: 40% !important;
+  }
+}
+@media (max-width: 992px) {
+  select {
+    width: 50% !important;
+  }
+}
+@media (max-width: 768px) {
+  select {
+    width: 50% !important;
+  }
+  .custome-search {
+    width: 100% !important;
+  }
+}
+
+.search .input-group .custome-search .form-floating input {
+  min-width: 100% !important;
+}
+.search .input-group .custome-search .form-floating input[type="search"]:focus {
+  border-color: black !important;
+}
+.form-control::placeholder {
+  color: #495057 !important;
+  opacity: 1 !important;
+}
+.form-floating > .form-control:focus {
+  padding: 0 10px !important;
 }
 
 /*** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~_~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Animations ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~_~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ***/

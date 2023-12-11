@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useDarkMode } from "../../../../context/DarkModeContext";
-import { addANewAnalyze } from "../../../../apis/ApisHandale";
+
+import BackBtn from "../../../BackBtn";
 
 export default function AddAnlyze() {
   const { darkMode } = useDarkMode();
@@ -183,145 +184,200 @@ export default function AddAnlyze() {
     console.log(components);
   }, [components, anlyze]);
   return (
-    <div className={`page-form ${darkMode ? " spic-dark-mode border-0" : ""}`}>
-      <form className="mx-5" onSubmit={onAnlyzeFormSubmit}>
-        <h1
-          className={`h3 formHeader ${
-            darkMode ? " spic-dark-mode border-0 border-bottom" : ""
-          }`}
+    <div className="ST-section my-1">
+      <BackBtn />
+      <div className="Reg-Pat my-4">
+        <div
+          className={`page-form ${darkMode ? " spic-dark-mode border-0" : ""}`}
         >
-          Add a New Anlyze:
-        </h1>
-        <div className="w-100">
-          <div className="mb-3">
-            <label
-              htmlFor="a_name"
-              className={`form-label text-truncate ${
-                darkMode ? " spic-dark-mode" : ""
+          <form className="mx-5" onSubmit={onAnlyzeFormSubmit}>
+            <h1
+              className={`h3 formHeader ${
+                darkMode ? " spic-dark-mode border-0 border-bottom" : ""
               }`}
             >
-              Anlyze Name:
-            </label>
-            <input
-              onChange={getNewAnlyzeData}
-              type="text"
-              name="name"
-              className="form-control"
-              id="a_name"
-            />
-          </div>
+              Add a New Anlyze:
+            </h1>
+            <div className="row">
+              <div className="col-12">
+                <label
+                  htmlFor="a_name"
+                  className={`form-label text-truncate ${
+                    darkMode ? " spic-dark-mode" : ""
+                  }`}
+                >
+                  Anlyze Name:
+                </label>
+                <input
+                  onChange={getNewAnlyzeData}
+                  type="text"
+                  name="name"
+                  className="form-control"
+                  id="a_name"
+                />
+              </div>
+            </div>
+            <hr className="d-none d-md-block my-4" />
+            <div className="row justify-content-center align-items-center">
+              <div className="col-12 col-md-2">
+                <label
+                  htmlFor="a_code"
+                  className={`form-label text-truncate ${
+                    darkMode ? " spic-dark-mode" : ""
+                  }`}
+                >
+                  Anlyze Code:
+                </label>
+                <input
+                  onChange={getNewAnlyzeData}
+                  type="text"
+                  name="code"
+                  className="form-control"
+                  id="a_code"
+                />
+              </div>
+              <div className="col-1 d-none d-md-flex justify-content-center align-items-center">
+                |
+              </div>
+              <div className="col-12 col-md-2">
+                <label
+                  htmlFor="a_cost"
+                  className={`form-label text-truncate ${
+                    darkMode ? " spic-dark-mode" : ""
+                  }`}
+                >
+                  Anlyze Cost:
+                </label>
+                <input
+                  onChange={getNewAnlyzeData}
+                  type="number"
+                  name="cost"
+                  className="form-control"
+                  id="a_cost"
+                />
+              </div>
+              <div className="col-1 d-none d-md-flex justify-content-center align-items-center">
+                |
+              </div>
+              <div className="col-12 col-md-2">
+                <label
+                  htmlFor="a_code"
+                  className={`form-label text-truncate ${
+                    darkMode ? " spic-dark-mode" : ""
+                  }`}
+                >
+                  No. of Components:
+                </label>
+                <input
+                  onChange={getNewAnlyzeData}
+                  type="number"
+                  name="no"
+                  className="form-control"
+                  id="a_code"
+                />
+              </div>
+              <div className="col-1 d-none d-md-flex justify-content-center align-items-center">
+                |
+              </div>
+              <div className="col-12 col-md-3 ">
+                <label
+                  className={`w-100  form-label ${
+                    darkMode ? " spic-dark-mode" : ""
+                  }`}
+                >
+                  isAvailable?
+                </label>
+                <select
+                  className={` ${darkMode ? " spic-dark-mode" : ""} w-100`}
+                  aria-label="Default select example"
+                  name="isAvailable"
+                  onChange={(e) => handaleAvailablity(e)}
+                >
+                  <option value={true}>Avilable</option>
+                  <option value={false}>Not Avilable</option>
+                </select>
+              </div>
+            </div>
+            <hr className="d-none d-md-block my-4" />
+            <div className="row justify-content-center align-items-center">
+              <div className="col-12 col-md-2 ">
+                <label
+                  className={`w-100 form-label ${
+                    darkMode ? " spic-dark-mode" : ""
+                  }`}
+                >
+                  Analyze Type:
+                </label>
+                <select
+                  className={` ${darkMode ? " spic-dark-mode" : ""} w-100`}
+                  aria-label="Default select example"
+                  name="isAvailable"
+                  onChange={(e) => handaleAvailablity(e)}
+                >
+                  <option value={true}>Avilable</option>
+                  <option value={false}>Not Avilable</option>
+                </select>
+              </div>
+              <div className="col-12 col-md-3">
+                <label
+                  htmlFor="a_cost"
+                  className={`form-label text-truncate ${
+                    darkMode ? " spic-dark-mode" : ""
+                  }`}
+                >
+                  New Type?
+                </label>
+                <input
+                  onChange={getNewAnlyzeData}
+                  type="number"
+                  name="cost"
+                  className="form-control"
+                  id="a_cost"
+                />
+              </div>
+              <div className="col-1 d-none d-md-flex justify-content-center align-items-center">
+                |
+              </div>
+              <div className="col-12 col-md-6">
+                <label
+                  htmlFor="a_description"
+                  className={`form-label text-truncate ${
+                    darkMode ? " spic-dark-mode" : ""
+                  }`}
+                >
+                  Anlyze Description:
+                </label>
+                <textarea
+                  onChange={getNewAnlyzeData}
+                  name="description"
+                  className="form-control w-100"
+                  id="a_description"
+                  rows="5"
+                />
+              </div>
+            </div>
+            <hr className=" my-4" />
+            <h1
+              className={`h3 formHeader my-5 ${
+                darkMode ? " spic-dark-mode border-0 border-bottom" : ""
+              }`}
+            >
+              Components Details:
+            </h1>
+            {errorMessage ? (
+              <div className="alert alert-danger">{errorMessage}</div>
+            ) : (
+              ""
+            )}
+            {renderComponentsRows()}
+            <div className="mt-4 d-flex justify-content-around">
+              <button className="btn btn-primary  d-flex justify-content-center BTN-Bold">
+                Add
+              </button>
+            </div>
+          </form>
         </div>
-        <div className="d-flex gap-4 flex-column flex-md-row justify-content-around">
-          <div className="mb-3">
-            <label
-              htmlFor="a_code"
-              className={`form-label text-truncate ${
-                darkMode ? " spic-dark-mode" : ""
-              }`}
-            >
-              Anlyze Code:
-            </label>
-            <input
-              onChange={getNewAnlyzeData}
-              type="text"
-              name="code"
-              className="form-control"
-              id="a_code"
-            />
-          </div>
-          <div className="mb-3">
-            <label
-              htmlFor="a_cost"
-              className={`form-label text-truncate ${
-                darkMode ? " spic-dark-mode" : ""
-              }`}
-            >
-              Anlyze Cost:
-            </label>
-            <input
-              onChange={getNewAnlyzeData}
-              type="number"
-              name="cost"
-              className="form-control"
-              id="a_cost"
-            />
-          </div>
-          <div className="mb-3">
-            <label
-              htmlFor="a_code"
-              className={`form-label text-truncate ${
-                darkMode ? " spic-dark-mode" : ""
-              }`}
-            >
-              No. of Anlyze Components:
-            </label>
-            <input
-              onChange={getNewAnlyzeData}
-              type="number"
-              name="no"
-              className="form-control"
-              id="a_code"
-            />
-          </div>
-          <div className="mb-3">
-            <label
-              className={`w-100 m-0 form-label ${
-                darkMode ? " spic-dark-mode" : ""
-              }`}
-            >
-              isAvailable?
-            </label>
-            <select
-              className={`all-Mid-shadow ${
-                darkMode ? " spic-dark-mode" : ""
-              } w-100`}
-              aria-label="Default select example"
-              name="isAvailable"
-              onChange={(e) => handaleAvailablity(e)}
-            >
-              <option value={true}>Avilable</option>
-              <option value={false}>Not Avilable</option>
-            </select>
-          </div>
-        </div>
-        <div>
-          <div className="mb-3 w-100">
-            <label
-              htmlFor="a_description"
-              className={`form-label text-truncate ${
-                darkMode ? " spic-dark-mode" : ""
-              }`}
-            >
-              Anlyze Description:
-            </label>
-            <textarea
-              onChange={getNewAnlyzeData}
-              name="description"
-              className="form-control w-100"
-              id="a_description"
-              rows="5"
-            />
-          </div>
-        </div>
-        <h1
-          className={`h3 formHeader my-5 ${
-            darkMode ? " spic-dark-mode border-0 border-bottom" : ""
-          }`}
-        >
-          Components Details:
-        </h1>
-        {errorMessage ? (
-          <div className="alert alert-danger">{errorMessage}</div>
-        ) : (
-          ""
-        )}
-        {renderComponentsRows()}
-        <div className="mt-4 mb-3 d-flex justify-content-around">
-          <button className="btn btn-primary  d-flex justify-content-center BTN-Bold">
-            Add
-          </button>
-        </div>
-      </form>
+      </div>
     </div>
   );
 }

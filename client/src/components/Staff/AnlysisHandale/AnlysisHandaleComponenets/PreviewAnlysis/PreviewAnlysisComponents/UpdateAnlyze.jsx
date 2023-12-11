@@ -29,7 +29,7 @@ export default function UpdateAnlyze() {
       console.error("Error: ", error);
     }
   }
-  //update User Details
+  //update Analyze Details
   async function updateAnlyze(e) {
     e.preventDefault();
     let newAnlyze = {
