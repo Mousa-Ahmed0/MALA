@@ -8,6 +8,10 @@ const { analyze, validateAnalyze } = require("../models/Analyze");
  * @access private (only admin or staff)
  * ------------------------------------------ */
 module.exports.addAnalyze = asyncHandler(async (req, res) => {
+  //if anzlyze already exist
+  const oldZ = await analyze.findOne({ code: newAnalyze.code });
+  if (oldZ) return res.status(400).json({ message: "Analyze eixst" });
+
   const newAnalyze = new analyze({
     name: req.body.name,
     code: req.body.code,
@@ -17,11 +21,6 @@ module.exports.addAnalyze = asyncHandler(async (req, res) => {
     analyzeCategory: req.body.analyzeCategory,
     compnents: req.body.compnents,
   });
-
-  //if anzlyze already exist
-  const oldZ = await analyze.findOne({ code: newAnalyze.code });
-  if (oldZ) return res.status(400).json({ message: "Analyze eixst" });
-
   //save analyze
   await newAnalyze.save();
 
@@ -85,39 +84,29 @@ module.exports.getAnalze = asyncHandler(async (req, res) => {
   res.status(200).json(oneAnalyze);
 });
 
-/**--------------------------------
- * @desc Update  User profile
- * @router /api/users/Ptofile/id
- * @method put
- * @access private (only user himself)
- * ------------------------------------------ */
-
-// module.exports.updateUserProfile=asyncHandler(async (req,res)=>{
-//     const {error} =validateUpdateUser(req.body);
-//     if(error)
-//         return res.status(400).json({message:error.details[0].message});
-
-//     if(req.body.password){
-//         const salt = await bcrypt.genSalt(8);
-//         req.body.password = await bcrypt.hash(req.body.password, salt);
-//     }
-//     const updatedUser=await user.findByIdAndUpdate(req.params.id,{
-//         $set:{
-//             username:req.body.username,
-//             password:req.params.password,
-//             bio:req.body.bio
-//         }
-//     },{new:true}).select("-password");
-//     res.status(200).json(updatedUser);
-// })
 
 /**--------------------------------
- * @desc Get  Users Count
- * @router /api/users/count
+ * @desc Get  Analyze Count
+ * @router /api/Analyze/count
  * @method GET
  * @access private (only admin)
  * ------------------------------------------ */
-// module.exports.getUsersCount=asyncHandler(async (req,res)=>{
-//     const count=await user.count();
-//     res.status(200).json(count);
-// })
+module.exports.getAnalyzeCount = asyncHandler(async (req, res) => {
+  const count = await analyze.count();
+  res.status(200).json(count);
+})
+
+/**--------------------------------
+ * @desc Get  Analyze Category
+ * @router /api/Analyze/getCategorys
+ * @method GET
+ * @access private (only admin)
+ * ------------------------------------------ */
+module.exports.getCategoryCount = asyncHandler(async (req, res) => {
+  const analyzeCategory = await analyze.find({}, { analyzeCategory: 1, _id: 0 });
+  if (analyzeCategory)
+    res.status(200).json(analyzeCategory);
+  else
+    res.status(400).json({message:"does not exist"});
+
+})
