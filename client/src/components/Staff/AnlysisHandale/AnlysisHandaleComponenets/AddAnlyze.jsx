@@ -37,7 +37,7 @@ export default function AddAnlyze() {
     e.preventDefault();
     let newAnlyze = {
       ...anlyze,
-      compnents: components.map((component) => component.component),
+      compnents: components.map((component) => component.newComponent),
     };
     try {
       await axios.post(
@@ -77,18 +77,18 @@ export default function AddAnlyze() {
   async function getNewComponentData(e, i) {
     e.preventDefault();
     await setComponents((prevComponents) => {
-      const newComponent = { ...component };
-      newComponent[e.target.name] = e.target.value;
       const updatedComponents = [...prevComponents];
       const existingComponentIndex = updatedComponents.findIndex(
         (component) => component.i === i
       );
 
       if (existingComponentIndex !== -1) {
-        updatedComponents[existingComponentIndex].component[e.target.name] =
-          newComponent[e.target.name];
+        updatedComponents[existingComponentIndex].newComponent[e.target.name] =
+          e.target.value;
       } else {
-        updatedComponents.push({ i, component });
+        const newComponent = { ...component };
+        newComponent[e.target.name] = e.target.value;
+        updatedComponents.push({ i, newComponent });
       }
       return updatedComponents;
     });
