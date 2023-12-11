@@ -28,13 +28,10 @@ module.exports.advertisements = asyncHandler(async (req, res) => {
         .json({ message: "done........." });
 })
 
-
-
-
 /**--------------------------------
  * @desc     upload advertisements
  * @router /api/advertisements/addPhoto
- * @method post
+ * @method POST
  * @access private (only logged in admin)
  * ------------------------------------------ */
 module.exports.PhotoUpload = asyncHandler(async (req, res) => {
@@ -88,7 +85,7 @@ module.exports.PhotoUpload = asyncHandler(async (req, res) => {
 /**--------------------------------
  * @desc   get all advertisements
  * @router /api/advertisements/getAdvertis
- * @method get
+ * @method GET
  * @access private (only logged in admin)
  * ------------------------------------------ */
 module.exports.getAdvert = asyncHandler(async (req, res) => {
@@ -103,17 +100,18 @@ module.exports.getAdvert = asyncHandler(async (req, res) => {
 /**--------------------------------
  * @desc     update advertisements
  * @router /api/advertisements/updateAdverti
- * @method PUt
+ * @method PUT
  * @access private (only logged in admin)
  * ------------------------------------------ */
 module.exports.updateAdverti = asyncHandler(async (req, res) => {
     let test = await Advertisement.findOne({ ident: req.query.ident });
-    let arrayImg = [];
-    let oldImag = test.advert;
 
     //if Advertisement exsit
     if (!test)
         return res.status(404).json({ message: "Advertisement not found" });
+
+    let arrayImg = [];
+    let oldImag = test.advert;
 
     //save text
     test.title = req.body.title;
@@ -150,3 +148,33 @@ module.exports.updateAdverti = asyncHandler(async (req, res) => {
 
 
 });
+
+
+/**--------------------------------
+ * @desc     delete advertisements
+ * @router /api/advertisements/deleteAdvert
+ * @method DELETE
+ * @access private (only logged in admin)
+ * ------------------------------------------ */
+module.exports.deleteAdvert = asyncHandler(async (req, res) => {
+    let del = await Advertisement.findOne({ ident: req.query.ident });
+
+
+    //if Advertisement exsit
+    if (!del)
+        return res.status(404).json({ message: "Advertisement not found" });
+
+    console.log(del);
+    let oldImag = del.advert;
+    
+    //delete image from cloudinary
+    for (let i = 0; i < oldImag.length; i++) {
+        await cloudinaryRemoveImage(oldImag[i].publicId);
+
+    }
+
+    //delete from db
+    await del.deleteOne();
+    return res.status(200).json({ message: "Advertisement is delete..." });
+
+})
