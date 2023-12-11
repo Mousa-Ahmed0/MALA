@@ -399,6 +399,11 @@ Footer .fot-Details li i {
   max-width: 10rem !important;
 }
 
+/* Select */
+.custom-select {
+  position: relative;
+}
+
 /* Search Section */
 
 select {
@@ -406,6 +411,13 @@ select {
   width: 30% !important;
   border: none !important;
   border-radius: 3px !important;
+  padding: 1rem !important;
+}
+/* Styling the options */
+select option {
+  background-color: #fff; /* Set background color for options */
+  color: #333; /* Set text color for options */
+  padding: 20px !important;
 }
 .custome-search {
   width: 75% !important;
