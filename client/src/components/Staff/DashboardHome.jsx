@@ -45,7 +45,7 @@ export default function DashboardHome({ user }) {
             <div className="col-md-6 mid-bold">Date:</div>
             <div className="col-md-3 mid-bold">More:</div>
           </div>
-          <div className="maxHeight-inhert overflow-yAxis ">
+          <div className="maxHeight-part overflow-yAxis">
             <div className="row detailes-size d-flex align-items-center">
               <div className="col-3 d-flex align-items-center text-truncate">
                 Some Important Thing you need to know!

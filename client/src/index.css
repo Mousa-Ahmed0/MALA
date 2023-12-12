@@ -419,12 +419,6 @@ select option {
   color: #333; /* Set text color for options */
   padding: 20px !important;
 }
-.custome-search {
-  width: 75% !important;
-  height: calc(var(--height-form) + 8px) !important;
-  border: none !important;
-  border-radius: 3px !important;
-}
 @media (max-width: 1200px) {
   select {
     width: 40% !important;
@@ -443,7 +437,12 @@ select option {
     width: 100% !important;
   }
 }
-
+.custome-search {
+  width: 75% !important;
+  height: calc(var(--height-form) + 8px) !important;
+  border: none !important;
+  border-radius: 3px !important;
+}
 .search .input-group .custome-search .form-floating input {
   min-width: 100% !important;
 }

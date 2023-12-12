@@ -47,6 +47,10 @@ import MakeReport from "./components/Staff/ReportsHandale/ReportsHandaleComponen
 import PaymentsController from "./components/Staff/PaymenysHandale/PaymentsController.jsx";
 import PaymentsPreviewContainer from "./components/Staff/PaymenysHandale/PaymentsHandaleComponents/PaymentsPreview/PaymentsPreviewContainer.jsx";
 import AddAPayment from "./components/Staff/PaymenysHandale/PaymentsHandaleComponents/AddAPayment.jsx";
+/* AdsController */
+import AdsController from "./components/Staff/AdsHandale/AdsController.jsx";
+import AddNewAdd from "./components/Staff/AdsHandale/AdsHandaleComponents/AddNewAdd.jsx";
+
 //ullits components
 import Footer from "./ulitls/Footer/Footer";
 import Navbar from "./ulitls/Navbar/Navbar.jsx";
@@ -79,11 +83,12 @@ export default function App() {
   const staffNavBarValues = [
     { id: 1, text: "Home", path: "/Staff/dashboard" },
     { id: 2, text: "Users", path: "/Staff/UsersController" },
-    { id: 8, text: "Payments", path: "/Staff/PaymentsController" },
-    { id: 5, text: "Results", path: "/Staff/ResultsController" },
-    { id: 7, text: "Reports", path: "/Staff/ReportsController" },
     { id: 3, text: "Anlysis", path: "/Staff/AnlysisController" },
     { id: 4, text: "Storage", path: "/Staff/StorageController" },
+    { id: 5, text: "Results", path: "/Staff/ResultsController" },
+    { id: 7, text: "Reports", path: "/Staff/ReportsController" },
+    { id: 8, text: "Payments", path: "/Staff/PaymentsController" },
+    { id: 9, text: "Ads", path: "/Staff/AdsController" },
     { id: 6, text: "|", path: null },
   ];
   const PatientNavBarValues = [
@@ -289,6 +294,12 @@ export default function App() {
                   <Route
                     path="/Staff/PaymentsController/AddAPayment"
                     element={<AddAPayment />}
+                  />
+                </Route>
+                <Route path="/Staff/AdsController" element={<AdsController />}>
+                  <Route
+                    path="/Staff/AdsController/AddNewAdd"
+                    element={<AddNewAdd setIsFormOpen={setIsFormOpen} />}
                   />
                 </Route>
                 <Route

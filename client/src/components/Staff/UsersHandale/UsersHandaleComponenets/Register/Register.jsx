@@ -107,10 +107,10 @@ export default function Register({ usertype }) {
       email: Joi.string()
         .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
         .required(),
-      firstname: Joi.string().min(4).max(12).required(),
-      lastname: Joi.string().min(4).max(12).required(),
+      firstname: Joi.string().max(20).required(),
+      lastname: Joi.string().max(20).required(),
       password: Joi.string().min(8).required(),
-      phone: Joi.string().trim().min(2).max(13).required(),
+      phone: Joi.string().trim().min(10).max(10).required(),
       birthday: Joi.date().required(),
       city: Joi.string().trim().min(2).max(100).required(),
       usertype: Joi.string().trim().required(),
