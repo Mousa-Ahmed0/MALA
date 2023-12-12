@@ -33,6 +33,21 @@ export default function AddAnlyze() {
   ]);
   const [isCategoryChoosen, setisCategoryChoosen] = useState(false);
 
+  //get current categories
+  async function getCategories() {
+    try {
+      let response = await axios.get(
+        "http://localhost:5000/api/analyze/getCategorys",
+        {
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+        }
+      );
+      console.log(response);
+    } catch (error) {
+      console.error("Error From getCategories: ", error);
+    }
+  }
+  //Add analyze
   async function onAnlyzeFormSubmit(e) {
     e.preventDefault();
     let newAnlyze = {
@@ -193,6 +208,11 @@ export default function AddAnlyze() {
     newAnlyze.analyzeCategory = e.target.value;
     setAnlyze(newAnlyze);
   }
+
+  ////////////////
+  useEffect(() => {
+    getCategories();
+  }, []);
   useEffect(() => {
     console.log(anlyze);
     console.log(components);
