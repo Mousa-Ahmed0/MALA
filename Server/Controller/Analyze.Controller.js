@@ -9,7 +9,7 @@ const { analyze, validateAnalyze } = require("../models/Analyze");
  * ------------------------------------------ */
 module.exports.addAnalyze = asyncHandler(async (req, res) => {
   //if anzlyze already exist
-  const oldZ = await analyze.findOne({ code: newAnalyze.code });
+  const oldZ = await analyze.findOne({ code: req.body.code});
   if (oldZ) return res.status(400).json({ message: "Analyze eixst" });
 
   const newAnalyze = new analyze({
@@ -103,10 +103,14 @@ module.exports.getAnalyzeCount = asyncHandler(async (req, res) => {
  * @access private (only admin)
  * ------------------------------------------ */
 module.exports.getCategoryCount = asyncHandler(async (req, res) => {
+  let arrayCat=[];
   const analyzeCategory = await analyze.find({}, { analyzeCategory: 1, _id: 0 });
-  if (analyzeCategory)
-    res.status(200).json(analyzeCategory);
+  if (analyzeCategory){
+    const uniqueCategories = new Set(analyzeCategory.map(item => item.analyzeCategory));
+    arrayCat = [...uniqueCategories];
+      res.status(200).json(arrayCat);
+  }
   else
-    res.status(400).json({message:"does not exist"});
+    res.status(400).json({message:"does not exist"},arrayCat);
 
 })
