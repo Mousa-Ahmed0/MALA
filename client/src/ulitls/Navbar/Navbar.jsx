@@ -101,7 +101,7 @@ export default function Navbar({ values, userDetails, logout }) {
               <div className="nav-item accDet d-flex justify-content-center align-items-center mx-2">
                 <img
                   className="nav-profile-img mx-2"
-                  src={localStorage.getItem("profileIMG")}
+                  src={userDetails.profilePhoto.url}
                   alt="nav-profile-img"
                   style={{ objectFit: "cover" }}
                 />
