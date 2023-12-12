@@ -26,6 +26,8 @@ const analyzeSchema = new mongoose.Schema(
     },
     analyzeCategory:{
       type: String,
+      unique: true,
+      required: true,
 
     },
     compnents: [
