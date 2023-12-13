@@ -43,6 +43,7 @@ export default function AddAnlyze() {
         }
       );
       console.log(response);
+      if (response.data.length > 0) setAvilableCategories(response.data);
     } catch (error) {
       console.error("Error From getCategories: ", error);
     }
@@ -191,11 +192,13 @@ export default function AddAnlyze() {
   /* Render renderCategoriesArray */
   function renderCategoriesArray() {
     return avilableCategories.map((category, index) => {
-      return (
-        <option key={index} value={category}>
-          {category}
-        </option>
-      );
+      if (category) {
+        return (
+          <option key={index} value={category}>
+            {category}
+          </option>
+        );
+      }
     });
   }
   /* handale category changes */

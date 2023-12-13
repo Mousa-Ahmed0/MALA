@@ -63,7 +63,7 @@ export default function UserProfilePrsintation({
                     Choose a New Profile Photo:
                   </label>
                   <input
-                    class="form-control form-control-lg"
+                    className="form-control form-control-lg"
                     id="formFileLg"
                     type="file"
                     accept="image/*"
