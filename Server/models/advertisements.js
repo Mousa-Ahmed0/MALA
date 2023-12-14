@@ -1,31 +1,28 @@
 const mongoose = require("mongoose");
 
 const advertisementSchema = new mongoose.Schema({
-  ident: {
-    type: Number,
-    unique: true,
-    // required: true
-  },
+
   title: {
     type: String,
-    // required: true
+    required: true,
+    unique:true
   },
   addText: {
     type: String,
   },
   creDate: {
     type: Date,
-    // required: true
+    required: true
   },
   expDate: {
     type: Date,
-    // required: true,
-    // validate: {
-    //     validator: function (value) {
-    //         return value >= this.creationDate;
-    //     },
-    //     message: 'Expiry date must be greater than or equal to creation date.'
-    // }
+    required: true,
+    validate: {
+        validator: function (value) {
+            return value >= this.creDate;
+        },
+        message: 'Expiry date must be greater than or equal to creation date.'
+    }
   },
 
   advert: [

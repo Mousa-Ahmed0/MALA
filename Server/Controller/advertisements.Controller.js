@@ -7,40 +7,22 @@ const path = require("path");
 const fs = require("fs");
 const { Advertisement } = require("../models/advertisements");
 
-/**--------------------------------
- * @desc  new advertisements
- * @router /api/advertisements/addAdvert
- * @method post
- * @access public
- * ------------------------------------------ */
-module.exports.advertisements = asyncHandler(async (req, res) => {
-
-    let newAdver = new Advertisement({
-        ident: req.body.ident,
-        title: req.body.title,
-        creDate: req.body.creDate,
-        expDate: req.body.expDate,
-        addText: req.body.addText,
-    })
-
-    await newAdver.save();
-    res.status(201)
-        .json({ message: "done........." });
-})
 
 /**--------------------------------
  * @desc     upload advertisements
- * @router /api/advertisements/addPhoto
+ * @router /api/advertisements/addAdvert
  * @method POST
  * @access private (only logged in admin)
  * ------------------------------------------ */
-module.exports.PhotoUpload = asyncHandler(async (req, res) => {
-    let newadv = await Advertisement.findOne({ ident: req.body.ident });
+module.exports.addAdvert = asyncHandler(async (req, res) => {
+    //chack
+
+    let newadv = await Advertisement.findOne({ title: req.body.title });
     if (newadv) {
         return res.status(400).json({ message: "Advertisement already exist" });
     }
     let arrayImg = [];
-    //1- validation
+
     if (!req.files || req.files.length === 0) return res.status(400).json({ message: "No file provided" });
 
     // Assuming you want to process each uploaded image
@@ -50,21 +32,20 @@ module.exports.PhotoUpload = asyncHandler(async (req, res) => {
 
         // Upload to cloudinary
         const result = await cloudinaryUploadImage(imagePath);
+        //Delete local image file after uploading to cloudinary
         fs.unlinkSync(imagePath);
 
         let imageInfo = {
-            url: result.secure_url,
-            publicId: result.public_id,
+            url: result.secure_url, 
+            publicId: result.public_id, 
         }
         arrayImg.push(imageInfo);
-        // You may also want to delete the local image file after uploading to cloudinary
     });
 
     // Wait for all uploads to complete before responding
     Promise.all(uploadPromises)
-        .then(async (results) => {
+        .then(async () => {
             let newAdver = new Advertisement({
-                ident: req.body.ident,
                 title: req.body.title,
                 creDate: req.body.creDate,
                 expDate: req.body.expDate,
@@ -78,8 +59,6 @@ module.exports.PhotoUpload = asyncHandler(async (req, res) => {
             console.error("Error uploading images:", error);
             res.status(500).json({ message: "Internal server error" });
         });
-
-
 });
 
 /**--------------------------------
@@ -104,7 +83,7 @@ module.exports.getAdvert = asyncHandler(async (req, res) => {
  * @access private (only logged in admin)
  * ------------------------------------------ */
 module.exports.updateAdverti = asyncHandler(async (req, res) => {
-    let test = await Advertisement.findOne({ ident: req.query.ident });
+    let test = await Advertisement.findById(req.params.id);
 
     //if Advertisement exsit
     if (!test)
@@ -157,16 +136,15 @@ module.exports.updateAdverti = asyncHandler(async (req, res) => {
  * @access private (only logged in admin)
  * ------------------------------------------ */
 module.exports.deleteAdvert = asyncHandler(async (req, res) => {
-    let del = await Advertisement.findOne({ ident: req.query.ident });
+    let del = await Advertisement.findById(req.params.id);
 
 
     //if Advertisement exsit
     if (!del)
         return res.status(404).json({ message: "Advertisement not found" });
 
-    console.log(del);
     let oldImag = del.advert;
-    
+
     //delete image from cloudinary
     for (let i = 0; i < oldImag.length; i++) {
         await cloudinaryRemoveImage(oldImag[i].publicId);

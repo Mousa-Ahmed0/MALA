@@ -1,22 +1,21 @@
 const {
-    ifAdmin,
-    verifyTokenOnlyUser,
-    verifyToken,
-    verifyTokenOnlyUserOrAdmin,
-    ifAdminOrStaff,
+  ifAdmin,
+  verifyTokenOnlyUser,
+  verifyToken,
+  verifyTokenOnlyUserOrAdmin,
+  ifAdminOrStaff,
 } = require("../middlewares/verifyToken");
 const validateId = require("../middlewares/validateObjectId");
 const photoUpload = require("../middlewares/photoUpload");
-const { advertisements, PhotoUpload, getAdvert, updateAdverti, deleteAdvert } = require("../Controller/advertisements.Controller");
+const {  getAdvert, updateAdverti, deleteAdvert, addAdvert } = require("../Controller/advertisements.Controller");
 const router = require("express").Router();
-router.put("/updateAdverti", ifAdmin,photoUpload.array("images",10), updateAdverti);
 
-router.post("/addAdvert", ifAdmin, advertisements);
-router.delete("/deleteAdvert", ifAdmin, deleteAdvert);
+router.delete("/deleteAdvert/:id", ifAdmin, deleteAdvert);
 router.get("/getAdvertis", ifAdmin, getAdvert);
 router
-  .route("/addPhoto")
-  .post(ifAdmin, photoUpload.array("images",10), PhotoUpload);
+  .route("/addAdvert")
+  .post(ifAdmin, photoUpload.array("images", 10), addAdvert);
+router.put("/updateAdverti/:id", validateId, ifAdmin, photoUpload.array("images", 10), updateAdverti);
 
 
 module.exports = router; 
