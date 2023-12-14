@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import DashboardWelcome from "../DashboardWelcome";
 import FormateDate from "../FormateDate";
 import { useDarkMode } from "../../context/DarkModeContext";
 import { Link } from "react-router-dom";
 import { getPateinrPayments, getPateinrResults } from "../../apis/ApisHandale";
-export default function PatientHome({ user }) {
+import AdsSection from "../UserComponenet/Ads/AdsSection";
+import PaymentToPDF from "../PaymentToPDF";
+export default function PatientHome({ user, isPdfLoading, setIsPdfLoading }) {
+  const hiddenDivRef = useRef(null);
   const { darkMode } = useDarkMode();
   const [allResults, setAllResults] = useState([]);
   const [resultError, setResultError] = useState(false);
@@ -20,6 +23,35 @@ export default function PatientHome({ user }) {
       </div>
     </div>
   );
+
+  // to pdf
+  const [loader, setLoader] = useState(false);
+  //download
+  /*const downloadPDF = () => {
+    const capture = print-section;
+    capture.style.padding = "20px 100px"; // Padding
+
+    setLoader(true);
+    html2canvas(capture).then((canvas) => {
+      const imgData = canvas.toDataURL("img/png");
+      const doc = new jsPDF("p", "px", "a4");
+      const componentWidth = doc.internal.pageSize.getWidth();
+      const componentHeight = doc.internal.pageSize.getHeight();
+
+      doc.setFontSize(12);
+
+      doc.addImage(
+        imgData,
+        "PNG",
+        0,
+        0,
+        componentWidth * 1,
+        componentHeight * 0.4
+      );
+      setLoader(false);
+      doc.save("receipt.pdf");
+    });
+  };*/
 
   //get patient results
   async function getResults() {
@@ -90,14 +122,18 @@ export default function PatientHome({ user }) {
             <div className="col-3 d-flex align-items-center text-truncate">
               {<FormateDate date={payment.date} />}
             </div>
-            <div className="col-6 d-flex align-items-center">
+            <div className="col-5 d-flex align-items-center">
               {payment.value}
               <span style={{ fontSize: "0.758rem" }}>NIS</span>
             </div>
-            <div className="col-3 d-flex align-items-center">
+            <div className="col-4 d-flex align-items-center gap-4">
               <Link className="btn m-0 nav-link position-relative">
                 More Details
               </Link>
+              <PaymentToPDF
+                darkMode={darkMode}
+                setIsPdfLoading={setIsPdfLoading}
+              />
             </div>
           </div>
         </>
@@ -117,7 +153,7 @@ export default function PatientHome({ user }) {
         <hr />
         <div className="row">
           <div
-            className={`p-4 col-12 col-md-6 my-4 maxHeight-inhert overflow-hidden ${
+            className={`p-4 col-12 col-md-6 my-4 maxHeight-inhert overflow-hidden  ${
               darkMode ? " spic-dark-mode" : " bg-white"
             }`}
           >
@@ -196,39 +232,7 @@ export default function PatientHome({ user }) {
         </div>
         <hr />
         <div className="row ">
-          <div
-            className={`p-4 col-12 my-4 maxHeight-inhert overflow-hidden ${
-              darkMode ? " spic-dark-mode" : " bg-white"
-            }`}
-          >
-            <h1 className="h5">
-              <span>
-                <i class="fa-solid fa-bullhorn"></i>
-              </span>{" "}
-              Notice Board:
-            </h1>
-            <hr className="my-4" />
-            <div className="row details-size mt-2 mb-4">
-              <div className="col-md-3 mid-bold">Title:</div>
-              <div className="col-md-6 mid-bold">Date:</div>
-              <div className="col-md-3 mid-bold">More:</div>
-            </div>
-            <div className="maxHeight-part overflow-yAxis ">
-              <div className="row detailes-size d-flex align-items-center">
-                <div className="col-3 d-flex align-items-center text-truncate">
-                  Some Important Thing you need to know!
-                </div>
-                <div className="col-6 d-flex align-items-center">
-                  04/12/2023
-                </div>
-                <div className="col-3 d-flex align-items-center">
-                  <Link className="btn m-0 nav-link position-relative">
-                    More Details
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
+          <AdsSection darkMode={darkMode} />
         </div>
       </div>
     </>

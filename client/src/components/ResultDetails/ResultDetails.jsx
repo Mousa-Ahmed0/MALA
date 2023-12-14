@@ -39,7 +39,7 @@ export default function ResultDetails() {
   function renderDetails() {
     return (
       <div className="print-section">
-        <div className="print-resultReport-header mb-1">
+        <div className="print-result Report-header mb-1">
           <ReportsHeader darkMode={darkMode} />
           <DetailsInformation
             darkMode={darkMode}

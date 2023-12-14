@@ -62,6 +62,10 @@ body {
   height: calc(100vh + 100%) !important;
   opacity: 75% !important;
 }
+.high-opasity {
+  height: calc(100vh) !important;
+  opacity: 85% !important;
+}
 .z-150 {
   z-index: 150 !important;
 }
@@ -405,7 +409,10 @@ Footer .fot-Details li i {
 }
 
 /* Search Section */
-
+.pdf-pay-section {
+  position: absolute !important;
+  left: -9999999999px;
+}
 select {
   height: calc(var(--height-form) + 8px) !important;
   width: 30% !important;

@@ -13,6 +13,7 @@ import Anlysis from "./components/Anlysis/AnlysisContainer.jsx";
 import AnlyiseDetails from "./components/AnlyiseDetails/AnlyiseDetails";
 import ResultDetails from "./components/ResultDetails/ResultDetails.jsx";
 import Profile from "./components/UserComponenet/UserProfile/UserProfileContainer.jsx";
+import AdDetails from "./components/UserComponenet/Ads/AdDetails.jsx";
 //LP Components
 import Home from "./components/LandingPageCompon/Home/Home";
 import About from "./components/LandingPageCompon/About/About";
@@ -69,6 +70,7 @@ import PatPaymentsPreviewContainer from "./components/Patient/PatientComponents/
 
 export default function App() {
   let [isFormOpen, setIsFormOpen] = useState(false);
+  let [isPdfLoading, setIsPdfLoading] = useState(false);
   const { darkMode, toggleDarkMode } = useDarkMode();
   let [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -141,6 +143,15 @@ export default function App() {
         </div>
       ) : (
         <>
+          <div
+            className={`${
+              isPdfLoading ? "d-flex " : "d-none"
+            } position-absolute bg-black high-opasity z-150  w-100 justify-content-center align-items-center`}
+          >
+            <div className="spinner-border text-primary" role="status">
+              <span className="sr-only">Loading...</span>
+            </div>
+          </div>
           <header
             className={`all-Mid-shadow position-relative w-100 ${
               darkMode ? " spic-dark-mode" : "light"
@@ -165,6 +176,7 @@ export default function App() {
                 isFormOpen ? "d-block " : "d-none"
               } position-absolute bg-black low-opasity z-150  w-100`}
             ></div>
+
             <Routes>
               <Route path="/" element={<LandingPage user={userDetails} />}>
                 <Route
@@ -174,7 +186,11 @@ export default function App() {
                     userDetails.usertype === "Admin" ? (
                       <DashboardHome user={userDetails} />
                     ) : userDetails.usertype === "Patient" ? (
-                      <PatientHome user={userDetails} />
+                      <PatientHome
+                        user={userDetails}
+                        isPdfLoading={isPdfLoading}
+                        setIsPdfLoading={setIsPdfLoading}
+                      />
                     ) : (
                       <Home />
                     )
@@ -213,6 +229,7 @@ export default function App() {
                 <Route path="/ResultDetails/:id" element={<ResultDetails />} />
 
                 <Route path="/ForgotPassword" element={<ForgotPassword />} />
+                <Route path="/AdDetails" element={<AdDetails />} />
                 <Route path="*" element={<Error />} />
               </Route>
               <Route path="/Doctor" element={<Doctor />}>
@@ -320,7 +337,12 @@ export default function App() {
               <Route path="/Patient" element={<Patient />}>
                 <Route
                   path="/Patient/PatientHome"
-                  element={<PatientHome user={userDetails} />}
+                  element={
+                    <PatientHome
+                      user={userDetails}
+                      setIsPdfLoading={setIsPdfLoading}
+                    />
+                  }
                 />
                 <Route
                   path="/Patient/HealthCalculators"

@@ -1,8 +1,10 @@
 import React from "react";
+import html2canvas from "html2canvas";
+
 export default function ReportsHeader({ darkMode }) {
   return (
     <>
-      <div className={`row ${darkMode ? " spic-dark-mode" : ""}`}>
+      <div className={`row`}>
         <div className="col-12 my-1">
           <div className="d-flex justify-content-around gap-4 align-items-center">
             <div className=" d-flex flex-column">
