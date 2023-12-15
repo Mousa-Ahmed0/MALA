@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import DashboardWelcome from "../DashboardWelcome";
-import LineChart from "../LineChart";
+import LineChart from "./Charts/PaymentLineChart/PaymentLineChartComponents/LineChart";
 import { useDarkMode } from "../../context/DarkModeContext";
 import { getPaymentsFromTo } from "../../apis/ApisHandale";
+import AdsSection from "../UserComponenet/Ads/AdsSection";
+import PaymentLineChartContainer from "./Charts/PaymentLineChart/PaymentLineChartContainer";
 export default function DashboardHome({ user }) {
   const { darkMode } = useDarkMode();
-  const width = "-webkit-fill-available";
 
-  function getPaymentChartDetails() {}
+  const width = "-webkit-fill-available";
   //BarChart
   const [chartLabels, setChartLabels] = useState([
     ["Staff"],
@@ -25,43 +26,9 @@ export default function DashboardHome({ user }) {
   return (
     <div className="ST-section ST-Dashboard">
       <DashboardWelcome user={user} />
-
       <hr className="my-4" />
-      <div className="row ">
-        <div
-          className={`p-4 col-12  maxHeight-inhert overflow-hidden ${
-            darkMode ? " spic-dark-mode" : " bg-white"
-          }`}
-        >
-          <h1 className="h5 m-0">
-            <span>
-              <i class="fa-solid fa-bullhorn"></i>
-            </span>{" "}
-            Notice Board:
-          </h1>
-          <hr className="my-4" />
-          <div className="row details-size mt-2 mb-4 d-none d-md-flex ">
-            <div className="col-md-3 mid-bold">Title:</div>
-            <div className="col-md-6 mid-bold">Date:</div>
-            <div className="col-md-3 mid-bold">More:</div>
-          </div>
-          <div className="maxHeight-part overflow-yAxis">
-            <div className="row detailes-size d-flex align-items-center">
-              <div className="col-3 d-flex align-items-center text-truncate">
-                Some Important Thing you need to know!
-              </div>
-              <div className="col-6 d-flex align-items-center">04/12/2023</div>
-              <div className="col-3 d-flex align-items-center">
-                <Link className="btn m-0 nav-link position-relative">
-                  More Details
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <AdsSection darkMode={darkMode} />
       <hr className="my-4" />
-
       <div className="d-flex flex-column flex-md-row justify-content-between align-items-center gap-4 my-4">
         <div
           className={`w-100 ${darkMode ? " spic-dark-mode" : "bg-white"} p-4`}
@@ -154,14 +121,7 @@ export default function DashboardHome({ user }) {
             darkMode ? " spic-dark-mode" : " bg-white"
           }`}
         >
-          <h1 className="h5">Our Payments - Last 6 Months:</h1>
-          <h1 className="h1 mt-2 mb-4 colorMain mid-bold">
-            4,800.00{" "}
-            <span className={`${darkMode ? "text-white" : "text-black"} h5`}>
-              NIS
-            </span>
-          </h1>
-          <LineChart darkMode={darkMode} />
+          <PaymentLineChartContainer darkMode={darkMode} />
         </div>
         <div className="col-1"></div>
         <div
@@ -195,13 +155,6 @@ export default function DashboardHome({ user }) {
         </div>
       </div>
       <hr className="my-4" />
-
-      {/*<MyChart
-        darkMode={darkMode}
-        chartLabels={chartLabels}
-        chartDataColors={chartDataColors}
-        chartData={chartData}
-  />*/}
     </div>
   );
 }

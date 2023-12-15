@@ -17,7 +17,7 @@ export default function AdsSection({ darkMode }) {
           Notice Board:
         </h1>
         <hr className="my-4" />
-        <div className="row details-size mt-2 mb-4">
+        <div className="row d-none d-md-flex details-size mt-2 mb-4">
           <div className="col-md-3 mid-bold">Title:</div>
           <div className="col-md-6 mid-bold">Date:</div>
           <div className="col-md-3 mid-bold">More:</div>

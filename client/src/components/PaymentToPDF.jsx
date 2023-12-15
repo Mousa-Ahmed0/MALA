@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import ReportsHeader from "./ReportsHeader";
-import DetailsHeader from "./PaymentsReport/PaymentsToPdfComponents/DetailsHeader";
+import DetailsHeader from "./PaymentsReport/PaymentsToPdfComponents/PatientDetailsHeader";
 
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";

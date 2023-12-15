@@ -35,14 +35,6 @@ export default function UserProfileContainer({
   useEffect(() => {
     getUser();
   }, []);
-  //handale change image
-  useEffect(() => {
-    console.log(user);
-    console.log(user.id);
-    if (user.id === userDetails.id) {
-      localStorage.setItem("profileIMG", user.profilePhoto.url);
-    }
-  }, [user]);
 
   //Get User Details
   async function getUser() {

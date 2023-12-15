@@ -11,7 +11,7 @@ import {
 
 import { Line } from "react-chartjs-2";
 
-const LineChart = ({ darkMode }) => {
+const LineChart = ({ darkMode, lineLabels, lineData }) => {
   ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -28,11 +28,11 @@ const LineChart = ({ darkMode }) => {
 
   // Sample data for the line chart
   const data = {
-    labels: ["January", "February", "March", "April", "May", "June"],
+    labels: lineLabels,
     datasets: [
       {
         label: "My Line Chart",
-        data: [1200, 1900, 300, 500, 200, 700],
+        data: lineData,
         fill: false,
         borderColor: borderColor,
         borderWidth: 2,
@@ -77,6 +77,7 @@ const LineChart = ({ darkMode }) => {
       },
     },
   };
+
   return (
     <div>
       <Line data={data} options={options} />
