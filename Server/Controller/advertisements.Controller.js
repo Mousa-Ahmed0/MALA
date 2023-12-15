@@ -97,7 +97,7 @@ module.exports.updateAdverti = asyncHandler(async (req, res) => {
   test.creDate = req.body.creDate;
   test.expDate = req.body.expDate;
   //edit image
-  if (req.body.files || req.body.files.length > 0) {
+  if (req.files || req.body.files.length > 0) {
     const uploadPromises = req.body.files.map(async (file) => {
       const imagePath = path.join(__dirname, `../images/${file.filename}`);
       const result = await cloudinaryUploadImage(imagePath);
