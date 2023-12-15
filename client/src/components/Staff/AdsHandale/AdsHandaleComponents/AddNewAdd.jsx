@@ -55,24 +55,35 @@ export default function AddNewAdd({ setIsFormOpen }) {
   }
   //image changes
   function handleImageChange(e) {
+    // get images from input and convert it to array of files
     const selectedImages = Array.from(e.target.files);
+    // create temp array to edit on it
     const newFiles = [...images];
+
+    // move on the array of files to convert each one to FormData and push it to newFiles Array
     selectedImages.forEach((imageFile, index) => {
-      const file = new FormData();
-      console.log("imageFile before be formdata", imageFile);
-      file.append(`image${index}`, imageFile);
-      console.log("file after be formdata", file);
-      newFiles.push(file);
+      const fileFormData = new FormData();
+      console.log("imageFile before FormData", imageFile);
+      fileFormData.append(`image${index}`, imageFile);
+      console.log("fileFormData", fileFormData);
+
+      // Store both the file and FormData in an object
+      const fileObject = {
+        file: imageFile,
+        formData: fileFormData,
+      };
+
+      newFiles.push(fileObject);
     });
 
     console.log("newFiles:", newFiles);
-    setImages(newFiles); // Set FormData to the images state
+    setImages(newFiles); // Set the array of file objects to the images state
   }
 
   //////////////
-  useEffect(() => {
+  /*useEffect(() => {
     console.log("New Ad: ", ad);
-  }, [ad]);
+  }, [ad]);*/
   return (
     <div className="ST-section my-1">
       <BackBtn />
