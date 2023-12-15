@@ -464,6 +464,28 @@ select option {
   padding: 0 10px !important;
 }
 
+/*********************************/
+.carousel {
+  height: 25rem;
+}
+.carousel-inner {
+  height: 100% !important;
+}
+.carousel-inner .carousel-item {
+  height: 100% !important;
+}
+.carousel-inner .carousel-item img {
+  border-radius: 15px;
+  min-width: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  transition: transform 0.3s ease-in-out;
+}
+.carousel-control-next,
+.carousel-control-next span,
+.carousel-control-prev span {
+  color: black;
+}
 /*** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~_~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Animations ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~_~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ***/
 /* Typing */
 @keyframes typing {

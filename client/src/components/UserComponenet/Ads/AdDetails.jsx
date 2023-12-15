@@ -1,69 +1,45 @@
 import React from "react";
+import { Carousel } from "react-bootstrap";
 
 import BackBtn from "../../BackBtn";
 
 export default function AdDetails({ darkMode }) {
+  const arrowStyles = {
+    color: darkMode ? "white !important" : "black !important", // Set the desired color for the arrows
+    "font-family": "fontawesome",
+  };
   return (
     <div className="ST-section">
       <BackBtn />
-      <div className="my-4">
-        <div
-          id="carouselExampleIndicators"
-          className="carousel slide"
-          data-ride="carousel"
+      <div className="my-4" style={{}}>
+        <Carousel
+          nextIcon={<span style={arrowStyles}>&#xf30b;</span>}
+          prevIcon={<span style={arrowStyles}>&#xf30a;</span>}
         >
-          <ol className="carousel-indicators">
-            <li
-              data-target="#carouselExampleIndicators"
-              data-slide-to={0}
-              className="active"
+          <Carousel.Item>
+            <img
+              className="d-block w-100 h-100"
+              src="./images/1.png"
+              alt="First slide"
             />
-            <li data-target="#carouselExampleIndicators" data-slide-to={1} />
-            <li data-target="#carouselExampleIndicators" data-slide-to={2} />
-          </ol>
-          <div className="carousel-inner">
-            <div className="carousel-item active">
-              <img
-                className="d-block w-100"
-                src="./images/1.png"
-                alt="First slide"
-              />
-            </div>
-            <div className="carousel-item">
-              <img
-                className="d-block w-100"
-                src="./images/med.png"
-                alt="Second slide"
-              />
-            </div>
-            <div className="carousel-item">
-              <img
-                className="d-block w-100"
-                src="./images/meet.png"
-                alt="Third slide"
-              />
-            </div>
-          </div>
-          <a
-            className="carousel-control-prev"
-            href="#carouselExampleIndicators"
-            role="button"
-            data-slide="prev"
-          >
-            <span className="carousel-control-prev-icon" aria-hidden="true" />
-            <span className="sr-only">Previous</span>
-          </a>
-          <a
-            className="carousel-control-next"
-            href="#carouselExampleIndicators"
-            role="button"
-            data-slide="next"
-          >
-            <span className="carousel-control-next-icon" aria-hidden="true" />
-            <span className="sr-only">Next</span>
-          </a>
-        </div>
+          </Carousel.Item>
+          <Carousel.Item>
+            <img
+              className="d-block w-100 h-100"
+              src="./images/meet.png"
+              alt="Second slide"
+            />
+          </Carousel.Item>
+          <Carousel.Item>
+            <img
+              className="d-block w-100 h-100"
+              src="./images/med.png"
+              alt="Third slide"
+            />
+          </Carousel.Item>
+        </Carousel>
       </div>
+      <hr className="my-4" />
     </div>
   );
 }
