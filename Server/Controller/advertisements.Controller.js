@@ -22,11 +22,11 @@ module.exports.addAdvert = asyncHandler(async (req, res) => {
   }
   let arrayImg = [];
   console.log(req.body);
-  if (!req.body.files || req.body.files.length === 0)
+  if (!req.files || req.files.length === 0)
     return res.status(400).json({ message: "No file provided" });
 
   // Assuming you want to process each uploaded image
-  const uploadPromises = req.body.files.map(async (file) => {
+  const uploadPromises = req.files.map(async (file) => {
     // Get the path to the image
     const imagePath = path.join(__dirname, `../images/${file.filename}`);
 
@@ -97,8 +97,8 @@ module.exports.updateAdverti = asyncHandler(async (req, res) => {
   test.creDate = req.body.creDate;
   test.expDate = req.body.expDate;
   //edit image
-  if (req.body.files || req.body.files.length > 0) {
-    const uploadPromises = req.body.files.map(async (file) => {
+  if (req.files || req.files.length > 0) {
+    const uploadPromises = req.files.map(async (file) => {
       const imagePath = path.join(__dirname, `../images/${file.filename}`);
       const result = await cloudinaryUploadImage(imagePath);
       fs.unlinkSync(imagePath);

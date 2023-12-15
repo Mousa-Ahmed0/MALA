@@ -72,7 +72,6 @@ export default function UserProfileContainer({
   async function updatePhoto() {
     const formData = new FormData();
     formData.append("image", imageFile);
-    console.log(formData);
     try {
       const response = await updateProfilePhoto(formData);
       getUser();

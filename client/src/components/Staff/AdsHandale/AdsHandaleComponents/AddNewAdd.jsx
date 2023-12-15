@@ -29,8 +29,8 @@ export default function AddNewAdd({ setIsFormOpen }) {
   //add ad
   async function onFormSubmit(e) {
     e.preventDefault();
+    console.log("images Array: ", images);
     const newAd = { ...ad, files: images };
-    console.log("Uploading images:", images);
     console.log("Uploading Ad:", newAd);
     try {
       let response = await axios.post(
@@ -60,24 +60,22 @@ export default function AddNewAdd({ setIsFormOpen }) {
     // create temp array to edit on it
     const newFiles = [...images];
 
-    // move on the array of files to convert each one to FormData and push it to newFiles Array
+    /*// move on the array of files to convert each one to FormData and push it to array
     selectedImages.forEach((imageFile, index) => {
       const fileFormData = new FormData();
       console.log("imageFile before FormData", imageFile);
       fileFormData.append(`image${index}`, imageFile);
       console.log("fileFormData", fileFormData);
 
-      // Store both the file and FormData in an object
-      const fileObject = {
-        file: imageFile,
-        formData: fileFormData,
-      };
-
-      newFiles.push(fileObject);
+      newFiles.push(fileFormData);
     });
 
     console.log("newFiles:", newFiles);
-    setImages(newFiles); // Set the array of file objects to the images state
+    setImages(newFiles); // Set the array of file objects to the images state*/
+    selectedImages.map((image) => {
+      newFiles.push(image);
+    });
+    setImages(newFiles);
   }
 
   //////////////
