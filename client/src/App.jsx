@@ -9,10 +9,14 @@ import Doctor from "./pages/Doctor/Doctor";
 import Patient from "./pages/Patient/Patient";
 import Error from "./pages/Error/Error";
 //Components
+/*analyze*/
 import Anlysis from "./components/Anlysis/AnlysisContainer.jsx";
 import AnlyiseDetails from "./components/AnlyiseDetails/AnlyiseDetails";
+/*result*/
 import ResultDetails from "./components/ResultDetails/ResultDetails.jsx";
+/*profile*/
 import Profile from "./components/UserComponenet/UserProfile/UserProfileContainer.jsx";
+/*Ads*/
 import AdDetails from "./components/UserComponenet/Ads/AdDetails.jsx";
 //LP Components
 import Home from "./components/LandingPageCompon/Home/Home";
@@ -229,7 +233,10 @@ export default function App() {
                 <Route path="/ResultDetails/:id" element={<ResultDetails />} />
 
                 <Route path="/ForgotPassword" element={<ForgotPassword />} />
-                <Route path="/AdDetails" element={<AdDetails />} />
+                <Route
+                  path="/AdDetails"
+                  element={<AdDetails darkMode={darkMode} />}
+                />
                 <Route path="*" element={<Error />} />
               </Route>
               <Route path="/Doctor" element={<Doctor />}>
@@ -367,7 +374,11 @@ export default function App() {
                 />
                 <Route
                   path="/Patient/PaymentsReview/:ident"
-                  element={<PatPaymentsPreviewContainer />}
+                  element={
+                    <PatPaymentsPreviewContainer
+                      setIsPdfLoading={setIsPdfLoading}
+                    />
+                  }
                 />
                 <Route path="/Patient/Anlysis" element={<Anlysis />} />
               </Route>

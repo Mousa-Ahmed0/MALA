@@ -4,13 +4,11 @@ import { useDarkMode } from "../../../../context/DarkModeContext";
 import { getPateinrPayments } from "../../../../apis/ApisHandale";
 import { Link } from "react-router-dom";
 import BackBtn from "../../../BackBtn";
-import SearchBar from "../../../SearchBar/SearchBar";
-import FormateDate from "../../../FormateDate";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
-import ResultToPDF from "../../../ResultToPDF";
 
-export default function PatPaymentsPreviewContainer() {
+import FormateDate from "../../../FormateDate";
+import PaymentToPDF from "../../../PaymentToPDF";
+
+export default function PatPaymentsPreviewContainer({ setIsPdfLoading }) {
   const patientIdent = useParams("ident").ident;
   const { darkMode } = useDarkMode();
   const [allPayments, setallPayments] = useState([]);
@@ -87,7 +85,10 @@ export default function PatPaymentsPreviewContainer() {
                         </Link>
                       </div>
                       <div className="col-6 col-md-1 d-flex justify-content-end align-items-center">
-                        <ResultToPDF darkMode={darkMode} />
+                        <PaymentToPDF
+                          darkMode={darkMode}
+                          setIsPdfLoading={setIsPdfLoading}
+                        />
                       </div>
                     </div>
                   </div>

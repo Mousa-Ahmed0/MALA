@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function DetailsHeader({ darkMode }) {
+export default function PatientDetailsHeader({ darkMode }) {
   return (
     <>
       <div>
