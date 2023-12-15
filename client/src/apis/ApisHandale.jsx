@@ -55,6 +55,8 @@ export const updateAUser = async (id, user) => {
   );
 };
 export const updateProfilePhoto = async (formData) => {
+  console.log("formData", formData);
+
   return await axios.post(
     `http://localhost:5000/api/user/profile/profile-photo-upload`,
     formData,
