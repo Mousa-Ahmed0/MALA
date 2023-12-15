@@ -248,3 +248,81 @@ module.exports.getResultsStaff = asyncHandler(async (req, res) => {
     });
   } else res.status(404).json({ message: "User not found" });
 });
+
+module.exports.resultDate = asyncHandler(async (req, res) => {
+  //vaildition @front end
+  const daysOfWeek = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+  const number = req.query.number;
+  const currentDate = new Date(req.query.date);
+  const startDate = new Date(currentDate);
+
+  let resultArray = [];
+
+  if (number == 0) {
+    //week
+    startDate.setDate(currentDate.getDate() - 7);
+    const getAllResult = await analyzeResult.find({
+      date: { $gte: startDate, $lte: currentDate },
+    });
+
+    if (getAllResult.length) {
+      for (let i = 0; i < getAllResult.length; i++) {
+        const userinfo = await user.findOne({
+          ident: getAllResult[i].patientIdent,
+        }).select('-password');
+        const dayOfWeek = getAllResult[i].date.getDay(); //find day
+        const dayName = daysOfWeek[dayOfWeek]; //find name of day
+        const pymentDetails = {
+          day: dayName,
+          date: getAllResult[i].date,
+          Result: getAllResult[i],
+          info: userinfo,
+        };
+        resultArray.push(pymentDetails);
+      }
+      res.status(201).json({
+        resultArray,
+        message: "Reports generated successfully.",
+      });
+    } else {
+      res.status(400).json({ message: "Can't find report" });
+    }
+  } else {
+    //number of month
+    startDate.setMonth(currentDate.getMonth() - number);
+    const getAllResult = await analyzeResult.find({
+      date: { $gte: startDate, $lte: currentDate },
+    });
+
+    if (getAllResult.length) {
+      for (let i = 0; i < getAllResult.length; i++) {
+        const userinfo = await user.findOne({
+          ident: getAllResult[i].patientIdent,
+        }).select('-password');
+        const dayOfWeek = getAllResult[i].date.getDay(); //find day
+        const dayName = daysOfWeek[dayOfWeek]; //find name of day
+        const pymentDetails = {
+          day: dayName,
+          date: getAllResult[i].date,
+          Result: getAllResult[i],
+          info: userinfo,
+        };
+        resultArray.push(pymentDetails);
+      }
+      res.status(201).json({
+        resultArray,
+        message: "Reports generated successfully.",
+      });
+    } else {
+      res.status(400).json({ message: "Can't find report" });
+    }
+  }
+});

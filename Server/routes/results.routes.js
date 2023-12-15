@@ -16,12 +16,14 @@ const {
   getResultsStaff,
   getResultsById,
   getResultsByIdStaff,
+  resultDate,
 } = require("../Controller/results.Controller");
 
 // results
 router.post("/addResults", ifAdminOrStaff, addResults);
 router.get("/getResult", ifAdminOrStaff, getResults);
 router.get("/getResults/staffIdent", ifAdminOrStaff, getResultsByIdStaff);
+router.get("/getResults/resultDate", ifAdminOrStaff, resultDate);
 
 router.get("/getResults/:id", validateId, getResultsById);
 router.get("/getPatientAnalyze", getResultsPatient);
