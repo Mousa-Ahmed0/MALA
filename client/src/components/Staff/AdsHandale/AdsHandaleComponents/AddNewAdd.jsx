@@ -54,10 +54,20 @@ export default function AddNewAdd({ setIsFormOpen }) {
     setAd(newAd);
   }
   //image changes
-  const handleImageChange = async (e) => {
+  function handleImageChange(e) {
     const selectedImages = Array.from(e.target.files);
-    await setImages(selectedImages);
-  };
+    const newFiles = [...images];
+    selectedImages.forEach((imageFile, index) => {
+      const file = new FormData();
+      console.log("imageFile before be formdata", imageFile);
+      file.append(`image${index}`, imageFile);
+      console.log("file after be formdata", file);
+      newFiles.push(file);
+    });
+
+    console.log("newFiles:", newFiles);
+    setImages(newFiles); // Set FormData to the images state
+  }
 
   //////////////
   useEffect(() => {

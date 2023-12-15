@@ -1,12 +1,11 @@
 const asyncHandler = require("express-async-handler");
 const {
-    cloudinaryUploadImage,
-    cloudinaryRemoveImage,
+  cloudinaryUploadImage,
+  cloudinaryRemoveImage,
 } = require("../utils/cloudinary");
 const path = require("path");
 const fs = require("fs");
 const { Advertisement } = require("../models/advertisements");
-
 
 /**--------------------------------
  * @desc     upload advertisements
@@ -15,50 +14,53 @@ const { Advertisement } = require("../models/advertisements");
  * @access private (only logged in admin)
  * ------------------------------------------ */
 module.exports.addAdvert = asyncHandler(async (req, res) => {
-    //chack
+  //chack
 
-    let newadv = await Advertisement.findOne({ title: req.body.title });
-    if (newadv) {
-        return res.status(400).json({ message: "Advertisement already exist" });
-    }
-    let arrayImg = [];
+  let newadv = await Advertisement.findOne({ title: req.body.title });
+  if (newadv) {
+    return res.status(400).json({ message: "Advertisement already exist" });
+  }
+  let arrayImg = [];
+  console.log(req.body);
+  if (!req.body.files || req.body.files.length === 0)
+    return res.status(400).json({ message: "No file provided" });
 
-    if (!req.files || req.files.length === 0) return res.status(400).json({ message: "No file provided" });
+  // Assuming you want to process each uploaded image
+  const uploadPromises = req.body.files.map(async (file) => {
+    // Get the path to the image
+    const imagePath = path.join(__dirname, `../images/${file.filename}`);
 
-    // Assuming you want to process each uploaded image
-    const uploadPromises = req.files.map(async (file) => {
-        // Get the path to the image
-        const imagePath = path.join(__dirname, `../images/${file.filename}`);
+    // Upload to cloudinary
+    const result = await cloudinaryUploadImage(imagePath);
+    //Delete local image file after uploading to cloudinary
+    fs.unlinkSync(imagePath);
 
-        // Upload to cloudinary
-        const result = await cloudinaryUploadImage(imagePath);
-        //Delete local image file after uploading to cloudinary
-        fs.unlinkSync(imagePath);
+    let imageInfo = {
+      url: result.secure_url,
+      publicId: result.public_id,
+    };
+    arrayImg.push(imageInfo);
+  });
 
-        let imageInfo = {
-            url: result.secure_url, 
-            publicId: result.public_id, 
-        }
-        arrayImg.push(imageInfo);
+  // Wait for all uploads to complete before responding
+  Promise.all(uploadPromises)
+    .then(async () => {
+      let newAdver = new Advertisement({
+        title: req.body.title,
+        creDate: req.body.creDate,
+        expDate: req.body.expDate,
+        addText: req.body.addText,
+        advert: arrayImg,
+      });
+      await newAdver.save();
+      res
+        .status(200)
+        .json({ message: "Images uploaded successfully", newAdver });
+    })
+    .catch((error) => {
+      console.error("Error uploading images:", error);
+      res.status(500).json({ message: "Internal server error" });
     });
-
-    // Wait for all uploads to complete before responding
-    Promise.all(uploadPromises)
-        .then(async () => {
-            let newAdver = new Advertisement({
-                title: req.body.title,
-                creDate: req.body.creDate,
-                expDate: req.body.expDate,
-                addText: req.body.addText,
-                advert: arrayImg,
-            })
-            await newAdver.save();
-            res.status(200).json({ message: "Images uploaded successfully", newAdver });
-        })
-        .catch((error) => {
-            console.error("Error uploading images:", error);
-            res.status(500).json({ message: "Internal server error" });
-        });
 });
 
 /**--------------------------------
@@ -68,12 +70,9 @@ module.exports.addAdvert = asyncHandler(async (req, res) => {
  * @access private (only logged in admin)
  * ------------------------------------------ */
 module.exports.getAdvert = asyncHandler(async (req, res) => {
-    let allAdv = await Advertisement.find({});
-    if (allAdv)
-        res.status(201).json({ message: "done.........", allAdv });
-    else
-        return res.status(400).json({ message: "dose not exist" });
-
+  let allAdv = await Advertisement.find({});
+  if (allAdv) res.status(201).json({ message: "done.........", allAdv });
+  else return res.status(400).json({ message: "dose not exist" });
 });
 
 /**--------------------------------
@@ -83,51 +82,47 @@ module.exports.getAdvert = asyncHandler(async (req, res) => {
  * @access private (only logged in admin)
  * ------------------------------------------ */
 module.exports.updateAdverti = asyncHandler(async (req, res) => {
-    let test = await Advertisement.findById(req.params.id);
+  let test = await Advertisement.findById(req.params.id);
 
-    //if Advertisement exsit
-    if (!test)
-        return res.status(404).json({ message: "Advertisement not found" });
+  //if Advertisement exsit
+  if (!test)
+    return res.status(404).json({ message: "Advertisement not found" });
 
-    let arrayImg = [];
-    let oldImag = test.advert;
+  let arrayImg = [];
+  let oldImag = test.advert;
 
-    //save text
-    test.title = req.body.title;
-    test.addText = req.body.addText;
-    test.creDate = req.body.creDate;
-    test.expDate = req.body.expDate;
-    //edit image
-    if (req.files || req.files.length > 0) {
-        const uploadPromises = req.files.map(async (file) => {
-            const imagePath = path.join(__dirname, `../images/${file.filename}`);
-            const result = await cloudinaryUploadImage(imagePath);
-            fs.unlinkSync(imagePath);
+  //save text
+  test.title = req.body.title;
+  test.addText = req.body.addText;
+  test.creDate = req.body.creDate;
+  test.expDate = req.body.expDate;
+  //edit image
+  if (req.body.files || req.body.files.length > 0) {
+    const uploadPromises = req.body.files.map(async (file) => {
+      const imagePath = path.join(__dirname, `../images/${file.filename}`);
+      const result = await cloudinaryUploadImage(imagePath);
+      fs.unlinkSync(imagePath);
 
-            let imageInfo = {
-                url: result.secure_url,
-                publicId: result.public_id,
-            };
-            arrayImg.push(imageInfo);
-        });
+      let imageInfo = {
+        url: result.secure_url,
+        publicId: result.public_id,
+      };
+      arrayImg.push(imageInfo);
+    });
 
-        // Wait for all uploads to complete before saving the updated advertisement
-        await Promise.all(uploadPromises);
-    }
-    test.advert = arrayImg;
-    //delete old image
-    for (let i = 0; i < oldImag.length; i++) {
-        await cloudinaryRemoveImage(oldImag[i].publicId);
+    // Wait for all uploads to complete before saving the updated advertisement
+    await Promise.all(uploadPromises);
+  }
+  test.advert = arrayImg;
+  //delete old image
+  for (let i = 0; i < oldImag.length; i++) {
+    await cloudinaryRemoveImage(oldImag[i].publicId);
+  }
+  //save to database
+  await test.save();
 
-    }
-    //save to database
-    await test.save();
-
-    res.status(200).json({ message: "Advertisement updated successfully", test });
-
-
+  res.status(200).json({ message: "Advertisement updated successfully", test });
 });
-
 
 /**--------------------------------
  * @desc     delete advertisements
@@ -136,23 +131,19 @@ module.exports.updateAdverti = asyncHandler(async (req, res) => {
  * @access private (only logged in admin)
  * ------------------------------------------ */
 module.exports.deleteAdvert = asyncHandler(async (req, res) => {
-    let del = await Advertisement.findById(req.params.id);
+  let del = await Advertisement.findById(req.params.id);
 
+  //if Advertisement exsit
+  if (!del) return res.status(404).json({ message: "Advertisement not found" });
 
-    //if Advertisement exsit
-    if (!del)
-        return res.status(404).json({ message: "Advertisement not found" });
+  let oldImag = del.advert;
 
-    let oldImag = del.advert;
+  //delete image from cloudinary
+  for (let i = 0; i < oldImag.length; i++) {
+    await cloudinaryRemoveImage(oldImag[i].publicId);
+  }
 
-    //delete image from cloudinary
-    for (let i = 0; i < oldImag.length; i++) {
-        await cloudinaryRemoveImage(oldImag[i].publicId);
-
-    }
-
-    //delete from db
-    await del.deleteOne();
-    return res.status(200).json({ message: "Advertisement is delete..." });
-
-})
+  //delete from db
+  await del.deleteOne();
+  return res.status(200).json({ message: "Advertisement is delete..." });
+});
