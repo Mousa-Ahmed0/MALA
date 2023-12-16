@@ -25,7 +25,6 @@ module.exports.addAdvert = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "Advertisement already exist" });
   }
   let arrayImg = [];
-  console.log(req.body);
   if (!req.files || req.files.length === 0)
     return res.status(400).json({ message: "No file provided" });
 

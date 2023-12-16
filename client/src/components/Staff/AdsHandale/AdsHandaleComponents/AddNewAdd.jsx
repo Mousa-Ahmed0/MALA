@@ -6,12 +6,12 @@ import BackBtn from "../../../BackBtn";
 export default function AddNewAdd({ setIsFormOpen }) {
   const { darkMode } = useDarkMode();
   const [ad, setAd] = useState({
+    images: [],
     title: "",
     addText: "",
     creDate: new Date(),
     expDate: new Date(),
   });
-  const [images, setImages] = useState([]);
   let [errorMessage, setErrorMessage] = useState("");
   let [apiMessage, setApiMessage] = useState("");
   let [apiError, setApiError] = useState(false);
@@ -29,28 +29,39 @@ export default function AddNewAdd({ setIsFormOpen }) {
   async function onFormSubmit(e) {
     e.preventDefault();
 
-    const forms = images.map((image) => {
+    /* const forms = images.map((image) => {
       const formData = new FormData();
       formData.append("image", image);
       return formData;
-    });
+    });*/
 
-    const formData = new FormData();
+    /* const formData = new FormData();
     formData.append("title", ad.title);
     formData.append("addText", ad.addText);
     formData.append("creDate", ad.creDate);
     formData.append("expDate", ad.expDate);
 
-    // Append array of FormData objects to the main FormData
-    forms.forEach((form) => {
-      formData.append("images", form);
+    images.map((image, index) => {
+      formData.append(`image ${index + 1}`, image);
     });
-    console.log("FormData:", formData);
+    // Append array of FormData objects to the main FormData
+    /* forms.forEach((form) => {
+      formData.append("images", form);
+    });*/
 
     try {
+      const formDataToSend = new FormData();
+      ad.images.forEach((image, index) => {
+        formDataToSend.append(`images[${index}]`, image);
+      });
+      formDataToSend.append("title", ad.title);
+      formDataToSend.append("addText", ad.addText);
+      formDataToSend.append("creDate", ad.creDate);
+      formDataToSend.append("expDate", ad.expDate);
+
       let response = await axios.post(
         "http://localhost:5000/api/advertisements/addAdvert",
-        formData,
+        formDataToSend,
         {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         }
@@ -70,17 +81,8 @@ export default function AddNewAdd({ setIsFormOpen }) {
   }
   //image changes
   function handleImageChange(e) {
-    // get images from input and convert it to array of files
-    const selectedImages = Array.from(e.target.files);
-    // create temp array to edit on it
-    const newFiles = [...images];
-
-    selectedImages.map((image, index) => {
-      // const fileFormData = new FormData();
-      //fileFormData.append(`image${index}`, image);
-      newFiles.push(image);
-    });
-    setImages(newFiles);
+    const files = e.target.files;
+    setAd({ ...ad, images: [...ad.images, ...files] });
   }
 
   /*// move on the array of files to convert each one to FormData and push it to array
@@ -210,11 +212,12 @@ export default function AddNewAdd({ setIsFormOpen }) {
                 className="form-control form-control-lg"
                 type="file"
                 accept="image/*"
+                name="images"
                 multiple
                 onChange={handleImageChange}
               />
               {/* Display selected images */}
-              {images.length > 0 && (
+              {/*images.length > 0 && (
                 <div className="mt-4">
                   <h5>Selected Images:</h5>
                   <div className="d-flex gap-2">
@@ -223,7 +226,7 @@ export default function AddNewAdd({ setIsFormOpen }) {
                     ))}
                   </div>
                 </div>
-              )}
+                    )*/}
               <div className="mt-4 d-flex justify-content-around">
                 <button className="btn btn-primary  d-flex justify-content-center BTN-Bold">
                   Add
