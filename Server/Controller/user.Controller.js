@@ -4,7 +4,6 @@ const {
   cloudinaryUploadImage,
   cloudinaryRemoveImage,
 } = require("../utils/cloudinary");
-const bcrypt = require("bcrypt");
 const path = require("path");
 const fs = require("fs");
 const jwt = require("jsonwebtoken");

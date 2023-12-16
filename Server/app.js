@@ -25,6 +25,7 @@ app.use("/api/user", require("./routes/user.routes"));
 app.use("/api/storage", require("./routes/storage.routes"));
 app.use("/api/result", require("./routes/results.routes"));
 app.use("/api/payment", require("./routes/payment.routes"));
+app.use("/api/massage", require("./routes/massage.routes"));
 app.use("/api/advertisements", require("./routes/advertisements.routes"));
 // app.use('/api/posts',require('./routes/post.routes'));
 // app.use('/api/comments',require('./routes/comment.routes'));
@@ -35,7 +36,11 @@ app.use(notFound);
 app.use(errorHandler);
 
 //Connection to database
-dbConnection();
+dbConnection().then(() => {
+  app.listen(port, () => console.log(`http://localhost:${port}`));
+
+})
+  .catch((err) => console.log(err));
 
 ///
 // const accountSid = 'AC3e755fbf415654279f10b6898afb8da5';
@@ -53,7 +58,6 @@ dbConnection();
 //   .then(message => console.log(message.sid))
 //   .catch(error => console.error(error));
 
-//Running the server 
-app.listen(port, () => console.log(`http://localhost:${port}`));
+//Running the server
 
 //
