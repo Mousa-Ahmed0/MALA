@@ -15,6 +15,10 @@ const { Advertisement } = require("../models/advertisements");
  * ------------------------------------------ */
 module.exports.addAdvert = asyncHandler(async (req, res) => {
   //chack
+  console.log("------------------- ---------------------------");
+  console.log("body: ", req.body);
+  console.log("images: ", req.body.images);
+  console.log("files[0]: ", req.files[0]);
 
   let newadv = await Advertisement.findOne({ title: req.body.title });
   if (newadv) {
@@ -27,6 +31,7 @@ module.exports.addAdvert = asyncHandler(async (req, res) => {
 
   // Assuming you want to process each uploaded image
   const uploadPromises = req.files.map(async (file) => {
+    console.log("uploadPromises");
     // Get the path to the image
     const imagePath = path.join(__dirname, `../images/${file.filename}`);
 

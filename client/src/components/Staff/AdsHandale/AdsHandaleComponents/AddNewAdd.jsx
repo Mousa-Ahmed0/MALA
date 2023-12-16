@@ -10,7 +10,6 @@ export default function AddNewAdd({ setIsFormOpen }) {
     addText: "",
     creDate: new Date(),
     expDate: new Date(),
-    files: [],
   });
   const [images, setImages] = useState([]);
   let [errorMessage, setErrorMessage] = useState("");
@@ -29,15 +28,31 @@ export default function AddNewAdd({ setIsFormOpen }) {
   //add ad
   async function onFormSubmit(e) {
     e.preventDefault();
-    console.log("images Array: ", images);
-    const newAd = { ...ad, files: images };
-    console.log("Uploading Ad:", newAd);
+
+    const forms = images.map((image) => {
+      const formData = new FormData();
+      formData.append("image", image);
+      return formData;
+    });
+
+    const formData = new FormData();
+    formData.append("title", ad.title);
+    formData.append("addText", ad.addText);
+    formData.append("creDate", ad.creDate);
+    formData.append("expDate", ad.expDate);
+
+    // Append array of FormData objects to the main FormData
+    forms.forEach((form, index) => {
+      formData.append(`images[${index}]`, form);
+    });
+
     try {
       let response = await axios.post(
         "http://localhost:5000/api/advertisements/addAdvert",
-        newAd,
+        formData,
         {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+          "Content-Type": "multipart/form-data",
         }
       );
       console.log(response);
@@ -60,7 +75,15 @@ export default function AddNewAdd({ setIsFormOpen }) {
     // create temp array to edit on it
     const newFiles = [...images];
 
-    /*// move on the array of files to convert each one to FormData and push it to array
+    selectedImages.map((image, index) => {
+      // const fileFormData = new FormData();
+      //fileFormData.append(`image${index}`, image);
+      newFiles.push(image);
+    });
+    setImages(newFiles);
+  }
+
+  /*// move on the array of files to convert each one to FormData and push it to array
     selectedImages.forEach((imageFile, index) => {
       const fileFormData = new FormData();
       console.log("imageFile before FormData", imageFile);
@@ -72,12 +95,6 @@ export default function AddNewAdd({ setIsFormOpen }) {
 
     console.log("newFiles:", newFiles);
     setImages(newFiles); // Set the array of file objects to the images state*/
-    selectedImages.map((image) => {
-      newFiles.push(image);
-    });
-    setImages(newFiles);
-  }
-
   //////////////
   /*useEffect(() => {
     console.log("New Ad: ", ad);
