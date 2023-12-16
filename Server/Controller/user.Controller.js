@@ -15,7 +15,7 @@ const jwt = require("jsonwebtoken");
  * ------------------------------------------ */
 module.exports.getAllUsers = asyncHandler(async (req, res) => {
   const users = await user.find().select("-password");
-  res.status(200).json(users); 
+  res.status(200).json(users);
 });
 /**--------------------------------
  * @desc Get  Users Count
@@ -194,6 +194,9 @@ module.exports.updateUser = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.profilePhotoUpload = asyncHandler(async (req, res) => {
   //1- validation
+  console.log("-----------------------Profile Picture-------------------");
+  console.log("body", req.body);
+  console.log("file", req.file);
   if (!req.file) return res.status(400).json({ message: "No file provided" });
 
   //2- get the  path to the image

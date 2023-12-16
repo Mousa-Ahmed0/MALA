@@ -6,13 +6,12 @@ import BackBtn from "../../../BackBtn";
 export default function AddNewAdd({ setIsFormOpen }) {
   const { darkMode } = useDarkMode();
   const [ad, setAd] = useState({
+    images: [],
     title: "",
     addText: "",
     creDate: new Date(),
     expDate: new Date(),
-    files: [],
   });
-  const [images, setImages] = useState([]);
   let [errorMessage, setErrorMessage] = useState("");
   let [apiMessage, setApiMessage] = useState("");
   let [apiError, setApiError] = useState(false);
@@ -29,13 +28,41 @@ export default function AddNewAdd({ setIsFormOpen }) {
   //add ad
   async function onFormSubmit(e) {
     e.preventDefault();
-    console.log("images Array: ", images);
-    const newAd = { ...ad, files: images };
-    console.log("Uploading Ad:", newAd);
+
+    /* const forms = images.map((image) => {
+      const formData = new FormData();
+      formData.append("image", image);
+      return formData;
+    });*/
+
+    /* const formData = new FormData();
+    formData.append("title", ad.title);
+    formData.append("addText", ad.addText);
+    formData.append("creDate", ad.creDate);
+    formData.append("expDate", ad.expDate);
+
+    images.map((image, index) => {
+      formData.append(`image ${index + 1}`, image);
+    });
+    // Append array of FormData objects to the main FormData
+    /* forms.forEach((form) => {
+      formData.append("images", form);
+    });*/
+
     try {
+      console.log("newAd: ", ad);
+      const formDataToSend = new FormData();
+      ad.images.forEach((image, index) => {
+        formDataToSend.append(`images[${index}]`, image);
+      });
+      formDataToSend.append("title", ad.title);
+      formDataToSend.append("addText", ad.addText);
+      formDataToSend.append("creDate", ad.creDate);
+      formDataToSend.append("expDate", ad.expDate);
+
       let response = await axios.post(
         "http://localhost:5000/api/advertisements/addAdvert",
-        newAd,
+        formDataToSend,
         {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         }
@@ -55,12 +82,11 @@ export default function AddNewAdd({ setIsFormOpen }) {
   }
   //image changes
   function handleImageChange(e) {
-    // get images from input and convert it to array of files
-    const selectedImages = Array.from(e.target.files);
-    // create temp array to edit on it
-    const newFiles = [...images];
+    const files = e.target.files;
+    setAd({ ...ad, images: [...ad.images, ...files] });
+  }
 
-    /*// move on the array of files to convert each one to FormData and push it to array
+  /*// move on the array of files to convert each one to FormData and push it to array
     selectedImages.forEach((imageFile, index) => {
       const fileFormData = new FormData();
       console.log("imageFile before FormData", imageFile);
@@ -72,12 +98,6 @@ export default function AddNewAdd({ setIsFormOpen }) {
 
     console.log("newFiles:", newFiles);
     setImages(newFiles); // Set the array of file objects to the images state*/
-    selectedImages.map((image) => {
-      newFiles.push(image);
-    });
-    setImages(newFiles);
-  }
-
   //////////////
   /*useEffect(() => {
     console.log("New Ad: ", ad);
@@ -193,11 +213,12 @@ export default function AddNewAdd({ setIsFormOpen }) {
                 className="form-control form-control-lg"
                 type="file"
                 accept="image/*"
+                name="images"
                 multiple
                 onChange={handleImageChange}
               />
               {/* Display selected images */}
-              {images.length > 0 && (
+              {/*images.length > 0 && (
                 <div className="mt-4">
                   <h5>Selected Images:</h5>
                   <div className="d-flex gap-2">
@@ -206,7 +227,7 @@ export default function AddNewAdd({ setIsFormOpen }) {
                     ))}
                   </div>
                 </div>
-              )}
+                    )*/}
               <div className="mt-4 d-flex justify-content-around">
                 <button className="btn btn-primary  d-flex justify-content-center BTN-Bold">
                   Add
