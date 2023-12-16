@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const { Massage } = require("../models/message");
+const mongoose = require('mongoose');
 /**--------------------------------
  * @desc Send Massage
  * @router /api/massage/sendMassage
@@ -19,9 +20,10 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
         return res.status(200).json(newMass);
     }
     else {//first massage
-        console.log(req.user.id);
+        const objectIdString = "657061843f25f53b9f23d19c";//admin _id
         const newMass = new Massage({
             userId: req.user.id,
+            recvId:objectIdString,
             massage: [{
                 mass: req.body.massage,
                 date: new Date()
@@ -29,10 +31,11 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
             ifReady: false
         });
         await newMass.save();
+        console.log(newMass.recvId);
         return res.status(200).json(newMass);
     }
 
-    return res.status(400).json({ massage: "Massage not send" });
+    // return res.status(400).json({ massage: "Massage not send" });
 
 });
 /**--------------------------------
@@ -42,7 +45,8 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
  * @access public
  * ------------------------------------------ */
 module.exports.getMass = asyncHandler(async (req, res) => {
-    const newMass = await Massage.findById(req.params.id).populate('userId', ['-password']).sort({ createdAt: 1 });
+    const newMass = await Massage.findById(req.params.id).populate('userId', ['-password']).populate('recvId', ['-password']).sort({ createdAt: 1 });
+    console.log(newMass.recvId);
     if (newMass)
         return res.status(200).json(newMass);
     else
@@ -64,4 +68,19 @@ module.exports.deleteMass = asyncHandler(async (req, res) => {
         await newMass.deleteOne();
         return res.status(200).json({ message: "Massage is delete..." });
     }
+});
+
+/**--------------------------------
+ * @desc return .count if not read
+ * @router /api/massage/countRead
+ * @method GET
+ * @access public
+ * ------------------------------------------ */
+module.exports.countIfRead = asyncHandler(async (req, res) => {
+    const newMass = await Massage.find({ifReady:false}).count();
+    if (!newMass)
+        return res.status(404).json({ message: "All masage is ready" , "count":newMass});
+    else 
+        return res.status(200).json({ "Number of massage if not ready":newMass });
+    
 });

@@ -5,6 +5,10 @@ const massSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
+    recvId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
     massage: [
       {
         mass: {
