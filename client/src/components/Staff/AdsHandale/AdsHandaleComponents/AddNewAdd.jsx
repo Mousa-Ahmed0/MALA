@@ -42,9 +42,10 @@ export default function AddNewAdd({ setIsFormOpen }) {
     formData.append("expDate", ad.expDate);
 
     // Append array of FormData objects to the main FormData
-    forms.forEach((form, index) => {
-      formData.append(`images[${index}]`, form);
+    forms.forEach((form) => {
+      formData.append("images", form);
     });
+    console.log("FormData:", formData);
 
     try {
       let response = await axios.post(
@@ -52,7 +53,6 @@ export default function AddNewAdd({ setIsFormOpen }) {
         formData,
         {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
-          "Content-Type": "multipart/form-data",
         }
       );
       console.log(response);
