@@ -36,10 +36,11 @@ app.use(notFound);
 app.use(errorHandler);
 
 //Connection to database
-dbConnection().then(() => {
-  app.listen(port, () => console.log(`http://localhost:${port}`));
+dbConnection()
+  .then(() => {
+    app.listen(port, () => console.log(`http://localhost:${port}`));
 
-})
+  })
   .catch((err) => console.log(err));
 
 ///
