@@ -62,6 +62,10 @@ module.exports.addAdvert = asyncHandler(async (req, res) => {
         .json({ message: "Images uploaded successfully", newAdver });
     })
     .catch((error) => {
+      console.log("-------------------Error---------------------------");
+      console.log("body: ", req.body);
+      console.log("images: ", req.body.images);
+      console.log("files[0]: ", req.files[0]);
       console.error("Error uploading images:", error);
       res.status(500).json({ message: "Internal server error" });
     });
