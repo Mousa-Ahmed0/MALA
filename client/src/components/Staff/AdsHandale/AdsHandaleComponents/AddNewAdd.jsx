@@ -48,9 +48,9 @@ export default function AddNewAdd({ setIsFormOpen }) {
     /* forms.forEach((form) => {
       formData.append("images", form);
     });*/
+    console.log("newAd: ", ad);
 
     try {
-      console.log("newAd: ", ad);
       const formDataToSend = new FormData();
       ad.images.forEach((image, index) => {
         formDataToSend.append(`images[${index}]`, image);

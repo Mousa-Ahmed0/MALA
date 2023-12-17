@@ -47,8 +47,8 @@ export default function Contact() {
         >
           Send Us An Email:
         </h1>
-        <div className="LP-Contact-Box d-flex flex-column flex-md-row justify-content-between align-items-center">
-          <div className="LP-Cont-Form w-50">
+        <div className="LP-Contact-Box row flex-column flex-md-row justify-content-between align-items-center">
+          <div className="col-12 col-md-7 LP-Cont-Form ">
             {errorList.map((error, index) => (
               <div key={index} className="alert alert-danger">
                 {" "}
@@ -106,46 +106,46 @@ export default function Contact() {
               </div>
             </form>
           </div>
-          <div className={`LP-Cont-Divide d-none d-md-block`}></div>
+          <div className={`col-12 col-md-1  d-none d-md-block`}></div>
           <div
-            className={`LP-Cont-Details w-25 d-flex flex-column flex-start gap-2 ${
+            className={`LP-Cont-Details col-12 col-md-4 d-flex flex-column flex-start gap-2 ${
               darkMode ? " spic-dark-mode" : ""
             }`}
           >
-            <div className="">
+            <div className="row">
               <h4
-                className={`my-2 colorMain ${
+                className={`col-12 my-2 colorMain ${
                   darkMode ? " spic-dark-mode" : ""
                 }`}
               >
                 More Information:
               </h4>
+              <p className="my-2 col-12 detailes-size">
+                <i className="fa-solid fa-map-location-dot colorMain"></i>{" "}
+                Sufyan Street, Nablus - PS
+              </p>
+              <p className="mb-3 col-12 detailes-size">
+                <i className="fa-solid fa-envelope colorMain"></i>{" "}
+                someExample@exg.com
+              </p>
+              <p className="mb-3 col-12 detailes-size">
+                <i className="fa-solid fa-mobile colorMain"></i> +970569156547{" "}
+                <span className="font-weight-bold">|</span>{" "}
+                <i className="font-weight-bold"></i> +2907058
+              </p>
+              <p className="mb-3 col-12 detailes-size">
+                <i className="fa-solid fa-calendar-days colorMain"></i> Tuesday
+                - Thursday <span className="font-weight-bold">|</span> 8:00Am -
+                4:00Pm
+              </p>
+              <a
+                className="btn bgMain col-4"
+                href="https://www.google.com/maps/place/%D9%85%D8%AE%D8%AA%D8%A8%D8%B1%D8%A7%D8%AA+%D9%85%D9%8A%D8%AF%D9%8A%D9%83%D9%8A%D8%B1+-+%D9%81%D8%B1%D8%B9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D8%A7%D9%84%D9%85%D8%B1%D9%83%D8%B2%D9%8A%E2%80%AD/@32.2236318,35.2608394,17z/data=!4m10!1m2!2m1!1zbWVkaWNhcmUg2YXYrtiq2KjYsdin2Ko!3m6!1s0x151ce1856a93462f:0x71bb2242fd6896e8!8m2!3d32.2232016!4d35.259248!15sChdtZWRpY2FyZSDZhdiu2KrYqNix2KfYqpIBC21lZGljYWxfbGFi4AEA!16s%2Fg%2F11jk_tx3kz?hl=ar&entry=ttu"
+                target="_blank"
+              >
+                Find US
+              </a>
             </div>
-            <p className="my-2 detailes-size">
-              <i className="fa-solid fa-map-location-dot colorMain"></i> Sufyan
-              Street, Nablus - PS
-            </p>
-            <p className="mb-3 detailes-size">
-              <i className="fa-solid fa-envelope colorMain"></i>{" "}
-              someExample@exg.com
-            </p>
-            <p className="mb-3 detailes-size">
-              <i className="fa-solid fa-mobile colorMain"></i> +970569156547{" "}
-              <span className="font-weight-bold">|</span>{" "}
-              <i className="font-weight-bold"></i> +2907058
-            </p>
-            <p className="mb-3 detailes-size">
-              <i className="fa-solid fa-calendar-days colorMain"></i> Tuesday -
-              Thursday <span className="font-weight-bold">|</span> 8:00Am -
-              4:00Pm
-            </p>
-            <a
-              className="btn bgMain w-50"
-              href="https://www.google.com/maps/place/%D9%85%D8%AE%D8%AA%D8%A8%D8%B1%D8%A7%D8%AA+%D9%85%D9%8A%D8%AF%D9%8A%D9%83%D9%8A%D8%B1+-+%D9%81%D8%B1%D8%B9+%D9%86%D8%A7%D8%A8%D9%84%D8%B3+%D8%A7%D9%84%D9%85%D8%B1%D9%83%D8%B2%D9%8A%E2%80%AD/@32.2236318,35.2608394,17z/data=!4m10!1m2!2m1!1zbWVkaWNhcmUg2YXYrtiq2KjYsdin2Ko!3m6!1s0x151ce1856a93462f:0x71bb2242fd6896e8!8m2!3d32.2232016!4d35.259248!15sChdtZWRpY2FyZSDZhdiu2KrYqNix2KfYqpIBC21lZGljYWxfbGFi4AEA!16s%2Fg%2F11jk_tx3kz?hl=ar&entry=ttu"
-              target="_blank"
-            >
-              Find US
-            </a>
           </div>
         </div>
       </div>

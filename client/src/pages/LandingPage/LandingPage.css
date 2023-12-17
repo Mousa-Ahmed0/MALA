@@ -131,7 +131,6 @@
 }
 /************* About **************/
 .LP-section.LP-About {
-  overflow: auto;
   width: 100%;
   padding: 0.35rem 0.875rem;
 }
@@ -180,9 +179,6 @@
 }
 /*** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~_~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Trending Anlysiss ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~_~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ***/
 
-.LP-section.LP-trindingAnlysis {
-  overflow: auto;
-}
 .trendRow {
   gap: 2.5rem;
 }

@@ -64,6 +64,7 @@ export default function AnlysisContainer() {
                 <div className="card-Top-Details d-flex gap-1 justify-content-center flex-column">
                   <h1 className="h4">{Analyze.name}</h1>
                   <p className="h4 my-2">({Analyze.code})</p>
+                  <hr />
                   <p className="my-2">{Analyze.cost} NIS</p>
                 </div>
               </div>
