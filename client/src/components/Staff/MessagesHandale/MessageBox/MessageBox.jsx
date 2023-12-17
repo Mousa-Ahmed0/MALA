@@ -43,11 +43,12 @@ export default function MessageBox({ darkMode }) {
         <div className="col-9">
           <div className="d-flex align-items-center gap-2">
             <img
+              data-lazy-src="./images/logo.png"
+              data-lazy-placeholder="https://placehold.it/1321x583?text=Loading"
               loading="lazy"
-              className={`nav-profile-img mx-2 img-fluid border ${
+              className={`img-fluid lazy nav-profile-img mx-2 img-fluid border ${
                 darkMode ? "border-white" : "border-black"
               } border-rounded`}
-              src={"./images/logo.png"}
               alt="nav-profile-img"
               style={{ objectFit: "cover" }}
             />

@@ -1,28 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import DashboardWelcome from "../DashboardWelcome";
-import LineChart from "./Charts/PaymentLineChart/PaymentLineChartComponents/LineChart";
 import { useDarkMode } from "../../context/DarkModeContext";
-import { getPaymentsFromTo } from "../../apis/ApisHandale";
 import AdsSection from "../UserComponenet/Ads/AdsSection";
 import PaymentLineChartContainer from "./Charts/PaymentLineChart/PaymentLineChartContainer";
 import MessageBox from "./MessagesHandale/MessageBox/MessageBox";
 export default function DashboardHome({ user }) {
   const { darkMode } = useDarkMode();
-
   const width = "-webkit-fill-available";
-  //BarChart
-  const [chartLabels, setChartLabels] = useState([
-    ["Staff"],
-    ["Patients"],
-    ["Doctors"],
-  ]);
-  const [chartDataColors, setChartDataColors] = useState([
-    ["aqua"],
-    ["red"],
-    ["green"],
-  ]);
-  const [chartData, setChartData] = useState([[3], [25], [5]]);
   useEffect(() => {}, []);
   return (
     <div className="ST-section ST-Dashboard">
