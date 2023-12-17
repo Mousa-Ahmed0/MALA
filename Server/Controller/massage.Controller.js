@@ -1,6 +1,5 @@
 const asyncHandler = require("express-async-handler");
 const { Massage } = require("../models/message");
-const mongoose = require('mongoose');
 /**--------------------------------
  * @desc Send Massage
  * @router /api/massage/sendMassage
@@ -9,6 +8,7 @@ const mongoose = require('mongoose');
  * ------------------------------------------ */
 module.exports.sendMass = asyncHandler(async (req, res) => {
     let newMass = await Massage.findOne({ userId: req.user.id });
+    console.log(req.user.usertype)
 
     if (newMass) {    //if exist
         // Massage record exists, update it
@@ -21,10 +21,15 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
         return res.status(200).json(newMass);
     }
     else {//first massage
-        const objectIdString = "657061843f25f53b9f23d19c";//admin _id
+        let objectIdString = ""
+        if (req.user.usertype === "Patient")
+            objectIdString = process.env.ADMIN_ID; //admin _id
+        else
+            objectIdString = req.body.recvId;
+
         const newMass = new Massage({
             userId: req.user.id,
-            recvId:objectIdString,
+            recvId: objectIdString,
             massage: [{
                 mass: req.body.massage,
                 date: new Date()
@@ -35,8 +40,6 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
         console.log(newMass.recvId);
         return res.status(200).json(newMass);
     }
-
-
 });
 /**--------------------------------
  * @desc get Massage
@@ -45,7 +48,8 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
  * @access public
  * ------------------------------------------ */
 module.exports.getMass = asyncHandler(async (req, res) => {
-    const newMass = await Massage.findById(req.params.id).populate('userId', ['-password']).populate('recvId', ['-password']).sort({ createdAt: 1 });
+    const newMass = await Massage.findById(req.params.id).populate('userId', ['-password']).sort({ createdAt: 1 });
+    //.populate('recvId', ['-password'])
     console.log(newMass.recvId);
     if (newMass)
         return res.status(200).json(newMass);
@@ -64,9 +68,9 @@ module.exports.deleteMass = asyncHandler(async (req, res) => {
     const newMass = await Massage.findByIdAndDelete(req.params.id);
     if (!newMass)
         return res.status(404).json({ message: "Massage not found" });
-    else {
+    else
         return res.status(200).json({ message: "Massage is delete..." });
-    }
+
 });
 
 /**--------------------------------
@@ -76,12 +80,12 @@ module.exports.deleteMass = asyncHandler(async (req, res) => {
  * @access public
  * ------------------------------------------ */
 module.exports.countIfRead = asyncHandler(async (req, res) => {
-    const newMass = await Massage.find({ifReady:false}).count();
+    const newMass = await Massage.find({ ifReady: false }).count();
     if (!newMass)
-        return res.status(404).json({ message: "All masage is ready" , "count":newMass});
-    else 
-        return res.status(200).json({ "Number of massage if not ready":newMass });
-    
+        return res.status(404).json({ message: "All masage is ready", "count": newMass });
+    else
+        return res.status(200).json({ "Number of massage if not ready": newMass });
+
 });
 /**--------------------------------
  * @desc Edit if ready 
@@ -89,13 +93,13 @@ module.exports.countIfRead = asyncHandler(async (req, res) => {
  * @method GET
  * @access public
  * ------------------------------------------ */
-module.exports.editIfReady=asyncHandler(async(req,res)=>{
-    const edit=await Massage.findByIdAndUpdate(req.params.id,{
-        ifReady:true,
-    },{new:true});
-    if(edit)
-        return res.status(200).json({"edit":"true" });
+module.exports.editIfReady = asyncHandler(async (req, res) => {
+    const edit = await Massage.findByIdAndUpdate(req.params.id, {
+        ifReady: true,
+    }, { new: true });
+    if (edit)
+        return res.status(200).json({ "edit": "true" });
     else
-        return res.status(400).json({"edit":"False" });
+        return res.status(400).json({ "edit": "False" });
 
 });
