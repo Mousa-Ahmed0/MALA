@@ -57,7 +57,7 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
  * @access public
  * ------------------------------------------ */
 module.exports.getAllMass = asyncHandler(async (req, res) => {
-    const newMass = await Massage.find({}).sort({ createdAt: 1 });
+    const newMass = await Massage.find({}).populate('senderId', ['-password']).sort({ createdAt: 1 });
     //.populate('recvId', ['-password'])
     if (newMass)
         return res.status(200).json(newMass);
@@ -73,7 +73,6 @@ module.exports.getAllMass = asyncHandler(async (req, res) => {
  * @access public
  * ------------------------------------------ */
 module.exports.getMass = asyncHandler(async (req, res) => {
-    console.log(req.user.id);
     const newMass = await Massage.find({senderId:req.user.id}).populate('senderId', ['-password']).sort({ createdAt: 1 });
     //.populate('recvId', ['-password'])
     if (newMass)
