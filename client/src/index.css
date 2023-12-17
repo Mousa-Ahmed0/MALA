@@ -499,6 +499,9 @@ select option {
   overflow-x: hidden;
   overflow-y: auto;
 }
+.message {
+  max-width: 100% !important;
+}
 /*** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~_~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Animations ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~_~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ***/
 /* Typing */
 @keyframes typing {
