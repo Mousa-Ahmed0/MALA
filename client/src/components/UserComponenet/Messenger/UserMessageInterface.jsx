@@ -41,21 +41,16 @@ export default function UserMessageInterface({ user, darkMode }) {
       console.error("Error from Sending Message: ", error);
     }
   }
-
   //get All Message In Conversation
   async function getMessages() {
     try {
-      let response = await axios.post(
-        "http://localhost:5000/api/massage/sendMassage",
-        message,
+      let response = await axios.get(
+        "http://localhost:5000/api/massage/getMassage",
         {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         }
       );
-      console.log(response);
-      setMessage({
-        massage: "",
-      });
+      setAllMessages(response.data[0].massage);
     } catch (error) {
       console.error("Error from Sending Message: ", error);
     }
@@ -77,6 +72,8 @@ export default function UserMessageInterface({ user, darkMode }) {
     console.log(e.target.value);
     setMessage(newMessage);
   }
+  //display the messages
+  function renderMessages() {}
   //////////////////
   useEffect(() => {
     //get all messages
@@ -101,9 +98,8 @@ export default function UserMessageInterface({ user, darkMode }) {
                   darkMode ? " spic-dark-mode" : ""
                 }`}
               >
-                <div className="col-12 messages"></div>
+                <div className="col-12 messages">{renderMessages()}</div>
                 <hr />
-
                 <div className="col-12">
                   <div className="row">
                     <div className="col-10 form-floating gray-color">

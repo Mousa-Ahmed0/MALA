@@ -20,14 +20,22 @@ export default function MessageBox({ darkMode }) {
   //get most recent messages
   async function getRecentMessages() {
     try {
-      const response = await axios.get("");
+      const response = await axios.get(
+        "http://localhost:5000/api/massage/getAllMassage",
+        {
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+        }
+      );
+      console.log(response);
     } catch (error) {
       setApiError(true);
       console.error("Error From GetRecentMessages: ", error);
     }
   }
   /////////
-
+  useEffect(() => {
+    getRecentMessages();
+  }, []);
   return (
     <div className="maxHeight-inhert overflow-yAxis message-Box">
       <div className="row detailes-size d-flex align-items-center">
