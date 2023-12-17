@@ -68,13 +68,28 @@ module.exports.getAllMass = asyncHandler(async (req, res) => {
 
 /**--------------------------------
  * @desc get Massage
- * @router /api/massage/getMassage/:id
+ * @router /api/massage/getMassage/
  * @method GET
  * @access public
  * ------------------------------------------ */
 module.exports.getMass = asyncHandler(async (req, res) => {
     console.log(req.user.id);
     const newMass = await Massage.find({senderId:req.user.id}).populate('senderId', ['-password']).sort({ createdAt: 1 });
+    //.populate('recvId', ['-password'])
+    if (newMass)
+        return res.status(200).json(newMass);
+    else
+        return res.status(400).json({ massage: "Massage dose not exist" });
+
+});
+/**--------------------------------
+ * @desc get Massage
+ * @router /api/massage/getUserMassage/:id
+ * @method GET
+ * @access public
+ * ------------------------------------------ */
+module.exports.getUserMass = asyncHandler(async (req, res) => {
+    const newMass = await Massage.findById(req.params.id).populate('senderId', ['-password']).sort({ createdAt: 1 });
     //.populate('recvId', ['-password'])
     if (newMass)
         return res.status(200).json(newMass);
