@@ -18,6 +18,8 @@ import ResultDetails from "./components/ResultDetails/ResultDetails.jsx";
 import Profile from "./components/UserComponenet/UserProfile/UserProfileContainer.jsx";
 /*Ads*/
 import AdDetails from "./components/UserComponenet/Ads/AdDetails.jsx";
+/*User Messenger*/
+import UserMessageInterface from "./components/UserComponenet/Messenger/UserMessageInterface.jsx";
 //LP Components
 import Home from "./components/LandingPageCompon/Home/Home";
 import About from "./components/LandingPageCompon/About/About";
@@ -101,6 +103,7 @@ export default function App() {
     { id: 1, text: "Home", path: "/Patient/PatientHome" },
     { id: 2, text: "Healthy Calculators", path: "/Patient/HealthCalculators" },
     { id: 3, text: "Anlysis", path: "/Patient/Anlysis" },
+    { id: 4, text: "Contact Us", path: "/Patient/contactLab" },
     { id: 6, text: "|", path: null },
   ];
   //login user details
@@ -377,6 +380,15 @@ export default function App() {
                   element={
                     <PatPaymentsPreviewContainer
                       setIsPdfLoading={setIsPdfLoading}
+                    />
+                  }
+                />
+                <Route
+                  path="/Patient/contactLab"
+                  element={
+                    <UserMessageInterface
+                      user={userDetails}
+                      darkMode={darkMode}
                     />
                   }
                 />

@@ -19,6 +19,7 @@
 }
 * {
   transition: 0 !important;
+  -webkit-tap-highlight-color: transparent !important;
 }
 html {
   scroll-behavior: smooth;
@@ -485,6 +486,18 @@ select option {
 .carousel-control-next span,
 .carousel-control-prev span {
   color: black;
+}
+
+/*/****************/
+.message-box {
+  min-height: 30rem;
+  max-height: 30rem;
+}
+.messages {
+  min-height: 25rem;
+  max-height: 25rem;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 /*** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~_~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Animations ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~_~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ***/
 /* Typing */

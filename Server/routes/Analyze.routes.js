@@ -14,8 +14,7 @@ router.route("/Add-Analyze").post(ifAdminOrStaff, addAnalyze);
 router.route("/updateAnalyze").put(ifAdminOrStaff, updateAnalyze);
 router.route("/count").get(ifAdminOrStaff, getAnalyzeCount);
 router.route("/getCategorys").get(ifAdminOrStaff, getCategoryCount);
-router.route("/getAnalyzes").get(ifAdminOrStaff, getAllAnalze);
-router.route("/getAnalyzesOne/:code").get(ifAdminOrStaff, getAnalze);
-
+router.route("/getAnalyzes").get(getAllAnalze);
+router.route("/getAnalyzesOne/:code").get(getAnalze);
 
 module.exports = router;

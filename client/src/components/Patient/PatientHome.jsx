@@ -73,7 +73,7 @@ export default function PatientHome({ user, isPdfLoading, setIsPdfLoading }) {
         <>
           <div
             key={index}
-            className="row detailes-size d-flex align-items-center my-2"
+            className="row detailes-size d-flex align-items-center my-4"
           >
             <div className="col-3 d-flex align-items-center text-truncate">
               {<FormateDate date={result.detailsAnalyze.date} />}
@@ -88,11 +88,10 @@ export default function PatientHome({ user, isPdfLoading, setIsPdfLoading }) {
                 to={`/ResultDetails/${result.detailsAnalyze.id}`}
                 className="btn m-0 nav-link position-relative"
               >
-                More Details
+                <i class="fa-solid fa-eye"></i>
               </Link>
             </div>
           </div>
-          <hr className="my-4" />
         </>
       );
     });
@@ -117,7 +116,7 @@ export default function PatientHome({ user, isPdfLoading, setIsPdfLoading }) {
         <>
           <div
             key={index}
-            className="row maxHeight-inhert overflow-yAxis detailes-size"
+            className="row maxHeight-inhert overflow-yAxis detailes-size my-4"
           >
             <div className="col-3 d-flex align-items-center text-truncate">
               {<FormateDate date={payment.date} />}
@@ -126,9 +125,9 @@ export default function PatientHome({ user, isPdfLoading, setIsPdfLoading }) {
               {payment.value}
               <span style={{ fontSize: "0.758rem" }}>NIS</span>
             </div>
-            <div className="col-4 d-flex align-items-center gap-4">
+            <div className="col-4 d-flex justify-content-center align-items-center gap-4">
               <Link className="btn m-0 nav-link position-relative">
-                More Details
+                <i class="fa-solid fa-eye"></i>
               </Link>
               <PaymentToPDF
                 darkMode={darkMode}
@@ -164,7 +163,7 @@ export default function PatientHome({ user, isPdfLoading, setIsPdfLoading }) {
               Last Results:
             </h1>
             <hr className="my-4" />
-            <div className="row details-size mt-2 mb-4">
+            <div className="row details-size  mt-2 mb-4">
               <div className="col-md-3 mid-bold">A. Date:</div>
               <div className="col-md-6 mid-bold">Doctor:</div>
               <div className="col-md-3 mid-bold">More:</div>
