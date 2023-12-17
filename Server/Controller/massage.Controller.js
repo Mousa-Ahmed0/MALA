@@ -58,8 +58,8 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
  * @access public
  * ------------------------------------------ */
 module.exports.getMass = asyncHandler(async (req, res) => {
-    const newMass = await Massage.findById(req.params.id).sort({ createdAt: 1 });
-    //.populate('userId', ['-password'])
+    const newMass = await Massage.findById(req.params.id).populate('senderId', ['-password'])
+    .sort({ createdAt: 1 });
     //.populate('recvId', ['-password'])
     if (newMass)
         return res.status(200).json(newMass);
