@@ -6,6 +6,7 @@ import { useDarkMode } from "../../context/DarkModeContext";
 import { getPaymentsFromTo } from "../../apis/ApisHandale";
 import AdsSection from "../UserComponenet/Ads/AdsSection";
 import PaymentLineChartContainer from "./Charts/PaymentLineChart/PaymentLineChartContainer";
+import MessageBox from "./MessagesHandale/MessageBox/MessageBox";
 export default function DashboardHome({ user }) {
   const { darkMode } = useDarkMode();
 
@@ -130,28 +131,7 @@ export default function DashboardHome({ user }) {
           }`}
         >
           <h1 className="h5 mb-4">Recent Messages:</h1>
-          <div className="maxHeight-inhert overflow-yAxis message-Box">
-            <div className="row detailes-size d-flex align-items-center">
-              <div className="col-1">1</div>
-              <div className="col-9">
-                <div className="d-flex align-items-center gap-2">
-                  <img
-                    loading="lazy"
-                    className={`nav-profile-img mx-2 img-fluid border ${
-                      darkMode ? "border-white" : "border-black"
-                    } border-rounded`}
-                    src={"./images/logo.png"}
-                    alt="nav-profile-img"
-                    style={{ objectFit: "cover" }}
-                  />
-                  <p className="h6 m-0 text-truncate">{"Omar Khaled"}</p>
-                </div>
-              </div>
-              <div style={{ cursor: "pointer" }} className="col-1">
-                <i class="fa-solid fa-circle-chevron-right fa-beat-fade"></i>
-              </div>
-            </div>
-          </div>
+          <MessageBox darkMode={darkMode} />
         </div>
       </div>
       <hr className="my-4" />
