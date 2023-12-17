@@ -9,6 +9,7 @@ const mongoose = require('mongoose');
  * ------------------------------------------ */
 module.exports.sendMass = asyncHandler(async (req, res) => {
     let newMass = await Massage.findOne({ userId: req.user.id });
+
     if (newMass) {    //if exist
         // Massage record exists, update it
         newMass.massage.push({
@@ -35,7 +36,6 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
         return res.status(200).json(newMass);
     }
 
-    // return res.status(400).json({ massage: "Massage not send" });
 
 });
 /**--------------------------------
@@ -61,11 +61,10 @@ module.exports.getMass = asyncHandler(async (req, res) => {
  * @access public
  * ------------------------------------------ */
 module.exports.deleteMass = asyncHandler(async (req, res) => {
-    const newMass = await Massage.findById(req.params.id);
+    const newMass = await Massage.findByIdAndDelete(req.params.id);
     if (!newMass)
         return res.status(404).json({ message: "Massage not found" });
     else {
-        await newMass.deleteOne();
         return res.status(200).json({ message: "Massage is delete..." });
     }
 });
@@ -83,4 +82,20 @@ module.exports.countIfRead = asyncHandler(async (req, res) => {
     else 
         return res.status(200).json({ "Number of massage if not ready":newMass });
     
+});
+/**--------------------------------
+ * @desc Edit if ready 
+ * @router /api/massage/ifReady/:id
+ * @method GET
+ * @access public
+ * ------------------------------------------ */
+module.exports.editIfReady=asyncHandler(async(req,res)=>{
+    const edit=await Massage.findByIdAndUpdate(req.params.id,{
+        ifReady:true,
+    },{new:true});
+    if(edit)
+        return res.status(200).json({"edit":"true" });
+    else
+        return res.status(400).json({"edit":"False" });
+
 });
