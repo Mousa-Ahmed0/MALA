@@ -7,40 +7,50 @@ const { Massage } = require("../models/message");
  * @access public
  * ------------------------------------------ */
 module.exports.sendMass = asyncHandler(async (req, res) => {
-    let newMass = await Massage.findOne({ userId: req.user.id });
-    console.log(req.user.usertype)
+    //if Patient determain admin _id
+    let objectIdString = "";
+    console.log(req.user.usertype);
+    if (req.user.usertype === "Patient")
+        objectIdString = process.env.ADMIN_ID; //admin _id
+    else
+        objectIdString = req.body.recvId;
 
-    if (newMass) {    //if exist
+    let massRecord = await Massage.findOne({
+        $or: [
+            { senderId: req.user.id, recvId: objectIdString },
+            { senderId: objectIdString, recvId: req.user.id },
+        ],
+    });
+
+    if (massRecord) {
         // Massage record exists, update it
-        newMass.massage.push({
+        massRecord.massage.push({
+            senderId: req.user.id,
             mass: req.body.massage,
-            date: new Date()
+            date: new Date(),
         });
-        newMass.ifReady = false;
-        await newMass.save();
-        return res.status(200).json(newMass);
-    }
-    else {//first massage
-        let objectIdString = ""
-        if (req.user.usertype === "Patient")
-            objectIdString = process.env.ADMIN_ID; //admin _id
-        else
-            objectIdString = req.body.recvId;
-
+        massRecord.ifReady = false;
+        await massRecord.save();
+        return res.status(200).json(massRecord);
+    } else {
+        // First massage
         const newMass = new Massage({
-            userId: req.user.id,
+            senderId: req.user.id,
             recvId: objectIdString,
-            massage: [{
-                mass: req.body.massage,
-                date: new Date()
-            }],
-            ifReady: false
+            massage: [
+                {
+                    senderId: req.user.id,
+                    mass: req.body.massage,
+                    date: new Date(),
+                },
+            ],
+            ifReady: false,
         });
         await newMass.save();
-        console.log(newMass.recvId);
         return res.status(200).json(newMass);
     }
 });
+
 /**--------------------------------
  * @desc get Massage
  * @router /api/massage/getMassage/:id
@@ -48,9 +58,9 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
  * @access public
  * ------------------------------------------ */
 module.exports.getMass = asyncHandler(async (req, res) => {
-    const newMass = await Massage.findById(req.params.id).populate('userId', ['-password']).sort({ createdAt: 1 });
+    const newMass = await Massage.findById(req.params.id).sort({ createdAt: 1 });
+    //.populate('userId', ['-password'])
     //.populate('recvId', ['-password'])
-    console.log(newMass.recvId);
     if (newMass)
         return res.status(200).json(newMass);
     else

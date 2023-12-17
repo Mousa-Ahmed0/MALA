@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const massSchema = new mongoose.Schema(
   {
-    userId: {
+    senderId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
@@ -11,6 +11,10 @@ const massSchema = new mongoose.Schema(
     },
     massage: [
       {
+        senderId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+        },
         mass: {
           type: String,
           required: true,
