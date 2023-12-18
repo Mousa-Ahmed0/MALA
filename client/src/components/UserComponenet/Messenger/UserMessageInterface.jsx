@@ -5,7 +5,7 @@ export default function UserMessageInterface({ user, darkMode }) {
   const [message, setMessage] = useState({
     massage: "",
   });
-  const [allMessages, setAllMessages] = useState([]);
+  const [allMessages, setAllMessages] = useState();
   const [noResults, setNoResults] = useState(false);
   const [apiError, setApiError] = useState(false);
   let apiErrorMessage = (
@@ -18,6 +18,32 @@ export default function UserMessageInterface({ user, darkMode }) {
       </div>
     </div>
   );
+  const [mouseOnMsgIndex, setMouseOnMsgIndex] = useState(null);
+
+  //formate Date
+  const formatDate = (inputDate) => {
+    const date = new Date(inputDate);
+
+    // Format date components
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear(); // Get last two digits of the year
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const ampm = hours >= 12 ? "PM" : "AM";
+
+    // Format with leading zeros
+    const formattedDay = day < 10 ? `0${day}` : day;
+    const formattedMonth = month < 10 ? `0${month}` : month;
+    const formattedYear = year;
+    const formattedHours = hours % 12 || 12; // Convert to 12-hour format
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+
+    // Construct the formatted date string
+    const formattedDate = `${formattedDay}-${formattedMonth}-${formattedYear}, ${formattedHours}:${formattedMinutes} ${ampm}`;
+
+    return formattedDate;
+  };
 
   // send message
   async function sendMessage(e) {
@@ -37,25 +63,21 @@ export default function UserMessageInterface({ user, darkMode }) {
       setMessage({
         massage: "",
       });
+      await getMessages();
     } catch (error) {
       console.error("Error from Sending Message: ", error);
     }
   }
-
   //get All Message In Conversation
   async function getMessages() {
     try {
-      let response = await axios.post(
-        "http://localhost:5000/api/massage/sendMassage",
-        message,
+      let response = await axios.get(
+        "http://localhost:5000/api/massage/getMassage",
         {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         }
       );
-      console.log(response);
-      setMessage({
-        massage: "",
-      });
+      setAllMessages(response.data[0]);
     } catch (error) {
       console.error("Error from Sending Message: ", error);
     }
@@ -77,11 +99,61 @@ export default function UserMessageInterface({ user, darkMode }) {
     console.log(e.target.value);
     setMessage(newMessage);
   }
+  //display the messages
+  //display the messages
+  function renderMessages() {
+    console.log(allMessages);
+    if (allMessages) {
+      return allMessages.massage.map((message, index) => {
+        console.log(index, message);
+        return (
+          <div
+            className={`row position-relative ${
+              message.senderId === user.id
+                ? "justify-content-start"
+                : "justify-content-end"
+            }`}
+          >
+            <div
+              key={index}
+              onMouseEnter={() => setMouseOnMsgIndex(index)}
+              onMouseLeave={() => setMouseOnMsgIndex(null)}
+              className={`col-6 alert text-wrap overflow-auto ${
+                message.senderId === user.id
+                  ? "alert-primary"
+                  : "alert-secondry"
+              }`}
+            >
+              {message.mass}{" "}
+              <div
+                className={`detailes-size m-0 position-absolute text-center top-0 end-0 bg-light bottom-shadow bg-info w-25 ${
+                  mouseOnMsgIndex === index ? "d-block" : "d-none"
+                }`}
+              >
+                {formatDate(message.date)}
+              </div>
+            </div>
+          </div>
+        );
+      });
+    } else {
+      return <div>Loading ...</div>;
+    }
+  }
+
   //////////////////
+  //get all messages
   useEffect(() => {
-    //get all messages
+    // Fetch messages initially
     getMessages();
-  }, []);
+
+    // Set up interval to fetch messages every 5 seconds (adjust as needed)
+    const intervalId = setInterval(getMessages, 30000);
+
+    // Clean up interval when the component unmounts
+    return () => clearInterval(intervalId);
+  }, []); // Empty dependency array means this effect runs once after the initial render
+
   return (
     <>
       <div className="ST-section">
@@ -101,9 +173,8 @@ export default function UserMessageInterface({ user, darkMode }) {
                   darkMode ? " spic-dark-mode" : ""
                 }`}
               >
-                <div className="col-12 messages"></div>
+                <div className="col-12 messages">{renderMessages()}</div>
                 <hr />
-
                 <div className="col-12">
                   <div className="row">
                     <div className="col-10 form-floating gray-color">
