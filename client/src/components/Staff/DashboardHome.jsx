@@ -12,7 +12,22 @@ export default function DashboardHome({ user }) {
   const [staffCount, setStaffCount] = useState(0);
   const [patientCount, setPatientCount] = useState(0);
   const [doctorsCount, setDoctorsCount] = useState(0);
+  const [nonReadNo, setNonReadNo] = useState(0);
 
+  //get count of non-read messages
+  async function getNonReadMessagesCount() {
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/api/massage/countRead",
+        {
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+        }
+      );
+      setNonReadNo(response.data.No);
+    } catch (error) {
+      console.error("Error from getNonReadMessagesCount:", error);
+    }
+  }
   //get Patients count
   async function getDoctorsCount() {
     try {
@@ -61,6 +76,7 @@ export default function DashboardHome({ user }) {
     getPatientCount();
     getStaffCount();
     getDoctorsCount();
+    getNonReadMessagesCount();
   }, []);
   return (
     <div className="ST-section ST-Dashboard">
@@ -190,11 +206,27 @@ export default function DashboardHome({ user }) {
         </div>
         <div className="col-1"></div>
         <div
-          className={`maxHeight-inhert overflow-hidden p-4 col-12 col-md-4 ${
+          className={`p-4 col-12 col-md-4 ${
             darkMode ? " spic-dark-mode" : " bg-white"
           }`}
         >
-          <h1 className="h5 mb-4">Recent Messages:</h1>
+          <div className="row align-items-center">
+            <div className="col-10 d-flex gap-2">
+              <span className=" h5 m-0 colorMain">
+                <i class="fa-solid fa-inbox"></i>
+              </span>
+              <h1 className=" h5 m-0">Recent Messages:</h1>
+            </div>
+            <div className="col-2 d-flex justify-content-end colorMain">
+              <h1 className="h3  m-0">
+                {nonReadNo === 0 ? (
+                  "All Message Readed!"
+                ) : (
+                  <div className=" mid-bold">+{nonReadNo} </div>
+                )}
+              </h1>
+            </div>
+          </div>
           <MessageBox darkMode={darkMode} />
         </div>
       </div>

@@ -19,7 +19,7 @@ import Profile from "./components/UserComponenet/UserProfile/UserProfileContaine
 /*Ads*/
 import AdDetails from "./components/UserComponenet/Ads/AdDetails.jsx";
 /*User Messenger*/
-import UserMessageInterface from "./components/UserComponenet/Messenger/UserMessageInterface.jsx";
+import MessageInterface from "./components/UserComponenet/Messenger/MessageInterface.jsx";
 //LP Components
 import Home from "./components/LandingPageCompon/Home/Home";
 import About from "./components/LandingPageCompon/About/About";
@@ -80,32 +80,7 @@ export default function App() {
   const { darkMode, toggleDarkMode } = useDarkMode();
   let [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const guestNavBarValues = [
-    { id: 1, text: "Home", path: "/Home" },
-    { id: 2, text: "About", path: "/About" },
-    { id: 3, text: "GuestAnlyses", path: "/GuestAnlyses" },
-    { id: 4, text: "Contact", path: "/Contact" },
-    { id: 6, text: "|", path: null },
-    { id: 7, text: "Login", path: "/Login" },
-  ];
-  const staffNavBarValues = [
-    { id: 1, text: "Home", path: "/Staff/dashboard" },
-    { id: 2, text: "Users", path: "/Staff/UsersController" },
-    { id: 3, text: "Anlysis", path: "/Staff/AnlysisController" },
-    { id: 4, text: "Storage", path: "/Staff/StorageController" },
-    { id: 5, text: "Results", path: "/Staff/ResultsController" },
-    { id: 7, text: "Reports", path: "/Staff/ReportsController" },
-    { id: 8, text: "Payments", path: "/Staff/PaymentsController" },
-    { id: 9, text: "Ads", path: "/Staff/AdsController" },
-    { id: 6, text: "|", path: null },
-  ];
-  const PatientNavBarValues = [
-    { id: 1, text: "Home", path: "/Patient/PatientHome" },
-    { id: 2, text: "Healthy Calculators", path: "/Patient/HealthCalculators" },
-    { id: 3, text: "Anlysis", path: "/Patient/Anlysis" },
-    { id: 4, text: "Contact Us", path: "/Patient/contactLab" },
-    { id: 6, text: "|", path: null },
-  ];
+
   //login user details
   let [userDetails, setUserDetails] = useState({});
   /* get user token and decode it */
@@ -132,6 +107,38 @@ export default function App() {
     });
   }
 
+  //NavBars
+  const guestNavBarValues = [
+    { id: 1, text: "Home", path: "/Home" },
+    { id: 2, text: "About", path: "/About" },
+    { id: 3, text: "GuestAnlyses", path: "/GuestAnlyses" },
+    { id: 4, text: "Contact", path: "/Contact" },
+    { id: 6, text: "|", path: null },
+    { id: 7, text: "Login", path: "/Login" },
+  ];
+  const staffNavBarValues = [
+    { id: 1, text: "Home", path: "/Staff/dashboard" },
+    { id: 2, text: "Users", path: "/Staff/UsersController" },
+    { id: 3, text: "Anlysis", path: "/Staff/AnlysisController" },
+    { id: 4, text: "Storage", path: "/Staff/StorageController" },
+    { id: 5, text: "Results", path: "/Staff/ResultsController" },
+    { id: 7, text: "Reports", path: "/Staff/ReportsController" },
+    { id: 8, text: "Payments", path: "/Staff/PaymentsController" },
+    { id: 9, text: "Ads", path: "/Staff/AdsController" },
+    { id: 6, text: "|", path: null },
+  ];
+  const PatientNavBarValues = [
+    { id: 1, text: "Home", path: "/Patient/PatientHome" },
+    { id: 2, text: "Healthy Calculators", path: "/Patient/HealthCalculators" },
+    { id: 3, text: "Anlysis", path: "/Patient/Anlysis" },
+    {
+      id: 4,
+      text: "Contact Us",
+      path: `/Patient/contactLab/${userDetails.id}`,
+    },
+    { id: 6, text: "|", path: null },
+  ];
+  ///////////////
   useEffect(() => {
     setLoading(false);
     if (localStorage.getItem("token")) {
@@ -384,12 +391,9 @@ export default function App() {
                   }
                 />
                 <Route
-                  path="/Patient/contactLab"
+                  path="/Patient/contactLab/:id"
                   element={
-                    <UserMessageInterface
-                      user={userDetails}
-                      darkMode={darkMode}
-                    />
+                    <MessageInterface user={userDetails} darkMode={darkMode} />
                   }
                 />
                 <Route path="/Patient/Anlysis" element={<Anlysis />} />

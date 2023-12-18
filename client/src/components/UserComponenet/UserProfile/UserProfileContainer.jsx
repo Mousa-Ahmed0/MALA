@@ -41,7 +41,7 @@ export default function UserProfileContainer({
     try {
       const response = await getUserByID(id);
       setUser(response.data.profile);
-      setUserDetails(response.data.profile);
+      if (userDetails.id === id) setUserDetails(response.data.profile);
     } catch (error) {
       setApiError(true);
       console.error("Error:", error);

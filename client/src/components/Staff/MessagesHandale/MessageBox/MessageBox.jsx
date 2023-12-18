@@ -1,6 +1,7 @@
 import axios from "axios";
 import { func } from "joi";
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 export default function MessageBox({ darkMode }) {
   const [allMessages, setAllMessages] = useState([]);
@@ -26,39 +27,72 @@ export default function MessageBox({ darkMode }) {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         }
       );
-      console.log(response);
+      if (response.data.length > 0) setAllMessages(response.data);
+      else setNoResults(true);
     } catch (error) {
       setApiError(true);
       console.error("Error From GetRecentMessages: ", error);
     }
   }
+  //disply the most 10 recent message
+  function renderRecentMessages() {
+    return allMessages.map((message, index) => {
+      return (
+        <div
+          key={index}
+          className="row detailes-size d-flex align-items-center mt-3 mb-4"
+        >
+          <div className="col-1">{index + 1}</div>
+          <div className="col-9">
+            <div className="d-flex align-items-center gap-2">
+              <img
+                src={message.senderId.profilePhoto.url}
+                data-lazy-placeholder="https://placehold.it/1321x583?text=Loading"
+                loading="lazy"
+                className={`img-fluid lazy nav-profile-img mx-2 img-fluid border ${
+                  darkMode ? "border-white" : "border-black"
+                } border-rounded`}
+                alt="nav-profile-img"
+                style={{ objectFit: "cover" }}
+              />
+              <p className="h6 m-0 text-truncate">
+                {message.senderId.firstname + " " + message.senderId.lastname}
+              </p>
+            </div>
+          </div>
+          <Link
+            to={`/Patient/contactLab/${message.id}`}
+            style={{ cursor: "pointer" }}
+            className="col-1"
+          >
+            <i
+              class={`fa-solid fa-circle-chevron-right ${
+                !message.ifReady ? "fa-beat-fade" : ""
+              }`}
+            ></i>
+          </Link>
+        </div>
+      );
+    });
+  }
+
   /////////
   useEffect(() => {
     getRecentMessages();
   }, []);
   return (
     <div className="maxHeight-inhert overflow-yAxis message-Box">
-      <div className="row detailes-size d-flex align-items-center">
-        <div className="col-1">1</div>
-        <div className="col-9">
-          <div className="d-flex align-items-center gap-2">
-            <img
-              data-lazy-src="./images/logo.png"
-              data-lazy-placeholder="https://placehold.it/1321x583?text=Loading"
-              loading="lazy"
-              className={`img-fluid lazy nav-profile-img mx-2 img-fluid border ${
-                darkMode ? "border-white" : "border-black"
-              } border-rounded`}
-              alt="nav-profile-img"
-              style={{ objectFit: "cover" }}
-            />
-            <p className="h6 m-0 text-truncate">{"Omar Khaled"}</p>
+      {noResults ? (
+        <div>No Messages Yet...</div>
+      ) : allMessages.length > 0 ? (
+        renderRecentMessages()
+      ) : (
+        <div className="d-flex justify-content-center align-items-center my-4">
+          <div className="spinner-border text-primary" role="status">
+            <span className="sr-only">Loading...</span>
           </div>
         </div>
-        <div style={{ cursor: "pointer" }} className="col-1">
-          <i class="fa-solid fa-circle-chevron-right fa-beat-fade"></i>
-        </div>
-      </div>
+      )}
     </div>
   );
 }
