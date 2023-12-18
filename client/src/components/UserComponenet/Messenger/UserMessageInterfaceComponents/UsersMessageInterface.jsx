@@ -1,7 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import BackBtn from "../../BackBtn";
-export default function UserMessageInterface({ user, darkMode }) {
+import BackBtn from "../../../BackBtn";
+export default function UsersMessageInterface({
+  user,
+  darkMode,
+  formatDate,
+  scrollToBottom,
+}) {
+  const messagesContainerRef = useRef(null);
   const [message, setMessage] = useState({
     massage: "",
   });
@@ -20,35 +26,9 @@ export default function UserMessageInterface({ user, darkMode }) {
   );
   const [mouseOnMsgIndex, setMouseOnMsgIndex] = useState(null);
 
-  //formate Date
-  const formatDate = (inputDate) => {
-    const date = new Date(inputDate);
-
-    // Format date components
-    const day = date.getDate();
-    const month = date.getMonth() + 1;
-    const year = date.getFullYear(); // Get last two digits of the year
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const ampm = hours >= 12 ? "PM" : "AM";
-
-    // Format with leading zeros
-    const formattedDay = day < 10 ? `0${day}` : day;
-    const formattedMonth = month < 10 ? `0${month}` : month;
-    const formattedYear = year;
-    const formattedHours = hours % 12 || 12; // Convert to 12-hour format
-    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
-
-    // Construct the formatted date string
-    const formattedDate = `${formattedDay}-${formattedMonth}-${formattedYear}, ${formattedHours}:${formattedMinutes} ${ampm}`;
-
-    return formattedDate;
-  };
-
   // send message
   async function sendMessage(e) {
     e.preventDefault();
-    console.log(message);
 
     //try to send message with api
     try {
@@ -59,7 +39,6 @@ export default function UserMessageInterface({ user, darkMode }) {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         }
       );
-      console.log(response);
       setMessage({
         massage: "",
       });
@@ -96,16 +75,13 @@ export default function UserMessageInterface({ user, darkMode }) {
     // set new message value
     let newMessage = { ...message };
     newMessage[e.target.name] = e.target.value;
-    console.log(e.target.value);
     setMessage(newMessage);
   }
   //display the messages
   //display the messages
   function renderMessages() {
-    console.log(allMessages);
     if (allMessages) {
       return allMessages.massage.map((message, index) => {
-        console.log(index, message);
         return (
           <div
             className={`row position-relative ${
@@ -144,6 +120,7 @@ export default function UserMessageInterface({ user, darkMode }) {
   //////////////////
   //get all messages
   useEffect(() => {
+    console.log("hello user");
     // Fetch messages initially
     getMessages();
 
@@ -153,53 +130,63 @@ export default function UserMessageInterface({ user, darkMode }) {
     // Clean up interval when the component unmounts
     return () => clearInterval(intervalId);
   }, []); // Empty dependency array means this effect runs once after the initial render
-
+  //scroll if message changed "send or rescive a message"
+  useEffect(() => {
+    scrollToBottom(messagesContainerRef);
+  }, [allMessages]);
   return (
     <>
-      <div className="ST-section">
-        <BackBtn />
-        <div className="Reg-Pat my-5">
-          <div className={`page-form ${darkMode ? " border-white" : ""}`}>
-            <div className="my-5 d-flex flex-column align-items-center justify-content-center">
-              <h1 className={`h3 m-0 ${darkMode ? " text-white" : ""}`}>
-                Contact With Us:
-              </h1>
-              <hr className={`my-2 w-50 ${darkMode ? " text-white" : ""}`} />
-            </div>
-            <div className={`"message-platform row mx-4" `}>
-              <h1 className="col-12 h3 my-0 colorMain">MALM:</h1>
-              <div
-                className={`row message-box bottom-shadow my-3 ${
-                  darkMode ? " spic-dark-mode" : ""
-                }`}
-              >
-                <div className="col-12 messages">{renderMessages()}</div>
-                <hr />
-                <div className="col-12">
-                  <div className="row">
-                    <div className="col-10 form-floating gray-color">
-                      <input
-                        name="massage"
-                        value={message.massage}
-                        className={`${
-                          darkMode ? " spic-dark-mode" : "light"
-                        } form-control border-0`}
-                        type="text"
-                        placeholder="your message ..."
-                        onChange={(e) => handaleMessageChange(e)}
-                        onKeyDown={(e) => handaleMessageChange(e)}
-                      />
-                    </div>
-                    <div className="col-2 d-flex align-items-center">
-                      <button
-                        onClick={(e) => sendMessage(e)}
-                        className="nav-link position-relative"
-                      >
-                        <i className="fa-solid fa-message colorMain mid-bold h3 m-0"></i>
-                      </button>
-                    </div>
-                  </div>
+      <div className="my-4 d-flex flex-column align-items-center justify-content-center">
+        <h1 className={`h3 m-0 ${darkMode ? " text-white" : ""}`}>
+          <span className="colorMain mid-bold">MALM</span> - Contact With Us:
+        </h1>
+        <hr className={`my-2 w-50 ${darkMode ? " text-white" : ""}`} />
+      </div>
+      <div className={`"message-platform row mx-4" `}>
+        <h1 className="col-12 h3 my-0 colorMain">MALM:</h1>
+        <div
+          className={`row message-box bottom-shadow my-3 ${
+            darkMode ? " spic-dark-mode" : ""
+          }`}
+        >
+          <div className="col-12 messages" ref={messagesContainerRef}>
+            {allMessages ? (
+              renderMessages()
+            ) : noResults ? (
+              <div className="d-flex justify-content-center align-items-center">
+                You didnt start a conversation yet ...
+              </div>
+            ) : (
+              <div className="d-flex justify-content-center align-items-center my-4">
+                <div className="spinner-border text-primary" role="status">
+                  <span className="sr-only">Loading...</span>
                 </div>
+              </div>
+            )}
+          </div>
+          <hr />
+          <div className="col-12">
+            <div className="row">
+              <div className="col-10 form-floating gray-color">
+                <input
+                  name="massage"
+                  value={message.massage}
+                  className={`${
+                    darkMode ? " spic-dark-mode" : "light"
+                  } form-control border-0`}
+                  type="text"
+                  placeholder="your message ..."
+                  onChange={(e) => handaleMessageChange(e)}
+                  onKeyDown={(e) => handaleMessageChange(e)}
+                />
+              </div>
+              <div className="col-2 d-flex align-items-center">
+                <button
+                  onClick={(e) => sendMessage(e)}
+                  className="nav-link position-relative"
+                >
+                  <i className="fa-solid fa-message colorMain mid-bold h3 m-0"></i>
+                </button>
               </div>
             </div>
           </div>

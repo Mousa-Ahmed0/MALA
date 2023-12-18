@@ -260,20 +260,22 @@ export default function PaymentLineChartContainer({ darkMode }) {
 
   return (
     <>
-      <div className="row">
-        <div className="col-12">
-          {" "}
-          <h1 className="h5">Our Payments - {filterOption}:</h1>
+      <div className="row align-items-center">
+        <div className="col-12 d-flex gap-2">
+          <span className=" h5 m-0 colorMain">
+            <i class="fa-solid fa-file-invoice-dollar"></i>
+          </span>
+          <h1 className=" h5 m-0">Our Payments - {filterOption}:</h1>
         </div>
         <div className="col-8">
-          <h1 className="h1 mt-2 mb-4 colorMain mid-bold">
+          <h1 className="h1 mt-3 mb-4 colorMain mid-bold">
             {totalCount}{" "}
             <span className={`${darkMode ? "text-white" : "text-black"} h5`}>
               NIS
             </span>
           </h1>
         </div>
-        <div className="col-4">
+        <div className="col-4 mt-3 mb-4">
           <div className="border border-black ">
             <UserFilter
               filterOptions={filterOptions}
