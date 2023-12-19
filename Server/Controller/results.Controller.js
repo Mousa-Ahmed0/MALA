@@ -427,7 +427,10 @@ module.exports.dayResult = asyncHandler(async (req, res) => {
     "Saturday",
   ];
   console.log(req.query.date);
+  
 
+
+  
   const getAllResult = await analyzeResult.find({
     date: req.query.Date,
   });
