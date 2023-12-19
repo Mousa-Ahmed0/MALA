@@ -427,9 +427,8 @@ module.exports.dayResult = asyncHandler(async (req, res) => {
     "Saturday",
   ];
   console.log(req.query.date);
-
   const getAllResult = await analyzeResult.find({
-    date: req.query.Date,
+    "resultSet.result.compontResult.resultDate": req.query.date,
   });
 
   let resultArray = [];
@@ -444,7 +443,19 @@ module.exports.dayResult = asyncHandler(async (req, res) => {
       const dayName = daysOfWeek[dayOfWeek]; //find name of day
 
       let newRes = getAllResult[i];
-      let tempRes = newRes.resultSet.map();
+
+      let tempResultSet = [...newRes.resultSet];
+      let newResultSet = [];
+
+      tempResultSet.map((rs, indexRS) => {
+        rs.result.map((ar, indexAR) => {
+          if (ar.resultDate === req.query.date) {
+            newResultSet.push(rs);
+          }
+        });
+      });
+      newRes = { ...newRes, resultSet: newResultSet };
+
       const pymentDetails = {
         day: dayName,
         "Start Analyz": getAllResult[i].date,
