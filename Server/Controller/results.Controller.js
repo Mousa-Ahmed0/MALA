@@ -444,30 +444,38 @@ module.exports.dayResult = asyncHandler(async (req, res) => {
 
       let newRes = getAllResult[i];
 
-      let tempResultSet = [...newRes.resultSet];
-      let newResultSet = [];
-      let dd=new Date(req.query.date);
+      let tempResultSet = newRes.resultSet;
+      let newResultSet = []; // save new result set [ a. id, resutl[] ]
+
+      let dd = new Date(req.query.date);
       //   console.log("new newRes",newRes);
       //   console.log(" tempResultSet",tempResultSet);
       tempResultSet.map((rs, indexRS) => {
-        // console.log(indexRS,"rs:",rs);
-
+        let newR = []; // [{compRes}]
         rs.result.map((ar, indexAR) => {
-          // console.log(indexRS,":",ar.resultDate);
-          ar.compontResult.map((cr,indexcr)=>{
-            console.log(indexcr,"ce:",cr);
-            if (cr.resultDate === dd) {
-              newResultSet.push(rs);
+          let newCR = []; ////[{resultvalues[] , date}]
+          ar.compontResult.map((cr, indexcr) => {
+            console.log(cr.resultDate == dd);
+            if (cr.resultDate.getTime() === dd.getTime()) {
+              newCR.push(cr);
             }
-          })
+          });
+          console.log("----------");
+          console.log("newCR:", newCR);
+          if (newCR.length > 0) {
+            newR.push({ compontResult: newCR });
+          }
         });
+        console.log("----------");
+        console.log("newR:", newR);
+        if (newR.length > 0) {
+          newResultSet.push({
+            anlyzeId: rs.anlyzeId,
+            result: newR,
+          });
+        }
       });
-      newRes = { ...newRes, resultSet: newResultSet };
-      console.log("newResultSet",newResultSet);
-
-      console.log("------------------------");
-
-      console.log(" newRes",newRes);
+      newRes.resultSet = newResultSet;
 
       const pymentDetails = {
         day: dayName,
