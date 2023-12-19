@@ -1,12 +1,13 @@
+import axios from "axios";
 import {
   getAllPayments,
   getPaymentsFiltered,
 } from "../../../../apis/ApisHandale";
 import UserFilter from "../../../UserFilter/UserFilter";
-import PayLineChart from "./PaymentLineChartComponents/PayLineChart";
+import VisitorsLineChart from "./VisitorsLineChartComponents/VisitorsLineChart";
 import React, { useState, useEffect } from "react";
 
-export default function PaymentLineChartContainer({ darkMode }) {
+export default function VisitorsLineChartContainer({ darkMode }) {
   const [lineChartPropreties, setLineChartProperties] = useState({
     lineLabels: [],
     lineData: [],
@@ -27,7 +28,7 @@ export default function PaymentLineChartContainer({ darkMode }) {
     "Dec",
   ];
 
-  const [totalCount, setTotalCount] = useState(0);
+  const [totalVisitors, setTotalVisitors] = useState(0);
   let [noResults, setNoResults] = useState("");
   let [errorMessage, setErrorMessage] = useState("");
   let [apiMessage, setApiMessage] = useState("");
@@ -79,6 +80,7 @@ export default function PaymentLineChartContainer({ darkMode }) {
   async function handaleFilterOption(option) {
     setFilterOption(option);
     let currentDate = new Date();
+    let currentDateString = formatDate(currentDate);
     let currentDay = currentDate.getDate();
     switch (option) {
       case "noValue":
@@ -87,10 +89,15 @@ export default function PaymentLineChartContainer({ darkMode }) {
       case "Last Week":
         try {
           //get data from api
-          let response = await getPaymentsFiltered({
-            payDate: formatDate(new Date()),
-            number: 0,
-          });
+          let response = await axios.get(
+            `http://localhost:5000/api/result/getResults/resultDate?number=1&date=${currentDateString}`,
+            {
+              headers: {
+                Authorization: "Bearer " + localStorage.getItem("token"),
+              },
+            }
+          );
+          console.log(response);
           //check is there data?
           if (response.data.paumentArray) {
             //create new prop
@@ -99,7 +106,7 @@ export default function PaymentLineChartContainer({ darkMode }) {
               lineData: [],
             };
             //set total count of paid value
-            setTotalCount(response.data.count);
+            setTotalVisitors(response.data.count);
             newLineChartProperties.lineLabels = getPastDayNames(7); //get name of last 7 days
             for (let i = currentDay - 7; i <= currentDay; i++) {
               //move 7 times loop "one for each day"
@@ -269,7 +276,7 @@ export default function PaymentLineChartContainer({ darkMode }) {
         </div>
         <div className="col-8">
           <h1 className="h1 mt-3 mb-4 colorMain mid-bold">
-            {totalCount}{" "}
+            {totalVisitors}{" "}
             <span className={`${darkMode ? "text-white" : "text-black"} h5`}>
               NIS
             </span>
@@ -287,7 +294,7 @@ export default function PaymentLineChartContainer({ darkMode }) {
       </div>
       {lineChartPropreties.lineData.length > 0 &&
       lineChartPropreties.lineLabels.length > 0 ? (
-        <PayLineChart
+        <VisitorsLineChart
           darkMode={darkMode}
           lineLabels={lineChartPropreties.lineLabels}
           lineData={lineChartPropreties.lineData}

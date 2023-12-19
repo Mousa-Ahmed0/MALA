@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-import DashboardWelcome from "../DashboardWelcome";
-import { useDarkMode } from "../../context/DarkModeContext";
-import AdsSection from "../UserComponenet/Ads/AdsSection";
-import PaymentLineChartContainer from "./Charts/PaymentLineChart/PaymentLineChartContainer";
-import MessageBox from "./MessagesHandale/MessageBox/MessageBox";
 import axios from "axios";
-import { getDatasetAtEvent } from "react-chartjs-2";
+//
+import { useDarkMode } from "../../context/DarkModeContext";
+//
+import DashboardWelcome from "../DashboardWelcome";
+import AdsSection from "../UserComponenet/Ads/AdsSection";
+import MessageBox from "./MessagesHandale/MessageBox/MessageBox";
+import PaymentLineChartContainer from "./Charts/PaymentLineChart/PaymentLineChartContainer";
+import VisitorsLineChartContainer from "./Charts/VisitorsLineChart/VisitorsLineChartContainer";
 export default function DashboardHome({ user }) {
   const { darkMode } = useDarkMode();
   const width = "-webkit-fill-available";
@@ -231,6 +233,40 @@ export default function DashboardHome({ user }) {
         </div>
       </div>
       <hr className="my-4" />
+      <div className="row maxHeight-part">
+        <div
+          className={`p-4 col-12 col-md-7 ${
+            darkMode ? " spic-dark-mode" : " bg-white"
+          }`}
+        >
+          <VisitorsLineChartContainer darkMode={darkMode} />
+        </div>
+        <div className="col-1"></div>
+        <div
+          className={`p-4 col-12 col-md-4 ${
+            darkMode ? " spic-dark-mode" : " bg-white"
+          }`}
+        >
+          <div className="row align-items-center">
+            <div className="col-10 d-flex gap-2">
+              <span className=" h5 m-0 colorMain">
+                <i class="fa-solid fa-inbox"></i>
+              </span>
+              <h1 className=" h5 m-0">Recent Messages:</h1>
+            </div>
+            <div className="col-2 d-flex justify-content-end colorMain">
+              <h1 className="h3  m-0">
+                {nonReadNo === 0 ? (
+                  "All Message Readed!"
+                ) : (
+                  <div className=" mid-bold">+{nonReadNo} </div>
+                )}
+              </h1>
+            </div>
+          </div>
+          <MessageBox darkMode={darkMode} />
+        </div>
+      </div>
     </div>
   );
 }

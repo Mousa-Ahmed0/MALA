@@ -51,6 +51,7 @@ export default function LabMessageInterface({
       console.error("Error from Sending Message: ", error);
     }
   }
+
   //get All Message In Conversation
   async function getMessages() {
     try {
@@ -125,12 +126,12 @@ export default function LabMessageInterface({
       return <div>Loading ...</div>;
     }
   }
-
   //to convert state to readed
   async function msgReaded() {
+    console.log("hhh");
     try {
-      const response = axios.get(
-        "http://localhost:5000/api/massage/ifReady/657f20243675425854378b96",
+      const response = axios.put(
+        `http://localhost:5000/api/massage/ifReady/${allMessages.senderId.id}`,
         {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         }
@@ -146,16 +147,15 @@ export default function LabMessageInterface({
     getMessages();
     // Set up interval to fetch messages every 5 seconds (adjust as needed)
     const intervalId = setInterval(getMessages, 30000);
-    //Make Messages Read
-    /* if (user.usertype === "Admin" || user.usertype === "Staff") {
-      msgReaded();
-    }*/
+    ////
     // Clean up interval when the component unmounts
     return () => clearInterval(intervalId);
   }, []); // Empty dependency array means this effect runs once after the initial render
   //scroll if message changed "send or rescive a message"
   useEffect(() => {
     scrollToBottom(messagesContainerRef);
+    //Make Messages Read
+    msgReaded();
   }, [allMessages]);
   return (
     <>
