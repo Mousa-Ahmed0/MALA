@@ -127,13 +127,27 @@ module.exports.countIfRead = asyncHandler(async (req, res) => {
  * @access public
  * ------------------------------------------ */
 module.exports.editIfReady = asyncHandler(async (req, res) => {
-    const edit = await Massage.findByIdAndUpdate(
-        req.params.id,
+    let objectIdString = "";
+    if (req.user.usertype === "Patient") {
+        objectIdString = process.env.ADMIN_ID; // admin _id
+    } else {
+        objectIdString = req.body.recvId;
+    }
+
+    const edit = await Massage.updateOne(
         {
-            ifReady: true,
+            $or: [
+                { senderId: req.user.id, recvId: objectIdString },
+                { senderId: objectIdString, recvId: req.user.id },
+            ],
         },
-        { new: true }
+        { $set: { ifReady: true } }
     );
-    if (edit) return res.status(200).json({ edit: "true" });
-    else return res.status(400).json({ edit: "False" });
+
+    if (edit.nModified > 0) {
+        return res.status(200).json({ edit: true });
+    } else {
+        return res.status(400).json({ edit: false });
+    }
+
 });
