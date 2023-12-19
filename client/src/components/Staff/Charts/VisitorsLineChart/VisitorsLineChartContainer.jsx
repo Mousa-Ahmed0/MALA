@@ -90,7 +90,7 @@ export default function VisitorsLineChartContainer({ darkMode }) {
         try {
           //get data from api
           let response = await axios.get(
-            `http://localhost:5000/api/result/getResults/resultDate?number=1&date=${currentDateString}`,
+            `http://localhost:5000/api/result/getResults/resultDate?number=0&date=${currentDateString}`,
             {
               headers: {
                 Authorization: "Bearer " + localStorage.getItem("token"),

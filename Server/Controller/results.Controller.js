@@ -157,7 +157,6 @@ module.exports.getResultsByIdStaff = asyncHandler(async (req, res) => {
     }
   }
 
-
   //send a response to client
   res.status(201).json({
     analysArray,
@@ -183,7 +182,7 @@ module.exports.getResultsPatient = asyncHandler(async (req, res) => {
       const usersStaff = await user
         .findOne({ ident: detailsAnalyze[i].staffIdent })
         .select("firstname lastname -_id ");
-  
+
       //user patient
       const usersPatint = await user
         .findOne({ ident: detailsAnalyze[i].patientIdent })
@@ -270,8 +269,8 @@ module.exports.resultDate = asyncHandler(async (req, res) => {
   const startDate = new Date(currentDate);
 
   let resultArray = [];
-
-  if (number == 0) {
+  console.log("number", typeof number, number);
+  if (number.includes("0")) {
     //week
     startDate.setDate(currentDate.getDate() - 7);
     const getAllResult = await analyzeResult.find({
@@ -280,9 +279,11 @@ module.exports.resultDate = asyncHandler(async (req, res) => {
 
     if (getAllResult.length) {
       for (let i = 0; i < getAllResult.length; i++) {
-        const userinfo = await user.findOne({
-          ident: getAllResult[i].patientIdent,
-        }).select('-password');
+        const userinfo = await user
+          .findOne({
+            ident: getAllResult[i].patientIdent,
+          })
+          .select("-password");
         const dayOfWeek = getAllResult[i].date.getDay(); //find day
         const dayName = daysOfWeek[dayOfWeek]; //find name of day
         const pymentDetails = {
@@ -309,9 +310,11 @@ module.exports.resultDate = asyncHandler(async (req, res) => {
 
     if (getAllResult.length) {
       for (let i = 0; i < getAllResult.length; i++) {
-        const userinfo = await user.findOne({
-          ident: getAllResult[i].patientIdent,
-        }).select('-password');
+        const userinfo = await user
+          .findOne({
+            ident: getAllResult[i].patientIdent,
+          })
+          .select("-password");
         const dayOfWeek = getAllResult[i].date.getDay(); //find day
         const dayName = daysOfWeek[dayOfWeek]; //find name of day
         const pymentDetails = {
@@ -330,6 +333,7 @@ module.exports.resultDate = asyncHandler(async (req, res) => {
       res.status(400).json({ message: "Can't find report" });
     }
   }
+  res.status(400).json({ message: "Can't find report" });
 });
 
 /**--------------------------------
@@ -359,9 +363,11 @@ module.exports.resultDateFromTo = asyncHandler(async (req, res) => {
   let resultArray = [];
   if (getAllResult.length) {
     for (let i = 0; i < getAllResult.length; i++) {
-      const userinfo = await user.findOne({
-        ident: getAllResult[i].patientIdent,
-      }).select('-password');
+      const userinfo = await user
+        .findOne({
+          ident: getAllResult[i].patientIdent,
+        })
+        .select("-password");
       const dayOfWeek = getAllResult[i].date.getDay(); //find day
       const dayName = daysOfWeek[dayOfWeek]; //find name of day
       const pymentDetails = {
@@ -400,15 +406,17 @@ module.exports.dayResult = asyncHandler(async (req, res) => {
   ];
 
   const getAllResult = await analyzeResult.find({
-    date: req.query.Date
+    date: req.query.Date,
   });
 
   let resultArray = [];
   if (getAllResult.length) {
     for (let i = 0; i < getAllResult.length; i++) {
-      const userinfo = await user.findOne({
-        ident: getAllResult[i].patientIdent,
-      }).select('-password');
+      const userinfo = await user
+        .findOne({
+          ident: getAllResult[i].patientIdent,
+        })
+        .select("-password");
       const dayOfWeek = getAllResult[i].date.getDay(); //find day
       const dayName = daysOfWeek[dayOfWeek]; //find name of day
       const pymentDetails = {

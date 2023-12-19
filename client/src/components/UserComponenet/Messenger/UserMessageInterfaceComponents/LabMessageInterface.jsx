@@ -127,11 +127,11 @@ export default function LabMessageInterface({
     }
   }
   //to convert state to readed
-  async function msgReaded() {
+  /* async function msgReaded() {
     console.log("hhh");
     try {
       const response = axios.put(
-        `http://localhost:5000/api/massage/ifReady/${allMessages.senderId.id}`,
+        `http://localhost:5000/api/massage/ifReady/${allMessages.id}`,
         {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         }
@@ -139,7 +139,7 @@ export default function LabMessageInterface({
     } catch (error) {
       console.error("Error From msgReaded: ", error);
     }
-  }
+  }*/
   //////////////////
   //get all messages
   useEffect(() => {
@@ -155,7 +155,7 @@ export default function LabMessageInterface({
   useEffect(() => {
     scrollToBottom(messagesContainerRef);
     //Make Messages Read
-    msgReaded();
+    //msgReaded();
   }, [allMessages]);
   return (
     <>
