@@ -446,15 +446,28 @@ module.exports.dayResult = asyncHandler(async (req, res) => {
 
       let tempResultSet = [...newRes.resultSet];
       let newResultSet = [];
-
+      let dd=new Date(req.query.date);
+      //   console.log("new newRes",newRes);
+      //   console.log(" tempResultSet",tempResultSet);
       tempResultSet.map((rs, indexRS) => {
+        // console.log(indexRS,"rs:",rs);
+
         rs.result.map((ar, indexAR) => {
-          if (ar.resultDate === req.query.date) {
-            newResultSet.push(rs);
-          }
+          // console.log(indexRS,":",ar.resultDate);
+          ar.compontResult.map((cr,indexcr)=>{
+            console.log(indexcr,"ce:",cr);
+            if (cr.resultDate === dd) {
+              newResultSet.push(rs);
+            }
+          })
         });
       });
       newRes = { ...newRes, resultSet: newResultSet };
+      console.log("newResultSet",newResultSet);
+
+      console.log("------------------------");
+
+      console.log(" newRes",newRes);
 
       const pymentDetails = {
         day: dayName,
