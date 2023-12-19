@@ -413,13 +413,7 @@ module.exports.dayResult = asyncHandler(async (req, res) => {
     "Saturday",
   ];
   console.log(req.query.date);
-  
-
-
-
-  const getAllResult = await analyzeResult.find({
-    "resultSet.result.compontResult.resultDate": req.query.date
-  });
+  const getAllResult = await analyzeResult.find({"resultSet.result.compontResult.resultDate": req.query.date});
 
   let resultArray = [];
   if (getAllResult.length) {
