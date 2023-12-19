@@ -248,7 +248,12 @@ module.exports.getResultsStaff = asyncHandler(async (req, res) => {
     });
   } else res.status(404).json({ message: "User not found" });
 });
-
+/**--------------------------------
+ * @desc get week month of result
+ * @router /api/getResults/resultDate
+ * @method GET
+ * @access private (staff or admin)
+ * ------------------------------------------ */
 module.exports.resultDate = asyncHandler(async (req, res) => {
   //vaildition @front end
   const daysOfWeek = [
@@ -324,5 +329,101 @@ module.exports.resultDate = asyncHandler(async (req, res) => {
     } else {
       res.status(400).json({ message: "Can't find report" });
     }
+  }
+});
+
+/**--------------------------------
+ * @desc get from to date of result
+ * @router /api/getResults/resultDateFromTo
+ * @method GET
+ * @access private (staff or admin)
+ * ------------------------------------------ */
+module.exports.resultDateFromTo = asyncHandler(async (req, res) => {
+  //vaildition @front end
+  const daysOfWeek = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+  const firstDate = new Date(req.query.firstDate);
+  const secondtDate = new Date(req.query.secondtDate);
+
+  const getAllResult = await analyzeResult.find({
+    date: { $gte: firstDate, $lte: secondtDate },
+  });
+
+  let resultArray = [];
+  if (getAllResult.length) {
+    for (let i = 0; i < getAllResult.length; i++) {
+      const userinfo = await user.findOne({
+        ident: getAllResult[i].patientIdent,
+      }).select('-password');
+      const dayOfWeek = getAllResult[i].date.getDay(); //find day
+      const dayName = daysOfWeek[dayOfWeek]; //find name of day
+      const pymentDetails = {
+        day: dayName,
+        date: getAllResult[i].date,
+        Result: getAllResult[i],
+        info: userinfo,
+      };
+      resultArray.push(pymentDetails);
+    }
+    res.status(201).json({
+      resultArray,
+      message: "Reports generated successfully.",
+    });
+  } else {
+    res.status(400).json({ message: "Can't find report" });
+  }
+});
+
+/**--------------------------------
+ * @desc get by one day result
+ * @router /api/getResults/dayResult
+ * @method GET
+ * @access private (staff or admin)
+ * ------------------------------------------ */
+module.exports.dayResult = asyncHandler(async (req, res) => {
+  //vaildition @front end
+  const daysOfWeek = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+
+  const getAllResult = await analyzeResult.find({
+    date: req.query.Date
+  });
+
+  let resultArray = [];
+  if (getAllResult.length) {
+    for (let i = 0; i < getAllResult.length; i++) {
+      const userinfo = await user.findOne({
+        ident: getAllResult[i].patientIdent,
+      }).select('-password');
+      const dayOfWeek = getAllResult[i].date.getDay(); //find day
+      const dayName = daysOfWeek[dayOfWeek]; //find name of day
+      const pymentDetails = {
+        day: dayName,
+        date: getAllResult[i].date,
+        Result: getAllResult[i],
+        info: userinfo,
+      };
+      resultArray.push(pymentDetails);
+    }
+    res.status(201).json({
+      resultArray,
+      message: "Reports generated successfully.",
+    });
+  } else {
+    res.status(400).json({ message: "Can't find report" });
   }
 });

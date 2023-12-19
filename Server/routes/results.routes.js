@@ -17,6 +17,8 @@ const {
   getResultsById,
   getResultsByIdStaff,
   resultDate,
+  resultDateFromTo,
+  dayResult,
 } = require("../Controller/results.Controller");
 
 // results
@@ -24,6 +26,8 @@ router.post("/addResults", ifAdminOrStaff, addResults);
 router.get("/getResult", ifAdminOrStaff, getResults);
 router.get("/getResults/staffIdent", ifAdminOrStaff, getResultsByIdStaff);
 router.get("/getResults/resultDate", ifAdminOrStaff, resultDate);
+router.get("/getResults/resultDateFromTo", ifAdminOrStaff, resultDateFromTo);
+router.get("/getResults/dayResult", ifAdminOrStaff, dayResult);
 
 router.get("/getResults/:id", validateId, getResultsById);
 router.get("/getPatientAnalyze", getResultsPatient);
