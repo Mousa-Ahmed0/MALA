@@ -32,7 +32,6 @@ export default function MessageInterface({ user, darkMode }) {
 
   //scroll the box down
   const scrollToBottom = (messagesContainerRef) => {
-    console.log(messagesContainerRef);
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTop =
         messagesContainerRef.current.scrollHeight;
