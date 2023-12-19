@@ -30,14 +30,24 @@ const analyzeResultSchema = new mongoose.Schema(
         },
         result: [
           {
-            name: {
-              type: String,
-              required: true,
-            },
-            value: {
-              type: String,
-              required: true,
-            },
+            compontResult: [
+              {
+                name: {
+                  type: String,
+                  required: true,
+                },
+                value: {
+                  type: String,
+                  required: true,
+                },
+                resultDate: {
+                  type: Date,
+                  required: true,
+                  default: new Date(),
+                }
+              }
+            ]
+
           },
         ],
       },

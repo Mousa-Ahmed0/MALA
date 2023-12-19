@@ -9,19 +9,33 @@ const { analyze } = require("../models/Analyze");
  * @access  (staff or admin)
  * ------------------------------------------ */
 module.exports.addResults = asyncHandler(async (req, res) => {
-  // validation  @frontend
+  //if result exists
+  let existingResult = await analyzeResult.findOne({ patientIdent: req.body.patientIdent });
+  if (existingResult) {//old patient
+    let analyzeId = req.body.resultSet[0].anlyzeId;
+    let existingAnalyze = existingResult.resultSet.find(result => result.anlyzeId.equals(analyzeId));
 
-  const newResult = new analyzeResult({
-    staffIdent: req.body.staffIdent,
-    patientIdent: req.body.patientIdent,
-    doctorIdent: req.body.doctorIdent,
-    doctorName: req.body.doctorName,
-    date: req.body.date,
-    resultSet: req.body.resultSet,
-  });
-  await newResult.save();
-  //send a response to client d
-  res.status(201).json({ newResult, message: "done..........." });
+    if (existingAnalyze) //old result new Analyze
+      existingAnalyze.result[0].compontResult.push(...req.body.resultSet[0].result[0].compontResult);
+    else //new Analyze
+      existingResult.resultSet.push(req.body.resultSet[0]);
+    //save to db
+    await existingResult.save();
+    return res.status(201).json({ message: "Result Update" });
+  }
+  else {//first patient
+    const newResult = new analyzeResult({
+      staffIdent: req.body.staffIdent,
+      patientIdent: req.body.patientIdent,
+      doctorIdent: req.body.doctorIdent,
+      doctorName: req.body.doctorName,
+      date: req.body.date,
+      resultSet: req.body.resultSet,
+    });
+    await newResult.save();
+    //send a response to client 
+    res.status(201).json({ newResult, message: "done..........." });
+  }
 });
 
 /**--------------------------------
@@ -183,7 +197,7 @@ module.exports.getResultsPatient = asyncHandler(async (req, res) => {
       const usersStaff = await user
         .findOne({ ident: detailsAnalyze[i].staffIdent })
         .select("firstname lastname -_id ");
-  
+
       //user patient
       const usersPatint = await user
         .findOne({ ident: detailsAnalyze[i].patientIdent })
@@ -220,7 +234,7 @@ module.exports.getResultsPatient = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.getResultsDoctor = asyncHandler(async (req, res) => {
   const detailsAnalyze = await analyzeResult.find({
-    doctorIdent: req.body.doctorIdent,
+    doctorIdent: req.query.doctorIdent,
   });
   if (detailsAnalyze != "") {
     //send a response to client
@@ -238,7 +252,7 @@ module.exports.getResultsDoctor = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.getResultsStaff = asyncHandler(async (req, res) => {
   const detailsAnalyze = await analyzeResult.find({
-    staffIdent: req.body.staffIdent,
+    staffIdent: req.query.staffIdent,
   });
   if (detailsAnalyze != "") {
     //send a response to client
@@ -398,9 +412,10 @@ module.exports.dayResult = asyncHandler(async (req, res) => {
     "Friday",
     "Saturday",
   ];
+  console.log(req.query.date);
 
   const getAllResult = await analyzeResult.find({
-    date: req.query.Date
+    "resultSet.result.compontResult.resultDate": req.query.date
   });
 
   let resultArray = [];
@@ -409,12 +424,16 @@ module.exports.dayResult = asyncHandler(async (req, res) => {
       const userinfo = await user.findOne({
         ident: getAllResult[i].patientIdent,
       }).select('-password');
+
       const dayOfWeek = getAllResult[i].date.getDay(); //find day
       const dayName = daysOfWeek[dayOfWeek]; //find name of day
+
+      let newRes=getAllResult[i];
+      
       const pymentDetails = {
         day: dayName,
-        date: getAllResult[i].date,
-        Result: getAllResult[i],
+        "Start Analyz": getAllResult[i].date,
+        Result: newRes,
         info: userinfo,
       };
       resultArray.push(pymentDetails);
