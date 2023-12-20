@@ -172,7 +172,7 @@ export default function AddResult({ setIsFormOpen }) {
   }, [val]);
   useEffect(() => {
     // Search for users when the search value changes
-    console.log(allResults);
+    console.log("allResults", allResults);
   }, [allResults]);
 
   return (

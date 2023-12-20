@@ -4,10 +4,13 @@ import { getOneAnalyze } from "../../../../../../apis/ApisHandale";
 
 export default function AnalyzeResult({
   darkMode,
-  resultSet,
+  isDone,
+  setIsDone,
   setResultSet,
-  isAnalyseChoosen,
-  setIsAnalyseChoosen,
+  isSelectActive,
+  setisSelectActive,
+  setApiMessage,
+  date,
 }) {
   //Object to save result of one anlyze
   const [anlyseResult, setAnlyseResult] = useState({
@@ -15,14 +18,18 @@ export default function AnalyzeResult({
     result: [],
   });
   //array to handale results of component of one anlyze
-  const [componentsResult, setComponentsResult] = useState([]);
+  const [componentsResult, setComponentsResult] = useState([
+    {
+      resultValues: [],
+      resultDate: new Date(date),
+    },
+  ]);
   // to handle ux
-  const [analyzeOption, setAnalyzeOption] = useState(false);
+  const [currentSelectActive, setcurrentSelectActive] = useState(false);
   let [errorMessage, setErrorMessage] = useState("");
   //analysis options
   const [allAnalysis, setAllAnalysis] = useState([]);
   const [selectValue, setSelectValue] = useState("0");
-  const [isDone, setIsDone] = useState(false);
 
   //get All Analysis
   async function getAnalysis() {
@@ -58,18 +65,20 @@ export default function AnalyzeResult({
   let [foundAnalyze, setFoundAnalyze] = useState(); //search for the anlyze
 
   function getAnalyzeResultDetails(e) {
+    setApiMessage("");
     setErrorMessage("");
     setIsDone(false);
     setSelectValue(e.target.value);
+    if (!isSelectActive) setcurrentSelectActive(true);
+
     if (e.target.value === "0") {
-      setAnalyzeOption(false);
-      setIsAnalyseChoosen(false);
+      setcurrentSelectActive(false);
     } else {
-      if (isAnalyseChoosen) {
+      if (isSelectActive && !currentSelectActive) {
         setErrorMessage("You Didn't Finish The Previous Result! ");
       } else {
-        setAnalyzeOption(true);
-        setIsAnalyseChoosen(true);
+        setisSelectActive(true);
+
         let newAnlyseResult = { ...anlyseResult };
         newAnlyseResult[e.target.name] = e.target.value;
         setAnlyseResult((prevState) => ({
@@ -84,17 +93,18 @@ export default function AnalyzeResult({
   }
   //handale Componenet Result Input
   function handleResultChange(name, value) {
+    setApiMessage("");
     // Update the state with the new result for the component
     setComponentsResult((prevResults) => {
       const updatedResults = [...prevResults];
-      const existingResultIndex = updatedResults.findIndex(
+      const existingResultIndex = updatedResults[0].resultValues.findIndex(
         (result) => result.name === name
       );
 
       if (existingResultIndex !== -1) {
-        updatedResults[existingResultIndex].value = value;
+        updatedResults[0].resultValues[existingResultIndex].value = value;
       } else {
-        updatedResults.push({ name, value });
+        updatedResults[0].resultValues.push({ name, value });
       }
 
       return updatedResults;
@@ -107,15 +117,23 @@ export default function AnalyzeResult({
       setErrorMessage("ThereEmptyValue");
     } else {
       // Use the current anlyseResult in the callback function
+      console.log("componentsResult from save: ", componentsResult);
       setResultSet((prevResultSet) => [
         ...prevResultSet,
-        { ...anlyseResult, result: componentsResult },
+        {
+          ...anlyseResult,
+          result: [...anlyseResult.result, { compontResult: componentsResult }],
+        },
       ]);
-      setAnalyzeOption(false);
-      setIsAnalyseChoosen(false);
+      setcurrentSelectActive(false);
+      setisSelectActive(false);
       setErrorMessage("");
       setSelectValue("0");
       setIsDone(true);
+      setAnlyseResult({
+        anlyzeId: "",
+        result: [],
+      });
     }
   }
   //Render Analyze Components
@@ -156,7 +174,24 @@ export default function AnalyzeResult({
   ///////////////////
   useEffect(() => {
     getAnalysis();
+    console.log("isSelectActive: ", isSelectActive);
+    console.log("currentSelectActive: ", currentSelectActive);
+    console.log("date", date);
   }, []);
+  useEffect(() => {
+    console.log("isSelectActive: ", isSelectActive);
+    console.log("currentSelectActive: ", currentSelectActive);
+  }, [isSelectActive, currentSelectActive]);
+  useEffect(() => {
+    console.log("anlyseResult", anlyseResult);
+  }, [anlyseResult]);
+  useEffect(() => {
+    console.log("componentsResult", componentsResult);
+  }, [componentsResult]);
+  useEffect(() => {
+    console.log("date", date);
+  }, [date]);
+
   ///////////////////
   return (
     <>
@@ -185,7 +220,7 @@ export default function AnalyzeResult({
           ""
         )}
       </div>
-      <div className={`col-12 ${!analyzeOption ? "d-none" : ""}`}>
+      <div className={`col-12 ${!currentSelectActive ? "d-none" : ""}`}>
         <div
           className={`card mb-4 ${darkMode ? " spic-dark-mode border-0" : ""}`}
         >

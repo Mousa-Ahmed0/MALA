@@ -91,6 +91,7 @@ export default function PaymentLineChartContainer({ darkMode }) {
             payDate: formatDate(new Date()),
             number: 0,
           });
+          console.log(response);
           //check is there data?
           if (response.data.paumentArray) {
             //create new prop

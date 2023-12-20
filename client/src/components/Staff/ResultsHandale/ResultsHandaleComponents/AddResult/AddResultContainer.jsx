@@ -7,7 +7,7 @@ import { addResult, getAllDoctor } from "../../../../../apis/ApisHandale";
 import AnalyzeResult from "./AddResultComponents/AnalyzeResult";
 export default function AddResult() {
   const { darkMode } = useDarkMode();
-
+  const [isDone, setIsDone] = useState(false);
   let [errorList, setErrorList] = useState([]);
   let [apiMessage, setApiMessage] = useState("");
   let [apiError, setApiError] = useState(false);
@@ -37,6 +37,7 @@ export default function AddResult() {
   }
   //get result details from inputs
   function getResultData(e) {
+    setApiMessage("");
     if (e.target.name === "a_no") {
       setAnlysisNo(e.target.value);
     } else {
@@ -50,7 +51,7 @@ export default function AddResult() {
   async function onSubmitForm(e) {
     e.preventDefault();
     let newResult = { ...result, resultSet: resultSet };
-    console.log(newResult);
+    console.log("newResult", newResult);
     /*setResult((prevResult) => ({
       ...prevResult,
       resultSet: resultSet,
@@ -69,6 +70,7 @@ export default function AddResult() {
         date: new Date(),
         resultSet: [],
       });
+      setIsDone(false);
     } catch (error) {
       setApiError(true);
       console.error("Error submitting Result with components:", error);
@@ -93,12 +95,12 @@ export default function AddResult() {
     );
   }
   /************** Anlysis Result **************/
-  const [isAnalyseChoosen, setIsAnalyseChoosen] = useState(false);
+  const [isSelectActive, setisSelectActive] = useState(false);
   // display the Anlysis ResultSet Form
   function renderResultSet() {
     let rows = [];
     for (let i = 0; i < anlysisNo; i++) {
-      let result = (
+      let r = (
         <>
           <div
             className={`componenet-No-Label text-truncate position-relative ${
@@ -111,10 +113,13 @@ export default function AddResult() {
             <div className="col-12">
               <AnalyzeResult
                 darkMode={darkMode}
-                resultSet={resultSet}
+                isDone={isDone}
+                setIsDone={setIsDone}
                 setResultSet={setResultSet}
-                isAnalyseChoosen={isAnalyseChoosen}
-                setIsAnalyseChoosen={setIsAnalyseChoosen}
+                isSelectActive={isSelectActive}
+                setisSelectActive={setisSelectActive}
+                setApiMessage={setApiMessage}
+                date={result ? result.date : new Date()}
               />
             </div>
             <br />
@@ -122,7 +127,7 @@ export default function AddResult() {
           <hr />
         </>
       );
-      rows.push(result);
+      rows.push(r);
     }
     return rows;
   }

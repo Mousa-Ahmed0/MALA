@@ -14,18 +14,6 @@ export default function ResultDetails() {
   const [loader, setLoader] = useState(false);
   const { darkMode } = useDarkMode();
   const { id } = useParams();
-  let [apiError, setApiError] = useState(false);
-  let apiErrorMessage = (
-    <div class="w-100 h-100 d-flex flex-column align-items-center">
-      <div class="alert alert-danger my-4 mid-bold w-100 d-flex justify-content-center">
-        Error!!!
-      </div>
-      <div class="my-4 mid-bold">
-        Theres a proplem! Please wait for us to solve the proplem.
-      </div>
-    </div>
-  );
-  let [noResults, setNoResults] = useState(false);
   const [resultDetails, setResuultDetails] = useState({});
   async function getResultDetails() {
     try {

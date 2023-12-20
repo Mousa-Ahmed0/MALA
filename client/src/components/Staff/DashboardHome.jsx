@@ -233,7 +233,7 @@ export default function DashboardHome({ user }) {
         </div>
       </div>
       <hr className="my-4" />
-      <div className="row maxHeight-part">
+      {/*<div className="row maxHeight-part">
         <div
           className={`p-4 col-12 col-md-7 ${
             darkMode ? " spic-dark-mode" : " bg-white"
@@ -266,7 +266,7 @@ export default function DashboardHome({ user }) {
           </div>
           <MessageBox darkMode={darkMode} />
         </div>
-      </div>
+      </div>*/}
     </div>
   );
 }
