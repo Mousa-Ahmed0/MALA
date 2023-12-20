@@ -400,8 +400,18 @@ Footer .fot-Details li i {
   height: auto;
 }
 
+.comp-name {
+  min-width: 5rem !important;
+  max-width: 5rem !important;
+}
 .normal-range {
-  max-width: 10rem !important;
+  min-width: 5rem !important;
+  max-width: 5rem !important;
+}
+.result {
+  font-size: var(--DetailPageSize);
+  text-wrap: wrap !important;
+  max-width: 2rem !important;
 }
 
 /* Select */
@@ -502,6 +512,7 @@ select option {
 .message {
   max-width: 100% !important;
 }
+
 /*** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~_~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Animations ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~_~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ***/
 /* Typing */
 @keyframes typing {
