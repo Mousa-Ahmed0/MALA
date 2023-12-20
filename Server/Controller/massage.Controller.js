@@ -133,19 +133,19 @@ module.exports.editIfReady = asyncHandler(async (req, res) => {
     } else {
         objectIdString = req.body.recvId;
     }
-
-    const edit = await Massage.updateOne(
-        {
-            $or: [
-                { senderId: req.user.id, recvId: objectIdString },
-                { senderId: objectIdString, recvId: req.user.id },
-            ],
-        },
-        { $set: { ifReady: true } }
-    );
-
-    if (edit.nModified > 0) {
+    if (req.user.usertype !== "Patient") {
+        console.log(req.user.usertype)
+        const edit = await Massage.updateOne(
+            {
+                $or: [
+                    { senderId: req.user.id, recvId: objectIdString },
+                    { senderId: objectIdString, recvId: req.user.id },
+                ],
+            },
+            { $set: { ifReady: true } }
+        );
         return res.status(200).json({ edit: true });
+
     } else {
         return res.status(400).json({ edit: false });
     }

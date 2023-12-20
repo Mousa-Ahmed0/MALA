@@ -307,6 +307,7 @@ module.exports.test = asyncHandler(async (req, res) => {
     "Friday",
     "Saturday",
   ];
+  let responseSent = false; // Variable to track whether response has been sent
   const number = req.query.number;
   const currentDate = new Date(req.query.payDate);
   const startDate = new Date(currentDate);
@@ -337,15 +338,22 @@ module.exports.test = asyncHandler(async (req, res) => {
         paumentArray.push(pymentDetails);
         count += getAllPayment[i].value;
       }
-      res.status(201).json({
-        count,
-        paumentArray,
-        message: "Reports generated successfully.",
-      });
+      if (!responseSent) {
+        res.status(201).json({
+          count,
+          paumentArray,
+          message: "Reports generated successfully.",
+        });
+        responseSent = true; // Set the flag to true to indicate response has been sent
+      }
     } else {
-      res.status(400).json({ message: "Can't find report" });
+      // Send the response if there are no results
+      if (!responseSent) {
+        res.status(400).json({ message: "Can't find report" });
+        responseSent = true; // Set the flag to true to indicate response has been sent
+      }
     }
-  } else {
+  } else if (number >= 1 && number <= 12) {
     //number of month
     startDate.setMonth(currentDate.getMonth() - number);
     const getAllPayment = await payments.find({
@@ -370,13 +378,24 @@ module.exports.test = asyncHandler(async (req, res) => {
         paumentArray.push(pymentDetails);
         count += getAllPayment[i].value;
       }
-      res.status(201).json({
-        count,
-        paumentArray,
-        message: "Reports generated successfully.",
-      });
+      if (!responseSent) {
+        res.status(201).json({
+          count,
+          paumentArray,
+          message: "Reports generated successfully.",
+        });
+        responseSent = true; // Set the flag to true to indicate response has been sent
+      }
     } else {
-      res.status(400).json({ message: "Can't find report" });
+      // Send the response if there are no results
+      if (!responseSent) {
+        res.status(400).json({ message: "Can't find report" });
+        responseSent = true; // Set the flag to true to indicate response has been sent
+      }
     }
+  }
+  if (!responseSent) {
+    res.status(400).json({ message: "Can't find report" });
+    responseSent = true; // Set the flag to true to indicate response has been sent
   }
 });
