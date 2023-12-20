@@ -318,7 +318,6 @@ module.exports.test = asyncHandler(async (req, res) => {
     const getAllPayment = await payments.find({
       payDate: { $gte: startDate, $lte: currentDate },
     });
-    console.log(getAllPayment);
     if (getAllPayment.length) {
       let count = 0;
       for (let i = 0; i < getAllPayment.length; i++) {

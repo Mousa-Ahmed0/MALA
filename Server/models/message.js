@@ -9,6 +9,14 @@ const massSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
+    ifReadySend: {
+      type: Boolean,
+      default: false
+    },
+    ifReadyRecv: {
+      type: Boolean,
+      default: false
+    },
     massage: [
       {
         senderId: {
@@ -26,10 +34,7 @@ const massSchema = new mongoose.Schema(
       }
 
     ],
-    ifReady: {
-      type: Boolean,
-      default: false
-    },
+  
   },
   {
     timestamps: true,

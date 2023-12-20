@@ -20,19 +20,28 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
         ],
     });
 
-    if (massRecord) {
-        // Massage record exists, update it
+    if (massRecord) {// Massage record exists, update it
         massRecord.massage.push({
             senderId: req.user.id,
             mass: req.body.massage,
             date: new Date(),
         });
-        if (!(req.user.usertype === "Patient"))
-            massRecord.ifReady = false;
+        const indx = massRecord.massage;
+        const last = indx[indx.length - 1];
+
+        console.log(last.senderId);
+        console.log(objectIdString);
+        console.log(objectIdString == last.senderId);
+        if ((objectIdString == last.senderId)) {
+            massRecord.ifReadySend = true;
+            massRecord.ifReadyRecv = false;
+        } else {
+            massRecord.ifReadySend = false;
+            massRecord.ifReadyRecv = true;
+        }
         await massRecord.save();
         return res.status(200).json(massRecord);
-    } else {
-        // First massage
+    } else {// First massage
         const newMass = new Massage({
             senderId: req.user.id,
             recvId: objectIdString,
@@ -43,7 +52,8 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
                     date: new Date(),
                 },
             ],
-            ifReady: false,
+            ifReadySend: true,
+            ifReadyRecv: false,
         });
         await newMass.save();
         return res.status(200).json(newMass);
@@ -127,27 +137,48 @@ module.exports.countIfRead = asyncHandler(async (req, res) => {
  * @access public
  * ------------------------------------------ */
 module.exports.editIfReady = asyncHandler(async (req, res) => {
-    let objectIdString = "";
-    if (req.user.usertype === "Patient") {
-        objectIdString = process.env.ADMIN_ID; // admin _id
-    } else {
-        objectIdString = req.body.recvId;
+    const updatedMassage = await Massage.findByIdAndUpdate(
+        req.params.id,
+        {
+            $and: [
+                { recvId: req.user.id },
+                // Add any additional conditions if needed
+            ],
+        },
+        { $set: { ifReadyRecv: true } },
+        { new: true }
+    );
+    console.log(req.params.id); 
+    console.log(req.user.id); 
+    if (!updatedMassage) {
+        return res.status(404).json({ error: 'Massage not found' });
     }
-    if (req.user.usertype !== "Patient") {
-        console.log(req.user.usertype)
-        const edit = await Massage.updateOne(
-            {
-                $or: [
-                    { senderId: req.user.id, recvId: objectIdString },
-                    { senderId: objectIdString, recvId: req.user.id },
-                ],
-            },
-            { $set: { ifReady: true } }
-        );
-        return res.status(200).json({ edit: true });
 
-    } else {
-        return res.status(400).json({ edit: false });
-    }
+    return res.status(200).json({ edit: true, updatedMassage });
+
+
+
+    // let objectIdString = "";
+    // if (req.user.usertype === "Patient") {
+    //     objectIdString = process.env.ADMIN_ID; // admin _id
+    // } else {
+    //     objectIdString = req.body.recvId;
+    // }
+    // if (req.user.usertype !== "Patient") {
+    //     console.log(req.user.usertype)
+    //     const edit = await Massage.updateOne(
+    //         {
+    //             $or: [
+    //                 { senderId: req.user.id, recvId: objectIdString },
+    //                 { senderId: objectIdString, recvId: req.user.id },
+    //             ],
+    //         },
+    //         { $set: { ifReady: true } }
+    //     );
+    //     return res.status(200).json({ edit: true });
+
+    // } else {
+    //     return res.status(400).json({ edit: false });
+    // }
 
 });

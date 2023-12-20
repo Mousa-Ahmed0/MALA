@@ -32,11 +32,9 @@ module.exports.addResults = asyncHandler(async (req, res) => {
     return res.status(201).json({ message: "Result Update" });
   } else {
     //first patient
+    console.log(req.body.resultSet);
     const newResult = new analyzeResult({
-      staffIdent: req.body.staffIdent,
       patientIdent: req.body.patientIdent,
-      doctorIdent: req.body.doctorIdent,
-      doctorName: req.body.doctorName,
       date: req.body.date,
       resultSet: req.body.resultSet,
     });
