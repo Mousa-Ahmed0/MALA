@@ -290,14 +290,14 @@ module.exports.resultDate = asyncHandler(async (req, res) => {
   const currentDate = new Date(req.query.date);
   const startDate = new Date(currentDate);
 
-  let resultArray = [];
-  console.log("number", typeof number, number);
-  if (number.includes("0")) {
-    //week
+  let responseSent = false; // Variable to track whether response has been sent
+
+  if (number == 0) {//week
     startDate.setDate(currentDate.getDate() - 7);
     const getAllResult = await analyzeResult.find({
-      date: { $gte: startDate, $lte: currentDate },
+      "resultSet.result.compontResult.resultDate": { $gte: startDate, $lte: currentDate },
     });
+    let resultArray = [];
 
     if (getAllResult.length) {
       for (let i = 0; i < getAllResult.length; i++) {
@@ -308,57 +308,138 @@ module.exports.resultDate = asyncHandler(async (req, res) => {
           .select("-password");
         const dayOfWeek = getAllResult[i].date.getDay(); //find day
         const dayName = daysOfWeek[dayOfWeek]; //find name of day
-        const pymentDetails = {
-          day: dayName,
-          date: getAllResult[i].date,
-          Result: getAllResult[i],
-          info: userinfo,
-        };
-        resultArray.push(pymentDetails);
-      }
-      res.status(201).json({
-        resultArray,
-        message: "Reports generated successfully.",
-      });
-    } else {
-      res.status(400).json({ message: "Can't find report" });
-    }
-  } else {
-    //number of month
-    startDate.setMonth(currentDate.getMonth() - number);
-    const getAllResult = await analyzeResult.find({
-      date: { $gte: startDate, $lte: currentDate },
-    });
 
-    if (getAllResult.length) {
-      for (let i = 0; i < getAllResult.length; i++) {
-        const userinfo = await user
-          .findOne({
-            ident: getAllResult[i].patientIdent,
-          })
-          .select("-password");
-        const dayOfWeek = getAllResult[i].date.getDay(); //find day
-        const dayName = daysOfWeek[dayOfWeek]; //find name of day
+        let newRes = getAllResult[i];
+        let tempResultSet = newRes.resultSet;
+        let newResultSet = []; // save new result set [ a. id, resutl[] ]
+
+        tempResultSet.map((rs, indexRS) => {
+          let newR = []; // [{compRes}]
+          rs.result.map((ar, indexAR) => {
+            let newCR = []; ////[{resultvalues[] , date}]
+            ar.compontResult.map((cr, indexcr) => {
+              if ((cr.resultDate.getTime() <= currentDate.getTime()) && (cr.resultDate.getTime() >= startDate.getTime())) {
+                newCR.push(cr);
+              }
+            });
+
+            if (newCR.length > 0) {
+              newR.push({ compontResult: newCR });
+            }
+          });
+
+          if (newR.length > 0) {
+            newResultSet.push({
+              anlyzeId: rs.anlyzeId,
+              result: newR,
+            });
+          }
+        });
+        newRes.resultSet = newResultSet;
+
         const pymentDetails = {
           day: dayName,
-          date: getAllResult[i].date,
-          Result: getAllResult[i],
+          "Start Analyz": getAllResult[i].date,
+          Result: newRes,
           info: userinfo,
         };
         resultArray.push(pymentDetails);
       }
-      res.status(201).json({
-        resultArray,
-        message: "Reports generated successfully.",
-      });
+
+      if (!responseSent) {
+        res.status(201).json({
+          resultArray,
+          message: "Reports generated successfully.",
+        });
+        responseSent = true; // Set the flag to true to indicate response has been sent
+      }
     } else {
-      res.status(400).json({ message: "Can't find report" });
+      // Send the response if there are no results
+      if (!responseSent) {
+        res.status(400).json({ message: "Can't find report" });
+        responseSent = true; // Set the flag to true to indicate response has been sent
+      }
     }
   }
-  res.status(400).json({ message: "Can't find report" });
+
+  else if (number >= 1 && number <= 12) {    //number of month
+    startDate.setMonth(currentDate.getMonth() - number);
+    const getAllResult = await analyzeResult.find({
+      "resultSet.result.compontResult.resultDate": { $gte: startDate, $lte: currentDate },
+    });
+
+    let resultArray = [];
+
+    if (getAllResult.length) {
+      for (let i = 0; i < getAllResult.length; i++) {
+        const userinfo = await user
+          .findOne({
+            ident: getAllResult[i].patientIdent,
+          })
+          .select("-password");
+        const dayOfWeek = getAllResult[i].date.getDay(); //find day
+        const dayName = daysOfWeek[dayOfWeek]; //find name of day
+
+        let newRes = getAllResult[i];
+        let tempResultSet = newRes.resultSet;
+        let newResultSet = []; // save new result set [ a. id, resutl[] ]
+
+        tempResultSet.map((rs, indexRS) => {
+          let newR = []; // [{compRes}]
+          rs.result.map((ar, indexAR) => {
+            let newCR = []; ////[{resultvalues[] , date}]
+            ar.compontResult.map((cr, indexcr) => {
+              if ((cr.resultDate.getTime() <= currentDate.getTime()) && (cr.resultDate.getTime() >= startDate.getTime())) {
+                newCR.push(cr);
+              }
+            });
+
+            if (newCR.length > 0) {
+              newR.push({ compontResult: newCR });
+            }
+          });
+
+          if (newR.length > 0) {
+            newResultSet.push({
+              anlyzeId: rs.anlyzeId,
+              result: newR,
+            });
+          }
+        });
+        newRes.resultSet = newResultSet;
+
+        const pymentDetails = {
+          day: dayName,
+          "Start Analyz": getAllResult[i].date,
+          Result: newRes,
+          info: userinfo,
+        };
+        resultArray.push(pymentDetails);
+      }
+      if (!responseSent) {
+        res.status(201).json({
+          resultArray,
+          message: "Reports generated successfully.",
+        });
+        responseSent = true; // Set the flag to true to indicate response has been sent
+      }
+    } else {
+      // Send the response if there are no results
+      if (!responseSent) {
+        res.status(400).json({ message: "Can't find report" });
+        responseSent = true; // Set the flag to true to indicate response has been sent
+      }
+    }
+  }
+  // Send a default response if none of the conditions are met
+  if (!responseSent) {
+    res.status(400).json({ message: "Number must between 0-12" });
+    responseSent = true; // Set the flag to true to indicate response has been sent
+  }
+
 });
 
-/**--------------------------------
+/**-------------------------------- 
  * @desc get from to date of result
  * @router /api/getResults/resultDateFromTo
  * @method GET
@@ -379,7 +460,7 @@ module.exports.resultDateFromTo = asyncHandler(async (req, res) => {
   const secondtDate = new Date(req.query.secondtDate);
 
   const getAllResult = await analyzeResult.find({
-    date: { $gte: firstDate, $lte: secondtDate },
+    "resultSet.result.compontResult.resultDate": { $gte: firstDate, $lte: secondtDate },
   });
 
   let resultArray = [];
@@ -392,10 +473,39 @@ module.exports.resultDateFromTo = asyncHandler(async (req, res) => {
         .select("-password");
       const dayOfWeek = getAllResult[i].date.getDay(); //find day
       const dayName = daysOfWeek[dayOfWeek]; //find name of day
+
+      let newRes = getAllResult[i];
+      let tempResultSet = newRes.resultSet;
+      let newResultSet = []; // save new result set [ a. id, resutl[] ]
+
+      tempResultSet.map((rs, indexRS) => {
+        let newR = []; // [{compRes}]
+        rs.result.map((ar, indexAR) => {
+          let newCR = []; ////[{resultvalues[] , date}]
+          ar.compontResult.map((cr, indexcr) => {
+            if ((cr.resultDate.getTime() <= firstDate.getTime()) && (cr.resultDate.getTime() >= secondtDate.getTime())) {
+              newCR.push(cr);
+            }
+          });
+
+          if (newCR.length > 0) {
+            newR.push({ compontResult: newCR });
+          }
+        });
+
+        if (newR.length > 0) {
+          newResultSet.push({
+            anlyzeId: rs.anlyzeId,
+            result: newR,
+          });
+        }
+      });
+      newRes.resultSet = newResultSet;
+
       const pymentDetails = {
         day: dayName,
-        date: getAllResult[i].date,
-        Result: getAllResult[i],
+        "Start Analyz": getAllResult[i].date,
+        Result: newRes,
         info: userinfo,
       };
       resultArray.push(pymentDetails);
