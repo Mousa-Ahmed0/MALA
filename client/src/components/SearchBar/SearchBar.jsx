@@ -1,7 +1,7 @@
 import React from "react";
 import { useDarkMode } from "../../context/DarkModeContext";
 
-function SearchBarContainer({ handaleSearchVlue, val }) {
+function SearchBarContainer({ handaleSearchVlue, val, placeHolder }) {
   const { darkMode } = useDarkMode();
 
   return (
@@ -31,7 +31,7 @@ function SearchBarContainer({ handaleSearchVlue, val }) {
                 } form-control border-0`}
                 id="floatingInputGroup1"
                 type="search"
-                placeholder="Search..."
+                placeholder={placeHolder}
                 aria-label="Search"
                 value={val}
               />

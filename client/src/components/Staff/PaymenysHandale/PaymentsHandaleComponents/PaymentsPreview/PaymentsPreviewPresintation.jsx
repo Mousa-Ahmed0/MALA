@@ -19,6 +19,7 @@ export default function PaymentsPreviewPresintation({
   searchFilterOption,
   val,
   handaleSearchVlue,
+  srchFilterOption,
 }) {
   return (
     <div className="ST-section my-2 p-0">
@@ -36,7 +37,15 @@ export default function PaymentsPreviewPresintation({
               filterOptions={srchFilterOptions}
               handaleFilterOption={searchFilterOption}
             />
-            <SearchBar handaleSearchVlue={handaleSearchVlue} val={val} />
+            <SearchBar
+              handaleSearchVlue={handaleSearchVlue}
+              val={val}
+              placeHolder={
+                srchFilterOption === "Patient"
+                  ? "Enter User Ident No. ..."
+                  : "Enter IC. Name ..."
+              }
+            />
           </div>
           <div
             className={`col-sm-12 col-md-4 d-flex justify-content-md-end align-items-center p-0`}

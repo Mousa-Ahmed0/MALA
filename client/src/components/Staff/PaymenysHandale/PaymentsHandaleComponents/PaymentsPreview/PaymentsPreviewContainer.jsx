@@ -76,8 +76,9 @@ export default function PaymentsPreviewContainer() {
       return (
         <div key={index} className="col-lg-12">
           <div
-            className={`card mb-4 border-0 px-3 ${darkMode ? " spic-dark-mode" : ""
-              }`}
+            className={`card mb-4 border-0 px-3 ${
+              darkMode ? " spic-dark-mode" : ""
+            }`}
           >
             <div className={`card-body p-0`}>
               <div className="row  pt-4 pb-1 px-0">
@@ -521,6 +522,7 @@ export default function PaymentsPreviewContainer() {
       searchFilterOption={searchFilterOption}
       val={val}
       handaleSearchVlue={handaleSearchVlue}
+      srchFilterOption={srchFilterOption}
     />
   );
 }
