@@ -9,39 +9,21 @@ const { analyze } = require("../models/Analyze");
  * @access  (staff or admin)
  * ------------------------------------------ */
 module.exports.addResults = asyncHandler(async (req, res) => {
-  //if result exists
-  let existingResult = await analyzeResult.findOne({
+  //vaildatin fronend
+  const newResult = new analyzeResult({
+    staffIdent :req.body.staffIdent,
     patientIdent: req.body.patientIdent,
+    date: req.body.date,
+    doctorIdent :req.body.doctorIdent,
+    doctorName :req.body.doctorName,
+    isDone :req.body.isDone,
+    isPaied :req.body.isPaied,
+    resultSet: req.body.resultSet, 
   });
-  if (existingResult) {
-    //old patient
-    let analyzeId = req.body.resultSet[0].anlyzeId;
-    let existingAnalyze = existingResult.resultSet.find((result) =>
-      result.anlyzeId.equals(analyzeId)
-    );
+  await newResult.save();
+  //send a response to client
+  res.status(201).json({ newResult, message: "done..........." });
 
-    if (existingAnalyze)
-      //old result new Analyze
-      existingAnalyze.result[0].compontResult.push(
-        ...req.body.resultSet[0].result[0].compontResult
-      );
-    //new Analyze
-    else existingResult.resultSet.push(req.body.resultSet[0]);
-    //save to db
-    await existingResult.save();
-    return res.status(201).json({ message: "Result Update" });
-  } else {
-    //first patient
-    console.log(req.body.resultSet);
-    const newResult = new analyzeResult({
-      patientIdent: req.body.patientIdent,
-      date: req.body.date,
-      resultSet: req.body.resultSet,
-    });
-    await newResult.save();
-    //send a response to client
-    res.status(201).json({ newResult, message: "done..........." });
-  }
 });
 
 /**--------------------------------
@@ -293,7 +275,7 @@ module.exports.resultDate = asyncHandler(async (req, res) => {
   if (number == 0) {//week
     startDate.setDate(currentDate.getDate() - 7);
     const getAllResult = await analyzeResult.find({
-      "resultSet.result.compontResult.resultDate": { $gte: startDate, $lte: currentDate },
+      date: { $gte: startDate, $lte: currentDate },
     });
     let resultArray = [];
 
@@ -307,38 +289,10 @@ module.exports.resultDate = asyncHandler(async (req, res) => {
         const dayOfWeek = getAllResult[i].date.getDay(); //find day
         const dayName = daysOfWeek[dayOfWeek]; //find name of day
 
-        let newRes = getAllResult[i];
-        let tempResultSet = newRes.resultSet;
-        let newResultSet = []; // save new result set [ a. id, resutl[] ]
-
-        tempResultSet.map((rs, indexRS) => {
-          let newR = []; // [{compRes}]
-          rs.result.map((ar, indexAR) => {
-            let newCR = []; ////[{resultvalues[] , date}]
-            ar.compontResult.map((cr, indexcr) => {
-              if ((cr.resultDate.getTime() <= currentDate.getTime()) && (cr.resultDate.getTime() >= startDate.getTime())) {
-                newCR.push(cr);
-              }
-            });
-
-            if (newCR.length > 0) {
-              newR.push({ compontResult: newCR });
-            }
-          });
-
-          if (newR.length > 0) {
-            newResultSet.push({
-              anlyzeId: rs.anlyzeId,
-              result: newR,
-            });
-          }
-        });
-        newRes.resultSet = newResultSet;
-
         const pymentDetails = {
           day: dayName,
-          "Start Analyz": getAllResult[i].date,
-          Result: newRes,
+          date: getAllResult[i].date,
+          Result: getAllResult[i],
           info: userinfo,
         };
         resultArray.push(pymentDetails);
@@ -363,7 +317,7 @@ module.exports.resultDate = asyncHandler(async (req, res) => {
   else if (number >= 1 && number <= 12) {    //number of month
     startDate.setMonth(currentDate.getMonth() - number);
     const getAllResult = await analyzeResult.find({
-      "resultSet.result.compontResult.resultDate": { $gte: startDate, $lte: currentDate },
+      date: { $gte: startDate, $lte: currentDate },
     });
 
     let resultArray = [];
@@ -378,38 +332,10 @@ module.exports.resultDate = asyncHandler(async (req, res) => {
         const dayOfWeek = getAllResult[i].date.getDay(); //find day
         const dayName = daysOfWeek[dayOfWeek]; //find name of day
 
-        let newRes = getAllResult[i];
-        let tempResultSet = newRes.resultSet;
-        let newResultSet = []; // save new result set [ a. id, resutl[] ]
-
-        tempResultSet.map((rs, indexRS) => {
-          let newR = []; // [{compRes}]
-          rs.result.map((ar, indexAR) => {
-            let newCR = []; ////[{resultvalues[] , date}]
-            ar.compontResult.map((cr, indexcr) => {
-              if ((cr.resultDate.getTime() <= currentDate.getTime()) && (cr.resultDate.getTime() >= startDate.getTime())) {
-                newCR.push(cr);
-              }
-            });
-
-            if (newCR.length > 0) {
-              newR.push({ compontResult: newCR });
-            }
-          });
-
-          if (newR.length > 0) {
-            newResultSet.push({
-              anlyzeId: rs.anlyzeId,
-              result: newR,
-            });
-          }
-        });
-        newRes.resultSet = newResultSet;
-
         const pymentDetails = {
           day: dayName,
-          "Start Analyz": getAllResult[i].date,
-          Result: newRes,
+          date: getAllResult[i].date,
+          Result: getAllResult[i],
           info: userinfo,
         };
         resultArray.push(pymentDetails);
@@ -458,9 +384,9 @@ module.exports.resultDateFromTo = asyncHandler(async (req, res) => {
   const secondtDate = new Date(req.query.secondtDate);
 
   const getAllResult = await analyzeResult.find({
-    "resultSet.result.compontResult.resultDate": { $gte: firstDate, $lte: secondtDate },
+    date: { $gte: firstDate, $lte: secondtDate },
   });
-
+ 
   let resultArray = [];
   if (getAllResult.length) {
     for (let i = 0; i < getAllResult.length; i++) {
@@ -472,38 +398,10 @@ module.exports.resultDateFromTo = asyncHandler(async (req, res) => {
       const dayOfWeek = getAllResult[i].date.getDay(); //find day
       const dayName = daysOfWeek[dayOfWeek]; //find name of day
 
-      let newRes = getAllResult[i];
-      let tempResultSet = newRes.resultSet;
-      let newResultSet = []; // save new result set [ a. id, resutl[] ]
-
-      tempResultSet.map((rs, indexRS) => {
-        let newR = []; // [{compRes}]
-        rs.result.map((ar, indexAR) => {
-          let newCR = []; ////[{resultvalues[] , date}]
-          ar.compontResult.map((cr, indexcr) => {
-            if ((cr.resultDate.getTime() <= firstDate.getTime()) && (cr.resultDate.getTime() >= secondtDate.getTime())) {
-              newCR.push(cr);
-            }
-          });
-
-          if (newCR.length > 0) {
-            newR.push({ compontResult: newCR });
-          }
-        });
-
-        if (newR.length > 0) {
-          newResultSet.push({
-            anlyzeId: rs.anlyzeId,
-            result: newR,
-          });
-        }
-      });
-      newRes.resultSet = newResultSet;
-
       const pymentDetails = {
         day: dayName,
-        "Start Analyz": getAllResult[i].date,
-        Result: newRes,
+        date: getAllResult[i].date,
+        Result: getAllResult[i],
         info: userinfo,
       };
       resultArray.push(pymentDetails);
@@ -536,7 +434,7 @@ module.exports.dayResult = asyncHandler(async (req, res) => {
   ];
   console.log(req.query.date);
   const getAllResult = await analyzeResult.find({
-    "resultSet.result.compontResult.resultDate": req.query.date,
+    date: req.query.date,
   });
 
   let resultArray = [];
@@ -549,46 +447,10 @@ module.exports.dayResult = asyncHandler(async (req, res) => {
         .select("-password");
       const dayOfWeek = getAllResult[i].date.getDay(); //find day
       const dayName = daysOfWeek[dayOfWeek]; //find name of day
-
-      let newRes = getAllResult[i];
-
-      let tempResultSet = newRes.resultSet;
-      let newResultSet = []; // save new result set [ a. id, resutl[] ]
-
-      let dd = new Date(req.query.date);
-      //   console.log("new newRes",newRes);
-      //   console.log(" tempResultSet",tempResultSet);
-      tempResultSet.map((rs, indexRS) => {
-        let newR = []; // [{compRes}]
-        rs.result.map((ar, indexAR) => {
-          let newCR = []; ////[{resultvalues[] , date}]
-          ar.compontResult.map((cr, indexcr) => {
-            console.log(cr.resultDate == dd);
-            if (cr.resultDate.getTime() === dd.getTime()) {
-              newCR.push(cr);
-            }
-          });
-          console.log("----------");
-          console.log("newCR:", newCR);
-          if (newCR.length > 0) {
-            newR.push({ compontResult: newCR });
-          }
-        });
-        console.log("----------");
-        console.log("newR:", newR);
-        if (newR.length > 0) {
-          newResultSet.push({
-            anlyzeId: rs.anlyzeId,
-            result: newR,
-          });
-        }
-      });
-      newRes.resultSet = newResultSet;
-
       const pymentDetails = {
         day: dayName,
-        "Start Analyz": getAllResult[i].date,
-        Result: newRes,
+        date: getAllResult[i].date,
+        Result: getAllResult[i],
         info: userinfo,
       };
       resultArray.push(pymentDetails);
@@ -601,3 +463,37 @@ module.exports.dayResult = asyncHandler(async (req, res) => {
     res.status(400).json({ message: "Can't find report" });
   }
 });
+// let newRes = getAllResult[i];
+
+// let tempResultSet = newRes.resultSet;
+// let newResultSet = []; // save new result set [ a. id, resutl[] ]
+
+// let dd = new Date(req.query.date);
+// //   console.log("new newRes",newRes);
+// //   console.log(" tempResultSet",tempResultSet);
+// tempResultSet.map((rs, indexRS) => {
+//   let newR = []; // [{compRes}]
+//   rs.result.map((ar, indexAR) => {
+//     let newCR = []; ////[{resultvalues[] , date}]
+//     ar.compontResult.map((cr, indexcr) => {
+//       console.log(cr.resultDate == dd);
+//       if (cr.resultDate.getTime() === dd.getTime()) {
+//         newCR.push(cr);
+//       }
+//     });
+//     console.log("----------");
+//     console.log("newCR:", newCR);
+//     if (newCR.length > 0) {
+//       newR.push({ compontResult: newCR });
+//     }
+//   });
+//   console.log("----------");
+//   console.log("newR:", newR);
+//   if (newR.length > 0) {
+//     newResultSet.push({
+//       anlyzeId: rs.anlyzeId,
+//       result: newR,
+//     });
+//   }
+// });
+// newRes.resultSet = newResultSet;

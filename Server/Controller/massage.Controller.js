@@ -7,44 +7,72 @@ const { Massage } = require("../models/message");
  * @access public
  * ------------------------------------------ */
 module.exports.sendMass = asyncHandler(async (req, res) => {
-    //if Patient determain admin _id
+    //if Patient must be determain admin _id
     let objectIdString = "";
     if (req.user.usertype === "Patient")
         objectIdString = process.env.ADMIN_ID; //admin _id
-    else objectIdString = req.body.recvId;
+    else objectIdString = req.body.secondUser;
 
     let massRecord = await Massage.findOne({
         $or: [
-            { senderId: req.user.id, recvId: objectIdString },
-            { senderId: objectIdString, recvId: req.user.id },
+            { firstUser: req.user.id, secondUser: objectIdString },
+            { firstUser: objectIdString, secondUser: req.user.id },
         ],
     });
 
     if (massRecord) {// Massage record exists, update it
+        const indx = massRecord.massage;
+        const last = indx[indx.length - 1];
+
+        console.log(last);
+        console.log(req.user.id);
+        console.log(objectIdString);
+        console.log(objectIdString == last.firstUser);
+        const fm=massRecord.firstUser;
+        const sm=massRecord.secondUser;
+        const lastId=last.senderId;
+        console.log("fm:",fm);
+        console.log("lastId:",lastId);
+        console.log(fm==lastId);
+        if ((req.user.id == last.senderId)) {
+            console.log("true");
+            console.log((last.senderId == massRecord.firstUser));
+            console.log(last.senderId);
+            console.log(massRecord.firstUser);
+
+            if (last.senderId == massRecord.firstUser) {                
+                console.log("firstUser");
+                massRecord.ifReadyFirstUser = true;
+                massRecord.ifReadySecondUser = false;
+            } else if (last.senderId == massRecord.secondUser) {
+                console.log("secondUser");
+                massRecord.ifReadyFirstUser = false;
+                massRecord.ifReadySecondUser = true;
+            }
+        } else {
+            console.log("false");
+
+            if (last.senderId == massRecord.firstUser) {
+                console.log("firstUser");
+                massRecord.ifReadyFirstUser = true;
+                massRecord.ifReadySecondUser = false;
+            } else if (last.senderId == massRecord.secondUser) {
+                console.log("secondUser");
+                massRecord.ifReadyFirstUser = false;
+                massRecord.ifReadySecondUser = true;
+            }
+        }
         massRecord.massage.push({
             senderId: req.user.id,
             mass: req.body.massage,
             date: new Date(),
         });
-        const indx = massRecord.massage;
-        const last = indx[indx.length - 1];
-
-        console.log(last.senderId);
-        console.log(objectIdString);
-        console.log(objectIdString == last.senderId);
-        if ((objectIdString == last.senderId)) {
-            massRecord.ifReadySend = true;
-            massRecord.ifReadyRecv = false;
-        } else {
-            massRecord.ifReadySend = false;
-            massRecord.ifReadyRecv = true;
-        }
         await massRecord.save();
         return res.status(200).json(massRecord);
     } else {// First massage
         const newMass = new Massage({
-            senderId: req.user.id,
-            recvId: objectIdString,
+            firstUser: req.user.id,
+            secondUser: objectIdString,
             massage: [
                 {
                     senderId: req.user.id,
@@ -52,9 +80,10 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
                     date: new Date(),
                 },
             ],
-            ifReadySend: true,
-            ifReadyRecv: false,
+            ifReadyFirstUser: true,
+            ifReadySecondUser: false,
         });
+        console.log(newMass.massage[0].senderId)
         await newMass.save();
         return res.status(200).json(newMass);
     }
@@ -67,9 +96,9 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.getAllMass = asyncHandler(async (req, res) => {
     const newMass = await Massage.find({})
-        .populate("senderId", ["-password"])
+        .populate("firstUser", ["-password"])
         .sort({ createdAt: 1 });
-    //.populate('recvId', ['-password'])
+    //.populate('secondUser', ['-password'])
 
     if (newMass) return res.status(200).json(newMass);
     else return res.status(400).json({ massage: "Massage dose not exist" });
@@ -82,10 +111,10 @@ module.exports.getAllMass = asyncHandler(async (req, res) => {
  * @access public
  * ------------------------------------------ */
 module.exports.getMass = asyncHandler(async (req, res) => {
-    const newMass = await Massage.find({ senderId: req.user.id })
-        .populate("senderId", ["-password"])
+    const newMass = await Massage.find({ firstUser: req.user.id })
+        .populate("firstUser", ["-password"])
         .sort({ createdAt: 1 });
-    //.populate('recvId', ['-password'])
+    //.populate('secondUser', ['-password'])
     if (newMass) return res.status(200).json(newMass);
     else return res.status(400).json({ massage: "Massage dose not exist" });
 });
@@ -97,9 +126,9 @@ module.exports.getMass = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.getUserMass = asyncHandler(async (req, res) => {
     const newMass = await Massage.findById(req.params.id)
-        .populate("senderId", ["-password"])
+        .populate("firstUser", ["-password"])
         .sort({ createdAt: 1 });
-    //.populate('recvId', ['-password'])
+    //.populate('secondUser', ['-password'])
     if (newMass) return res.status(200).json(newMass);
     else return res.status(400).json({ massage: "Massage dose not exist" });
 });
@@ -137,48 +166,27 @@ module.exports.countIfRead = asyncHandler(async (req, res) => {
  * @access public
  * ------------------------------------------ */
 module.exports.editIfReady = asyncHandler(async (req, res) => {
-    const updatedMassage = await Massage.findByIdAndUpdate(
-        req.params.id,
-        {
-            $and: [
-                { recvId: req.user.id },
-                // Add any additional conditions if needed
-            ],
-        },
-        { $set: { ifReadyRecv: true } },
-        { new: true }
-    );
-    console.log(req.params.id); 
-    console.log(req.user.id); 
-    if (!updatedMassage) {
+    const updateReady = await Massage.findById(req.params.id);
+    if (!updateReady)
         return res.status(404).json({ error: 'Massage not found' });
+
+    else if (updateReady.firstUser == req.user.id) {
+        updateReady.ifReadyFirstUser = true;
+        console.log("send", updateReady);
+        await updateReady.save();
+        return res.status(200).json({ edit: true, updateReady });
+
+    }
+    else if (updateReady.secondUser == req.user.id) {
+        updateReady.ifReadySecondUser = true;
+        console.log("rec", updateReady);
+        await updateReady.save();
+        return res.status(200).json({ edit: true, updateReady });
     }
 
-    return res.status(200).json({ edit: true, updatedMassage });
 
 
 
-    // let objectIdString = "";
-    // if (req.user.usertype === "Patient") {
-    //     objectIdString = process.env.ADMIN_ID; // admin _id
-    // } else {
-    //     objectIdString = req.body.recvId;
-    // }
-    // if (req.user.usertype !== "Patient") {
-    //     console.log(req.user.usertype)
-    //     const edit = await Massage.updateOne(
-    //         {
-    //             $or: [
-    //                 { senderId: req.user.id, recvId: objectIdString },
-    //                 { senderId: objectIdString, recvId: req.user.id },
-    //             ],
-    //         },
-    //         { $set: { ifReady: true } }
-    //     );
-    //     return res.status(200).json({ edit: true });
 
-    // } else {
-    //     return res.status(400).json({ edit: false });
-    // }
 
 });

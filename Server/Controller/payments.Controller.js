@@ -20,11 +20,7 @@ module.exports.addPayment = asyncHandler(async (req, res) => {
     value: req.body.value,
     discountedValue: req.body.discountedValue,
   });
-  if (newPayment.InsuranceCompPers && newPayment.InsuranceCompPers) {
-    const pers = newPayment.InsuranceCompPers / 100; //pers
-    newPayment.discountedValue = newPayment.value * pers; //discountedValue
-    newPayment.value = newPayment.value - newPayment.value * pers; //value
-  }
+
   await newPayment.save();
   res
     .status(201)

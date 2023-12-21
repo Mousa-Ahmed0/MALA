@@ -3,10 +3,14 @@ const Joi = require("joi");
 //payments schema
 const paymentsSchema = new mongoose.Schema(
   {
-    identPatient: {
-      type: String,
-      required: true,
+    resultId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Result",
     },
+    // patinDetails:{
+
+    // }
+    // ,
     payDate: {
       type: Date,
       required: true,
@@ -17,15 +21,27 @@ const paymentsSchema = new mongoose.Schema(
     InsuranceCompPers: {
       type: Number,
     },
-    value:{
-      type:Number,
-      default:1,
+    paiedvalue: {
+      type: Number,
+      default: 1,
     },
-    discountedValue:{
+    discountedValue: {
       type: Number,
 
     },
-   
+    resultCostDetils: [{
+      anlayzeCost: {
+        aName: {
+          type: String,
+        },
+        aCost: {
+          type: Number,
+        },
+      },
+    }],
+    totalValue: {
+      type: Number,
+    }
   },
   {
     timestamps: true,
@@ -35,6 +51,6 @@ const paymentsSchema = new mongoose.Schema(
 );
 
 const payments = mongoose.model("payments", paymentsSchema);
-module.exports={
-    payments,
+module.exports = {
+  payments,
 }
