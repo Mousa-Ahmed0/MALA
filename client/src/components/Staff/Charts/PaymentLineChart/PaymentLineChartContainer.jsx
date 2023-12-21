@@ -135,6 +135,7 @@ export default function PaymentLineChartContainer({ darkMode }) {
             payDate: formatDate(new Date()),
             number: 3,
           });
+          console.log(response);
           //check is there data?
           if (response.data.paumentArray) {
             //create new prop
@@ -142,6 +143,8 @@ export default function PaymentLineChartContainer({ darkMode }) {
               lineLabels: [],
               lineData: [],
             };
+            setTotalCount(response.data.count);
+
             let month = currentDate.getMonth() + 1; //get current month
             for (let i = month - 3; i <= currentDate.getMonth(); i++) {
               // move on months count
@@ -181,6 +184,8 @@ export default function PaymentLineChartContainer({ darkMode }) {
               lineLabels: [],
               lineData: [],
             };
+            setTotalCount(response.data.count);
+
             let month = currentDate.getMonth() + 1; //get current month
             for (let i = month - 6; i <= currentDate.getMonth(); i++) {
               // move on months count
@@ -219,6 +224,8 @@ export default function PaymentLineChartContainer({ darkMode }) {
               lineLabels: [],
               lineData: [],
             };
+            setTotalCount(response.data.count);
+
             let month = currentDate.getMonth() + 1; //get current month
             for (let i = month - 12; i <= currentDate.getMonth(); i++) {
               // move on months count

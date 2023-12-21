@@ -26,6 +26,8 @@ export default function AnalyzeResult({
   ]);
   // to handle ux
   const [currentSelectActive, setcurrentSelectActive] = useState(false);
+  //
+  const [currentDone, setCurentDone] = useState(false);
   let [errorMessage, setErrorMessage] = useState("");
   //analysis options
   const [allAnalysis, setAllAnalysis] = useState([]);
@@ -130,6 +132,7 @@ export default function AnalyzeResult({
       setErrorMessage("");
       setSelectValue("0");
       setIsDone(true);
+      setCurentDone(true);
       setAnlyseResult({
         anlyzeId: "",
         result: [],
@@ -210,6 +213,7 @@ export default function AnalyzeResult({
             name="anlyzeId"
             onChange={getAnalyzeResultDetails}
             value={selectValue}
+            disabled={(isSelectActive && !currentSelectActive) || currentDone}
           >
             {renderAnlysisOptiens()}
           </select>
@@ -244,7 +248,7 @@ export default function AnalyzeResult({
           </div>
         </div>
       </div>
-      {isDone ? <div className="alert alert-info ">Done!</div> : ""}
+      {currentDone ? <div className="alert alert-info ">Done!</div> : ""}
     </>
   );
 }

@@ -178,10 +178,7 @@ export const getPaymentsFromTo = async (date) => {
 export const getPaymentsFiltered = async (date) => {
   console.log(" custome date: ", date);
   return await axios.get(
-    "http://localhost:5000/api/payment/week",
-    {
-      params: date, // Use 'params' to send data as query parameters
-    },
+    `http://localhost:5000/api/payment/week?payDate=${date.payDate}&number=${date.number}`,
     {
       headers: {
         Authorization: "Bearer " + localStorage.getItem("token"),
