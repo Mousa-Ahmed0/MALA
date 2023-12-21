@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const { payments } = require("../models/payments");
 const { user } = require("../models/user");
+const { analyzeResult } = require("../models/patienResults");
 
 /**-----------------------------------
  * @desc add payments
@@ -13,12 +14,15 @@ const { user } = require("../models/user");
 module.exports.addPayment = asyncHandler(async (req, res) => {
   //vaildition @front end
   const newPayment = new payments({
+    resultId: req.body.resultId,
     identPatient: req.body.identPatient,
     payDate: req.body.payDate,
     InsuranceCompName: req.body.InsuranceCompName,
     InsuranceCompPers: req.body.InsuranceCompPers,
-    value: req.body.value,
+    paiedvalue: req.body.paiedvalue,
     discountedValue: req.body.discountedValue,
+    resultCostDetils: req.body.resultCostDetils,
+    totalValue: req.body.totalValue
   });
 
   await newPayment.save();
@@ -57,15 +61,19 @@ module.exports.getPayment = asyncHandler(async (req, res) => {
       }).select('-password');
       const dayOfWeek = getPayment[i].payDate.getDay(); //find day
       const dayName = daysOfWeek[dayOfWeek]; //find name of day
+
+      const resultInfo = await analyzeResult.findById(getPayment[i].resultId).select('-password');
+      // getPayment[i].resultId
       const pymentDetails = {
         day: dayName,
         date: getPayment[i].payDate,
+        result: resultInfo,
         value: getPayment[i].value,
         payment: getPayment[i],
         info: userinfo,
       };
       paumentArray.push(pymentDetails);
-      count += getPayment[i].value;
+      count += getPayment[i].totalValue;
     }
     res.status(201).json({
       count,
@@ -111,28 +119,32 @@ module.exports.getPaymentIdentPatient = asyncHandler(async (req, res) => {
     "Saturday",
   ];
 
-  const getPayment = await payments.find({
-    identPatient: req.query.identPatient,
-  });
+  const getPayment = await payments.find({});
 
   let paumentArray = [];
   if (getPayment.length) {
     let count = 0;
     for (let i = 0; i < getPayment.length; i++) {
-      const userinfo = await user.findOne({
-        ident: getPayment[i].identPatient,
-      }).select('-password');
-      const dayOfWeek = getPayment[i].payDate.getDay(); //find day
-      const dayName = daysOfWeek[dayOfWeek]; //find name of day
-      const pymentDetails = {
-        day: dayName,
-        date: getPayment[i].payDate,
-        value: getPayment[i].value,
-        payment: getPayment[i],
-        info: userinfo,
-      };
-      paumentArray.push(pymentDetails);
-      count += getPayment[i].value;
+      const resultInfo = await analyzeResult.findById(getPayment[i].resultId).select('-password');
+      const identPat = resultInfo.patientIdent;
+      if (identPat == req.query.identPatient) {
+        const userinfo = await user.findOne({ ident: identPat }).select('-password');
+        if (userinfo) {
+          const dayOfWeek = getPayment[i].payDate.getDay(); //find day
+          const dayName = daysOfWeek[dayOfWeek]; //find name of day
+          const pymentDetails = {
+            day: dayName,
+            date: getPayment[i].payDate,
+            result: resultInfo,
+            value: getPayment[i].value,
+            payment: getPayment[i],
+            info: userinfo,
+          };
+          paumentArray.push(pymentDetails);
+          count += getPayment[i].totalValue;
+        }
+        else res.status(400).json({ message: "User not found......." });
+      }
     }
     res.status(201).json({
       count,
@@ -164,12 +176,18 @@ module.exports.getPaymentId = asyncHandler(async (req, res) => {
 
   const getPayment = await payments.findById(req.params.id);
   if (getPayment) {
-    const userinfo = await user.findOne({ ident: getPayment.identPatient }).select('-password');
     const dayOfWeek = getPayment.payDate.getDay(); //find day
     const dayName = daysOfWeek[dayOfWeek]; //find name of day
+
+    const resultInfo = await analyzeResult.findById(getPayment.resultId).select('-password');
+
+    const identPat = resultInfo.patientIdent;
+    const userinfo = await user.findOne({ ident: identPat }).select('-password');
+
     const pymentDetails = {
       day: dayName,
       date: getPayment.payDate,
+      result: resultInfo,
       value: getPayment.value,
       payment: getPayment,
       info: userinfo,
@@ -211,15 +229,19 @@ module.exports.getByDate = asyncHandler(async (req, res) => {
       }).select('-password');
       const dayOfWeek = getPayment[i].payDate.getDay(); //find day
       const dayName = daysOfWeek[dayOfWeek]; //find name of day
+
+      const resultInfo = await analyzeResult.findById(getPayment[i].resultId).select('-password');
+
       const pymentDetails = {
         day: dayName,
         date: getPayment[i].payDate,
+        result: resultInfo,
         value: getPayment[i].value,
         payment: getPayment[i],
         info: userinfo,
       };
       paumentArray.push(pymentDetails);
-      count += getPayment[i].value;
+      count += getPayment[i].totalValue;
     }
     res.status(201).json({
       count,
@@ -264,15 +286,18 @@ module.exports.getFromToDate = asyncHandler(async (req, res) => {
       }).select('-password');
       const dayOfWeek = getAllPayment[i].payDate.getDay(); //find day
       const dayName = daysOfWeek[dayOfWeek]; //find name of day
+
+      const resultInfo = await analyzeResult.findById(getAllPayment[i].resultId).select('-password');
       const pymentDetails = {
         day: dayName,
         date: getAllPayment[i].payDate,
+        result: resultInfo,
         value: getAllPayment[i].value,
         payment: getAllPayment[i],
         info: userinfo,
       };
       paumentArray.push(pymentDetails);
-      count += getAllPayment[i].value;
+      count += getAllPayment[i].totalValue;
     }
     res.status(201).json({
       count,
@@ -322,15 +347,18 @@ module.exports.test = asyncHandler(async (req, res) => {
         }).select('-password');
         const dayOfWeek = getAllPayment[i].payDate.getDay(); //find day
         const dayName = daysOfWeek[dayOfWeek]; //find name of day
+
+        const resultInfo = await analyzeResult.findById(getAllPayment[i].resultId).select('-password');
         const pymentDetails = {
           day: dayName,
           date: getAllPayment[i].payDate,
+          result: resultInfo,
           value: getAllPayment[i].value,
           payment: getAllPayment[i],
           info: userinfo,
         };
         paumentArray.push(pymentDetails);
-        count += getAllPayment[i].value;
+        count += getAllPayment[i].totalValue;
       }
       if (!responseSent) {
         res.status(201).json({
@@ -347,7 +375,7 @@ module.exports.test = asyncHandler(async (req, res) => {
         res.status(400).json({ message: "Can't find report" });
       }
     }
-  } 
+  }
   else if (number >= 1 && number <= 12) {//number of month
     startDate.setMonth(currentDate.getMonth() - number);
     const getAllPayment = await payments.find({
@@ -362,15 +390,18 @@ module.exports.test = asyncHandler(async (req, res) => {
         }).select('-password');
         const dayOfWeek = getAllPayment[i].payDate.getDay(); //find day
         const dayName = daysOfWeek[dayOfWeek]; //find name of day
+
+        const resultInfo = await analyzeResult.findById(getAllPayment[i].resultId).select('-password');
         const pymentDetails = {
           day: dayName,
           date: getAllPayment[i].payDate,
+          result: resultInfo,
           value: getAllPayment[i].value,
           payment: getAllPayment[i],
           info: userinfo,
         };
         paumentArray.push(pymentDetails);
-        count += getAllPayment[i].value;
+        count += getAllPayment[i].totalValue;
       }
       if (!responseSent) {
         responseSent = true; // Set the flag to true to indicate response has been sent
