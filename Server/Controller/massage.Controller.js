@@ -10,7 +10,7 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
     //if Patient must be determain admin _id
     let objectIdString = "";
     if (req.user.usertype === "Patient")
-        objectIdString = process.env.ADMIN_ID; //admin _id
+        objectIdString = process.env.ADMIN_ID; //admin _id - 657061843f25f53b9f23d19c
     else objectIdString = req.body.secondUser;
 
     let massRecord = await Massage.findOne({
@@ -24,40 +24,21 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
         const indx = massRecord.massage;
         const last = indx[indx.length - 1];
 
-        console.log(last);
-        console.log(req.user.id);
-        console.log(objectIdString);
-        console.log(objectIdString == last.firstUser);
-        const fm=massRecord.firstUser;
-        const sm=massRecord.secondUser;
-        const lastId=last.senderId;
-        console.log("fm:",fm);
-        console.log("lastId:",lastId);
-        console.log(fm==lastId);
-        if ((req.user.id == last.senderId)) {
-            console.log("true");
-            console.log((last.senderId == massRecord.firstUser));
-            console.log(last.senderId);
-            console.log(massRecord.firstUser);
+        // const lastId=last.senderId.toString();
 
-            if (last.senderId == massRecord.firstUser) {                
-                console.log("firstUser");
+        if ((req.user.id == last.senderId)) {//last measage from same user
+            if (req.user.id == massRecord.firstUser) {//firstUser          
                 massRecord.ifReadyFirstUser = true;
                 massRecord.ifReadySecondUser = false;
-            } else if (last.senderId == massRecord.secondUser) {
-                console.log("secondUser");
+            } else if (req.user.id == massRecord.secondUser) {//secondUser
                 massRecord.ifReadyFirstUser = false;
                 massRecord.ifReadySecondUser = true;
             }
-        } else {
-            console.log("false");
-
-            if (last.senderId == massRecord.firstUser) {
-                console.log("firstUser");
+        } else {//last measage from another user
+            if (req.user.id == massRecord.firstUser) {//firstUser
                 massRecord.ifReadyFirstUser = true;
                 massRecord.ifReadySecondUser = false;
-            } else if (last.senderId == massRecord.secondUser) {
-                console.log("secondUser");
+            } else if (req.user.id == massRecord.secondUser) {//secondUser
                 massRecord.ifReadyFirstUser = false;
                 massRecord.ifReadySecondUser = true;
             }
