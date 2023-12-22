@@ -11,14 +11,14 @@ const { analyze } = require("../models/Analyze");
 module.exports.addResults = asyncHandler(async (req, res) => {
   //vaildatin fronend
   const newResult = new analyzeResult({
-    staffIdent :req.body.staffIdent,
+    staffIdent: req.body.staffIdent,
     patientIdent: req.body.patientIdent,
     date: req.body.date,
-    doctorIdent :req.body.doctorIdent,
-    doctorName :req.body.doctorName,
-    isDone :req.body.isDone,
-    isPaied :req.body.isPaied,
-    resultSet: req.body.resultSet, 
+    doctorIdent: req.body.doctorIdent,
+    doctorName: req.body.doctorName,
+    isDone: req.body.isDone,
+    isPaied: req.body.isPaied,
+    resultSet: req.body.resultSet,
   });
   await newResult.save();
   //send a response to client
@@ -386,7 +386,7 @@ module.exports.resultDateFromTo = asyncHandler(async (req, res) => {
   const getAllResult = await analyzeResult.find({
     date: { $gte: firstDate, $lte: secondtDate },
   });
- 
+
   let resultArray = [];
   if (getAllResult.length) {
     for (let i = 0; i < getAllResult.length; i++) {
@@ -463,37 +463,90 @@ module.exports.dayResult = asyncHandler(async (req, res) => {
     res.status(400).json({ message: "Can't find report" });
   }
 });
-// let newRes = getAllResult[i];
 
-// let tempResultSet = newRes.resultSet;
-// let newResultSet = []; // save new result set [ a. id, resutl[] ]
 
-// let dd = new Date(req.query.date);
-// //   console.log("new newRes",newRes);
-// //   console.log(" tempResultSet",tempResultSet);
-// tempResultSet.map((rs, indexRS) => {
-//   let newR = []; // [{compRes}]
-//   rs.result.map((ar, indexAR) => {
-//     let newCR = []; ////[{resultvalues[] , date}]
-//     ar.compontResult.map((cr, indexcr) => {
-//       console.log(cr.resultDate == dd);
-//       if (cr.resultDate.getTime() === dd.getTime()) {
-//         newCR.push(cr);
-//       }
-//     });
-//     console.log("----------");
-//     console.log("newCR:", newCR);
-//     if (newCR.length > 0) {
-//       newR.push({ compontResult: newCR });
-//     }
-//   });
-//   console.log("----------");
-//   console.log("newR:", newR);
-//   if (newR.length > 0) {
-//     newResultSet.push({
-//       anlyzeId: rs.anlyzeId,
-//       result: newR,
-//     });
-//   }
-// });
-// newRes.resultSet = newResultSet;
+/**-------------------------------- 
+ * @desc if result done
+ * @router /api/Results/ifDone
+ * @method GET
+ * @access private (staff or admin)
+ * ------------------------------------------ */
+module.exports.isDone = asyncHandler(async (req, res) => {
+  let done = [];
+  let notDone = [];
+  const ifDone = await analyzeResult.find({});
+  if (ifDone.length) {
+    ifDone.forEach((index) => {
+      if (index.isDone == true) {
+        done.push(index);
+      }
+      else notDone.push(index);
+    })
+    res.status(200).json({ done: done, "Not done": notDone });
+  }
+  else res.status(404).json({ message: "Not repot " });
+});
+/**-------------------------------- 
+ * @desc if result done edit to true
+ * @router /api/Results/Results/ifDoneEdit
+ * @method GET
+ * @access private (staff or admin)
+ * ------------------------------------------ */
+module.exports.isDoneEdit = asyncHandler(async (req, res) => {
+
+  const ifDone = await analyzeResult.findById(req.params.id);
+  if (ifDone) {
+    if (ifDone.isDone)
+      res.status(200).json({ message:"Alrede True",ifDone});
+    else{
+      ifDone.isDone=true;
+      await ifDone.save();
+      res.status(200).json({ message:"done edit...",ifDone});
+    }
+  }
+  else res.status(404).json({ message: "Does not exist " });
+});
+
+/**-------------------------------- 
+ * @desc if result paied
+ * @router /api/Results/ifPaied
+ * @method GET
+ * @access private (staff or admin)
+ * ------------------------------------------ */
+module.exports.isPaied = asyncHandler(async (req, res) => {
+  let paied = [];
+  let notPaied = [];
+  const ifPaied = await analyzeResult.find({});
+  if (ifPaied.length) {
+    ifPaied.forEach((index) => {
+      if (index.isPaied == true) {
+        paied.push(index);
+      }
+      else notPaied.push(index);
+
+    })
+    res.status(200).json({"Number of  paied":paied.length, paied, "Number of not paid":notPaied.length,"Not paied": notPaied });
+  }
+  else res.status(404).json({ message: "Not repot " });
+});
+
+/**-------------------------------- 
+ * @desc if result paied edit to true
+ * @router /api/Results/Results/ifPaiedEdit
+ * @method GET
+ * @access private (staff or admin)
+ * ------------------------------------------ */
+module.exports.isPaiedEdit = asyncHandler(async (req, res) => {
+
+  const ifPaied = await analyzeResult.findById(req.params.id);
+  if (ifPaied) {
+    if (ifPaied.isPaied)
+      res.status(200).json({ message:"Alrede True",ifPaied});
+    else{
+      ifPaied.isPaied=true;
+      await ifPaied.save();
+      res.status(200).json({ message:"done edit...",ifPaied});
+    }
+  }
+  else res.status(404).json({ message: "Does not exist " });
+});
