@@ -53,6 +53,7 @@ import MakeReport from "./components/Staff/ReportsHandale/ReportsHandaleComponen
 /* PaymentsController */
 import PaymentsController from "./components/Staff/PaymenysHandale/PaymentsController.jsx";
 import PaymentsPreviewContainer from "./components/Staff/PaymenysHandale/PaymentsHandaleComponents/PaymentsPreview/PaymentsPreviewContainer.jsx";
+import NotPaidResultsContainer from "./components/Staff/PaymenysHandale/PaymentsHandaleComponents/NotPaidResults/NotPaidResultsContainer.jsx";
 import AddAPayment from "./components/Staff/PaymenysHandale/PaymentsHandaleComponents/AddAPayment.jsx";
 /* AdsController */
 import AdsController from "./components/Staff/AdsHandale/AdsController.jsx";
@@ -241,6 +242,7 @@ export default function App() {
                   }
                 />
                 <Route path="/ResultDetails/:id" element={<ResultDetails />} />
+                <Route path="/AddAPayment/:id" element={<AddAPayment />} />
 
                 <Route path="/ForgotPassword" element={<ForgotPassword />} />
                 <Route
@@ -326,8 +328,8 @@ export default function App() {
                     element={<PaymentsPreviewContainer />}
                   />
                   <Route
-                    path="/Staff/PaymentsController/AddAPayment"
-                    element={<AddAPayment />}
+                    path="/Staff/PaymentsController/NotPaidPayments"
+                    element={<NotPaidResultsContainer />}
                   />
                 </Route>
                 <Route path="/Staff/AdsController" element={<AdsController />}>

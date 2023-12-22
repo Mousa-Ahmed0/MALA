@@ -1,11 +1,11 @@
-import ResultsPreviewPresintation from "./ResultsPreviewPresintation";
+import NotPaidResultsPresintation from "./NotPaidResultsPresintation";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useDarkMode } from "../../../../../context/DarkModeContext";
 import { getAllResults } from "../../../../../apis/ApisHandale";
 
-export default function ResultsPreviewContainer({ setIsFormOpen }) {
+export default function NotPaidResultsContainer({ setIsFormOpen }) {
   const { darkMode } = useDarkMode();
 
   const [isUpdateFormOpen, setIsUpdateFormOpen] = useState(false);
@@ -31,17 +31,6 @@ export default function ResultsPreviewContainer({ setIsFormOpen }) {
     </div>
   );
 
-  /* *************** Handale Pop Forms *************** */
-  //update form open
-  function handaleUpdateFormOpen(a) {
-    setIsFormOpen(true);
-    setIsUpdateFormOpen(true);
-  }
-
-  function closeUpdateForm() {
-    setIsFormOpen(false);
-    setIsUpdateFormOpen(false);
-  }
   //get all results
   async function getResults() {
     try {
@@ -104,7 +93,7 @@ export default function ResultsPreviewContainer({ setIsFormOpen }) {
                 <div className="col-5 col-md-3 d-flex flex-row-reverse flex-md-row align-items-center">
                   <div className="col-6 col-md-12 ">
                     <div className="row">
-                      <div className="col-6 col-md-7 d-flex justify-content-end align-items-center">
+                      <div className="col-6 col-md-7 d-flex justify-content-end align-items-center text-truncate">
                         {result.detailsAnalyze.isDone ? (
                           <Link
                             style={{ cursor: "pointer" }}
@@ -117,18 +106,18 @@ export default function ResultsPreviewContainer({ setIsFormOpen }) {
                           "Not Ready!"
                         )}
                       </div>
-                      <div className="col-6 col-md-5 d-flex justify-content-end align-items-center">
-                        <button
-                          onClick={() => handaleUpdateFormOpen(result)}
+                      <div className="col-6 col-md-4 d-flex align-items-center justify-content-end">
+                        <Link
+                          to={`/AddAPayment/${result.detailsAnalyze.id}`}
                           className="normal-btn btn d-flex justify-content-center align-items-center"
                         >
                           {" "}
                           <i
-                            className={`fas fa-edit mb-0 text-truncate ${
+                            className={`fas fa-money-bill mb-0 text-truncate ${
                               darkMode ? " dark-theme" : ""
                             }`}
                           ></i>
-                        </button>
+                        </Link>
                       </div>
                     </div>
                   </div>
@@ -183,7 +172,7 @@ export default function ResultsPreviewContainer({ setIsFormOpen }) {
 
   return (
     <>
-      <ResultsPreviewPresintation
+      <NotPaidResultsPresintation
         darkMode={darkMode}
         apiMessage={apiMessage}
         apiError={apiError}

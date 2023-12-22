@@ -3,6 +3,7 @@ import BackBtn from "../../../../BackBtn";
 export default function AddResultPresintation({
   darkMode,
   result,
+  setResult,
   getResultData,
   onSubmitForm,
   renderDoctorsOption,
@@ -153,10 +154,57 @@ export default function AddResultPresintation({
                 ResultSet Details:
               </h1>
               {renderResultSet()}
-              <div className="mb-3 d-flex justify-content-end">
-                <button className="btn btn-primary d-flex justify-content-center BTN-Bold">
-                  Add
-                </button>
+              <div className="mb-3 row">
+                <div className="col-12 col-md-8 d-flex flex-column">
+                  <div className="row h-100 align-items-center">
+                    <div className="col-12 col-md-4 m-0 alert custom-control custom-checkbox ">
+                      <input
+                        onChange={() =>
+                          setResult({ ...result, isPaied: !result.isPaied })
+                        }
+                        type="checkbox"
+                        className="custom-control-input"
+                        id="customCheck1"
+                        checked={result.isPaied}
+                      />
+                      <label
+                        className={`mid-bold custom-control-label mx-2 ${
+                          darkMode ? " spic-dark-mode" : ""
+                        }`}
+                        htmlFor="customCheck1"
+                      >
+                        is Paid?
+                      </label>
+                    </div>
+                    <div className="col-12 col-md-4 m-0 alert custom-control custom-checkbox ">
+                      <input
+                        onChange={() =>
+                          setResult({ ...result, isDone: !result.isDone })
+                        }
+                        type="checkbox"
+                        className="custom-control-input"
+                        id="customCheck1"
+                        checked={!result.isDone}
+                      />
+                      <label
+                        className={`mid-bold custom-control-label mx-2 ${
+                          darkMode ? " spic-dark-mode" : ""
+                        }`}
+                        htmlFor="customCheck1"
+                      >
+                        Result Not Ready?
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div className="h-100 alert m-0 col-12 col-md-4 d-flex justify-content-center justify-content-md-end">
+                  <button
+                    type="submit"
+                    className="btn btn-primary d-flex justify-content-center BTN-Bold"
+                  >
+                    Add
+                  </button>
+                </div>
               </div>
             </form>
           </div>

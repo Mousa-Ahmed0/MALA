@@ -6,13 +6,13 @@ export default function PaymentsController() {
   const userDashNavbarValues = [
     {
       id: 1,
-      text: "Preview",
+      text: "Payments",
       path: "/Staff/PaymentsController/PaymentsPreview",
     },
     {
       id: 2,
-      text: "Add a Payment",
-      path: "/Staff/PaymentsController/AddAPayment",
+      text: "Not Paid Payments",
+      path: "/Staff/PaymentsController/NotPaidPayments",
     },
   ];
   return (

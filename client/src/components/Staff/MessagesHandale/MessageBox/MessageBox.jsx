@@ -27,6 +27,7 @@ export default function MessageBox({ darkMode }) {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         }
       );
+      console.log(response.data);
       if (response.data.length > 0) setAllMessages(response.data);
       else setNoResults(true);
     } catch (error) {
@@ -46,7 +47,7 @@ export default function MessageBox({ darkMode }) {
           <div className="col-9">
             <div className="d-flex align-items-center gap-2">
               <img
-                src={message.senderId.profilePhoto.url}
+                src={"./images/logo.png"}
                 data-lazy-placeholder="https://placehold.it/1321x583?text=Loading"
                 loading="lazy"
                 className={`img-fluid lazy nav-profile-img mx-2 img-fluid border ${

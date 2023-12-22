@@ -12,6 +12,8 @@ export default function AddResult() {
   let [apiMessage, setApiMessage] = useState("");
   let [apiError, setApiError] = useState(false);
   const [result, setResult] = useState({
+    isDone: true,
+    isPaied: false,
     staffIdent: 0,
     patientIdent: 0,
     doctorIdent: 0,
@@ -38,6 +40,7 @@ export default function AddResult() {
   //get result details from inputs
   function getResultData(e) {
     setApiMessage("");
+    setIsDone(false);
     if (e.target.name === "a_no") {
       setAnlysisNo(e.target.value);
     } else {
@@ -51,18 +54,30 @@ export default function AddResult() {
   async function onSubmitForm(e) {
     e.preventDefault();
     let newResult = { ...result, resultSet: resultSet };
-    console.log("newResult", newResult);
     /*setResult((prevResult) => ({
       ...prevResult,
       resultSet: resultSet,
     }));*/
 
     try {
-      let response = await addResult(newResult);
+      console.log("newResult", newResult);
+      let response = await axios.post(
+        "http://localhost:5000/api/result/addResults",
+        newResult,
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
+      console.log(response);
       setApiError(false);
       setApiMessage(response.data.message);
+      setIsDone(true);
       console.log("Result with components submitted successfully");
       setResult({
+        isDone: true,
+        isPaied: false,
         staffIdent: 0,
         patientIdent: 0,
         doctorIdent: 0,
@@ -70,7 +85,7 @@ export default function AddResult() {
         date: new Date(),
         resultSet: [],
       });
-      setIsDone(false);
+      setResultSet([]);
     } catch (error) {
       setApiError(true);
       console.error("Error submitting Result with components:", error);
@@ -115,6 +130,7 @@ export default function AddResult() {
                 darkMode={darkMode}
                 isDone={isDone}
                 setIsDone={setIsDone}
+                resultSet={resultSet}
                 setResultSet={setResultSet}
                 isSelectActive={isSelectActive}
                 setisSelectActive={setisSelectActive}
@@ -139,9 +155,9 @@ export default function AddResult() {
   useEffect(() => {
     console.log("Result: ", result);
   }, [result]);
-  /*useEffect(() => {
+  useEffect(() => {
     console.log("resultSet: ", resultSet);
-  }, [resultSet]);*/
+  }, [resultSet]);
   ///////////////////
 
   return (
@@ -149,6 +165,7 @@ export default function AddResult() {
       <AddResultPresintation
         darkMode={darkMode}
         result={result}
+        setResult={setResult}
         getResultData={getResultData}
         onSubmitForm={onSubmitForm}
         renderDoctorsOption={renderDoctorsOption}

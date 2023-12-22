@@ -4,29 +4,21 @@ import { getOneAnalyze } from "../../../../../../apis/ApisHandale";
 
 export default function AnalyzeResult({
   darkMode,
-  isDone,
-  setIsDone,
+  resultSet,
   setResultSet,
   isSelectActive,
   setisSelectActive,
   setApiMessage,
-  date,
+  isDone,
+  setIsDone,
 }) {
   //Object to save result of one anlyze
   const [anlyseResult, setAnlyseResult] = useState({
     anlyzeId: "",
     result: [],
   });
-  //array to handale results of component of one anlyze
-  const [componentsResult, setComponentsResult] = useState([
-    {
-      resultValues: [],
-      resultDate: new Date(date),
-    },
-  ]);
   // to handle ux
   const [currentSelectActive, setcurrentSelectActive] = useState(false);
-  //
   const [currentDone, setCurentDone] = useState(false);
   let [errorMessage, setErrorMessage] = useState("");
   //analysis options
@@ -68,8 +60,8 @@ export default function AnalyzeResult({
 
   function getAnalyzeResultDetails(e) {
     setApiMessage("");
-    setErrorMessage("");
     setIsDone(false);
+    setErrorMessage("");
     setSelectValue(e.target.value);
     if (!isSelectActive) setcurrentSelectActive(true);
 
@@ -80,7 +72,6 @@ export default function AnalyzeResult({
         setErrorMessage("You Didn't Finish The Previous Result! ");
       } else {
         setisSelectActive(true);
-
         let newAnlyseResult = { ...anlyseResult };
         newAnlyseResult[e.target.name] = e.target.value;
         setAnlyseResult((prevState) => ({
@@ -96,47 +87,36 @@ export default function AnalyzeResult({
   //handale Componenet Result Input
   function handleResultChange(name, value) {
     setApiMessage("");
-    // Update the state with the new result for the component
-    setComponentsResult((prevResults) => {
-      const updatedResults = [...prevResults];
-      const existingResultIndex = updatedResults[0].resultValues.findIndex(
-        (result) => result.name === name
-      );
+    setIsDone(false);
+    const updatedResults = [...anlyseResult.result];
+    const existingResultIndex = updatedResults.findIndex(
+      (result) => result.name === name
+    );
 
-      if (existingResultIndex !== -1) {
-        updatedResults[0].resultValues[existingResultIndex].value = value;
-      } else {
-        updatedResults[0].resultValues.push({ name, value });
-      }
-
-      return updatedResults;
-    });
+    if (existingResultIndex !== -1) {
+      updatedResults[existingResultIndex].value = value;
+    } else {
+      updatedResults.push({ name, value });
+    }
+    setAnlyseResult({ ...anlyseResult, result: updatedResults });
   }
   //Save Array of Components Result
   function saveResults(e) {
     e.preventDefault();
-    if (componentsResult.length === 0) {
+    if (anlyseResult.result.length === 0) {
       setErrorMessage("ThereEmptyValue");
     } else {
       // Use the current anlyseResult in the callback function
-      console.log("componentsResult from save: ", componentsResult);
-      setResultSet((prevResultSet) => [
-        ...prevResultSet,
-        {
-          ...anlyseResult,
-          result: [...anlyseResult.result, { compontResult: componentsResult }],
-        },
-      ]);
+      console.log("anlyseResult from save: ", anlyseResult);
+      const newResultSet = [...resultSet];
+      newResultSet.push(anlyseResult);
+      setResultSet(newResultSet);
       setcurrentSelectActive(false);
       setisSelectActive(false);
+      setAnlyseResult({ anlyzeId: "", result: [] });
       setErrorMessage("");
       setSelectValue("0");
-      setIsDone(true);
       setCurentDone(true);
-      setAnlyseResult({
-        anlyzeId: "",
-        result: [],
-      });
     }
   }
   //Render Analyze Components
@@ -177,23 +157,17 @@ export default function AnalyzeResult({
   ///////////////////
   useEffect(() => {
     getAnalysis();
-    console.log("isSelectActive: ", isSelectActive);
-    console.log("currentSelectActive: ", currentSelectActive);
-    console.log("date", date);
   }, []);
   useEffect(() => {
-    console.log("isSelectActive: ", isSelectActive);
-    console.log("currentSelectActive: ", currentSelectActive);
-  }, [isSelectActive, currentSelectActive]);
-  useEffect(() => {
-    console.log("anlyseResult", anlyseResult);
+    console.log("ggg", anlyseResult);
   }, [anlyseResult]);
+
   useEffect(() => {
-    console.log("componentsResult", componentsResult);
-  }, [componentsResult]);
-  useEffect(() => {
-    console.log("date", date);
-  }, [date]);
+    if (isDone) {
+      setcurrentSelectActive(false);
+      setCurentDone(false);
+    }
+  }, [isDone]);
 
   ///////////////////
   return (

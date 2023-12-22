@@ -18,6 +18,7 @@ export default function ResultDetails() {
   async function getResultDetails() {
     try {
       let response = await getResultByID(id);
+      console.log(response);
       setResuultDetails(response.data);
     } catch (error) {
       console.error("Error", error);
