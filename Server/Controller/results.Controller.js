@@ -80,12 +80,12 @@ module.exports.getResultsById = asyncHandler(async (req, res) => {
   let analysArray = [];
 
   //analyze id componet
-  for (let i = 0; i < detailsAnalyze.resultSet.length; i++) {
-    const analyzeComp = await analyze.findById(
-      detailsAnalyze.resultSet[i].anlyzeId
-    );
-    analysArray.push(analyzeComp);
-  }
+  // for (let i = 0; i < detailsAnalyze.resultSet.length; i++) {
+  const analyzeComp = await analyze.findById(
+    detailsAnalyze.resultSet[0].anlyzeId
+  );
+  analysArray.push(analyzeComp);
+  // }
   //user staff
   const usersStaff = await user
     .findOne({ ident: detailsAnalyze.staffIdent })
@@ -117,6 +117,59 @@ module.exports.getResultsById = asyncHandler(async (req, res) => {
     message: "done...........",
   });
 });
+
+
+/**--------------------------------
+ * @desc get resuls by ID - and all analyze
+ * @router /api/result/getAllResults/:id
+ * @method GET
+ * @access private (staff or admin)
+ * ------------------------------------------ */
+module.exports.getAllResultsById = asyncHandler(async (req, res) => {
+  const detailsAnalyze = await analyzeResult.findById(req.params.id);
+
+  if (detailsAnalyze) {
+    const analyzeId = detailsAnalyze.resultSet[0].anlyzeId.toString();//anlyzeId form req.params.id
+    const patIdent = detailsAnalyze.patientIdent;//patientIdent form req.params.id
+
+    const allResult = await analyzeResult.find({ patientIdent: patIdent });
+
+    if (allResult.length) {
+      let userAnalyze = [];
+      //user patient
+      const usersPatint = await user
+        .findOne({ ident: detailsAnalyze.patientIdent })
+        .select("firstname lastname sex birthday -_id ");
+
+      allResult.forEach(async (index) => {//for of resultSet to get anlyzeId
+        if (index.resultSet[0].anlyzeId == analyzeId) {
+          const userDetails = {
+            date: index.date,
+            result: index.resultSet,
+          };
+          // console.log(userDetails);
+
+          userAnalyze.push(userDetails);//undefined ??
+          console.log(userAnalyze);
+
+        }
+      })
+      console.log(userAnalyze);
+      //send a response to client
+      res.status(201).json({usersPatint,userAnalyze,
+        message: "done...........",
+      });
+
+    }
+    else
+      res.status(400).json({ message: "User not found" });
+
+  }
+  else
+    res.status(400).json({ message: "ID not found" });
+});
+
+
 
 /**--------------------------------
  * @desc get resuls by staffIdent
@@ -175,7 +228,8 @@ module.exports.getResultsByIdStaff = asyncHandler(async (req, res) => {
 module.exports.getResultsPatient = asyncHandler(async (req, res) => {
   const detailsAnalyze = await analyzeResult.find({
     patientIdent: req.query.patientIdent,
-  });
+    isDone: true,
+  },);
   let usersArray = [];
 
   if (detailsAnalyze.length) {
@@ -222,6 +276,7 @@ module.exports.getResultsPatient = asyncHandler(async (req, res) => {
 module.exports.getResultsDoctor = asyncHandler(async (req, res) => {
   const detailsAnalyze = await analyzeResult.find({
     doctorIdent: req.query.doctorIdent,
+    isDone: true,
   });
   if (detailsAnalyze != "") {
     //send a response to client

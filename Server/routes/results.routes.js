@@ -23,6 +23,7 @@ const {
   isPaied,
   isDoneEdit,
   isPaiedEdit,
+  getAllResultsById,
 } = require("../Controller/results.Controller");
 
 // results
@@ -34,6 +35,7 @@ router.get("/getResults/resultDateFromTo", ifAdminOrStaff, resultDateFromTo);
 router.get("/getResults/dayResult", ifAdminOrStaff, dayResult);
 
 router.get("/getResults/:id", validateId, getResultsById);
+router.get("/getAllResults/:id", validateId, getAllResultsById);
 router.get("/getPatientAnalyze", getResultsPatient);
 router.get("/getDoctorAnzlyze", ifAdminOrStaff, getResultsDoctor);
 router.get("/getStaffAnzlyze", ifAdminOrStaff, getResultsStaff);

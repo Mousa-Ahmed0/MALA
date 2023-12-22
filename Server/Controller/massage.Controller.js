@@ -78,7 +78,7 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
 module.exports.getAllMass = asyncHandler(async (req, res) => {
     const newMass = await Massage.find({})
         .populate("firstUser", ["-password"])
-        .sort({ createdAt: 1 });
+        .sort({ createdAt: -1 });
     //.populate('secondUser', ['-password'])
 
     if (newMass) return res.status(200).json(newMass);
@@ -153,21 +153,13 @@ module.exports.editIfReady = asyncHandler(async (req, res) => {
 
     else if (updateReady.firstUser == req.user.id) {
         updateReady.ifReadyFirstUser = true;
-        console.log("send", updateReady);
         await updateReady.save();
         return res.status(200).json({ edit: true, updateReady });
 
     }
     else if (updateReady.secondUser == req.user.id) {
         updateReady.ifReadySecondUser = true;
-        console.log("rec", updateReady);
         await updateReady.save();
         return res.status(200).json({ edit: true, updateReady });
     }
-
-
-
-
-
-
 });
