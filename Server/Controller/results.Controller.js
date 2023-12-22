@@ -23,7 +23,6 @@ module.exports.addResults = asyncHandler(async (req, res) => {
   await newResult.save();
   //send a response to client
   res.status(201).json({ newResult, message: "done..........." });
-
 });
 
 /**--------------------------------
@@ -118,7 +117,6 @@ module.exports.getResultsById = asyncHandler(async (req, res) => {
   });
 });
 
-
 /**--------------------------------
  * @desc get resuls by ID - and all analyze
  * @router /api/result/getAllResults/:id
@@ -127,10 +125,9 @@ module.exports.getResultsById = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.getAllResultsById = asyncHandler(async (req, res) => {
   const detailsAnalyze = await analyzeResult.findById(req.params.id);
-
   if (detailsAnalyze) {
-    const analyzeId = detailsAnalyze.resultSet[0].anlyzeId.toString();//anlyzeId form req.params.id
-    const patIdent = detailsAnalyze.patientIdent;//patientIdent form req.params.id
+    const analyzeId = detailsAnalyze.resultSet[0].anlyzeId.toString(); //anlyzeId form req.params.id
+    const patIdent = detailsAnalyze.patientIdent; //patientIdent form req.params.id
 
     const allResult = await analyzeResult.find({ patientIdent: patIdent });
 
@@ -141,7 +138,8 @@ module.exports.getAllResultsById = asyncHandler(async (req, res) => {
         .findOne({ ident: detailsAnalyze.patientIdent })
         .select("firstname lastname sex birthday -_id ");
 
-      allResult.forEach(async (index) => {//for of resultSet to get anlyzeId
+      allResult.forEach(async (index) => {
+        //for of resultSet to get anlyzeId
         if (index.resultSet[0].anlyzeId == analyzeId) {
           const userDetails = {
             date: index.date,
@@ -149,27 +147,18 @@ module.exports.getAllResultsById = asyncHandler(async (req, res) => {
           };
           // console.log(userDetails);
 
-          userAnalyze.push(userDetails);//undefined ??
+          userAnalyze.push(userDetails); //undefined ??
           console.log(userAnalyze);
-
         }
-      })
+      });
       console.log(userAnalyze);
       //send a response to client
-      res.status(201).json({usersPatint,userAnalyze,
-        message: "done...........",
-      });
-
-    }
-    else
-      res.status(400).json({ message: "User not found" });
-
-  }
-  else
-    res.status(400).json({ message: "ID not found" });
+      res
+        .status(201)
+        .json({ usersPatint, userAnalyze, message: "done..........." });
+    } else res.status(400).json({ message: "User not found" });
+  } else res.status(400).json({ message: "ID not found" });
 });
-
-
 
 /**--------------------------------
  * @desc get resuls by staffIdent
@@ -229,7 +218,7 @@ module.exports.getResultsPatient = asyncHandler(async (req, res) => {
   const detailsAnalyze = await analyzeResult.find({
     patientIdent: req.query.patientIdent,
     isDone: true,
-  },);
+  });
   let usersArray = [];
 
   if (detailsAnalyze.length) {
@@ -327,7 +316,8 @@ module.exports.resultDate = asyncHandler(async (req, res) => {
 
   let responseSent = false; // Variable to track whether response has been sent
 
-  if (number == 0) {//week
+  if (number == 0) {
+    //week
     startDate.setDate(currentDate.getDate() - 7);
     const getAllResult = await analyzeResult.find({
       date: { $gte: startDate, $lte: currentDate },
@@ -367,9 +357,8 @@ module.exports.resultDate = asyncHandler(async (req, res) => {
         responseSent = true; // Set the flag to true to indicate response has been sent
       }
     }
-  }
-
-  else if (number >= 1 && number <= 12) {    //number of month
+  } else if (number >= 1 && number <= 12) {
+    //number of month
     startDate.setMonth(currentDate.getMonth() - number);
     const getAllResult = await analyzeResult.find({
       date: { $gte: startDate, $lte: currentDate },
@@ -415,10 +404,9 @@ module.exports.resultDate = asyncHandler(async (req, res) => {
     res.status(400).json({ message: "Number must between 0-12" });
     responseSent = true; // Set the flag to true to indicate response has been sent
   }
-
 });
 
-/**-------------------------------- 
+/**--------------------------------
  * @desc get from to date of result
  * @router /api/getResults/resultDateFromTo
  * @method GET
@@ -519,8 +507,7 @@ module.exports.dayResult = asyncHandler(async (req, res) => {
   }
 });
 
-
-/**-------------------------------- 
+/**--------------------------------
  * @desc if result done
  * @router /api/Results/ifDone
  * @method GET
@@ -530,31 +517,27 @@ module.exports.isDone = asyncHandler(async (req, res) => {
   const isDone = await analyzeResult.find({ isDone: req.query.isDone });
 
   if (isDone.length) res.status(200).json({ isDone });
-
   else res.status(404).json({ message: "Not repot " });
 });
-/**-------------------------------- 
+/**--------------------------------
  * @desc if result done edit to true
  * @router /api/Results/Results/ifDoneEdit
  * @method GET
  * @access private (staff or admin)
  * ------------------------------------------ */
 module.exports.isDoneEdit = asyncHandler(async (req, res) => {
-
   const ifDone = await analyzeResult.findById(req.params.id);
   if (ifDone) {
-    if (ifDone.isDone)
-      res.status(200).json({ message: "Alrede True", ifDone });
+    if (ifDone.isDone) res.status(200).json({ message: "Alrede True", ifDone });
     else {
       ifDone.isDone = true;
       await ifDone.save();
       res.status(200).json({ message: "done edit...", ifDone });
     }
-  }
-  else res.status(404).json({ message: "Does not exist " });
+  } else res.status(404).json({ message: "Does not exist " });
 });
 
-/**-------------------------------- 
+/**--------------------------------
  * @desc if result paied
  * @router /api/Results/ifPaied
  * @method GET
@@ -563,19 +546,18 @@ module.exports.isDoneEdit = asyncHandler(async (req, res) => {
 module.exports.isPaied = asyncHandler(async (req, res) => {
   const isPaied = await analyzeResult.find({ isPaied: req.query.isPaied });
 
-  if (isPaied.length) res.status(200).json({ "Number of  paied": isPaied.length, isPaied });
-
+  if (isPaied.length)
+    res.status(200).json({ "Number of  paied": isPaied.length, isPaied });
   else res.status(404).json({ message: "Not repot " });
 });
 
-/**-------------------------------- 
+/**--------------------------------
  * @desc if result paied edit to true
  * @router /api/Results/Results/ifPaiedEdit
  * @method GET
  * @access private (staff or admin)
  * ------------------------------------------ */
 module.exports.isPaiedEdit = asyncHandler(async (req, res) => {
-
   const ifPaied = await analyzeResult.findById(req.params.id);
   if (ifPaied) {
     if (ifPaied.isPaied)
@@ -585,6 +567,5 @@ module.exports.isPaiedEdit = asyncHandler(async (req, res) => {
       await ifPaied.save();
       res.status(200).json({ message: "done edit...", ifPaied });
     }
-  }
-  else res.status(404).json({ message: "Does not exist " });
+  } else res.status(404).json({ message: "Does not exist " });
 });
