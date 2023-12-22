@@ -126,36 +126,63 @@ module.exports.getResultsById = asyncHandler(async (req, res) => {
 module.exports.getAllResultsById = asyncHandler(async (req, res) => {
   const detailsAnalyze = await analyzeResult.findById(req.params.id);
   if (detailsAnalyze) {
-    const analyzeId = detailsAnalyze.resultSet[0].anlyzeId.toString(); //anlyzeId form req.params.id
+    let allId = []; //get all analyze id from req.params.id
+    detailsAnalyze.resultSet.forEach((index) => {
+      allId.push(index.anlyzeId.toString());
+    });
+    console.log(allId);
     const patIdent = detailsAnalyze.patientIdent; //patientIdent form req.params.id
 
     const allResult = await analyzeResult.find({ patientIdent: patIdent });
 
+    let userAnalyze = [];
+
     if (allResult.length) {
-      let userAnalyze = [];
       //user patient
       const usersPatint = await user
         .findOne({ ident: detailsAnalyze.patientIdent })
         .select("firstname lastname sex birthday -_id ");
 
-      allResult.forEach(async (index) => {
-        //for of resultSet to get anlyzeId
-        if (index.resultSet[0].anlyzeId == analyzeId) {
-          const userDetails = {
-            date: index.date,
-            result: index.resultSet,
-          };
-          // console.log(userDetails);
+      //user staff
+      const usersStaff = await user
+        .findOne({ ident: detailsAnalyze.staffIdent })
+        .select("firstname lastname -_id ");
 
-          userAnalyze.push(userDetails); //undefined ??
-          console.log(userAnalyze);
-        }
+      //user doctor
+      let usersDoctor = null;
+      if (detailsAnalyze.doctorIdent != "")
+        usersDoctor = await user
+          .findOne({ ident: detailsAnalyze.doctorIdent })
+          .select("firstname lastname -_id");
+      //loop on id
+      allId.forEach((index) => {
+        const analyzeId = index;
+
+        allResult.forEach(async (index) => {
+          //for of resultSet to get result
+          index.resultSet.forEach((index) => {
+            //for of result to get anlyzeId
+            if (index.anlyzeId == analyzeId) {
+              const userDetails = {
+                date: index.date,
+                result: index,
+              };
+              userAnalyze.push(userDetails);
+            }
+          });
+        });
       });
-      console.log(userAnalyze);
+
       //send a response to client
       res
         .status(201)
-        .json({ usersPatint, userAnalyze, message: "done..........." });
+        .json({
+          usersStaff,
+          usersDoctor,
+          usersPatint,
+          userAnalyze,
+          message: "done...........",
+        });
     } else res.status(400).json({ message: "User not found" });
   } else res.status(400).json({ message: "ID not found" });
 });
