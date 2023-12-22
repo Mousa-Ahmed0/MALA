@@ -80,7 +80,6 @@ module.exports.getAllMass = asyncHandler(async (req, res) => {
         .populate("firstUser", ["-password"]).populate("secondUser", ["-password"])
         .sort({ createdAt: -1 });
     //.populate('secondUser', ['-password'])
-
     if (newMass) return res.status(200).json(newMass);
     else return res.status(400).json({ massage: "Massage dose not exist" });
 });
@@ -106,9 +105,9 @@ module.exports.getMass = asyncHandler(async (req, res) => {
  * @access public
  * ------------------------------------------ */
 module.exports.getUserMass = asyncHandler(async (req, res) => {
-    const newMass = await Massage.findById(req.params.id)
+    const newMass = await Massage.findById(req.params.id).populate("secondUser", ["-password"])
         .populate("firstUser", ["-password"])
-        .sort({ createdAt: 1 });
+        .sort({ createdAt: -1 });
     //.populate('secondUser', ['-password'])
     if (newMass) return res.status(200).json(newMass);
     else return res.status(400).json({ massage: "Massage dose not exist" });

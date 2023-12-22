@@ -174,7 +174,8 @@ module.exports.getAllResultsById = asyncHandler(async (req, res) => {
       });
 
       //send a response to client
-      res.status(201).json({usersStaff,usersDoctor,
+      res.status(201).json({
+        usersStaff, usersDoctor,
         usersPatint, userAnalyze,
         message: "done...........",
       });
@@ -547,8 +548,37 @@ module.exports.dayResult = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.isDone = asyncHandler(async (req, res) => {
   const isDone = await analyzeResult.find({ isDone: req.query.isDone });
+  let usersArray = [];
 
-  if (isDone.length) res.status(200).json({ isDone });
+  if (isDone.length) {
+    for (let i = 0; i < isDone.length; i++) {
+      //user staff
+      const usersStaff = await user
+        .findOne({ ident: isDone[i].staffIdent })
+        .select("firstname lastname -_id ");
+
+      //user patient
+      const usersPatint = await user
+        .findOne({ ident: isDone[i].patientIdent })
+        .select("firstname lastname sex birthday -_id ");
+      //user doctor
+      let usersDoctor = null;
+      if (isDone[i].doctorIdent != "")
+        usersDoctor = await user
+          .findOne({ ident: isDone[i].doctorIdent })
+          .select("firstname lastname -_id");
+      // Create an object with the required properties
+      const userDetails = {
+        isDone: isDone[i],
+        usersPatient: usersPatint,
+        usersStaff: usersStaff,
+        usersDoctor: usersDoctor,
+      };
+      // Push the object to the array
+      usersArray.push(userDetails);
+    }
+    res.status(200).json({ usersArray });
+  }
 
   else res.status(404).json({ message: "Not repot " });
 });
@@ -582,8 +612,38 @@ module.exports.isDoneEdit = asyncHandler(async (req, res) => {
 module.exports.isPaied = asyncHandler(async (req, res) => {
   const isPaied = await analyzeResult.find({ isPaied: req.query.isPaied });
 
-  if (isPaied.length) res.status(200).json({ "Number of  paied": isPaied.length, isPaied });
+  if (isPaied.length) {
+    let usersArray = [];
 
+    for (let i = 0; i < isPaied.length; i++) {
+      //user staff
+      const usersStaff = await user
+        .findOne({ ident: isPaied[i].staffIdent })
+        .select("firstname lastname -_id ");
+
+      //user patient
+      const usersPatint = await user
+        .findOne({ ident: isPaied[i].patientIdent })
+        .select("firstname lastname sex birthday -_id ");
+      //user doctor
+      let usersDoctor = null;
+      if (isPaied[i].doctorIdent != "")
+        usersDoctor = await user
+          .findOne({ ident: isPaied[i].doctorIdent })
+          .select("firstname lastname -_id");
+      // Create an object with the required properties
+      const userDetails = {
+        isPaied: isPaied[i],
+        usersPatient: usersPatint,
+        usersStaff: usersStaff,
+        usersDoctor: usersDoctor,
+      };
+      // Push the object to the array
+      usersArray.push(userDetails);
+    }
+    
+    res.status(200).json({ "Number of  paied": isPaied.length, usersArray });
+  }
   else res.status(404).json({ message: "Not repot " });
 });
 
