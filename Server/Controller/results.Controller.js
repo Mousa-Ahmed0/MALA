@@ -472,18 +472,10 @@ module.exports.dayResult = asyncHandler(async (req, res) => {
  * @access private (staff or admin)
  * ------------------------------------------ */
 module.exports.isDone = asyncHandler(async (req, res) => {
-  let done = [];
-  let notDone = [];
-  const ifDone = await analyzeResult.find({});
-  if (ifDone.length) {
-    ifDone.forEach((index) => {
-      if (index.isDone == true) {
-        done.push(index);
-      }
-      else notDone.push(index);
-    })
-    res.status(200).json({ done: done, "Not done": notDone });
-  }
+  const isDone = await analyzeResult.find({ isDone: req.query.isDone });
+
+  if (isDone.length) res.status(200).json({ isDone });
+
   else res.status(404).json({ message: "Not repot " });
 });
 /**-------------------------------- 
@@ -497,11 +489,11 @@ module.exports.isDoneEdit = asyncHandler(async (req, res) => {
   const ifDone = await analyzeResult.findById(req.params.id);
   if (ifDone) {
     if (ifDone.isDone)
-      res.status(200).json({ message:"Alrede True",ifDone});
-    else{
-      ifDone.isDone=true;
+      res.status(200).json({ message: "Alrede True", ifDone });
+    else {
+      ifDone.isDone = true;
       await ifDone.save();
-      res.status(200).json({ message:"done edit...",ifDone});
+      res.status(200).json({ message: "done edit...", ifDone });
     }
   }
   else res.status(404).json({ message: "Does not exist " });
@@ -514,19 +506,10 @@ module.exports.isDoneEdit = asyncHandler(async (req, res) => {
  * @access private (staff or admin)
  * ------------------------------------------ */
 module.exports.isPaied = asyncHandler(async (req, res) => {
-  let paied = [];
-  let notPaied = [];
-  const ifPaied = await analyzeResult.find({});
-  if (ifPaied.length) {
-    ifPaied.forEach((index) => {
-      if (index.isPaied == true) {
-        paied.push(index);
-      }
-      else notPaied.push(index);
+  const isPaied = await analyzeResult.find({ isPaied: req.query.isPaied });
 
-    })
-    res.status(200).json({"Number of  paied":paied.length, paied, "Number of not paid":notPaied.length,"Not paied": notPaied });
-  }
+  if (isPaied.length) res.status(200).json({ "Number of  paied": isPaied.length, isPaied });
+
   else res.status(404).json({ message: "Not repot " });
 });
 
@@ -541,11 +524,11 @@ module.exports.isPaiedEdit = asyncHandler(async (req, res) => {
   const ifPaied = await analyzeResult.findById(req.params.id);
   if (ifPaied) {
     if (ifPaied.isPaied)
-      res.status(200).json({ message:"Alrede True",ifPaied});
-    else{
-      ifPaied.isPaied=true;
+      res.status(200).json({ message: "Alrede True", ifPaied });
+    else {
+      ifPaied.isPaied = true;
       await ifPaied.save();
-      res.status(200).json({ message:"done edit...",ifPaied});
+      res.status(200).json({ message: "done edit...", ifPaied });
     }
   }
   else res.status(404).json({ message: "Does not exist " });
