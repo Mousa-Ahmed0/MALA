@@ -59,7 +59,7 @@ const analyzeResultSchema = new mongoose.Schema(
   {
     timestamps: true,
     toJSON: { virtuals: true },
-    toObject: { virtuals: true }, 
+    toObject: { virtuals: true },
   }
 );
 const analyzeResult = mongoose.model("Result", analyzeResultSchema);
