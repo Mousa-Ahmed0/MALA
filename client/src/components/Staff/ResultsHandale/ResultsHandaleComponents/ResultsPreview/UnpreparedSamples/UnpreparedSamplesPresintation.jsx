@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 
-import SearchBar from "../../../../../components/SearchBar/SearchBar";
-import UserFilter from "../../../../../components/UserFilter/UserFilter";
+import SearchBar from "../../../../../SearchBar/SearchBar";
+import UserFilter from "../../../../../UserFilter/UserFilter";
 
-export default function ResultsPreviewPresintation({
+export default function UnpreparedSamplesPresintation({
   darkMode,
   apiMessage,
   apiError,

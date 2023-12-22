@@ -44,7 +44,8 @@ import ItemsPreview from "./components/Staff/StorageHandale/StorageHandaleCompon
 import AddItem from "./components/Staff/StorageHandale/StorageHandaleComponents/AddItem.jsx";
 /* ResultsController */
 import ResultsController from "./components/Staff/ResultsHandale/ResultsController.jsx";
-import ResultsPreview from "./components/Staff/ResultsHandale/ResultsHandaleComponents/ResultsPreview/ResultsPreviewContainer.jsx";
+import ResultsPreview from "./components/Staff/ResultsHandale/ResultsHandaleComponents/ResultsPreview/ReadySamples/ResultsPreviewContainer.jsx";
+import UnpreparedSamples from "./components/Staff/ResultsHandale/ResultsHandaleComponents/ResultsPreview/UnpreparedSamples/UnpreparedSamplesContainer.jsx";
 import AddResult from "./components/Staff/ResultsHandale/ResultsHandaleComponents/AddResult/AddResultContainer.jsx";
 /* ReportsController */
 import ReportsController from "./components/Staff/ReportsHandale/ReportsController.jsx";
@@ -316,7 +317,11 @@ export default function App() {
                   />
                   <Route
                     path="/Staff/ResultsController/ResultsPreview"
-                    element={<ResultsPreview setIsFormOpen={setIsFormOpen} />}
+                    element={<ResultsPreview />}
+                  />
+                  <Route
+                    path="/Staff/ResultsController/UnpreparedSamples"
+                    element={<ResultsPreview />}
                   />
                 </Route>
                 <Route

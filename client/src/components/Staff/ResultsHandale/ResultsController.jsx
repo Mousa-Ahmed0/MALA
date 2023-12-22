@@ -6,12 +6,17 @@ export default function ResultsController() {
   const userDashNavbarValues = [
     {
       id: 1,
-      text: "Preview",
+      text: "Ready Samples",
       path: "/Staff/ResultsController/ResultsPreview",
     },
     {
       id: 2,
-      text: "Add a Result",
+      text: "Unprepared Samples",
+      path: "/Staff/ResultsController/UnpreparedSamples",
+    },
+    {
+      id: 3,
+      text: "New Sample",
       path: "/Staff/ResultsController/AddResult",
     },
   ];

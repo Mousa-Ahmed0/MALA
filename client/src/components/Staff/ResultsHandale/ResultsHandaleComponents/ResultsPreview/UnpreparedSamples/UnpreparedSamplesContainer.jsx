@@ -1,11 +1,11 @@
-import ResultsPreviewPresintation from "./ResultsPreviewPresintation";
+import UnpreparedSamplesPresintation from "./UnpreparedSamplesPresintation";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-import { useDarkMode } from "../../../../../context/DarkModeContext";
-import { getAllResults } from "../../../../../apis/ApisHandale";
+import { useDarkMode } from "../../../../../../context/DarkModeContext";
+import { getAllResults, getSamples } from "../../../../../../apis/ApisHandale";
 
-export default function ResultsPreviewContainer({ setIsFormOpen }) {
+export default function UnpreparedSamplesContainer({}) {
   const { darkMode } = useDarkMode();
 
   const [isUpdateFormOpen, setIsUpdateFormOpen] = useState(false);
@@ -32,20 +32,11 @@ export default function ResultsPreviewContainer({ setIsFormOpen }) {
   );
 
   /* *************** Handale Pop Forms *************** */
-  //update form open
-  function handaleUpdateFormOpen(a) {
-    setIsFormOpen(true);
-    setIsUpdateFormOpen(true);
-  }
-
-  function closeUpdateForm() {
-    setIsFormOpen(false);
-    setIsUpdateFormOpen(false);
-  }
   //get all results
   async function getResults() {
     try {
       let response = await getAllResults();
+      console.log(response);
       setAllResults(response.data.usersArray);
       setVisibleResults(response.data.usersArray);
     } catch (error) {
@@ -119,7 +110,7 @@ export default function ResultsPreviewContainer({ setIsFormOpen }) {
                       </div>
                       <div className="col-6 col-md-5 d-flex justify-content-end align-items-center">
                         <button
-                          onClick={() => handaleUpdateFormOpen(result)}
+                          onClick={() => {}}
                           className="normal-btn btn d-flex justify-content-center align-items-center"
                         >
                           {" "}
@@ -183,7 +174,7 @@ export default function ResultsPreviewContainer({ setIsFormOpen }) {
 
   return (
     <>
-      <ResultsPreviewPresintation
+      <UnpreparedSamplesPresintation
         darkMode={darkMode}
         apiMessage={apiMessage}
         apiError={apiError}

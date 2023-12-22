@@ -118,6 +118,16 @@ export const getAllResults = async () => {
     },
   });
 };
+export const getSamples = async (cond) => {
+  return await axios.get(
+    `http://localhost:5000/api/result/Results/ifDone?isDone=${cond}`,
+    {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    }
+  );
+};
 export const getResultByID = async (id) => {
   return await axios.get(`http://localhost:5000/api/result/getResults/${id}`, {
     headers: {

@@ -11,7 +11,7 @@ export default function PaymentsController() {
     },
     {
       id: 2,
-      text: "Not Paid Payments",
+      text: "Unpaid Samples",
       path: "/Staff/PaymentsController/NotPaidPayments",
     },
   ];
