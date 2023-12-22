@@ -77,7 +77,7 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.getAllMass = asyncHandler(async (req, res) => {
     const newMass = await Massage.find({})
-        .populate("firstUser", ["-password"])
+        .populate("firstUser", ["-password"]).populate("secondUser", ["-password"])
         .sort({ createdAt: -1 });
     //.populate('secondUser', ['-password'])
 
@@ -133,7 +133,7 @@ module.exports.deleteMass = asyncHandler(async (req, res) => {
  * @access public
  * ------------------------------------------ */
 module.exports.countIfRead = asyncHandler(async (req, res) => {
-    const newMass = await Massage.find({ ifReady: false }).count();
+    const newMass = await Massage.find({ ifReadyFirstUser: true,ifReadySecondUser:true }).count();
     if (!newMass)
         return res
             .status(404)
