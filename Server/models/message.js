@@ -1,19 +1,19 @@
 const mongoose = require("mongoose");
 const massSchema = new mongoose.Schema(
   {
-    senderId: {
+    firstUser: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
-    recvId: {
+    secondUser: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
-    ifReadySend: {
+    ifReadyFirstUser: {
       type: Boolean,
       default: false
     },
-    ifReadyRecv: {
+    ifReadySecondUser: {
       type: Boolean,
       default: false
     },

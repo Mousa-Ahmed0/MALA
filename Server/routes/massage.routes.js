@@ -15,7 +15,7 @@ const { verifyToken, ifAdmin } = require("../middlewares/verifyToken");
 router.post("/sendMassage", verifyToken, sendMass);
 router.get("/countRead", verifyToken, countIfRead);
 router.get("/getAllMassage", ifAdmin, getAllMass);
-router.put("/ifReady/:id", verifyToken, editIfReady);
+router.put("/ifReady/:id",validateObjectId, verifyToken, editIfReady);
 router.delete("/deleteMassage/:id", validateObjectId, verifyToken, deleteMass);
 router.get("/getMassage", verifyToken, getMass);
 router.get("/getUserMassage/:id", getUserMass);
