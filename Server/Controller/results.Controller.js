@@ -178,15 +178,13 @@ module.exports.getAllResultsById = asyncHandler(async (req, res) => {
       });
 
       //send a response to client
-      res
-        .status(201)
-        .json({
-          usersStaff,
-          usersDoctor,
-          usersPatint,
-          userAnalyze,
-          message: "done...........",
-        });
+      res.status(201).json({
+        usersStaff,
+        usersDoctor,
+        usersPatint,
+        userAnalyze,
+        message: "done...........",
+      });
     } else res.status(400).json({ message: "User not found" });
   } else res.status(400).json({ message: "ID not found" });
 });
@@ -546,6 +544,37 @@ module.exports.dayResult = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.isDone = asyncHandler(async (req, res) => {
   const isDone = await analyzeResult.find({ isDone: req.query.isDone });
+  let usersArray = [];
+
+  if (isDone.length) {
+    for (let i = 0; i < isDone.length; i++) {
+      //user staff
+      const usersStaff = await user
+        .findOne({ ident: isDone[i].staffIdent })
+        .select("firstname lastname -_id ");
+
+      //user patient
+      const usersPatint = await user
+        .findOne({ ident: isDone[i].patientIdent })
+        .select("firstname lastname sex birthday -_id ");
+      //user doctor
+      let usersDoctor = null;
+      if (isDone[i].doctorIdent != "")
+        usersDoctor = await user
+          .findOne({ ident: isDone[i].doctorIdent })
+          .select("firstname lastname -_id");
+      // Create an object with the required properties
+      const userDetails = {
+        isDone: isDone[i],
+        usersPatient: usersPatint,
+        usersStaff: usersStaff,
+        usersDoctor: usersDoctor,
+      };
+      // Push the object to the array
+      usersArray.push(userDetails);
+    }
+    res.status(200).json({ usersArray });
+  }
 
   if (isDone.length) res.status(200).json({ isDone });
   else res.status(404).json({ message: "Not repot " });
