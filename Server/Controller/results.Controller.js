@@ -154,6 +154,10 @@ module.exports.getAllResultsById = asyncHandler(async (req, res) => {
         usersDoctor = await user
           .findOne({ ident: detailsAnalyze.doctorIdent })
           .select("firstname lastname -_id");
+      else {
+        usersDoctor = detailsAnalyze.doctorName;
+      }
+      const resultDate = detailsAnalyze.date;
       //loop on id
       allId.forEach((index) => {
         const analyzeId = index;
