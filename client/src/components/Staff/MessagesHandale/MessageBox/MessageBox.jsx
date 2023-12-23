@@ -47,7 +47,7 @@ export default function MessageBox({ darkMode }) {
           <div className="col-9">
             <div className="d-flex align-items-center gap-2">
               <img
-                src={"./images/logo.png"}
+                src={message.firstUser.profilePhoto.url}
                 data-lazy-placeholder="https://placehold.it/1321x583?text=Loading"
                 loading="lazy"
                 className={`img-fluid lazy nav-profile-img mx-2 img-fluid border ${
@@ -57,7 +57,7 @@ export default function MessageBox({ darkMode }) {
                 style={{ objectFit: "cover" }}
               />
               <p className="h6 m-0 text-truncate">
-                {message.senderId.firstname + " " + message.senderId.lastname}
+                {message.firstUser.firstname + " " + message.firstUser.lastname}
               </p>
             </div>
           </div>

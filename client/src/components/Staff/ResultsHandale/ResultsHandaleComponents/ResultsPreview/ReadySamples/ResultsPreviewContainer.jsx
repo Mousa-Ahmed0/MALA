@@ -35,7 +35,7 @@ export default function ResultsPreviewContainer({}) {
   //get all results
   async function getResults() {
     try {
-      let response = await getAllResults();
+      let response = await getSamples(true);
       console.log(response);
       setAllResults(response.data.usersArray);
       setVisibleResults(response.data.usersArray);
