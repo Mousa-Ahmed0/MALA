@@ -34,7 +34,7 @@ module.exports.editResult = asyncHandler(async (req, res) => {
   //vaildatin fronend
   const editRes = await analyzeResult.findByIdAndUpdate(req.params.id, {
     date: req.body.date,
-
+    isDone:req.body.isDone,
     resultSet: req.body.resultSet,
   }, { new: true });
   if (!editRes) {
