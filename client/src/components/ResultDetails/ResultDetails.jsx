@@ -4,7 +4,7 @@ import BackBtn from "../BackBtn";
 import DetailsInformation from "./ResultDetailsComponents/DetailsInformation";
 import ReportsHeader from "../ReportsHeader";
 import ResultsTable from "./ResultDetailsComponents/ResultsTable";
-import { getResultByID } from "../../apis/ApisHandale.jsx";
+import { getDetailsResult } from "../../apis/ApisHandale.jsx";
 
 import { useParams } from "react-router-dom";
 import html2canvas from "html2canvas";
@@ -17,7 +17,7 @@ export default function ResultDetails() {
   const [resultDetails, setResuultDetails] = useState({});
   async function getResultDetails() {
     try {
-      let response = await getResultByID(id);
+      let response = await getDetailsResult(id);
       console.log(response);
       setResuultDetails(response.data);
     } catch (error) {
@@ -34,12 +34,16 @@ export default function ResultDetails() {
             darkMode={darkMode}
             doctorInformation={
               resultDetails.usersDoctor
-                ? resultDetails.usersDoctor
-                : resultDetails.detailsAnalyze.doctorName
+                ? typeof resultDetails.usersDoctor === "string"
+                  ? resultDetails.usersDoctor
+                  : resultDetails.usersDoctor.doctorName.firstname +
+                    " " +
+                    resultDetails.usersDoctor.doctorName.lastname
+                : "Doctor"
             }
             patintInformation={resultDetails.usersPatint}
             staffInformation={resultDetails.usersStaff}
-            date={resultDetails.detailsAnalyze.date}
+            date={resultDetails.resultDate}
           />
         </div>
         <ResultsTable darkMode={darkMode} resultDetails={resultDetails} />

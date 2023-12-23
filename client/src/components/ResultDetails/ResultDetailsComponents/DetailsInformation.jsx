@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import AgeCalculator from "../../../methods/AgeCalculator";
+import { formatDate } from "../../../methods/FormateDate";
 export default function DetailsInformation({
   darkMode,
   doctorInformation,
@@ -7,14 +8,11 @@ export default function DetailsInformation({
   staffInformation,
   date,
 }) {
-  const originalDateString = date;
-  const dateObject = new Date(originalDateString);
-
-  const day = String(dateObject.getUTCDate()).padStart(2, "0");
-  const month = String(dateObject.getUTCMonth() + 1).padStart(2, "0");
-  const year = String(dateObject.getUTCFullYear());
-
-  const formattedDate = `${day}/${month}/${year}`;
+  const formattedDate = formatDate(new Date(date));
+  ////
+  useEffect(() => {
+    console.log("patintInformation", patintInformation);
+  }, []);
   return (
     <>
       <div
@@ -25,13 +23,7 @@ export default function DetailsInformation({
         <div className=" d-flex flex-column">
           <div>
             Doctor:
-            <span className="light-bold">
-              {" "}
-              {typeof doctorInformation === "object" &&
-              doctorInformation !== null
-                ? doctorInformation.firstname + " " + doctorInformation.lastname
-                : doctorInformation}
-            </span>
+            <span className="light-bold"> {doctorInformation}</span>
           </div>
           <div>
             Staff:
@@ -65,7 +57,7 @@ export default function DetailsInformation({
                 birthday={
                   patintInformation !== null
                     ? patintInformation.birthday
-                    : Date()
+                    : new Date()
                 }
               />
             </span>

@@ -136,6 +136,16 @@ export const getResultByID = async (id) => {
     },
   });
 };
+export const getDetailsResult = async (id) => {
+  return await axios.get(
+    `http://localhost:5000/api/result/getAllResults/${id}`,
+    {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    }
+  );
+};
 export const getPateinrResults = async (ident) => {
   return await axios.get(
     `http://localhost:5000/api/result/getPatientAnalyze`,

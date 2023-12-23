@@ -13,7 +13,7 @@ export default function AgeCalculator({ birthday }) {
 
       // Calculate the age
       const ageInMilliseconds = new Date(timeDiff);
-      const years = ageInMilliseconds.getUTCFullYear() - 1970;
+      const years = Math.abs(ageInMilliseconds.getUTCFullYear() - 1970);
 
       setAge(years);
     };

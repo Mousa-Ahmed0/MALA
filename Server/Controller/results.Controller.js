@@ -179,6 +179,7 @@ module.exports.getAllResultsById = asyncHandler(async (req, res) => {
 
       //send a response to client
       res.status(201).json({
+        resultDate,
         usersStaff,
         usersDoctor,
         usersPatint,
