@@ -32,13 +32,11 @@ module.exports.addResults = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.editResult = asyncHandler(async (req, res) => {
   //vaildatin fronend
-  const editRes=await analyzeResult.findByIdAndUpdate(req.params.id,{
-    staffIdent: req.body.staffIdent,
+  const editRes = await analyzeResult.findByIdAndUpdate(req.params.id, {
     date: req.body.date,
-    doctorIdent: req.body.doctorIdent,
-    doctorName: req.body.doctorName,
+
     resultSet: req.body.resultSet,
-  },{new:true});
+  }, { new: true });
   if (!editRes) {
     return res.status(404).json({ message: "Document not found" });
   }
@@ -153,13 +151,13 @@ module.exports.getAllResultsById = asyncHandler(async (req, res) => {
     let allId = []; //get all analyze id from req.params.id
     let analyzComponent = [];
 
-    detailsAnalyze.resultSet.forEach(async(index) => {
+    detailsAnalyze.resultSet.forEach(async (index) => {
       let analyzeComp = await analyze.findById(index.anlyzeId);
       analyzComponent.push(analyzeComp);
       allId.push(index.anlyzeId.toString());
     });
 
-       console.log(allId);
+    console.log(allId);
     const patIdent = detailsAnalyze.patientIdent; //patientIdent form req.params.id
 
     const allResult = await analyzeResult.find({ patientIdent: patIdent });
