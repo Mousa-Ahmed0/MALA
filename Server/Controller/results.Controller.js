@@ -557,6 +557,9 @@ module.exports.isDone = asyncHandler(async (req, res) => {
   const isDone = await analyzeResult.find({ isDone: req.query.isDone });
   let usersArray = [];
 
+
+
+
   if (isDone.length) {
     for (let i = 0; i < isDone.length; i++) {
       //user staff
