@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { useDarkMode } from "../../../../../../context/DarkModeContext";
 import { getAllResults, getSamples } from "../../../../../../apis/ApisHandale";
 
-export default function UnpreparedSamplesContainer({}) {
+export default function ResultsPreviewContainer({}) {
   const { darkMode } = useDarkMode();
 
   const [isUpdateFormOpen, setIsUpdateFormOpen] = useState(false);
@@ -35,7 +35,7 @@ export default function UnpreparedSamplesContainer({}) {
   //get all results
   async function getResults() {
     try {
-      let response = await getAllResults();
+      let response = await getSamples(false);
       console.log(response);
       setAllResults(response.data.usersArray);
       setVisibleResults(response.data.usersArray);
@@ -81,14 +81,14 @@ export default function UnpreparedSamplesContainer({}) {
                       ? result.usersDoctor.firstname +
                         " " +
                         result.usersDoctor.lastname
-                      : result.detailsAnalyze.doctorName.length > 0
-                      ? result.detailsAnalyze.doctorName
+                      : result.isDone.doctorName.length > 0
+                      ? result.isDone.doctorName
                       : "Not Found"}
                   </p>
                 </div>
                 <div className="col-sm-12 col-md-1 d-md-flex d-none align-items-center p-0">
                   <p className="mb-0 text-truncate">
-                    {result.detailsAnalyze.resultSet.length}
+                    {result.isDone.resultSet.length}
                   </p>
                 </div>
 
@@ -96,11 +96,11 @@ export default function UnpreparedSamplesContainer({}) {
                   <div className="col-6 col-md-12 ">
                     <div className="row">
                       <div className="col-6 col-md-7 d-flex justify-content-end align-items-center">
-                        {result.detailsAnalyze.isDone ? (
+                        {result.isDone.isDone ? (
                           <Link
                             style={{ cursor: "pointer" }}
                             className="position-relative nav-link mb-0 text-truncate"
-                            to={`/ResultDetails/${result.detailsAnalyze.id}`}
+                            to={`/ResultDetails/${result.isDone.id}`}
                           >
                             Result Details
                           </Link>
@@ -109,7 +109,8 @@ export default function UnpreparedSamplesContainer({}) {
                         )}
                       </div>
                       <div className="col-6 col-md-5 d-flex justify-content-end align-items-center">
-                        <button
+                        <Link
+                          to={`/Staff/ResultsController/EditResult/${result.isDone.id}`}
                           onClick={() => {}}
                           className="normal-btn btn d-flex justify-content-center align-items-center"
                         >
@@ -119,7 +120,7 @@ export default function UnpreparedSamplesContainer({}) {
                               darkMode ? " dark-theme" : ""
                             }`}
                           ></i>
-                        </button>
+                        </Link>
                       </div>
                     </div>
                   </div>

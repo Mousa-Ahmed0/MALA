@@ -5,6 +5,7 @@ import { useDarkMode } from "../../../../context/DarkModeContext";
 import BackBtn from "../../../BackBtn";
 export default function AddNewAdd({ setIsFormOpen }) {
   const { darkMode } = useDarkMode();
+  const [isLoading, setIsLoading] = useState(false);
   const [ad, setAd] = useState({
     images: [],
     title: "",
@@ -48,30 +49,44 @@ export default function AddNewAdd({ setIsFormOpen }) {
     /* forms.forEach((form) => {
       formData.append("images", form);
     });*/
-    console.log("newAd: ", ad);
+    console.log("ad: ", ad);
 
     try {
+      setIsLoading(true);
       const formDataToSend = new FormData();
       ad.images.forEach((image, index) => {
-        formDataToSend.append(`images[${index}]`, image);
+        formDataToSend.append("images", image, image.name);
       });
       formDataToSend.append("title", ad.title);
       formDataToSend.append("addText", ad.addText);
       formDataToSend.append("creDate", ad.creDate);
       formDataToSend.append("expDate", ad.expDate);
 
+      console.log("formDataToSend: ", formDataToSend);
+
       let response = await axios.post(
         "http://localhost:5000/api/advertisements/addAdvert",
         formDataToSend,
         {
-          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+            "Content-Type": "multipart/form-data", // Ensure this header is set
+          },
         }
       );
-      console.log(response);
     } catch (error) {
       setApiError(true);
       console.error("Error From Add a new Ad: ", error);
     }
+    setIsLoading(false);
+    setApiMessage("Done!");
+    setAd({
+      images: [],
+      title: "",
+      addText: "",
+      creDate: "",
+      expDate: "",
+    });
   }
 
   // get Data
@@ -83,7 +98,8 @@ export default function AddNewAdd({ setIsFormOpen }) {
   //image changes
   function handleImageChange(e) {
     const files = e.target.files;
-    setAd({ ...ad, images: [...ad.images, ...files] });
+    console.log("Selected Files: ", files);
+    setAd((prevAd) => ({ ...prevAd, images: [...prevAd.images, ...files] }));
   }
 
   /*// move on the array of files to convert each one to FormData and push it to array
@@ -120,11 +136,15 @@ export default function AddNewAdd({ setIsFormOpen }) {
               >
                 Add a New Ad:
               </h1>
-
+              {apiMessage ? (
+                <div className="alert alert-info d-flex justify-content-center align-items-center">
+                  {apiMessage}
+                </div>
+              ) : (
+                ""
+              )}
               {errorMessage ? (
                 <div className="alert alert-danger">errorMessage </div>
-              ) : apiMessage ? (
-                <div className="alert alert-info">apiMessage </div>
               ) : (
                 ""
               )}
@@ -230,7 +250,15 @@ export default function AddNewAdd({ setIsFormOpen }) {
                     )*/}
               <div className="mt-4 d-flex justify-content-around">
                 <button className="btn btn-primary  d-flex justify-content-center BTN-Bold">
-                  Add
+                  {isLoading ? (
+                    <div className="d-flex justify-content-center align-items-center my-4">
+                      <div className="spinner-border text-white" role="status">
+                        <span className="sr-only">Loading...</span>
+                      </div>
+                    </div>
+                  ) : (
+                    "Add"
+                  )}
                 </button>
               </div>
             </form>

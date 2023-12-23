@@ -47,10 +47,8 @@ import ResultsController from "./components/Staff/ResultsHandale/ResultsControll
 import ResultsPreview from "./components/Staff/ResultsHandale/ResultsHandaleComponents/ResultsPreview/ReadySamples/ResultsPreviewContainer.jsx";
 import UnpreparedSamples from "./components/Staff/ResultsHandale/ResultsHandaleComponents/ResultsPreview/UnpreparedSamples/UnpreparedSamplesContainer.jsx";
 import AddResult from "./components/Staff/ResultsHandale/ResultsHandaleComponents/AddResult/AddResultContainer.jsx";
-/* ReportsController */
-import ReportsController from "./components/Staff/ReportsHandale/ReportsController.jsx";
-import ReportsPreview from "./components/Staff/ReportsHandale/ReportsHandaleComponents/ResultsPreview/ReportsPreviewContainer.jsx";
-import MakeReport from "./components/Staff/ReportsHandale/ReportsHandaleComponents/MakeReport.jsx";
+import EditResult from "./components/Staff/ResultsHandale/ResultsHandaleComponents/EditResult/EditResultContainer.jsx";
+
 /* PaymentsController */
 import PaymentsController from "./components/Staff/PaymenysHandale/PaymentsController.jsx";
 import PaymentsPreviewContainer from "./components/Staff/PaymenysHandale/PaymentsHandaleComponents/PaymentsPreview/PaymentsPreviewContainer.jsx";
@@ -59,6 +57,7 @@ import AddAPayment from "./components/Staff/PaymenysHandale/PaymentsHandaleCompo
 /* AdsController */
 import AdsController from "./components/Staff/AdsHandale/AdsController.jsx";
 import AddNewAdd from "./components/Staff/AdsHandale/AdsHandaleComponents/AddNewAdd.jsx";
+import AdsPreviewContainer from "./components/Staff/AdsHandale/AdsHandaleComponents/AdsPreview/AdsPreviewContainer.jsx";
 
 //ullits components
 import Footer from "./ulitls/Footer/Footer";
@@ -124,9 +123,8 @@ export default function App() {
     { id: 3, text: "Anlysis", path: "/Staff/AnlysisController" },
     { id: 4, text: "Storage", path: "/Staff/StorageController" },
     { id: 5, text: "Results", path: "/Staff/ResultsController" },
-    { id: 7, text: "Reports", path: "/Staff/ReportsController" },
-    { id: 8, text: "Payments", path: "/Staff/PaymentsController" },
-    { id: 9, text: "Ads", path: "/Staff/AdsController" },
+    { id: 7, text: "Payments", path: "/Staff/PaymentsController" },
+    { id: 8, text: "Ads", path: "/Staff/AdsController" },
     { id: 6, text: "|", path: null },
   ];
   const PatientNavBarValues = [
@@ -316,12 +314,16 @@ export default function App() {
                     element={<AddResult />}
                   />
                   <Route
+                    path="/Staff/ResultsController/EditResult/:id"
+                    element={<EditResult />}
+                  />
+                  <Route
                     path="/Staff/ResultsController/ResultsPreview"
                     element={<ResultsPreview />}
                   />
                   <Route
                     path="/Staff/ResultsController/UnpreparedSamples"
-                    element={<ResultsPreview />}
+                    element={<UnpreparedSamples />}
                   />
                 </Route>
                 <Route
@@ -342,20 +344,12 @@ export default function App() {
                     path="/Staff/AdsController/AddNewAdd"
                     element={<AddNewAdd setIsFormOpen={setIsFormOpen} />}
                   />
-                </Route>
-                <Route
-                  path="/Staff/ReportsController"
-                  element={<ReportsController />}
-                >
                   <Route
-                    path="/Staff/ReportsController/MakeReport"
-                    element={<MakeReport />}
-                  />
-                  <Route
-                    path="/Staff/ReportsController/ReportsPreview"
-                    element={<ReportsPreview setIsFormOpen={setIsFormOpen} />}
+                    path="/Staff/AdsController/AdsPreview"
+                    element={<AdsPreviewContainer />}
                   />
                 </Route>
+
                 <Route path="*" element={<Error />} />
               </Route>
               <Route path="/Patient" element={<Patient />}>

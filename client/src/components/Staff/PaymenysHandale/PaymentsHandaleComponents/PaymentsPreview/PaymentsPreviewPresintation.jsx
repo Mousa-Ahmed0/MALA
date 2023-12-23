@@ -20,6 +20,7 @@ export default function PaymentsPreviewPresintation({
   val,
   handaleSearchVlue,
   srchFilterOption,
+  dateRange,
 }) {
   return (
     <div className="ST-section my-2 p-0">
@@ -78,6 +79,7 @@ export default function PaymentsPreviewPresintation({
                     type="date"
                     name="firstDate"
                     className="form-control"
+                    value={dateRange.firstDate}
                     onChange={(e) => handaleDataRangeChange(e)}
                   />
                 </div>
@@ -93,6 +95,7 @@ export default function PaymentsPreviewPresintation({
                     type="date"
                     name="secondtDate"
                     className="form-control"
+                    value={dateRange.secondtDate}
                     onChange={(e) => handaleDataRangeChange(e)}
                   />
                 </div>

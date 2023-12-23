@@ -3,19 +3,33 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useDarkMode } from "../../../../../../context/DarkModeContext";
-import { getAllResults, getSamples } from "../../../../../../apis/ApisHandale";
+import {
+  getAllResults,
+  getResultsFiltered,
+  getResultsFromTo,
+  getSamples,
+} from "../../../../../../apis/ApisHandale";
 
 export default function ResultsPreviewContainer({}) {
   const { darkMode } = useDarkMode();
 
-  const [isUpdateFormOpen, setIsUpdateFormOpen] = useState(false);
   const [allResults, setAllResults] = useState([]);
   const [visibleResults, setVisibleResults] = useState([]);
   //search & filter variables
+  const [isCustomeDate, setIsCustomeDate] = useState(false);
   let [val, setVal] = useState(""); //search value
   let [filterOption, setFilterOption] = useState("noValue");
-  let [searchResults, setSearchResults] = useState([]);
-  const filterOptions = ["noValue", "Staff", "Patient", "Doctor"];
+  let [srchFilterOption, setSrchFilterOption] = useState("Patient");
+  let [fillterdResults, setfillterdResults] = useState([]);
+  const filterOptions = [
+    "noValue",
+    "Last Week",
+    "Last Month",
+    "Last 3 Months",
+    "Last 6 Months",
+    "Last Year",
+  ];
+  const srchFilterOptions = ["Patient", "Doctor"];
   //Errors variables
   let [apiError, setApiError] = useState(false);
   let [apiMessage, setApiMessage] = useState("");
@@ -31,7 +45,6 @@ export default function ResultsPreviewContainer({}) {
     </div>
   );
 
-  /* *************** Handale Pop Forms *************** */
   //get all results
   async function getResults() {
     try {
@@ -81,14 +94,14 @@ export default function ResultsPreviewContainer({}) {
                       ? result.usersDoctor.firstname +
                         " " +
                         result.usersDoctor.lastname
-                      : result.detailsAnalyze.doctorName.length > 0
-                      ? result.detailsAnalyze.doctorName
+                      : result.isDone.doctorName.length > 0
+                      ? result.isDone.doctorName
                       : "Not Found"}
                   </p>
                 </div>
                 <div className="col-sm-12 col-md-1 d-md-flex d-none align-items-center p-0">
                   <p className="mb-0 text-truncate">
-                    {result.detailsAnalyze.resultSet.length}
+                    {result.isDone.resultSet.length}
                   </p>
                 </div>
 
@@ -96,11 +109,11 @@ export default function ResultsPreviewContainer({}) {
                   <div className="col-6 col-md-12 ">
                     <div className="row">
                       <div className="col-6 col-md-7 d-flex justify-content-end align-items-center">
-                        {result.detailsAnalyze.isDone ? (
+                        {result.isDone.isDone ? (
                           <Link
                             style={{ cursor: "pointer" }}
                             className="position-relative nav-link mb-0 text-truncate"
-                            to={`/ResultDetails/${result.detailsAnalyze.id}`}
+                            to={`/ResultDetails/${result.isDone.id}`}
                           >
                             Result Details
                           </Link>
@@ -111,11 +124,11 @@ export default function ResultsPreviewContainer({}) {
                       <div className="col-6 col-md-5 d-flex justify-content-end align-items-center">
                         <button
                           onClick={() => {}}
-                          className="normal-btn btn d-flex justify-content-center align-items-center"
+                          className="delete-btn btn d-flex justify-content-center align-items-center"
                         >
                           {" "}
                           <i
-                            className={`fas fa-edit mb-0 text-truncate ${
+                            className={`fas fa-trash mb-0 text-truncate ${
                               darkMode ? " dark-theme" : ""
                             }`}
                           ></i>
@@ -134,22 +147,347 @@ export default function ResultsPreviewContainer({}) {
   }
 
   /** ====================== filter Section ====================== **/
-  function clearResults() {}
+  const endDate = new Date(); // current date
+  const startDate = new Date(endDate); // start date "Before 3 Years for initial"
+  startDate.setFullYear(endDate.getFullYear() - 3);
 
-  function handaleFilterOption(option) {}
+  //format date as "yy-mm-dd" formula
+  const formatDate = (date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    return `${year}-${month}-${day}`;
+  };
+
+  // Data Range Variable
+  const [dateRange, setDateRange] = useState({
+    firstDate: formatDate(startDate),
+    secondtDate: formatDate(endDate),
+  });
+
+  // save new data range
+  function handaleDataRangeChange(e) {
+    const newDataRange = { ...dateRange };
+    newDataRange[e.target.name] = e.target.value;
+    setDateRange(newDataRange);
+  }
+
+  //filter based on data range
+  async function filterByDataRange() {
+    try {
+      let response = await getResultsFromTo(dateRange);
+      console.log("response from range", response);
+      if (response.data.paumentArray) {
+        setfillterdResults(response.data.resultArray);
+        setVisibleResults(response.data.resultArray);
+      } else {
+        setNoResults(true);
+        setfillterdResults([]);
+      }
+    } catch (error) {
+      console.error("error", error);
+    }
+  }
+
+  //reset filter option, "reset Visible & filtered payments array"
+  function clearResults() {
+    if (
+      filterOption === "noValue" ||
+      fillterdResults.length === 0 ||
+      !fillterdResults
+    ) {
+      setVisibleResults(allResults);
+      setfillterdResults([]); // Reset the filtered results
+    } else {
+      setVisibleResults(fillterdResults);
+    }
+    setNoResults(false); // Reset the noResults state
+    setVal("");
+  }
+
+  //handale search value filter - patient or IC -
+  function searchFilterOption(option) {
+    clearResults();
+    setSrchFilterOption(option);
+  }
+
+  // handale the select filter option
+  async function handaleFilterOption(option) {
+    setVal("");
+    setFilterOption(option);
+
+    switch (option) {
+      case "noValue":
+        clearResults();
+        break;
+
+      case "Last Week":
+        try {
+          let response = await getResultsFiltered({
+            payDate: formatDate(new Date()),
+            number: 0,
+          });
+          console.log("Response from week filter", response);
+          if (response.data.paumentArray) {
+            setfillterdResults(response.data.paumentArray);
+            setVisibleResults(response.data.paumentArray);
+          } else {
+            setNoResults(true);
+            setfillterdResults([]);
+          }
+        } catch (error) {
+          console.error("error", error);
+        }
+        break;
+      case "Last Month":
+        try {
+          let response = await getResultsFiltered({
+            payDate: formatDate(new Date()),
+            number: 1,
+          });
+          if (response.data.paumentArray) {
+            setfillterdResults(response.data.paumentArray);
+            setVisibleResults(response.data.paumentArray);
+          } else {
+            setNoResults(true);
+            setfillterdResults([]);
+          }
+        } catch (error) {
+          console.error("error", error);
+        }
+        break;
+      case "Last 3 Months":
+        try {
+          let response = await getResultsFiltered({
+            payDate: formatDate(new Date()),
+            number: 3,
+          });
+          if (response.data.paumentArray) {
+            setfillterdResults(response.data.paumentArray);
+            setVisibleResults(response.data.paumentArray);
+          } else {
+            setNoResults(true);
+            setfillterdResults([]);
+          }
+        } catch (error) {
+          console.error("error", error);
+        }
+        break;
+      case "Last 6 Months":
+        try {
+          let response = await getResultsFiltered({
+            payDate: formatDate(new Date()),
+            number: 6,
+          });
+          if (response.data.paumentArray) {
+            setfillterdResults(response.data.paumentArray);
+            setVisibleResults(response.data.paumentArray);
+          } else {
+            setNoResults(true);
+            setfillterdResults([]);
+          }
+        } catch (error) {
+          console.error("error", error);
+        }
+        break;
+      case "Last Year":
+        try {
+          let response = await getResultsFiltered({
+            payDate: formatDate(new Date()),
+            number: 12,
+          });
+          if (response.data.paumentArray) {
+            setfillterdResults(response.data.paumentArray);
+            setVisibleResults(response.data.paumentArray);
+          } else {
+            setNoResults(true);
+            setfillterdResults([]);
+          }
+        } catch (error) {
+          console.error("error", error);
+        }
+        break;
+
+      default:
+        console.log("Error in Option");
+    }
+  }
+
+  // custome ui based on type of filter
+  function hadaleDateFilters() {
+    setIsCustomeDate(!isCustomeDate);
+    setVisibleResults(allResults);
+    setFilterOption("noValue");
+    setfillterdResults([]);
+    setVal("");
+    setDateRange({
+      firstDate: "",
+      secondtDate: "",
+    });
+  }
 
   /** ====================== Search Section ====================== **/
+  // get new search bar value
   function handaleSearchVlue(value) {
     if (value === "") {
       clearResults();
+      setVal("");
     }
     setVal(value);
   }
+
+  //search for an payments
   async function searchForAResult() {
     if (val.trim() === "") {
+      console.log("search out");
       return;
+    } else {
+      console.log("search in");
+      //custome date range
+      if (isCustomeDate) {
+        //no filter yet
+        // no data ranged selected
+        if (fillterdResults.length === 0 || !fillterdResults) {
+          // patient search filter
+          if (
+            srchFilterOption === "noValue" ||
+            srchFilterOption === "Patient"
+          ) {
+            let srchResultsArray = allResults.filter((p) =>
+              p.info ? p.info.ident.toString().includes(val) : false
+            );
+            if (srchResultsArray.length === 0) {
+              setNoResults(true);
+              setVisibleResults([]);
+            } else {
+              setVisibleResults(srchResultsArray);
+            }
+          }
+          // IC search filter
+          else if (srchFilterOption === "IC") {
+            let srchResultsArray = allResults.filter((p) =>
+              p.payment
+                ? p.payment.InsuranceCompName.toLowerCase().includes(
+                    val.toLowerCase()
+                  )
+                : false
+            );
+            if (srchResultsArray.length === 0) {
+              setNoResults(true);
+              setVisibleResults([]);
+            } else {
+              setVisibleResults(srchResultsArray);
+            }
+          }
+        } // data range is changed
+        else {
+          // patient search filter
+
+          if (
+            srchFilterOption === "noValue" ||
+            srchFilterOption === "Patient"
+          ) {
+            let srchResultsArray = fillterdResults.filter((p) =>
+              p.info ? p.info.ident.toString().includes(val) : false
+            );
+            if (srchResultsArray.length === 0) {
+              setNoResults(true);
+              setVisibleResults([]);
+            } else {
+              setVisibleResults(srchResultsArray);
+            }
+          } // IC search filter
+          else if (srchFilterOption === "IC") {
+            let srchResultsArray = fillterdResults.filter((p) =>
+              p.payment
+                ? p.payment.InsuranceCompName.toLowerCase().includes(
+                    val.toLowerCase()
+                  )
+                : false
+            );
+            if (srchResultsArray.length === 0) {
+              setNoResults(true);
+              setVisibleResults([]);
+            } else {
+              setVisibleResults(srchResultsArray);
+            }
+          }
+        }
+      } // select filters (Last ...)
+      else {
+        // there no filter option selected
+        if (
+          fillterdResults.length === 0 ||
+          !fillterdResults ||
+          filterOption === "noValue"
+        ) {
+          // no option selected
+          if (
+            srchFilterOption === "noValue" ||
+            srchFilterOption === "Patient" // patient search filter
+          ) {
+            let srchResultsArray = allResults.filter((p) =>
+              p.info ? p.info.ident.toString().includes(val) : false
+            );
+            if (srchResultsArray.length === 0) {
+              setNoResults(true);
+              setVisibleResults([]);
+            } else {
+              setVisibleResults(srchResultsArray);
+            }
+          } else if (srchFilterOption === "IC") {
+            // IC search filter
+            let srchResultsArray = allResults.filter((p) =>
+              p.payment
+                ? p.payment.InsuranceCompName.toLowerCase().includes(
+                    val.toLowerCase()
+                  )
+                : false
+            );
+            if (srchResultsArray.length === 0) {
+              setNoResults(true);
+              setVisibleResults([]);
+            } else {
+              setVisibleResults(srchResultsArray);
+            }
+          }
+        } else {
+          // patient search filter
+          if (
+            srchFilterOption === "noValue" ||
+            srchFilterOption === "Patient"
+          ) {
+            let srchResultsArray = fillterdResults.filter((p) =>
+              p.info ? p.info.ident.toString().includes(val) : false
+            );
+            if (srchResultsArray.length === 0) {
+              setNoResults(true);
+              setVisibleResults([]);
+            } else {
+              setVisibleResults(srchResultsArray);
+            }
+          } // IC search filter
+          else if (srchFilterOption === "IC") {
+            // IC search filter
+            let srchResultsArray = fillterdResults.filter((p) =>
+              p.payment
+                ? p.payment.InsuranceCompName.toLowerCase().includes(
+                    val.toLowerCase()
+                  )
+                : false
+            );
+            if (srchResultsArray.length === 0) {
+              setNoResults(true);
+              setVisibleResults([]);
+            } else {
+              setVisibleResults(srchResultsArray);
+            }
+          }
+        }
+      }
     }
   }
+
   /** ====================== Delete Section ====================== **/
   async function deleteUser(id) {}
   //initial rendring
@@ -161,36 +499,51 @@ export default function ResultsPreviewContainer({}) {
   useEffect(() => {
     // Filter and display users when the filter option or data changes
     handaleFilterOption(filterOption);
-  }, [filterOption, searchResults]);
+    console.log("useEffect 2");
+  }, [filterOption]);
 
   useEffect(() => {
     // Search for users when the search value changes
+    console.log("useEffect 3");
+
     searchForAResult();
-  }, [val]);
+  }, [val, fillterdResults]);
+
   useEffect(() => {
-    // Search for users when the search value changes
-    console.log("allResults", allResults);
-  }, [allResults]);
+    filterByDataRange();
+  }, [dateRange]);
+  useEffect(() => {
+    console.log("useEffect 4");
+
+    if (isCustomeDate) {
+      console.log("Custome Date Function");
+    } else {
+      handaleFilterOption(filterOption);
+    }
+  }, [isCustomeDate]);
 
   return (
     <>
       <ResultsPreviewPresintation
         darkMode={darkMode}
+        visibleResults={visibleResults}
+        displayResults={displayResults}
         apiMessage={apiMessage}
         apiError={apiError}
         noResults={noResults}
         apiErrorMessage={apiErrorMessage}
-        val={val}
-        setVal={setVal}
-        setFilterOption={setFilterOption}
+        isCustomeDate={isCustomeDate}
+        hadaleDateFilters={hadaleDateFilters}
+        handaleDataRangeChange={handaleDataRangeChange}
         filterOptions={filterOptions}
-        clearResults={clearResults}
         handaleFilterOption={handaleFilterOption}
+        srchFilterOptions={srchFilterOptions}
+        searchFilterOption={searchFilterOption}
+        val={val}
         handaleSearchVlue={handaleSearchVlue}
-        searchForAResult={searchForAResult}
+        srchFilterOption={srchFilterOption}
+        dateRange={dateRange}
         deleteUser={deleteUser}
-        displayResults={displayResults}
-        visibleResults={visibleResults}
       />
     </>
   );

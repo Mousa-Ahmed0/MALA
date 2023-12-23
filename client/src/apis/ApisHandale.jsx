@@ -119,6 +119,7 @@ export const getAllResults = async () => {
   });
 };
 export const getSamples = async (cond) => {
+  console.log(cond);
   return await axios.get(
     `http://localhost:5000/api/result/Results/ifDone?isDone=${cond}`,
     {
@@ -148,6 +149,28 @@ export const getPateinrResults = async (ident) => {
     }
   );
 };
+export const getResultsFromTo = async (date) => {
+  console.log(" custome date: ", date);
+  return await axios.get(
+    `http://localhost:5000/api/result/getResults/resultDateFromTo?firstDate=${date.firstDate}&secondtDate=${date.secondtDate}`,
+    {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    }
+  );
+};
+export const getResultsFiltered = async (date) => {
+  console.log(" custome date: ", date);
+  return await axios.get(
+    `http://localhost:5000/api/result/getResults/resultDate?number=${date.number}&date=${date.payDate}`,
+    {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    }
+  );
+};
 /* Patments API`s */
 export const addPayment = async (newPayment) => {
   return await axios.post(
@@ -163,6 +186,17 @@ export const addPayment = async (newPayment) => {
 export const getAllPayments = async () => {
   return await axios.get(
     "http://localhost:5000/api/payment/getPayment",
+
+    {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    }
+  );
+};
+export const getUnPaidSamples = async () => {
+  return await axios.get(
+    "http://localhost:5000/api/result/Results/ifPaied?isPaied=false",
 
     {
       headers: {

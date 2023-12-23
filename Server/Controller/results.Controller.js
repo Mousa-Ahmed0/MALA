@@ -79,12 +79,12 @@ module.exports.getResultsById = asyncHandler(async (req, res) => {
   let analysArray = [];
 
   //analyze id componet
-  // for (let i = 0; i < detailsAnalyze.resultSet.length; i++) {
-  const analyzeComp = await analyze.findById(
-    detailsAnalyze.resultSet[0].anlyzeId
-  );
-  analysArray.push(analyzeComp);
-  // }
+  for (let i = 0; i < detailsAnalyze.resultSet.length; i++) {
+    const analyzeComp = await analyze.findById(
+      detailsAnalyze.resultSet[i].anlyzeId
+    );
+    analysArray.push(analyzeComp);
+  }
   //user staff
   const usersStaff = await user
     .findOne({ ident: detailsAnalyze.staffIdent })
@@ -604,10 +604,45 @@ module.exports.isDoneEdit = asyncHandler(async (req, res) => {
  * @access private (staff or admin)
  * ------------------------------------------ */
 module.exports.isPaied = asyncHandler(async (req, res) => {
-  const isPaied = await analyzeResult.find({ isPaied: req.query.isPaied });
+  /* const isPaied = await analyzeResult.find({ isPaied: req.query.isPaied });
 
   if (isPaied.length)
     res.status(200).json({ "Number of  paied": isPaied.length, isPaied });
+  else res.status(404).json({ message: "Not repot " });*/
+  const isPaied = await analyzeResult.find({ isPaied: req.query.isPaied });
+  let usersArray = [];
+
+  if (isPaied.length) {
+    for (let i = 0; i < isPaied.length; i++) {
+      //user staff
+      const usersStaff = await user
+        .findOne({ ident: isPaied[i].staffIdent })
+        .select("firstname lastname -_id ");
+
+      //user patient
+      const usersPatint = await user
+        .findOne({ ident: isPaied[i].patientIdent })
+        .select("firstname lastname sex birthday -_id ");
+      //user doctor
+      let usersDoctor = null;
+      if (isPaied[i].doctorIdent != "")
+        usersDoctor = await user
+          .findOne({ ident: isPaied[i].doctorIdent })
+          .select("firstname lastname -_id");
+      // Create an object with the required properties
+      const userDetails = {
+        isPaied: isPaied[i],
+        usersPatient: usersPatint,
+        usersStaff: usersStaff,
+        usersDoctor: usersDoctor,
+      };
+      // Push the object to the array
+      usersArray.push(userDetails);
+    }
+    res.status(200).json({ usersArray });
+  }
+
+  if (isPaied.length) res.status(200).json({ isPaied });
   else res.status(404).json({ message: "Not repot " });
 });
 

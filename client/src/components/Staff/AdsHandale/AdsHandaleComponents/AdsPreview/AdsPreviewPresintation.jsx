@@ -1,32 +1,23 @@
-import React, { useEffect, useState } from "react";
-
+import React from "react";
+import BackBtn from "../../../../BackBtn";
 import SearchBar from "../../../../SearchBar/SearchBar";
-import UserFilter from "../../../../UserFilter/UserFilter";
 
-export default function NotPaidResultsPresintation({
-  darkMode,
-  apiMessage,
-  apiError,
-  noResults,
-  apiErrorMessage,
+export default function AdsPreviewPresintation({
   handaleSearchVlue,
-  filterOptions,
-  handaleFilterOption,
-  visibleResults,
-  displayResults,
+  darkMode,
+  visibleAds,
+  displayAds,
+  apiError,
+  apiErrorMessage,
+  noResults,
 }) {
   return (
-    <div className="ST-section my-2 p-0">
-      <div className="container">
-        <div className="row searchSection mb-5">
-          <div className="col-sm-12 col-md-8 d-flex align-items-center p-0">
+    <>
+      <BackBtn />
+      <div className="row my-5">
+        <div className="row">
+          <div className="col-lg-12">
             <SearchBar handaleSearchVlue={handaleSearchVlue} />
-          </div>
-          <div className="col-sm-12 col-md-4 d-flex justify-content-md-end align-items-center p-0">
-            <UserFilter
-              filterOptions={filterOptions}
-              handaleFilterOption={handaleFilterOption}
-            />
           </div>
         </div>
         <section className="px-4">
@@ -36,42 +27,29 @@ export default function NotPaidResultsPresintation({
                 <div className="card-body">
                   <div className="row">
                     <div
-                      className={`col-md-1 text-truncate text-muted p-0 ${
-                        darkMode ? " dark-theme" : ""
-                      }`}
-                    >
-                      Result #:
-                    </div>
-                    <div
                       className={`col-md-2 text-truncate text-muted p-0 ${
                         darkMode ? " dark-theme" : ""
                       }`}
                     >
-                      Patient Name:
+                      Ad #:
                     </div>
                     <div
-                      className={`col-md-2 text-truncate text-muted p-0 ${
+                      className={`col-md-4 text-truncate text-muted p-0 ${
                         darkMode ? " dark-theme" : ""
                       }`}
                     >
-                      Gender:
+                      Ad Title:
                     </div>
                     <div
                       className={`col-md-3 text-truncate text-muted p-0 ${
                         darkMode ? " dark-theme" : ""
                       }`}
                     >
-                      Doctor:
+                      Finish Date:
                     </div>
+
                     <div
-                      className={`col-md-1 text-truncate text-muted p-0 ${
-                        darkMode ? " dark-theme" : ""
-                      }`}
-                    >
-                      Analysis:
-                    </div>
-                    <div
-                      className={`col-md-3 d-flex justify-content-center text-truncate text-muted p-0 ${
+                      className={`col-md-3 text-truncate text-muted d-flex justify-content-center p-0 ${
                         darkMode ? " dark-theme" : ""
                       }`}
                     >
@@ -81,13 +59,13 @@ export default function NotPaidResultsPresintation({
                 </div>
               </div>
             </div>
-          </div>
-          <div className="row ">
-            {Array.isArray(visibleResults) && visibleResults.length > 0 ? (
-              displayResults()
+          </div>{" "}
+          <div className="row">
+            {Array.isArray(visibleAds) && visibleAds.length > 0 ? (
+              displayAds()
             ) : apiError ? (
               apiErrorMessage
-            ) : noResults ? (
+            ) : noResults || visibleAds.length === 0 ? (
               <div className="my-4 mid-bold">No results Found.</div>
             ) : (
               <div className="d-flex justify-content-center align-items-center my-4">
@@ -99,6 +77,6 @@ export default function NotPaidResultsPresintation({
           </div>
         </section>
       </div>
-    </div>
+    </>
   );
 }

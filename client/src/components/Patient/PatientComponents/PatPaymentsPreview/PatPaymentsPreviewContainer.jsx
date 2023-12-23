@@ -5,7 +5,7 @@ import { getPateinrPayments } from "../../../../apis/ApisHandale";
 import { Link } from "react-router-dom";
 import BackBtn from "../../../BackBtn";
 
-import FormateDate from "../../../FormateDate";
+import { formatDate } from "../../../../methods/FormateDate";
 import PaymentToPDF from "../../../PaymentToPDF";
 
 export default function PatPaymentsPreviewContainer({ setIsPdfLoading }) {
@@ -61,9 +61,7 @@ export default function PatPaymentsPreviewContainer({ setIsPdfLoading }) {
                   <p className="mb-0 text-truncate">{index + 1}:</p>
                 </div>
                 <div className="col-6 col-md-2 d-flex align-items-center p-0">
-                  <p className="mb-0 text-truncate">
-                    {<FormateDate date={p.date} />}
-                  </p>
+                  <p className="mb-0 text-truncate">{formatDate(p.date)}</p>
                 </div>
                 <div className="col-6 col-md-6 d-flex align-items-center p-0">
                   <p className="mb-0 text-truncate">

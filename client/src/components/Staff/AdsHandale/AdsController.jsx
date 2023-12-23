@@ -7,7 +7,7 @@ export default function AdsController() {
     {
       id: 1,
       text: "Preview",
-      path: "/Staff/ReportsController/ReportsPreview",
+      path: "/Staff/AdsController/AdsPreview",
     },
     {
       id: 2,

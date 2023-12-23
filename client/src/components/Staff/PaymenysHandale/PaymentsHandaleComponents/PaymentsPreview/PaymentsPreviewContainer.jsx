@@ -8,6 +8,7 @@ import {
   getPaymentsFiltered,
   getPaymentsFromTo,
 } from "../../../../../apis/ApisHandale";
+import { formatDate } from "../../../../../methods/FormateDate";
 export default function PaymentsPreviewContainer() {
   const { darkMode } = useDarkMode();
   const [isCustomeDate, setIsCustomeDate] = useState(false);
@@ -46,6 +47,7 @@ export default function PaymentsPreviewContainer() {
   async function getPayments() {
     try {
       let response = await getAllPayments();
+      console.log(response);
       setAllPayments(response.data.paumentArray);
       setVisiblePayments(response.data.paumentArray);
     } catch (error) {
@@ -58,20 +60,9 @@ export default function PaymentsPreviewContainer() {
     return visiblePayments.map((p, index) => {
       /// get date and formate it
       const dateString = p.payment.payDate;
-      const dateObject = new Date(dateString);
-      // Extract year, month, and day
-      const year = dateObject.getFullYear();
-      const month = (dateObject.getMonth() + 1).toString().padStart(2, "0"); // Months are zero-based
-      const day = dateObject.getDate().toString().padStart(2, "0");
 
       // Create the formatted date string as yy/mm/dd
-      const formDate = `${year}/${month}/${day}`;
-      //get all value needed - discounted + paid value -
-      const allValue = p.payment.discountedValue + p.payment.value;
-      // get discount perc
-      const percentage = Math.floor(
-        (p.payment.discountedValue / p.payment.value) * 100
-      );
+      const formDate = formatDate(new Date(dateString));
 
       return (
         <div key={index} className="col-lg-12">
@@ -99,7 +90,10 @@ export default function PaymentsPreviewContainer() {
                   <p className="mb-0 text-truncate">{formDate}</p>
                 </div>
                 <div className="col-sm-12 col-md-1 d-md-flex d-none align-items-center p-0">
-                  <p className="mb-0 text-truncate">{allValue}NIS</p>
+                  <p className="mb-0 text-truncate">
+                    {p.payment.totalValue}{" "}
+                    <span style={{ fontSize: "0.758rem" }}>NIS</span>
+                  </p>
                 </div>
                 <div className="col-2 col-md-3 d-flex justify-content-center justify-content-md-start  align-items-center p-0">
                   <p className="mb-0 text-truncate">
@@ -110,10 +104,15 @@ export default function PaymentsPreviewContainer() {
                 </div>
 
                 <div className="col-sm-12 col-md-1 d-md-flex d-none align-items-center p-0">
-                  <p className="mb-0 text-truncate">{percentage}%</p>
+                  <p className="mb-0 text-truncate">
+                    {p.payment.InsuranceCompPers}%
+                  </p>
                 </div>
                 <div className="col-sm-12 col-md-2 d-md-flex d-none align-items-center p-0">
-                  <p className="mb-0 text-truncate">{p.payment.value}NIS</p>
+                  <p className="mb-0 text-truncate">
+                    {p.payment.paiedvalue}{" "}
+                    <span style={{ fontSize: "0.758rem" }}>NIS</span>
+                  </p>
                 </div>
                 <div className="col-5 col-md-1 d-flex flex-row-reverse flex-md-row align-items-center">
                   <Link
@@ -302,6 +301,10 @@ export default function PaymentsPreviewContainer() {
     setFilterOption("noValue");
     setfillterdResults([]);
     setVal("");
+    setDateRange({
+      firstDate: "",
+      secondtDate: "",
+    });
   }
 
   /** ====================== Search Section ====================== **/
@@ -523,6 +526,7 @@ export default function PaymentsPreviewContainer() {
       val={val}
       handaleSearchVlue={handaleSearchVlue}
       srchFilterOption={srchFilterOption}
+      dateRange={dateRange}
     />
   );
 }

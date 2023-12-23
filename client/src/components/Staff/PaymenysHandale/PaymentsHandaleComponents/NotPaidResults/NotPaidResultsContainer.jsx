@@ -3,9 +3,9 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useDarkMode } from "../../../../../context/DarkModeContext";
-import { getAllResults } from "../../../../../apis/ApisHandale";
+import { getUnPaidSamples } from "../../../../../apis/ApisHandale";
 
-export default function NotPaidResultsContainer({ setIsFormOpen }) {
+export default function NotPaidResultsContainer({}) {
   const { darkMode } = useDarkMode();
 
   const [isUpdateFormOpen, setIsUpdateFormOpen] = useState(false);
@@ -31,10 +31,12 @@ export default function NotPaidResultsContainer({ setIsFormOpen }) {
     </div>
   );
 
+  /* *************** Handale Pop Forms *************** */
   //get all results
   async function getResults() {
     try {
-      let response = await getAllResults();
+      let response = await getUnPaidSamples();
+      console.log(response);
       setAllResults(response.data.usersArray);
       setVisibleResults(response.data.usersArray);
     } catch (error) {
@@ -79,26 +81,26 @@ export default function NotPaidResultsContainer({ setIsFormOpen }) {
                       ? result.usersDoctor.firstname +
                         " " +
                         result.usersDoctor.lastname
-                      : result.detailsAnalyze.doctorName.length > 0
-                      ? result.detailsAnalyze.doctorName
+                      : result.isPaied.doctorName.length > 0
+                      ? result.isPaied.doctorName
                       : "Not Found"}
                   </p>
                 </div>
                 <div className="col-sm-12 col-md-1 d-md-flex d-none align-items-center p-0">
                   <p className="mb-0 text-truncate">
-                    {result.detailsAnalyze.resultSet.length}
+                    {result.isPaied.resultSet.length}
                   </p>
                 </div>
 
                 <div className="col-5 col-md-3 d-flex flex-row-reverse flex-md-row align-items-center">
                   <div className="col-6 col-md-12 ">
                     <div className="row">
-                      <div className="col-6 col-md-7 d-flex justify-content-end align-items-center text-truncate">
-                        {result.detailsAnalyze.isDone ? (
+                      <div className="col-6 col-md-7 d-flex justify-content-end align-items-center">
+                        {result.isPaied.isDone ? (
                           <Link
                             style={{ cursor: "pointer" }}
                             className="position-relative nav-link mb-0 text-truncate"
-                            to={`/ResultDetails/${result.detailsAnalyze.id}`}
+                            to={`/ResultDetails/${result.isPaied.id}`}
                           >
                             Result Details
                           </Link>
@@ -106,9 +108,10 @@ export default function NotPaidResultsContainer({ setIsFormOpen }) {
                           "Not Ready!"
                         )}
                       </div>
-                      <div className="col-6 col-md-4 d-flex align-items-center justify-content-end">
+                      <div className="col-6 col-md-5 d-flex justify-content-end align-items-center">
                         <Link
-                          to={`/AddAPayment/${result.detailsAnalyze.id}`}
+                          to={`/AddAPayment/${result.isPaied.id}`}
+                          onClick={() => {}}
                           className="normal-btn btn d-flex justify-content-center align-items-center"
                         >
                           {" "}

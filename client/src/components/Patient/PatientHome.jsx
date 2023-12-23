@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import DashboardWelcome from "../DashboardWelcome";
-import FormateDate from "../FormateDate";
+import { formatDate } from "../../methods/FormateDate";
 import { useDarkMode } from "../../context/DarkModeContext";
 import { Link } from "react-router-dom";
 import { getPateinrPayments, getPateinrResults } from "../../apis/ApisHandale";
@@ -76,7 +76,7 @@ export default function PatientHome({ user, isPdfLoading, setIsPdfLoading }) {
             className="row detailes-size d-flex align-items-center my-4"
           >
             <div className="col-3 d-flex align-items-center text-truncate">
-              {<FormateDate date={result.detailsAnalyze.date} />}
+              {formatDate(result.detailsAnalyze.date)}
             </div>
             <div className="col-6 d-flex align-items-center">
               {result.detailsAnalyze.doctorName.length > 0
@@ -119,7 +119,7 @@ export default function PatientHome({ user, isPdfLoading, setIsPdfLoading }) {
             className="row maxHeight-inhert overflow-yAxis detailes-size my-4"
           >
             <div className="col-3 d-flex align-items-center text-truncate">
-              {<FormateDate date={payment.date} />}
+              {formatDate(payment.date)}
             </div>
             <div className="col-5 d-flex align-items-center">
               {payment.value}

@@ -1,6 +1,6 @@
 import React from "react";
 import BackBtn from "../../../../BackBtn";
-export default function AddResultPresintation({
+export default function EditResultPresintation({
   darkMode,
   result,
   setResult,
@@ -119,10 +119,6 @@ export default function AddResultPresintation({
                     Doctor Not Found?
                   </label>
                   <input
-                    style={{
-                      cursor:
-                        result.doctorIdent !== "0" ? "not-allowed" : "auto",
-                    }}
                     onChange={getResultData}
                     type="text"
                     name="doctorName"

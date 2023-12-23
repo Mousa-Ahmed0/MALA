@@ -1,31 +1,27 @@
-import AddResultPresintation from "./AddResultPresintation";
+import EditResultPresintation from "./EditResultPresintation";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useDarkMode } from "../../../../../context/DarkModeContext";
-import { addResult, getAllDoctor } from "../../../../../apis/ApisHandale";
+import {
+  addResult,
+  getAllDoctor,
+  getResultByID,
+} from "../../../../../apis/ApisHandale";
 
-import AnalyzeResult from "./AddResultComponents/AnalyzeResult";
-export default function AddResult() {
+import EditAnalyzeResult from "./EditResultComponents/EditAnalyzeResult";
+import { useParams } from "react-router";
+export default function EditResultContainer() {
   const { darkMode } = useDarkMode();
   const [isDone, setIsDone] = useState(false);
   let [errorList, setErrorList] = useState([]);
   let [apiMessage, setApiMessage] = useState("");
   let [apiError, setApiError] = useState(false);
-  const [result, setResult] = useState({
-    isDone: true,
-    isPaied: false,
-    staffIdent: 0,
-    patientIdent: 0,
-    doctorIdent: 0,
-    doctorName: "",
-    date: new Date(),
-    resultSet: [],
-  });
+  const [result, setResult] = useState({});
   const [anlysisNo, setAnlysisNo] = useState(1);
   const [resultSet, setResultSet] = useState([]);
   //doctors
   const [allDoctors, setAllDoctors] = useState([]);
-  const [doctorSelected, setDoctorSelected] = useState(false);
+  const { id } = useParams();
 
   async function getAllDoctors() {
     try {
@@ -39,19 +35,25 @@ export default function AddResult() {
       console.error("Error From getAllDoctors: ", error);
     }
   }
+
+  async function getResult() {
+    try {
+      const response = await getResultByID(id);
+      setResult(response.data.detailsAnalyze);
+      console.log(response);
+    } catch (error) {
+      console.error("Error from getResult to edit: ", error);
+    }
+  }
   //get result details from inputs
   function getResultData(e) {
     setApiMessage("");
     setIsDone(false);
-
     if (e.target.name === "a_no") {
       setAnlysisNo(e.target.value);
     } else {
       let newResult = { ...result };
       newResult[e.target.name] = e.target.value;
-      if (e.target.name === "doctorIdent") {
-        newResult.doctorName = "";
-      }
       setResult(newResult);
     }
   }
@@ -102,7 +104,8 @@ export default function AddResult() {
     if (allDoctors.length === 0) {
       return <option value={0}>Loading...</option>;
     }
-    //
+
+    ///////////////////
     return (
       <>
         <option value={0}>Not Found</option>
@@ -131,7 +134,7 @@ export default function AddResult() {
           </div>
           <div className="row d-flex my-4 flex-column flex-md-row">
             <div className="col-12">
-              <AnalyzeResult
+              <EditAnalyzeResult
                 darkMode={darkMode}
                 isDone={isDone}
                 setIsDone={setIsDone}
@@ -155,6 +158,7 @@ export default function AddResult() {
 
   ///////////////////
   useEffect(() => {
+    getResult();
     getAllDoctors();
   }, []);
   useEffect(() => {
@@ -167,7 +171,7 @@ export default function AddResult() {
 
   return (
     <>
-      <AddResultPresintation
+      <EditResultPresintation
         darkMode={darkMode}
         result={result}
         setResult={setResult}
