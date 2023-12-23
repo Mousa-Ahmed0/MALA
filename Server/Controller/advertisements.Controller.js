@@ -87,6 +87,19 @@ module.exports.getAdvert = asyncHandler(async (req, res) => {
 });
 
 /**--------------------------------
+ * @desc   get  advertisements by _id
+ * @router /api/advertisements/getAdvertisTd/:id
+ * @method GET
+ * @access private (only logged in admin)
+ * ------------------------------------------ */
+module.exports.getAdvertId = asyncHandler(async (req, res) => {
+  let allAdv = await Advertisement.findById(req.params.id);
+  if (allAdv) res.status(201).json({ message: "done.........", allAdv });
+  else return res.status(400).json({ message: "dose not exist" });
+});
+
+
+/**--------------------------------
  * @desc     update advertisements
  * @router /api/advertisements/updateAdverti
  * @method PUT

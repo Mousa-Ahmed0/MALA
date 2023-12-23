@@ -56,14 +56,17 @@ module.exports.getPayment = asyncHandler(async (req, res) => {
   if (getPayment.length) {
     let count = 0;
     for (let i = 0; i < getPayment.length; i++) {
-      const userinfo = await user.findOne({
-        ident: getPayment[i].identPatient,
-      }).select('-password');
+
       const dayOfWeek = getPayment[i].payDate.getDay(); //find day
       const dayName = daysOfWeek[dayOfWeek]; //find name of day
 
-      const resultInfo = await analyzeResult.findById(getPayment[i].resultId).select('-password');
-      // getPayment[i].resultId
+      const resultInfo = await analyzeResult.findById(getPayment[i].resultId);
+      console.log(resultInfo);
+      console.log(getPayment[i].resultId);
+      const userinfo = await user.findOne({
+        ident: resultInfo.patientIdent,
+      }).select('-password');
+      getPayment[i].resultId
       const pymentDetails = {
         day: dayName,
         date: getPayment[i].payDate,
@@ -125,7 +128,7 @@ module.exports.getPaymentIdentPatient = asyncHandler(async (req, res) => {
   if (getPayment.length) {
     let count = 0;
     for (let i = 0; i < getPayment.length; i++) {
-      const resultInfo = await analyzeResult.findById(getPayment[i].resultId).select('-password');
+      const resultInfo = await analyzeResult.findById(getPayment[i].resultId);
       const identPat = resultInfo.patientIdent;
       if (identPat == req.query.identPatient) {
         const userinfo = await user.findOne({ ident: identPat }).select('-password');
@@ -179,7 +182,7 @@ module.exports.getPaymentId = asyncHandler(async (req, res) => {
     const dayOfWeek = getPayment.payDate.getDay(); //find day
     const dayName = daysOfWeek[dayOfWeek]; //find name of day
 
-    const resultInfo = await analyzeResult.findById(getPayment.resultId).select('-password');
+    const resultInfo = await analyzeResult.findById(getPayment.resultId);
 
     const identPat = resultInfo.patientIdent;
     const userinfo = await user.findOne({ ident: identPat }).select('-password');
@@ -224,14 +227,14 @@ module.exports.getByDate = asyncHandler(async (req, res) => {
   if (getPayment.length) {
     let count = 0;
     for (let i = 0; i < getPayment.length; i++) {
-      const userinfo = await user.findOne({
-        ident: getPayment[i].identPatient,
-      }).select('-password');
+
       const dayOfWeek = getPayment[i].payDate.getDay(); //find day
       const dayName = daysOfWeek[dayOfWeek]; //find name of day
 
       const resultInfo = await analyzeResult.findById(getPayment[i].resultId).select('-password');
-
+      const userinfo = await user.findOne({
+        ident: resultInfo.patientIdent,
+      }).select('-password');
       const pymentDetails = {
         day: dayName,
         date: getPayment[i].payDate,
@@ -281,13 +284,14 @@ module.exports.getFromToDate = asyncHandler(async (req, res) => {
   if (getAllPayment.length) {
     let count = 0;
     for (let i = 0; i < getAllPayment.length; i++) {
-      const userinfo = await user.findOne({
-        ident: getAllPayment[i].identPatient,
-      }).select('-password');
+
       const dayOfWeek = getAllPayment[i].payDate.getDay(); //find day
       const dayName = daysOfWeek[dayOfWeek]; //find name of day
 
-      const resultInfo = await analyzeResult.findById(getAllPayment[i].resultId).select('-password');
+      const resultInfo = await analyzeResult.findById(getAllPayment[i].resultId);
+      const userinfo = await user.findOne({
+        ident: resultInfo.patientIdent,
+      }).select('-password');
       const pymentDetails = {
         day: dayName,
         date: getAllPayment[i].payDate,
@@ -342,13 +346,13 @@ module.exports.test = asyncHandler(async (req, res) => {
     if (getAllPayment.length) {
       let count = 0;
       for (let i = 0; i < getAllPayment.length; i++) {
-        const userinfo = await user.findOne({
-          ident: getAllPayment[i].identPatient,
-        }).select('-password');
         const dayOfWeek = getAllPayment[i].payDate.getDay(); //find day
         const dayName = daysOfWeek[dayOfWeek]; //find name of day
 
-        const resultInfo = await analyzeResult.findById(getAllPayment[i].resultId).select('-password');
+        const resultInfo = await analyzeResult.findById(getAllPayment[i].resultId);
+        const userinfo = await user.findOne({
+          ident: resultInfo.patientIdent,
+        }).select('-password');
         const pymentDetails = {
           day: dayName,
           date: getAllPayment[i].payDate,
@@ -385,13 +389,15 @@ module.exports.test = asyncHandler(async (req, res) => {
     if (getAllPayment.length) {
       let count = 0;
       for (let i = 0; i < getAllPayment.length; i++) {
-        const userinfo = await user.findOne({
-          ident: getAllPayment[i].identPatient,
-        }).select('-password');
+
         const dayOfWeek = getAllPayment[i].payDate.getDay(); //find day
         const dayName = daysOfWeek[dayOfWeek]; //find name of day
 
-        const resultInfo = await analyzeResult.findById(getAllPayment[i].resultId).select('-password');
+        const resultInfo = await analyzeResult.findById(getAllPayment[i].resultId);
+        const userinfo = await user.findOne({
+          ident: resultInfo.patientIdent,
+        }).select('-password');
+
         const pymentDetails = {
           day: dayName,
           date: getAllPayment[i].payDate,

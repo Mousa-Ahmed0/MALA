@@ -24,10 +24,12 @@ const {
   isDoneEdit,
   isPaiedEdit,
   getAllResultsById,
+  editResult,
 } = require("../Controller/results.Controller");
 
 // results
 router.post("/addResults", ifAdminOrStaff, addResults);
+router.put("/editResults/:id", ifAdminOrStaff, editResult);
 router.get("/getResult", ifAdminOrStaff, getResults);
 router.get("/getResults/staffIdent", ifAdminOrStaff, getResultsByIdStaff);
 router.get("/getResults/resultDate", ifAdminOrStaff, resultDate);

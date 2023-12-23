@@ -24,6 +24,28 @@ module.exports.addResults = asyncHandler(async (req, res) => {
   //send a response to client
   res.status(201).json({ newResult, message: "done..........." });
 });
+/**--------------------------------
+ * @desc edit result
+ * @router /api/result/editResults
+ * @method post
+ * @access  (staff or admin)
+ * ------------------------------------------ */
+module.exports.editResult = asyncHandler(async (req, res) => {
+  //vaildatin fronend
+  const editRes=await analyzeResult.findByIdAndUpdate(req.params.id,{
+    staffIdent: req.body.staffIdent,
+    date: req.body.date,
+    doctorIdent: req.body.doctorIdent,
+    doctorName: req.body.doctorName,
+    resultSet: req.body.resultSet,
+  },{new:true});
+  if (!editRes) {
+    return res.status(404).json({ message: "Document not found" });
+  }
+
+  res.status(200).json({ editRes, message: "Update successful" });
+
+});
 
 /**--------------------------------
  * @desc get resuls
@@ -52,6 +74,9 @@ module.exports.getResults = asyncHandler(async (req, res) => {
       usersDoctor = await user
         .findOne({ ident: detailsAnalyze[i].doctorIdent })
         .select("firstname lastname -_id");
+    else {
+      usersDoctor = detailsAnalyze[i].doctorName;
+    }
     // Create an object with the required properties
     const userDetails = {
       detailsAnalyze: detailsAnalyze[i],
@@ -101,10 +126,9 @@ module.exports.getResultsById = asyncHandler(async (req, res) => {
       .findOne({ ident: detailsAnalyze.doctorIdent })
       .select("firstname lastname -_id");
 
-  if (detailsAnalyze.doctorIdent != "")
-    usersDoctor = await user
-      .findOne({ ident: detailsAnalyze.doctorIdent })
-      .select("firstname lastname -_id");
+  else {
+    usersDoctor = detailsAnalyze[i].doctorName;
+  }
 
   //send a response to client
   res.status(201).json({
@@ -127,10 +151,15 @@ module.exports.getAllResultsById = asyncHandler(async (req, res) => {
   const detailsAnalyze = await analyzeResult.findById(req.params.id);
   if (detailsAnalyze) {
     let allId = []; //get all analyze id from req.params.id
-    detailsAnalyze.resultSet.forEach((index) => {
+    let analyzComponent = [];
+
+    detailsAnalyze.resultSet.forEach(async(index) => {
+      let analyzeComp = await analyze.findById(index.anlyzeId);
+      analyzComponent.push(analyzeComp);
       allId.push(index.anlyzeId.toString());
     });
-    console.log(allId);
+
+       console.log(allId);
     const patIdent = detailsAnalyze.patientIdent; //patientIdent form req.params.id
 
     const allResult = await analyzeResult.find({ patientIdent: patIdent });
@@ -159,26 +188,27 @@ module.exports.getAllResultsById = asyncHandler(async (req, res) => {
       }
       const resultDate = detailsAnalyze.date;
       //loop on id
-      allId.forEach((index) => {
+      allId.forEach(async (index) => {
         const analyzeId = index;
 
-        allResult.forEach(async (index) => {
+        allResult.forEach(async (ind) => {
           //for of resultSet to get result
-          index.resultSet.forEach((index) => {
+          ind.resultSet.forEach(async (ele) => {
             //for of result to get anlyzeId
-            if (index.anlyzeId == analyzeId) {
+            if (ele.anlyzeId == analyzeId) {
               const userDetails = {
-                date: index.date,
-                result: index,
+                date: "ele.date",
+                result: ele,
               };
               userAnalyze.push(userDetails);
             }
           });
         });
-      });
 
+      });
       //send a response to client
       res.status(201).json({
+        analyzComponent,
         resultDate,
         usersStaff,
         usersDoctor,
@@ -219,6 +249,9 @@ module.exports.getResultsByIdStaff = asyncHandler(async (req, res) => {
         usersDoctor = await user
           .findOne({ ident: detailsAnalyze[i].doctorIdent })
           .select("firstname lastname -_id");
+      else {
+        usersDoctor = detailsAnalyze[i].doctorName;
+      }
       // Create an object with the required properties
       const userDetails = {
         detailsAnalyze: detailsAnalyze[i],
@@ -268,6 +301,9 @@ module.exports.getResultsPatient = asyncHandler(async (req, res) => {
         usersDoctor = await user
           .findOne({ ident: detailsAnalyze[i].doctorIdent })
           .select("firstname lastname -_id");
+      else {
+        usersDoctor = detailsAnalyze[i].doctorName;
+      }
       // Create an object with the required properties
       const userDetails = {
         detailsAnalyze: detailsAnalyze[i],
@@ -564,6 +600,9 @@ module.exports.isDone = asyncHandler(async (req, res) => {
         usersDoctor = await user
           .findOne({ ident: isDone[i].doctorIdent })
           .select("firstname lastname -_id");
+      else {
+        usersDoctor = isPaied[i].doctorName;
+      }
       // Create an object with the required properties
       const userDetails = {
         isDone: isDone[i],
@@ -613,6 +652,7 @@ module.exports.isPaied = asyncHandler(async (req, res) => {
   const isPaied = await analyzeResult.find({ isPaied: req.query.isPaied });
   let usersArray = [];
 
+
   if (isPaied.length) {
     for (let i = 0; i < isPaied.length; i++) {
       //user staff
@@ -630,6 +670,9 @@ module.exports.isPaied = asyncHandler(async (req, res) => {
         usersDoctor = await user
           .findOne({ ident: isPaied[i].doctorIdent })
           .select("firstname lastname -_id");
+      else {
+        usersDoctor = isPaied[i].doctorName;
+      }
       // Create an object with the required properties
       const userDetails = {
         isPaied: isPaied[i],
@@ -643,7 +686,6 @@ module.exports.isPaied = asyncHandler(async (req, res) => {
     res.status(200).json({ usersArray });
   }
 
-  if (isPaied.length) res.status(200).json({ isPaied });
   else res.status(404).json({ message: "Not repot " });
 });
 
