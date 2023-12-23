@@ -155,11 +155,18 @@ module.exports.getAllResultsById = asyncHandler(async (req, res) => {
         usersDoctor = await user
           .findOne({ ident: detailsAnalyze.doctorIdent })
           .select("firstname lastname -_id");
+      else{
+        usersDoctor=detailsAnalyze.doctorName;
+      }
+      const resultDate=detailsAnalyze.date;
       //loop on id
       allId.forEach((index) => {
         const analyzeId = index;
 
         allResult.forEach(async (index) => {//for of resultSet to get result
+          //date
+          //index.date
+          console.log(index.date);
           index.resultSet.forEach((index) => {//for of result to get anlyzeId
             if (index.anlyzeId == analyzeId) {
               const userDetails = {
@@ -174,7 +181,7 @@ module.exports.getAllResultsById = asyncHandler(async (req, res) => {
       });
 
       //send a response to client
-      res.status(201).json({
+      res.status(201).json({resultDate,
         usersStaff, usersDoctor,
         usersPatint, userAnalyze,
         message: "done...........",
