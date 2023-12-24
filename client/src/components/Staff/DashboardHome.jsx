@@ -288,17 +288,22 @@ export default function DashboardHome({ user }) {
               </span>
               <h1 className=" h5 m-0">Important Notes:</h1>
             </div>
+            <hr className="my-3" />
             {unpreperdSambles === 0 && unPaymentResults === 0 ? (
-              <div className="row detailes-size d-flex align-items-center mt-3 mb-4">
+              <div className="row home-size d-flex align-items-center mt-3 mb-4 high-bold colorMain">
                 You are Finished!
               </div>
             ) : (
               ""
             )}
             {unpreperdSambles !== 0 ? (
-              <div className="row detailes-size d-flex align-items-center mt-3 mb-4">
+              <div className="row home-size d-flex align-items-center mt-3 mb-4">
                 <div className="col-10">
-                  You Have {unpreperdSambles} Sambles Not Ready Yet!
+                  You Have{" "}
+                  <span className="high-bold colorMain">
+                    {unpreperdSambles}
+                  </span>{" "}
+                  Sambles Not Ready Yet!
                 </div>
                 <div className="col-2 d-flex justify-content-end">
                   <Link
@@ -313,9 +318,13 @@ export default function DashboardHome({ user }) {
               ""
             )}
             {unPaymentResults !== 0 ? (
-              <div className="row detailes-size d-flex align-items-center mt-3 mb-4">
+              <div className="row home-size d-flex align-items-center mt-3 mb-4">
                 <div className="col-10">
-                  You Have {unPaymentResults} Samples didnt payed yet!
+                  You Have{" "}
+                  <span className="high-bold colorMain">
+                    {unPaymentResults}
+                  </span>{" "}
+                  Samples didnt payed yet!
                 </div>
                 <div className="col-2 d-flex justify-content-end">
                   <Link
