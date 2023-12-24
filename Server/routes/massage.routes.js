@@ -17,7 +17,7 @@ router.get("/countRead", ifAdmin, countIfRead);
 router.get("/getAllMassage", ifAdmin, getAllMass);
 router.put("/ifReady/:id",validateObjectId, verifyToken, editIfReady);
 router.delete("/deleteMassage/:id", validateObjectId, verifyToken, deleteMass);
-router.get("/getMassage", verifyToken, getMass);
-router.get("/getUserMassage/:id", getUserMass);
+// router.get("/getMassage", verifyToken, getMass);
+router.get("/getUserMassage/:id",validateObjectId, verifyToken, getUserMass);
 
 module.exports = router;

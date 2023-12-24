@@ -99,14 +99,14 @@ module.exports.getAllMass = asyncHandler(async (req, res) => {
  * @method GET
  * @access public
  * ------------------------------------------ */
-module.exports.getMass = asyncHandler(async (req, res) => {
-  const newMass = await Massage.find({ firstUser: req.user.id })
-    .populate("firstUser", ["-password"])
-    .sort({ createdAt: 1 });
-  //.populate('secondUser', ['-password'])
-  if (newMass) return res.status(200).json(newMass);
-  else return res.status(400).json({ massage: "Massage dose not exist" });
-});
+// module.exports.getMass = asyncHandler(async (req, res) => {
+//   const newMass = await Massage.find({ firstUser: req.user.id })
+//     .populate("firstUser", ["-password"])
+//     .sort({ createdAt: 1 });
+//   //.populate('secondUser', ['-password'])
+//   if (newMass) return res.status(200).json(newMass);
+//   else return res.status(400).json({ massage: "Massage dose not exist" });
+// });
 /**--------------------------------
  * @desc get Massage
  * @router /api/massage/getUserMassage/:id
@@ -119,7 +119,16 @@ module.exports.getUserMass = asyncHandler(async (req, res) => {
     .populate("firstUser", ["-password"])
     .sort({ createdAt: -1 });
   //.populate('secondUser', ['-password'])
-  if (newMass) return res.status(200).json(newMass);
+  if (newMass) {
+    if (newMass.firstUser.equals(req.user.id)) {
+      newMass.ifReadyFirstUser = true;
+      await newMass.save();
+    } else if (newMass.secondUser.equals(req.user.id)) {
+      newMass.ifReadySecondUser = true;
+      await newMass.save();
+    }
+    return res.status(200).json(newMass);
+  }
   else return res.status(400).json({ massage: "Massage dose not exist" });
 });
 
