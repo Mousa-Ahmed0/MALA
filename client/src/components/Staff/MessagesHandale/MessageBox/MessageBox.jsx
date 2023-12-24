@@ -68,7 +68,7 @@ export default function MessageBox({ darkMode }) {
           >
             <i
               class={`fa-solid fa-circle-chevron-right ${
-                !message.ifReady ? "fa-beat-fade" : ""
+                !message.ifReadySecondUser ? "fa-beat-fade" : ""
               }`}
             ></i>
           </Link>
