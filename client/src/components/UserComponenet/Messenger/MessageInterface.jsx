@@ -50,7 +50,7 @@ export default function MessageInterface({ user, darkMode }) {
                 user={user}
                 formatDate={formatDate}
                 scrollToBottom={scrollToBottom}
-                userId={id}
+                messageId={id}
               />
             ) : (
               <UsersMessageInterface

@@ -1,18 +1,18 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import BackBtn from "../../../BackBtn";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 export default function LabMessageInterface({
   user,
   darkMode,
   formatDate,
   scrollToBottom,
-  userId,
+  messageId,
 }) {
   const messagesContainerRef = useRef(null);
   const [message, setMessage] = useState({
     massage: "",
-    recvId: "",
+    secondUser: "",
   });
   const [allMessages, setAllMessages] = useState();
   const [noResults, setNoResults] = useState(false);
@@ -44,7 +44,7 @@ export default function LabMessageInterface({
       );
       setMessage({
         massage: "",
-        recvId: "",
+        secondUser: "",
       });
       await getMessages();
     } catch (error) {
@@ -56,19 +56,18 @@ export default function LabMessageInterface({
   async function getMessages() {
     try {
       let response = await axios.get(
-        `http://localhost:5000/api/massage/getUserMassage/${userId}`,
+        `http://localhost:5000/api/massage/getUserMassage/${messageId}`,
         {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         }
       );
-      if (response.data.length === 0) setNoResults(true);
-      else {
-        setMessage({
-          massage: "",
-          recvId: response.data.senderId.id,
-        });
-        setAllMessages(response.data);
-      }
+      console.log(response);
+      setAllMessages(response.data);
+      if (response.data.massage.length === 0) setNoResults(true);
+      setMessage({
+        massage: "",
+        secondUser: response.data.firstUser.id,
+      });
     } catch (error) {
       console.error("Error from getting Message by Id: ", error);
     }
@@ -156,7 +155,11 @@ export default function LabMessageInterface({
     scrollToBottom(messagesContainerRef);
     //Make Messages Read
     //msgReaded();
+    console.log(allMessages);
   }, [allMessages]);
+  useEffect(() => {
+    console.log(message);
+  }, [message]);
   return (
     <>
       <div className="my-4 d-flex flex-column align-items-center justify-content-center">
@@ -169,20 +172,20 @@ export default function LabMessageInterface({
               className="nav-profile-img mx-2"
               src={
                 allMessages
-                  ? allMessages.senderId.profilePhoto.url
+                  ? allMessages.firstUser.profilePhoto.url
                   : "https://placehold.it/1321x583?text=Loading"
               }
               alt="nav-profile-img"
               style={{ objectFit: "cover" }}
             />
             <Link
-              to={`/Profile/${allMessages ? allMessages.senderId.id : ""}`}
+              to={`/Profile/${allMessages ? allMessages.firstUser.id : ""}`}
               className="pt-1 nav-item nav-link position-relative m-0 mid-bold text-truncate"
             >
               {allMessages
-                ? allMessages.senderId.firstname +
+                ? allMessages.firstUser.firstname +
                   " " +
-                  allMessages.senderId.lastname
+                  allMessages.firstUser.lastname
                 : "User Name"}
             </Link>
           </div>
