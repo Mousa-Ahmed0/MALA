@@ -85,8 +85,6 @@ export default function DashboardHome({ user }) {
     <div className="ST-section ST-Dashboard">
       <DashboardWelcome user={user} />
       <hr className="my-4" />
-      <AdsSection darkMode={darkMode} />
-      <hr className="my-4" />
       <div className="d-flex flex-column flex-md-row justify-content-between align-items-center gap-4 my-4">
         <div
           className={`w-100 ${darkMode ? " spic-dark-mode" : "bg-white"} p-4`}
@@ -234,7 +232,7 @@ export default function DashboardHome({ user }) {
         </div>
       </div>
       <hr className="my-4" />
-      {/*<div className="row maxHeight-part">
+      <div className="row maxHeight-part">
         <div
           className={`p-4 col-12 col-md-7 ${
             darkMode ? " spic-dark-mode" : " bg-white"
@@ -249,25 +247,18 @@ export default function DashboardHome({ user }) {
           }`}
         >
           <div className="row align-items-center">
-            <div className="col-10 d-flex gap-2">
+            <div className="col-12 d-flex gap-2">
               <span className=" h5 m-0 colorMain">
                 <i class="fa-solid fa-inbox"></i>
               </span>
-              <h1 className=" h5 m-0">Recent Messages:</h1>
-            </div>
-            <div className="col-2 d-flex justify-content-end colorMain">
-              <h1 className="h3  m-0">
-                {nonReadNo === 0 ? (
-                  "All Message Readed!"
-                ) : (
-                  <div className=" mid-bold">+{nonReadNo} </div>
-                )}
-              </h1>
+              <h1 className=" h5 m-0">Important Notes:</h1>
             </div>
           </div>
           <MessageBox darkMode={darkMode} />
         </div>
-      </div>*/}
+      </div>
+      <hr className="my-4" />
+      <AdsSection darkMode={darkMode} />
     </div>
   );
 }

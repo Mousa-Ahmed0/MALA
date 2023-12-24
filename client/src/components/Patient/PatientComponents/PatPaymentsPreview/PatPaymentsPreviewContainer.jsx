@@ -65,7 +65,7 @@ export default function PatPaymentsPreviewContainer({ setIsPdfLoading }) {
                 </div>
                 <div className="col-6 col-md-6 d-flex align-items-center p-0">
                   <p className="mb-0 text-truncate">
-                    {p.payment.value}
+                    {p.payment.paiedvalue}
                     <span style={{ fontSize: "0.758rem" }}>NIS</span>
                   </p>
                 </div>
@@ -160,14 +160,14 @@ export default function PatPaymentsPreviewContainer({ setIsPdfLoading }) {
                           darkMode ? " dark-theme" : ""
                         }`}
                       >
-                        Result #:
+                        Pay #:
                       </div>
                       <div
                         className={`col-md-2 text-truncate text-muted p-0 ${
                           darkMode ? " dark-theme" : ""
                         }`}
                       >
-                        Paiymnet Date:
+                        Paymnet Date:
                       </div>
                       <div
                         className={`col-md-6 text-truncate text-muted p-0 ${

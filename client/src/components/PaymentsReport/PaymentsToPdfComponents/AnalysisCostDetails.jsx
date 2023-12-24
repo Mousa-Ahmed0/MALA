@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function PatientDetailsHeader({ info, day, date, darkMode }) {
+export default function AnalysisCostDetails({ info, day, date, darkMode }) {
   return (
     <>
       <div className="d-flex justify-content-between">

@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import DashboardWelcome from "../DashboardWelcome";
-import { formatDate } from "../../methods/FormateDate";
+import { formatDateWithouHour } from "../../methods/FormateDate";
 import { useDarkMode } from "../../context/DarkModeContext";
 import { Link } from "react-router-dom";
 import { getPateinrPayments, getPateinrResults } from "../../apis/ApisHandale";
 import AdsSection from "../UserComponenet/Ads/AdsSection";
 import PaymentToPDF from "../PaymentToPDF";
-export default function PatientHome({ user, isPdfLoading, setIsPdfLoading }) {
-  const hiddenDivRef = useRef(null);
+export default function PatientHome({ user, setIsPdfLoading }) {
   const { darkMode } = useDarkMode();
   const [allResults, setAllResults] = useState([]);
   const [resultError, setResultError] = useState(false);
@@ -24,41 +23,12 @@ export default function PatientHome({ user, isPdfLoading, setIsPdfLoading }) {
     </div>
   );
 
-  // to pdf
-  const [loader, setLoader] = useState(false);
-  //download
-  /*const downloadPDF = () => {
-    const capture = print-section;
-    capture.style.padding = "20px 100px"; // Padding
-
-    setLoader(true);
-    html2canvas(capture).then((canvas) => {
-      const imgData = canvas.toDataURL("img/png");
-      const doc = new jsPDF("p", "px", "a4");
-      const componentWidth = doc.internal.pageSize.getWidth();
-      const componentHeight = doc.internal.pageSize.getHeight();
-
-      doc.setFontSize(12);
-
-      doc.addImage(
-        imgData,
-        "PNG",
-        0,
-        0,
-        componentWidth * 1,
-        componentHeight * 0.4
-      );
-      setLoader(false);
-      doc.save("receipt.pdf");
-    });
-  };*/
-
   //get patient results
   async function getResults() {
     try {
       let response = await getPateinrResults({ patientIdent: user.ident });
       setAllResults(response.data.usersArray);
-      console.log(response);
+      //console.log("Results", response);
       setResultError(false);
     } catch (error) {
       setResultError(true);
@@ -76,12 +46,14 @@ export default function PatientHome({ user, isPdfLoading, setIsPdfLoading }) {
             className="row detailes-size d-flex align-items-center my-4"
           >
             <div className="col-3 d-flex align-items-center text-truncate">
-              {formatDate(result.detailsAnalyze.date)}
+              {formatDateWithouHour(result.detailsAnalyze.date)}
             </div>
             <div className="col-6 d-flex align-items-center">
               {result.detailsAnalyze.doctorName.length > 0
                 ? result.detailsAnalyze.doctorName
-                : result.usersDoctor.fname + " " + result.usersDoctor.lastname}
+                : result.usersDoctor.firstname +
+                  " " +
+                  result.usersDoctor.lastname}
             </div>
             <div className="col-3 d-flex align-items-center">
               <Link
@@ -101,6 +73,7 @@ export default function PatientHome({ user, isPdfLoading, setIsPdfLoading }) {
   async function getPayments() {
     try {
       let response = await getPateinrPayments({ identPatient: user.ident });
+      console.log("Payments", response);
       setAllPayments(response.data.paumentArray);
       setPaymentError(false);
     } catch (error) {
@@ -111,18 +84,15 @@ export default function PatientHome({ user, isPdfLoading, setIsPdfLoading }) {
 
   //display patient results
   function displayPayments() {
-    return allPayments.map((payment, index) => {
+    return allPayments.map((p, index) => {
       return (
         <>
-          <div
-            key={index}
-            className="row maxHeight-inhert overflow-yAxis detailes-size my-4"
-          >
+          <div key={index} className="row overflow-yAxis detailes-size my-4">
             <div className="col-3 d-flex align-items-center text-truncate">
-              {formatDate(payment.date)}
+              {formatDateWithouHour(p.date)}
             </div>
             <div className="col-5 d-flex align-items-center">
-              {payment.value}
+              {p.payment.paiedvalue}
               <span style={{ fontSize: "0.758rem" }}>NIS</span>
             </div>
             <div className="col-4 d-flex justify-content-center align-items-center gap-4">
@@ -130,6 +100,7 @@ export default function PatientHome({ user, isPdfLoading, setIsPdfLoading }) {
                 <i class="fa-solid fa-eye"></i>
               </Link>
               <PaymentToPDF
+                paymentDetails={p}
                 darkMode={darkMode}
                 setIsPdfLoading={setIsPdfLoading}
               />
@@ -168,7 +139,7 @@ export default function PatientHome({ user, isPdfLoading, setIsPdfLoading }) {
               <div className="col-md-6 mid-bold">Doctor:</div>
               <div className="col-md-3 mid-bold">More:</div>
             </div>
-            <div className=" maxHeight-part overflow-yAxis ">
+            <div className=" overflow-yAxis  maxHeight-part">
               {allResults.length !== 0 ? (
                 displayResults()
               ) : resultError ? (
@@ -181,6 +152,7 @@ export default function PatientHome({ user, isPdfLoading, setIsPdfLoading }) {
                 </div>
               )}
             </div>
+            <hr className="my-4" />
             <div className="d-flex justify-content-end mt-4">
               <Link
                 to={`/Patient/ResultsPreview/${user.ident}`}
@@ -208,17 +180,21 @@ export default function PatientHome({ user, isPdfLoading, setIsPdfLoading }) {
               <div className="col-md-6 mid-bold">Paid Value:</div>
               <div className="col-md-3 mid-bold">More:</div>
             </div>
-            {allPayments.length !== 0 ? (
-              displayPayments()
-            ) : paymentError ? (
-              apiErrorMessage
-            ) : (
-              <div className="d-flex justify-content-center align-items-center">
-                <div className="spinner-border text-primary" role="status">
-                  <span className="sr-only">Loading...</span>
+            <div className=" overflow-yAxis  maxHeight-part">
+              {allPayments.length !== 0 ? (
+                displayPayments()
+              ) : paymentError ? (
+                apiErrorMessage
+              ) : (
+                <div className="d-flex justify-content-center align-items-center">
+                  <div className="spinner-border text-primary" role="status">
+                    <span className="sr-only">Loading...</span>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
+
+            <hr className="my-4" />
             <div className="d-flex justify-content-end mt-4">
               <Link
                 to={`/Patient/PaymentsReview/${user.ident}`}

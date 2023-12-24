@@ -40,8 +40,10 @@ export default function AddAPayment() {
         response.data.analysArray.map((anlyze, index) => {
           tempTotalValue += anlyze.cost;
           tempResultCostDetils.push({
-            aName: anlyze.name + " " + "(" + anlyze.code + ")",
-            aCost: anlyze.cost,
+            anlayzeCost: {
+              aName: anlyze.name + " " + "(" + anlyze.code + ")",
+              aCost: anlyze.cost,
+            },
           });
         });
         setPayment({

@@ -425,8 +425,11 @@ table {
 
 /* Search Section */
 .pdf-pay-section {
+  min-width: 100rem !important;
   position: absolute !important;
   left: -9999999999px;
+  size: 7in 9.25in;
+  margin: 27mm 16mm 27mm 16mm;
 }
 select {
   height: calc(var(--height-form) + 8px) !important;

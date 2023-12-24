@@ -66,7 +66,7 @@ export default function PatResultsPreviewContainer() {
                   <p className="mb-0 text-truncate">
                     {result.detailsAnalyze.doctorName.length > 0
                       ? result.detailsAnalyze.doctorName
-                      : result.usersDoctor.fname +
+                      : result.usersDoctor.firstname +
                         " " +
                         result.usersDoctor.lastname}
                   </p>

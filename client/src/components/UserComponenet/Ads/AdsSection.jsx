@@ -29,7 +29,6 @@ export default function AdsSection({ darkMode }) {
           },
         }
       );
-      console.log(response);
       if (response.data.allAdv) {
         setAllAds(response.data.allAdv);
       } else {

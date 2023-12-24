@@ -12,7 +12,7 @@ export const getAllAnalysis = async () => {
   });
 };
 export const getOneAnalyze = async (code) => {
-  console.log(code);
+  //console.log(code);
   return await axios.get(
     `http://localhost:5000/api/analyze/getAnalyzesOne/${code}`
   );
@@ -55,7 +55,7 @@ export const updateAUser = async (id, user) => {
   );
 };
 export const updateProfilePhoto = async (formData) => {
-  console.log("formData", formData);
+  // console.log("formData", formData);
 
   return await axios.post(
     `http://localhost:5000/api/user/profile/profile-photo-upload`,
@@ -119,7 +119,7 @@ export const getAllResults = async () => {
   });
 };
 export const getSamples = async (cond) => {
-  console.log(cond);
+  // console.log(cond);
   return await axios.get(
     `http://localhost:5000/api/result/Results/ifDone?isDone=${cond}`,
     {
@@ -160,7 +160,7 @@ export const getPateinrResults = async (ident) => {
   );
 };
 export const getResultsFromTo = async (date) => {
-  console.log(" custome date: ", date);
+  // console.log(" custome date: ", date);
   return await axios.get(
     `http://localhost:5000/api/result/getResults/resultDateFromTo?firstDate=${date.firstDate}&secondtDate=${date.secondtDate}`,
     {
@@ -171,7 +171,7 @@ export const getResultsFromTo = async (date) => {
   );
 };
 export const getResultsFiltered = async (date) => {
-  console.log(" custome date: ", date);
+  //console.log(" custome date: ", date);
   return await axios.get(
     `http://localhost:5000/api/result/getResults/resultDate?number=${date.number}&date=${date.payDate}`,
     {
@@ -216,7 +216,7 @@ export const getUnPaidSamples = async () => {
   );
 };
 export const getPaymentsFromTo = async (date) => {
-  console.log(" custome date: ", date);
+  //console.log(" custome date: ", date);
   return await axios.get(
     "http://localhost:5000/api/payment/getFromToDate",
     {
@@ -230,7 +230,7 @@ export const getPaymentsFromTo = async (date) => {
   );
 };
 export const getPaymentsFiltered = async (date) => {
-  console.log(" custome date: ", date);
+  // console.log(" custome date: ", date);
   return await axios.get(
     `http://localhost:5000/api/payment/week?payDate=${date.payDate}&number=${date.number}`,
     {

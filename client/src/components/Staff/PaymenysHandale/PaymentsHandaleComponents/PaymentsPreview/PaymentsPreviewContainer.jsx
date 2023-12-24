@@ -9,7 +9,8 @@ import {
   getPaymentsFromTo,
 } from "../../../../../apis/ApisHandale";
 import { formatDate } from "../../../../../methods/FormateDate";
-export default function PaymentsPreviewContainer() {
+import PaymentToPDF from "../../../../PaymentToPDF";
+export default function PaymentsPreviewContainer({ setIsPdfLoading }) {
   const { darkMode } = useDarkMode();
   const [isCustomeDate, setIsCustomeDate] = useState(false);
 
@@ -47,7 +48,7 @@ export default function PaymentsPreviewContainer() {
   async function getPayments() {
     try {
       let response = await getAllPayments();
-      console.log(response);
+      //console.log(response);
       setAllPayments(response.data.paumentArray);
       setVisiblePayments(response.data.paumentArray);
     } catch (error) {
@@ -82,8 +83,7 @@ export default function PaymentsPreviewContainer() {
                     to={`/Profile/`}
                     className="position-relative nav-link mb-0 text-truncate"
                   >
-                    {p.info ? p.info.firstname : "fn"}{" "}
-                    {p.info ? p.info.lastname : "ln"}
+                    {p.info?.firstname || "fn"} {p.info?.lastname || "ln"}
                   </Link>
                 </div>
                 <div className="col-sm-12 col-md-1 d-md-flex d-none align-items-center p-0">
@@ -114,12 +114,15 @@ export default function PaymentsPreviewContainer() {
                     <span style={{ fontSize: "0.758rem" }}>NIS</span>
                   </p>
                 </div>
-                <div className="col-5 col-md-1 d-flex flex-row-reverse flex-md-row align-items-center">
-                  <Link
-                    className={`position-relative nav-link mb-0 text-truncate`}
-                  >
-                    Print
+                <div className="col-5 col-md-1 d-flex justify-content-center align-items-center gap-4">
+                  <Link className="btn m-0 nav-link position-relative">
+                    <i class="fa-solid fa-eye"></i>
                   </Link>
+                  <PaymentToPDF
+                    paymentDetails={p}
+                    darkMode={darkMode}
+                    setIsPdfLoading={setIsPdfLoading}
+                  />
                 </div>
               </div>
             </div>
@@ -320,10 +323,10 @@ export default function PaymentsPreviewContainer() {
   //search for an payments
   async function searchForAUser() {
     if (val.trim() === "") {
-      console.log("search out");
+      //  console.log("search out");
       return;
     } else {
-      console.log("search in");
+      // console.log("search in");
       //custome date range
       if (isCustomeDate) {
         //no filter yet
@@ -473,18 +476,15 @@ export default function PaymentsPreviewContainer() {
   useEffect(() => {
     // Fetch all payments when the component mounts
     getPayments();
-    console.log("useEffect 1");
   }, []);
 
   useEffect(() => {
     // Filter and display users when the filter option or data changes
     handaleFilterOption(filterOption);
-    console.log("useEffect 2");
   }, [filterOption]);
 
   useEffect(() => {
     // Search for users when the search value changes
-    console.log("useEffect 3");
 
     searchForAUser();
   }, [val, fillterdResults]);
@@ -493,20 +493,12 @@ export default function PaymentsPreviewContainer() {
     filterByDataRange();
   }, [dateRange]);
   useEffect(() => {
-    console.log("useEffect 4");
-
     if (isCustomeDate) {
-      console.log("Custome Date Function");
+      // console.log("Custome Date Function");
     } else {
       handaleFilterOption(filterOption);
     }
   }, [isCustomeDate]);
-  useEffect(() => {
-    console.log("fillterdResults: ", fillterdResults);
-  }, [fillterdResults]);
-  useEffect(() => {
-    console.log("visiblePayments: ", visiblePayments);
-  }, [visiblePayments]);
 
   return (
     <PaymentsPreviewPresintation

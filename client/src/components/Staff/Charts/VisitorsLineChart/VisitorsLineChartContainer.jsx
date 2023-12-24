@@ -97,26 +97,26 @@ export default function VisitorsLineChartContainer({ darkMode }) {
               },
             }
           );
-          console.log(response);
+          // console.log(response);
           //check is there data?
-          if (response.data.paumentArray) {
+          if (response.data.resultArray) {
             //create new prop
             const newLineChartProperties = {
               lineLabels: [],
               lineData: [],
             };
             //set total count of paid value
-            setTotalVisitors(response.data.count);
+            setTotalVisitors(response.data.resultArray.length);
             newLineChartProperties.lineLabels = getPastDayNames(7); //get name of last 7 days
             for (let i = currentDay - 7; i <= currentDay; i++) {
               //move 7 times loop "one for each day"
               let count = 0; //total count for each day
-              response.data.paumentArray.map((pay) => {
+              response.data.resultArray.map((res) => {
                 //move on all data returned to get total value for each
-                let date = new Date(pay.date);
+                let date = new Date(res.date);
                 let day = date.getDate();
                 if (day === i) {
-                  count += pay.value;
+                  count += 1;
                 }
               });
               //push the count of day to array "0 if day not exist in data"
@@ -137,28 +137,33 @@ export default function VisitorsLineChartContainer({ darkMode }) {
       case "Last 3 Months":
         try {
           //get data from api
-          let response = await getPaymentsFiltered({
-            payDate: formatDate(new Date()),
-            number: 3,
-          });
+          let response = await await axios.get(
+            `http://localhost:5000/api/result/getResults/resultDate?number=3&date=${currentDateString}`,
+            {
+              headers: {
+                Authorization: "Bearer " + localStorage.getItem("token"),
+              },
+            }
+          );
           //check is there data?
-          if (response.data.paumentArray) {
+          if (response.data.resultArray) {
             //create new prop
             const newLineChartProperties = {
               lineLabels: [],
               lineData: [],
             };
+            setTotalVisitors(response.data.resultArray.length);
             let month = currentDate.getMonth() + 1; //get current month
             for (let i = month - 3; i <= currentDate.getMonth(); i++) {
               // move on months count
               newLineChartProperties.lineLabels.push(monthsOfYear[i]); // get name of month then add it to label array
               let count = 0; // total count of paid value for each month
-              response.data.paumentArray.map((pay) => {
+              response.data.resultArray.map((res) => {
                 //move on data to count each
-                let date = new Date(pay.date);
-                let payMonth = date.getMonth();
-                if (payMonth === i) {
-                  count += pay.value;
+                let date = new Date(res.date);
+                let resMonth = date.getMonth();
+                if (resMonth === i) {
+                  count += 1;
                 }
               });
               newLineChartProperties.lineData.push(count.toString()); //push the count to array
@@ -176,28 +181,33 @@ export default function VisitorsLineChartContainer({ darkMode }) {
       case "Last 6 Months":
         try {
           //get data from api
-          let response = await getPaymentsFiltered({
-            payDate: formatDate(new Date()),
-            number: 6,
-          });
+          let response = await await axios.get(
+            `http://localhost:5000/api/result/getResults/resultDate?number=6&date=${currentDateString}`,
+            {
+              headers: {
+                Authorization: "Bearer " + localStorage.getItem("token"),
+              },
+            }
+          );
           //check is there data?
-          if (response.data.paumentArray) {
+          if (response.data.resultArray) {
             //create new prop
             const newLineChartProperties = {
               lineLabels: [],
               lineData: [],
             };
+            setTotalVisitors(response.data.resultArray.length);
             let month = currentDate.getMonth() + 1; //get current month
             for (let i = month - 6; i <= currentDate.getMonth(); i++) {
               // move on months count
               newLineChartProperties.lineLabels.push(monthsOfYear[i]); // get name of month then add it to label array
               let count = 0; // total count of paid value for each month
-              response.data.paumentArray.map((pay) => {
+              response.data.resultArray.map((res) => {
                 //move on data to count each
-                let date = new Date(pay.date);
-                let payMonth = date.getMonth();
-                if (payMonth === i) {
-                  count += pay.value;
+                let date = new Date(res.date);
+                let resMonth = date.getMonth();
+                if (resMonth === i) {
+                  count += 1;
                 }
               });
               newLineChartProperties.lineData.push(count.toString()); //push the count to array
@@ -211,31 +221,37 @@ export default function VisitorsLineChartContainer({ darkMode }) {
           console.error("error", error);
         }
         break;
+
       case "Last Year":
         try {
           //get data from api
-          let response = await getPaymentsFiltered({
-            payDate: formatDate(new Date()),
-            number: 12,
-          });
+          let response = await await axios.get(
+            `http://localhost:5000/api/result/getResults/resultDate?number=12&date=${currentDateString}`,
+            {
+              headers: {
+                Authorization: "Bearer " + localStorage.getItem("token"),
+              },
+            }
+          );
           //check is there data?
-          if (response.data.paumentArray) {
+          if (response.data.resultArray) {
             //create new prop
             const newLineChartProperties = {
               lineLabels: [],
               lineData: [],
             };
+            setTotalVisitors(response.data.resultArray.length);
             let month = currentDate.getMonth() + 1; //get current month
             for (let i = month - 12; i <= currentDate.getMonth(); i++) {
               // move on months count
               newLineChartProperties.lineLabels.push(monthsOfYear[i]); // get name of month then add it to label array
               let count = 0; // total count of paid value for each month
-              response.data.paumentArray.map((pay) => {
+              response.data.resultArray.map((res) => {
                 //move on data to count each
-                let date = new Date(pay.date);
-                let payMonth = date.getMonth();
-                if (payMonth === i) {
-                  count += pay.value;
+                let date = new Date(res.date);
+                let resMonth = date.getMonth();
+                if (resMonth === i) {
+                  count += 1;
                 }
               });
               newLineChartProperties.lineData.push(count.toString()); //push the count to array
@@ -261,9 +277,6 @@ export default function VisitorsLineChartContainer({ darkMode }) {
   useEffect(() => {
     handaleFilterOption(filterOption);
   }, [filterOption]);
-  useEffect(() => {
-    console.log("filterOption: ", filterOption);
-  }, [filterOption]);
 
   return (
     <>
@@ -272,13 +285,13 @@ export default function VisitorsLineChartContainer({ darkMode }) {
           <span className=" h5 m-0 colorMain">
             <i class="fa-solid fa-file-invoice-dollar"></i>
           </span>
-          <h1 className=" h5 m-0">Our Payments - {filterOption}:</h1>
+          <h1 className=" h5 m-0">Lab Visitors - {filterOption}:</h1>
         </div>
         <div className="col-8">
           <h1 className="h1 mt-3 mb-4 colorMain mid-bold">
             {totalVisitors}{" "}
             <span className={`${darkMode ? "text-white" : "text-black"} h5`}>
-              NIS
+              Persons
             </span>
           </h1>
         </div>

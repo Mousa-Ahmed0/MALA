@@ -91,7 +91,7 @@ export default function PaymentLineChartContainer({ darkMode }) {
             payDate: formatDate(new Date()),
             number: 0,
           });
-          console.log(response);
+          // console.log(response);
           //check is there data?
           if (response.data.paumentArray) {
             //create new prop
@@ -110,7 +110,7 @@ export default function PaymentLineChartContainer({ darkMode }) {
                 let date = new Date(pay.date);
                 let day = date.getDate();
                 if (day === i) {
-                  count += pay.value;
+                  count += pay.payment.totalValue;
                 }
               });
               //push the count of day to array "0 if day not exist in data"
@@ -135,7 +135,7 @@ export default function PaymentLineChartContainer({ darkMode }) {
             payDate: formatDate(new Date()),
             number: 3,
           });
-          console.log(response);
+          //  console.log(response);
           //check is there data?
           if (response.data.paumentArray) {
             //create new prop
@@ -155,7 +155,7 @@ export default function PaymentLineChartContainer({ darkMode }) {
                 let date = new Date(pay.date);
                 let payMonth = date.getMonth();
                 if (payMonth === i) {
-                  count += pay.value;
+                  count += pay.payment.totalValue;
                 }
               });
               newLineChartProperties.lineData.push(count.toString()); //push the count to array
@@ -196,7 +196,7 @@ export default function PaymentLineChartContainer({ darkMode }) {
                 let date = new Date(pay.date);
                 let payMonth = date.getMonth();
                 if (payMonth === i) {
-                  count += pay.value;
+                  count += pay.payment.totalValue;
                 }
               });
               newLineChartProperties.lineData.push(count.toString()); //push the count to array
@@ -236,7 +236,7 @@ export default function PaymentLineChartContainer({ darkMode }) {
                 let date = new Date(pay.date);
                 let payMonth = date.getMonth();
                 if (payMonth === i) {
-                  count += pay.value;
+                  count += pay.payment.totalValue;
                 }
               });
               newLineChartProperties.lineData.push(count.toString()); //push the count to array
@@ -263,7 +263,7 @@ export default function PaymentLineChartContainer({ darkMode }) {
     handaleFilterOption(filterOption);
   }, [filterOption]);
   useEffect(() => {
-    console.log("filterOption: ", filterOption);
+    //console.log("filterOption: ", filterOption);
   }, [filterOption]);
 
   return (

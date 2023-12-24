@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import ReportsHeader from "./ReportsHeader";
 import DetailsHeader from "./PaymentsReport/PaymentsToPdfComponents/PatientDetailsHeader";
@@ -6,16 +6,20 @@ import DetailsHeader from "./PaymentsReport/PaymentsToPdfComponents/PatientDetai
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+import { formatDateWithouHour } from "../methods/FormateDate";
+import AnalysisCostDetails from "./PaymentsReport/PaymentsToPdfComponents/AnalysisCostDetails";
 
-export default function PaymentToPDF({ darkMode, setIsPdfLoading }) {
+export default function PaymentToPDF({
+  darkMode,
+  paymentDetails,
+  setIsPdfLoading,
+}) {
   const [loader, setLoader] = useState(false);
-  // Example usage
-  const payment = {
-    name: "Person",
-    date: "22-3-2023",
-    value: 275,
-    // Add more properties as needed
-  };
+  const payment = paymentDetails.payment;
+  const formatedDate = formatDateWithouHour(paymentDetails.date);
+  const formatedICname =
+    payment.InsuranceCompName.length > 0 ? payment.InsuranceCompName : "NaN";
+
   const downloadPDF = (payment) => {
     const doc = new jsPDF();
     doc.setFontSize(16);
@@ -25,11 +29,10 @@ export default function PaymentToPDF({ darkMode, setIsPdfLoading }) {
       (doc.getStringUnitWidth("Your Custom Header") *
         doc.internal.getFontSize()) /
       doc.internal.scaleFactor;
-    const xPosition = (pageWidth - textWidth) / 2;
+    const xPositionCenter = (pageWidth - textWidth) / 2;
 
     // Add the custom header to the middle of the page
     const capture = document.querySelector(".pdf-pay-section");
-
     capture.style.padding = "1rem 2.5rem"; // Padding
     capture.style.position = "relative"; // Padding
     capture.style.left = "0"; // Padding
@@ -48,10 +51,16 @@ export default function PaymentToPDF({ darkMode, setIsPdfLoading }) {
         theme: "striped",
 
         head: [["Value", "Date", "IC. Name", "Discount", "Paid Value"]],
-        body: [["275Nis", "22-3-2024", "IC 1", "5%", "250Nis"]],
+        body: [
+          [
+            `${payment.totalValue} NIS`,
+            `${formatedDate}`,
+            `${formatedICname}`,
+            `${payment.InsuranceCompPers}%`,
+            `${payment.paiedvalue} NIS`,
+          ],
+        ],
       });
-      doc.text("Total Paid", xPosition, 90);
-      doc.text("250Nis", xPosition, 100);
 
       setLoader(false);
       setIsPdfLoading(false);
@@ -63,6 +72,12 @@ export default function PaymentToPDF({ darkMode, setIsPdfLoading }) {
       }, 100);
     });
   };
+
+  //////////
+  useEffect(() => {
+    if (paymentDetails.payment.id === "65863210b493cffd6d34659e")
+      console.log("paymentDetails", paymentDetails);
+  }, []);
   return (
     <>
       <button
@@ -78,7 +93,12 @@ export default function PaymentToPDF({ darkMode, setIsPdfLoading }) {
       {/* Hidden div to render components */}
       <div className={`pdf-pay-section ${darkMode ? "dark-theme" : ""}`}>
         <ReportsHeader darkMode={darkMode} />
-        <DetailsHeader darkMode={darkMode} />
+        <DetailsHeader
+          info={paymentDetails.info}
+          day={paymentDetails.day}
+          date={formatedDate}
+          darkMode={darkMode}
+        />
         <hr className="my-4" />
       </div>
     </>

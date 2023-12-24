@@ -332,7 +332,11 @@ export default function App() {
                 >
                   <Route
                     path="/Staff/PaymentsController/PaymentsPreview"
-                    element={<PaymentsPreviewContainer />}
+                    element={
+                      <PaymentsPreviewContainer
+                        setIsPdfLoading={setIsPdfLoading}
+                      />
+                    }
                   />
                   <Route
                     path="/Staff/PaymentsController/NotPaidPayments"
