@@ -399,21 +399,25 @@ Footer .fot-Details li i {
 .result-header-logo img {
   height: auto;
 }
-
+table {
+  font-size: var(--DetailPageSize) !important;
+}
 .comp-name {
-  min-width: 5rem !important;
-  max-width: 5rem !important;
+  /*min-width: 5rem !important;
+  max-width: 5rem !important;*/
+  max-width: 250px !important;
 }
 .normal-range {
-  min-width: 5rem !important;
-  max-width: 5rem !important;
+  /* min-width: 2.575rem !important;
+  max-width: 2.575rem !important;*/
+  max-width: 10% !important;
 }
 .result {
-  font-size: var(--DetailPageSize);
   text-wrap: wrap !important;
-  max-width: 2rem !important;
 }
-
+.unit {
+  max-width: 20% !important;
+}
 /* Select */
 .custom-select {
   position: relative;

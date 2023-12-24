@@ -1,6 +1,5 @@
 //formate Date
 export const formatDate = (inputDate) => {
-  console.log(inputDate);
   const date = new Date(inputDate);
 
   // Format date components
