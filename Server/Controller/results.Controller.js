@@ -32,17 +32,20 @@ module.exports.addResults = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.editResult = asyncHandler(async (req, res) => {
   //vaildatin fronend
-  const editRes = await analyzeResult.findByIdAndUpdate(req.params.id, {
-    date: req.body.date,
-    isDone:req.body.isDone,
-    resultSet: req.body.resultSet,
-  }, { new: true });
+  const editRes = await analyzeResult.findByIdAndUpdate(
+    req.params.id,
+    {
+      date: req.body.date,
+      isDone: req.body.isDone,
+      resultSet: req.body.resultSet,
+    },
+    { new: true }
+  );
   if (!editRes) {
     return res.status(404).json({ message: "Document not found" });
   }
 
   res.status(200).json({ editRes, message: "Update successful" });
-
 });
 
 /**--------------------------------
@@ -123,7 +126,6 @@ module.exports.getResultsById = asyncHandler(async (req, res) => {
     usersDoctor = await user
       .findOne({ ident: detailsAnalyze.doctorIdent })
       .select("firstname lastname -_id");
-
   else {
     usersDoctor = detailsAnalyze[i].doctorName;
   }
@@ -202,7 +204,6 @@ module.exports.getAllResultsById = asyncHandler(async (req, res) => {
             }
           });
         });
-
       });
       //send a response to client
       res.status(201).json({
@@ -599,7 +600,7 @@ module.exports.isDone = asyncHandler(async (req, res) => {
           .findOne({ ident: isDone[i].doctorIdent })
           .select("firstname lastname -_id");
       else {
-        usersDoctor = isPaied[i].doctorName;
+        usersDoctor = isDone[i].doctorName;
       }
       // Create an object with the required properties
       const userDetails = {
@@ -650,7 +651,6 @@ module.exports.isPaied = asyncHandler(async (req, res) => {
   const isPaied = await analyzeResult.find({ isPaied: req.query.isPaied });
   let usersArray = [];
 
-
   if (isPaied.length) {
     for (let i = 0; i < isPaied.length; i++) {
       //user staff
@@ -682,9 +682,7 @@ module.exports.isPaied = asyncHandler(async (req, res) => {
       usersArray.push(userDetails);
     }
     res.status(200).json({ usersArray });
-  }
-
-  else res.status(404).json({ message: "Not repot " });
+  } else res.status(404).json({ message: "Not repot " });
 });
 
 /**--------------------------------

@@ -49,7 +49,7 @@ export default function ResultsPreviewContainer({}) {
   async function getResults() {
     try {
       let response = await getSamples(true);
-      console.log(response);
+      console.log("response from gg", response);
       setAllResults(response.data.usersArray);
       setVisibleResults(response.data.usersArray);
     } catch (error) {

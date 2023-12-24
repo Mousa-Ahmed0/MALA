@@ -245,7 +245,7 @@ export default function App() {
 
                 <Route path="/ForgotPassword" element={<ForgotPassword />} />
                 <Route
-                  path="/AdDetails"
+                  path="/AdDetails/:id"
                   element={<AdDetails darkMode={darkMode} />}
                 />
                 <Route path="*" element={<Error />} />

@@ -91,7 +91,7 @@ export default function AdsPreviewContainer() {
                         <Link
                           style={{ cursor: "pointer" }}
                           className="position-relative nav-link mb-0 text-truncate"
-                          to={`/Ads/`}
+                          to={`/AdDetails/${Ad._id}`}
                         >
                           Ad Details
                         </Link>
