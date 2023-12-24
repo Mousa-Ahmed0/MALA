@@ -143,8 +143,11 @@ module.exports.deleteMass = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.countIfRead = asyncHandler(async (req, res) => {
   const newMass = await Massage.find({
-    ifReadyFirstUser: true,
-    ifReadySecondUser: true,
+    $or: [
+      { firstUser: req.user.id, ifReadyFirstUser: false },
+      { secondUser: req.user.id, ifReadySecondUser: false },
+    ],
+
   }).count();
   if (!newMass)
     return res
