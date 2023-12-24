@@ -628,6 +628,40 @@ module.exports.isDone = asyncHandler(async (req, res) => {
   else res.status(404).json({ message: "Not repot " });
 });
 /**--------------------------------
+ * @desc count result done or not dont
+ * @router /api/Results/ifDoneCount
+ * @method GET
+ * @access private (staff or admin)
+ * ------------------------------------------ */
+module.exports.isDoneCount = asyncHandler(async (req, res) => {
+  const isDoneTrue = await analyzeResult.find({ isDone: true }).count();
+  const isDoneFalse = await analyzeResult.find({ isDone: false }).count();
+
+  if (isDoneTrue ||isDoneFalse) {
+
+    res.status(200).json({ "Number_of_true":isDoneTrue ,"Number_of_false":isDoneFalse});
+  }
+
+  else res.status(404).json({ message: "Not repot " });
+});
+/**--------------------------------
+ * @desc count result done or not dont
+ * @router /api/Results/ifDoneCount
+ * @method GET
+ * @access private (staff or admin)
+ * ------------------------------------------ */
+module.exports.isPaiedCount = asyncHandler(async (req, res) => {
+  const isPaiedTrue = await analyzeResult.find({ isPaied: true }).count();
+  const isPaiedFalse = await analyzeResult.find({ isPaied: false }).count();
+
+  if (isPaiedTrue ||isPaiedFalse) {
+
+    res.status(200).json({ "Number_of_true":isPaiedTrue ,"Number_of_false":isPaiedFalse});
+  }
+
+  else res.status(404).json({ message: "Not repot " });
+});
+/**--------------------------------
  * @desc if result done edit to true
  * @router /api/Results/Results/ifDoneEdit
  * @method GET
@@ -644,6 +678,7 @@ module.exports.isDoneEdit = asyncHandler(async (req, res) => {
     }
   } else res.status(404).json({ message: "Does not exist " });
 });
+
 
 /**--------------------------------
  * @desc if result paied
