@@ -234,7 +234,7 @@ export default function DashboardHome({ user }) {
       <hr className="my-4" />
       <div className="row maxHeight-part">
         <div
-          className={`p-4 col-12 col-md-7 ${
+          className={`p-4 col-12 col-lg-7 ${
             darkMode ? " spic-dark-mode" : " bg-white"
           }`}
         >
@@ -242,19 +242,19 @@ export default function DashboardHome({ user }) {
         </div>
         <div className="col-1"></div>
         <div
-          className={`p-4 col-12 col-md-4 ${
+          className={`p-4 col-12 col-lg-4 ${
             darkMode ? " spic-dark-mode" : " bg-white"
           }`}
         >
           <div className="row align-items-center">
-            <div className="col-10 d-flex gap-2">
+            <div className="col-8 d-flex gap-2">
               <span className=" h5 m-0 colorMain">
                 <i class="fa-solid fa-inbox"></i>
               </span>
               <h1 className=" h5 m-0">Recent Messages:</h1>
             </div>
-            <div className="col-2 d-flex justify-content-end colorMain">
-              <h1 className="h3  m-0">
+            <div className="col-4 d-flex justify-content-end colorMain">
+              <h1 className="h6  m-0">
                 {nonReadNo === 0 ? (
                   "All Message Readed!"
                 ) : (
@@ -269,7 +269,7 @@ export default function DashboardHome({ user }) {
       <hr className="my-4" />
       <div className="row maxHeight-part">
         <div
-          className={`p-4 col-12 col-md-7 ${
+          className={`p-4 col-12 col-lg-7 ${
             darkMode ? " spic-dark-mode" : " bg-white"
           }`}
         >
@@ -277,7 +277,7 @@ export default function DashboardHome({ user }) {
         </div>
         <div className="col-1"></div>
         <div
-          className={`p-4 col-12 col-md-4 ${
+          className={`p-4 col-12 col-lg-4 ${
             darkMode ? " spic-dark-mode" : " bg-white"
           }`}
         >
