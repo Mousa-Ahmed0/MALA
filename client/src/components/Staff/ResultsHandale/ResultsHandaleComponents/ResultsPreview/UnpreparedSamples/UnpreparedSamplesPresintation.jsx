@@ -88,7 +88,7 @@ export default function UnpreparedSamplesPresintation({
             ) : apiError ? (
               apiErrorMessage
             ) : noResults ? (
-              <div className="my-4 mid-bold">No results Found.</div>
+              <div className="my-4 mid-bold">All Samples Done!</div>
             ) : (
               <div className="d-flex justify-content-center align-items-center my-4">
                 <div className="spinner-border text-primary" role="status">

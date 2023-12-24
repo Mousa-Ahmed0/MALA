@@ -240,6 +240,23 @@ export default function PaymentsPreviewContainer({ setIsPdfLoading }) {
           console.error("error", error);
         }
         break;
+      case "Last Month":
+        try {
+          let response = await getPaymentsFiltered({
+            payDate: formatDate(new Date()),
+            number: 1,
+          });
+          if (response.data.paumentArray) {
+            setfillterdResults(response.data.paumentArray);
+            setVisiblePayments(response.data.paumentArray);
+          } else {
+            setNoResults(true);
+            setfillterdResults([]);
+          }
+        } catch (error) {
+          console.error("error", error);
+        }
+        break;
       case "Last 3 Months":
         try {
           let response = await getPaymentsFiltered({
@@ -492,6 +509,9 @@ export default function PaymentsPreviewContainer({ setIsPdfLoading }) {
   useEffect(() => {
     filterByDataRange();
   }, [dateRange]);
+  useEffect(() => {
+    console.log(visiblePayments);
+  }, [visiblePayments]);
   useEffect(() => {
     if (isCustomeDate) {
       // console.log("Custome Date Function");

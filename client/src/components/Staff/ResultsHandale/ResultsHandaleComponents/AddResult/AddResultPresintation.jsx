@@ -161,26 +161,7 @@ export default function AddResultPresintation({
               <div className="mb-3 row">
                 <div className="col-12 col-md-8 d-flex flex-column">
                   <div className="row h-100 align-items-center">
-                    <div className="col-12 col-md-4 m-0 alert custom-control custom-checkbox ">
-                      <input
-                        onChange={() =>
-                          setResult({ ...result, isPaied: !result.isPaied })
-                        }
-                        type="checkbox"
-                        className="custom-control-input"
-                        id="customCheck1"
-                        checked={result.isPaied}
-                      />
-                      <label
-                        className={`mid-bold custom-control-label mx-2 ${
-                          darkMode ? " spic-dark-mode" : ""
-                        }`}
-                        htmlFor="customCheck1"
-                      >
-                        is Paid?
-                      </label>
-                    </div>
-                    <div className="col-12 col-md-4 m-0 alert custom-control custom-checkbox ">
+                    <div className="col-12 col-md-6 m-0 alert custom-control custom-checkbox ">
                       <input
                         onChange={() =>
                           setResult({ ...result, isDone: !result.isDone })

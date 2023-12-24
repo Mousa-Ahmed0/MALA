@@ -41,7 +41,8 @@ export default function NotPaidResultsContainer({}) {
       setVisibleResults(response.data.usersArray);
     } catch (error) {
       console.error("Error From getResults: ", error);
-      setApiError(error.data.message);
+      //setApiError(error.data.message);
+      setNoResults(true);
     }
   }
 
@@ -78,11 +79,11 @@ export default function NotPaidResultsContainer({}) {
                 <div className="col-sm-12 col-md-3 d-md-flex d-none align-items-center p-0">
                   <p className="mb-0 text-truncate">
                     {result.usersDoctor
-                      ? result.usersDoctor.firstname +
-                        " " +
-                        result.usersDoctor.lastname
-                      : result.isPaied.doctorName.length > 0
-                      ? result.isPaied.doctorName
+                      ? result.usersDoctor.length > 0
+                        ? result.usersDoctor
+                        : result.usersDoctor.firstname +
+                          " " +
+                          result.usersDoctor.lastname
                       : "Not Found"}
                   </p>
                 </div>

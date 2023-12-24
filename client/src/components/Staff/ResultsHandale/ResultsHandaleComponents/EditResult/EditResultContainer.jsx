@@ -2,75 +2,69 @@ import EditResultPresintation from "./EditResultPresintation";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useDarkMode } from "../../../../../context/DarkModeContext";
-import {
-  addResult,
-  getAllDoctor,
-  getResultByID,
-} from "../../../../../apis/ApisHandale";
+import { getResultByID } from "../../../../../apis/ApisHandale";
 
-import EditAnalyzeResult from "./EditResultComponents/EditAnalyzeResult";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 export default function EditResultContainer() {
+  const navigate = useNavigate();
   const { darkMode } = useDarkMode();
-  const [isDone, setIsDone] = useState(false);
-  let [errorList, setErrorList] = useState([]);
   let [apiMessage, setApiMessage] = useState("");
   let [apiError, setApiError] = useState(false);
   const [result, setResult] = useState({});
+  const [allAnalysis, setAllAnalysis] = useState([]);
   const [anlysisNo, setAnlysisNo] = useState(1);
   const [resultSet, setResultSet] = useState([]);
-  //doctors
-  const [allDoctors, setAllDoctors] = useState([]);
   const { id } = useParams();
+  const [allDone, setAllDone] = useState(false);
 
-  async function getAllDoctors() {
-    try {
-      let response = await getAllDoctor();
-      const doctorsData = response.data.map((doctor) => ({
-        name: doctor.firstname + " " + doctor.lastname,
-        ident: doctor.ident,
-      }));
-      setAllDoctors(doctorsData);
-    } catch (error) {
-      console.error("Error From getAllDoctors: ", error);
-    }
-  }
-
+  const goBack = () => {
+    navigate(-1);
+  };
+  //get Result details by id
   async function getResult() {
     try {
       const response = await getResultByID(id);
       setResult(response.data.detailsAnalyze);
       console.log(response);
+      setAnlysisNo(response.data.detailsAnalyze.resultSet.length);
+      setAllAnalysis(response.data.analysArray);
     } catch (error) {
       console.error("Error from getResult to edit: ", error);
     }
   }
-  //get result details from inputs
+  //get result details from inputs "Date"
   function getResultData(e) {
     setApiMessage("");
-    setIsDone(false);
-    if (e.target.name === "a_no") {
-      setAnlysisNo(e.target.value);
-    } else {
-      let newResult = { ...result };
-      newResult[e.target.name] = e.target.value;
-      setResult(newResult);
-    }
+    let newResult = { ...result };
+    newResult[e.target.name] = e.target.value;
+    setResult(newResult);
   }
 
-  //on submit ?
+  //function editComponentResults
+  function editComponentResults(e, analyzeIndex, compIndex, compName) {
+    console.log(compName, ": ", e.target.value);
+    console.log("analyzeIndex: ", analyzeIndex);
+    console.log("compIndex: ", compIndex);
+    //////////////////////////////////////////
+    let newResultSet = [...result.resultSet];
+    console.log("newResultSet", newResultSet);
+    newResultSet[analyzeIndex].result[compIndex].value = e.target.value;
+    setResult((prevResult) => {
+      return {
+        ...prevResult,
+        resultSet: newResultSet,
+      };
+    });
+  }
+  //on submit ? => update the result
   async function onSubmitForm(e) {
     e.preventDefault();
-    let newResult = { ...result, resultSet: resultSet };
-    /*setResult((prevResult) => ({
-      ...prevResult,
-      resultSet: resultSet,
-    }));*/
+    let newResult = { ...result, isDone: true };
 
     try {
       console.log("newResult", newResult);
-      let response = await axios.post(
-        "http://localhost:5000/api/result/addResults",
+      let response = await axios.put(
+        `http://localhost:5000/api/result/editResults/${id}`,
         newResult,
         {
           headers: {
@@ -81,44 +75,15 @@ export default function EditResultContainer() {
       console.log(response);
       setApiError(false);
       setApiMessage(response.data.message);
-      setIsDone(true);
       console.log("Result with components submitted successfully");
-      setResult({
-        isDone: true,
-        isPaied: false,
-        staffIdent: 0,
-        patientIdent: 0,
-        doctorIdent: 0,
-        doctorName: "",
-        date: new Date(),
-        resultSet: [],
-      });
-      setResultSet([]);
+      setAllDone(true);
     } catch (error) {
       setApiError(true);
       console.error("Error submitting Result with components:", error);
     }
   }
-  // display the doctors options in our community
-  function renderDoctorsOption() {
-    if (allDoctors.length === 0) {
-      return <option value={0}>Loading...</option>;
-    }
 
-    ///////////////////
-    return (
-      <>
-        <option value={0}>Not Found</option>
-        {allDoctors.map((doctor) => (
-          <option key={doctor.ident} value={doctor.ident}>
-            {doctor.name}
-          </option>
-        ))}
-      </>
-    );
-  }
   /************** Anlysis Result **************/
-  const [isSelectActive, setisSelectActive] = useState(false);
   // display the Anlysis ResultSet Form
   function renderResultSet() {
     let rows = [];
@@ -132,21 +97,62 @@ export default function EditResultContainer() {
           >
             Analyze No: {i + 1}:{" "}
           </div>
-          <div className="row d-flex my-4 flex-column flex-md-row">
+          <div className="row d-flex my-4 flex-column flex-md-row my-2">
             <div className="col-12">
-              <EditAnalyzeResult
-                darkMode={darkMode}
-                isDone={isDone}
-                setIsDone={setIsDone}
-                resultSet={resultSet}
-                setResultSet={setResultSet}
-                isSelectActive={isSelectActive}
-                setisSelectActive={setisSelectActive}
-                setApiMessage={setApiMessage}
-                date={result ? result.date : new Date()}
-              />
+              <div className="col-12 col-md-6">
+                <div className="row">
+                  <div className="col-12 h3 m-0 high-bold ">
+                    {allAnalysis[i]?.name || "Not Found"}
+                  </div>
+                </div>
+              </div>
             </div>
             <br />
+          </div>
+          <div
+            className={`card mb-4 ${
+              darkMode ? " spic-dark-mode border-0" : ""
+            }`}
+          >
+            <div className="card-body">
+              <div className="row mb-4">
+                <div className="col-md-3 d-none d-md-flex">Component Name:</div>
+                <div className="col-md-3 d-none d-md-flex">Result:</div>
+                <div className="col-md-3 d-none d-md-flex">Unit:</div>
+                <div className="col-md-3 d-none d-md-flex">Normal Range:</div>
+              </div>
+              <hr />
+              {allAnalysis[i]?.compnents?.map((comp, compIndex) => (
+                <>
+                  <div className="row mb-4">
+                    <div className="col-4 col-md-3 d-md-flex text-truncate">
+                      {comp.nameC}
+                    </div>
+                    <div className="col-3 col-md-3 d-md-flex">
+                      <div className="row">
+                        <div className="col-12 col-md-6">
+                          <input
+                            type="text"
+                            onChange={(e) =>
+                              editComponentResults(e, i, compIndex, comp.nameC)
+                            }
+                            value={result?.resultSet[i].result[compIndex].value}
+                            className="form-control"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col-2 col-md-3 d-md-flex text-truncate">
+                      {comp.unit}
+                    </div>
+                    <div className="col-3 col-md-3 d-md-flex">
+                      {comp.healthyValue}
+                    </div>
+                  </div>
+                  <hr />
+                </>
+              ))}
+            </div>
           </div>
           <hr />
         </>
@@ -159,7 +165,6 @@ export default function EditResultContainer() {
   ///////////////////
   useEffect(() => {
     getResult();
-    getAllDoctors();
   }, []);
   useEffect(() => {
     console.log("Result: ", result);
@@ -167,6 +172,11 @@ export default function EditResultContainer() {
   useEffect(() => {
     console.log("resultSet: ", resultSet);
   }, [resultSet]);
+  useEffect(() => {
+    if (allDone) {
+      goBack();
+    }
+  }, [allDone]);
   ///////////////////
 
   return (
@@ -177,7 +187,6 @@ export default function EditResultContainer() {
         setResult={setResult}
         getResultData={getResultData}
         onSubmitForm={onSubmitForm}
-        renderDoctorsOption={renderDoctorsOption}
         apiMessage={apiMessage}
         renderResultSet={renderResultSet}
       />

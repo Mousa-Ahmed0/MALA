@@ -39,9 +39,13 @@ export default function ResultsPreviewContainer({}) {
       console.log(response);
       setAllResults(response.data.usersArray);
       setVisibleResults(response.data.usersArray);
+      if (!response) {
+        setNoResults(true);
+      }
     } catch (error) {
       console.error("Error From getResults: ", error);
-      setApiError(error.data.message);
+      //setApiError(true);
+      setNoResults(true);
     }
   }
 

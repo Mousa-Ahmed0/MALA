@@ -3,10 +3,8 @@ import BackBtn from "../../../../BackBtn";
 export default function EditResultPresintation({
   darkMode,
   result,
-  setResult,
   getResultData,
   onSubmitForm,
-  renderDoctorsOption,
   renderResultSet,
   apiMessage,
 }) {
@@ -22,7 +20,7 @@ export default function EditResultPresintation({
                   darkMode ? " spic-dark-mode border-0 border-bottom" : ""
                 }`}
               >
-                New Result:
+                Edit Result:
               </h1>
               {apiMessage ? (
                 <div className="alert alert-info d-flex justify-content-center">
@@ -32,118 +30,75 @@ export default function EditResultPresintation({
                 ""
               )}
               <div className="row d-flex  flex-column flex-md-row">
-                <div className="col-12 col-md-4 mb-3">
-                  <label
-                    htmlFor="r_staff"
-                    className={`form-label ${
-                      darkMode ? " spic-dark-mode" : ""
-                    }`}
-                  >
-                    Staff Ident:
-                  </label>
-                  <input
-                    onChange={getResultData}
-                    type="text"
-                    name="staffIdent"
-                    className="form-control"
-                    id="r_staff"
-                    value={result.staffIdent}
-                  />
+                <div className="row">
+                  <div className="col-12 col-md-4 mb-3 bg-white">
+                    <div className="row">
+                      <div className="col-12 mb-3"> Staff Ident:</div>
+                      <div className="col-12 text-center colorMain h3 m-0 high-bold">
+                        {result.staffIdent}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-1"></div>
+                  <div className="col-12 col-md-3 mb-3 bg-white">
+                    <div className="row">
+                      <div className="col-12 mb-3"> Patient Ident:</div>
+                      <div className="col-12 text-center h3 m-0 high-bold">
+                        {result.patientIdent}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-1"></div>
+                  <div className="col-12 col-md-3 mb-3 bg-white">
+                    <div className="row text-truncate">
+                      <div className="col-12 mb-3">Doctor:</div>
+                      <div className="col-12 text-center h3 m-0 high-bold colorMain">
+                        {result.doctorIdent !== 0 ? (
+                          <div>
+                            <span style={{ fontSize: "0.675rem" }}>
+                              Dr. Ident:{" "}
+                            </span>
+                            {result.doctorIdent}
+                          </div>
+                        ) : (
+                          <div>
+                            <span style={{ fontSize: "0.675rem" }}>Dr. </span>
+                            {result.doctorName}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="col-12 col-md-4 mb-3">
-                  <label
-                    htmlFor="r_patientIdent"
-                    className={`form-label ${
-                      darkMode ? " spic-dark-mode" : ""
-                    }`}
-                  >
-                    Patient Ident:
-                  </label>
-                  <input
-                    onChange={getResultData}
-                    type="text"
-                    name="patientIdent"
-                    className="form-control"
-                    id="r_patientIdent"
-                    value={result.patientIdent}
-                  />
-                </div>
-                <div className="col-12 col-lg-4 mb-3">
-                  <label
-                    htmlFor="r_date"
-                    className={`form-label ${
-                      darkMode ? " spic-dark-mode" : ""
-                    }`}
-                  >
-                    Result Date:
-                  </label>
-                  <input
-                    onChange={getResultData}
-                    type="date"
-                    name="date"
-                    className="form-control"
-                    id="r_date"
-                    value={result.date}
-                  />
-                </div>
-              </div>
-              <div className="row d-flex flex-column flex-md-row">
-                <div className="col-12 col-lg-4 my-3 d-flex justify-content-between align-items-center">
-                  <label
-                    htmlFor="r_doctor"
-                    className={` m-0 form-label ${
-                      darkMode ? " spic-dark-mode" : ""
-                    }`}
-                  >
-                    Doctor:
-                  </label>
-                  <select
-                    className={`w-75 mx-2 border border-white all-Mid-shadow ${
-                      darkMode ? " spic-dark-mode" : ""
-                    }`}
-                    aria-label="Default select example"
-                    name="doctorIdent"
-                    id="r_doctor"
-                    onChange={getResultData}
-                  >
-                    {renderDoctorsOption()}
-                  </select>
-                </div>
-                <div className="col-12 col-lg-4 mb-3">
-                  <label
-                    htmlFor="r_doctorName"
-                    className={`form-label ${
-                      darkMode ? " spic-dark-mode" : ""
-                    }`}
-                  >
-                    Doctor Not Found?
-                  </label>
-                  <input
-                    onChange={getResultData}
-                    type="text"
-                    name="doctorName"
-                    className="form-control"
-                    id="r_doctorName"
-                    value={result.doctorName}
-                    disabled={result.doctorIdent != "0"}
-                  />
-                </div>
-                <div className="col-12 col-lg-4 mb-3">
-                  <label
-                    htmlFor="a_no"
-                    className={`form-label ${
-                      darkMode ? " spic-dark-mode" : ""
-                    }`}
-                  >
-                    No of Analysis:
-                  </label>
-                  <input
-                    onChange={getResultData}
-                    type="number"
-                    name="a_no"
-                    className="form-control"
-                    id="a_no"
-                  />
+                <hr className="my-4" />
+                <div className="row">
+                  <div className="col-12 col-lg-4 mb-3">
+                    <label
+                      htmlFor="r_date"
+                      className={`form-label ${
+                        darkMode ? " spic-dark-mode" : ""
+                      }`}
+                    >
+                      Result Date:
+                    </label>
+                    <input
+                      onChange={getResultData}
+                      type="date"
+                      name="date"
+                      className="form-control"
+                      id="r_date"
+                      value={result.date}
+                    />
+                  </div>
+                  <div className="col-5"></div>
+                  <div className="col-12 col-md-3 mb-3 bg-white">
+                    <div className="row">
+                      <div className="col-12 mb-3"> No. of Analysis:</div>
+                      <div className="col-12 text-center colorMain h3 m-0 high-bold">
+                        {result.resultSet?.length || 0}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
               <h1
@@ -155,54 +110,12 @@ export default function EditResultPresintation({
               </h1>
               {renderResultSet()}
               <div className="mb-3 row">
-                <div className="col-12 col-md-8 d-flex flex-column">
-                  <div className="row h-100 align-items-center">
-                    <div className="col-12 col-md-4 m-0 alert custom-control custom-checkbox ">
-                      <input
-                        onChange={() =>
-                          setResult({ ...result, isPaied: !result.isPaied })
-                        }
-                        type="checkbox"
-                        className="custom-control-input"
-                        id="customCheck1"
-                        checked={result.isPaied}
-                      />
-                      <label
-                        className={`mid-bold custom-control-label mx-2 ${
-                          darkMode ? " spic-dark-mode" : ""
-                        }`}
-                        htmlFor="customCheck1"
-                      >
-                        is Paid?
-                      </label>
-                    </div>
-                    <div className="col-12 col-md-4 m-0 alert custom-control custom-checkbox ">
-                      <input
-                        onChange={() =>
-                          setResult({ ...result, isDone: !result.isDone })
-                        }
-                        type="checkbox"
-                        className="custom-control-input"
-                        id="customCheck1"
-                        checked={!result.isDone}
-                      />
-                      <label
-                        className={`mid-bold custom-control-label mx-2 ${
-                          darkMode ? " spic-dark-mode" : ""
-                        }`}
-                        htmlFor="customCheck1"
-                      >
-                        Result Not Ready?
-                      </label>
-                    </div>
-                  </div>
-                </div>
-                <div className="h-100 alert m-0 col-12 col-md-4 d-flex justify-content-center justify-content-md-end">
+                <div className="h-100 alert m-0 col-12  d-flex justify-content-center">
                   <button
                     type="submit"
                     className="btn btn-primary d-flex justify-content-center BTN-Bold"
                   >
-                    Add
+                    Update
                   </button>
                 </div>
               </div>

@@ -34,6 +34,7 @@ export default function AddAPayment() {
     let tempResultCostDetils = [];
     try {
       const response = await getResultByID(id);
+      console.log(response);
       setResultDetails(response.data);
       console.log(response.data);
       if (response.data.analysArray && response.data.analysArray.length > 0) {

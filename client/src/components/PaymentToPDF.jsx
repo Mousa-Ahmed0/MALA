@@ -50,14 +50,16 @@ export default function PaymentToPDF({
         bodyStyles: { textColor: 0 },
         theme: "striped",
 
-        head: [["Value", "Date", "IC. Name", "Discount", "Paid Value"]],
+        head: [
+          ["Value", "IC. Name", "Discount", "Paid Value", "Discounted Value"],
+        ],
         body: [
           [
             `${payment.totalValue} NIS`,
-            `${formatedDate}`,
             `${formatedICname}`,
             `${payment.InsuranceCompPers}%`,
             `${payment.paiedvalue} NIS`,
+            `${payment.discountedValue} NIS`,
           ],
         ],
       });

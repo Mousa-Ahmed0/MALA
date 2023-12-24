@@ -1,19 +1,7 @@
 import React from "react";
+import { formatDateWithouHour } from "../../methods/FormateDate";
 export default function DetailsInformationTable({ p, darkMode }) {
-  const dateString = p.payment.payDate;
-  const dateObject = new Date(dateString);
-
-  // Extract year, month, and day
-  const year = dateObject.getFullYear();
-  const month = (dateObject.getMonth() + 1).toString().padStart(2, "0"); // Months are zero-based
-  const day = dateObject.getDate().toString().padStart(2, "0");
-
-  // Create the formatted date string as year-month-day
-  const formDate = `${year}/${month}/${day}`;
-  const allValue = p.payment.discountedValue + p.payment.value;
-  const percentage = Math.floor(
-    (p.payment.discountedValue / p.payment.value) * 100
-  );
+  const formDate = formatDateWithouHour(p.payment.payDate);
   return (
     <>
       <div
@@ -23,19 +11,30 @@ export default function DetailsInformationTable({ p, darkMode }) {
       >
         <div className="row">
           <div className="col-6">
-            <div>
-              Name:
-              <span className="mid-bold">
-                {" "}
-                {p.info
-                  ? p.info.firstname + " " + p.info.lastname
-                  : "Not Found"}
-              </span>
+            <div className="row">
+              <div className="col-12">
+                Name:
+                <span className="mid-bold">
+                  {" "}
+                  {p.info
+                    ? p.info.firstname + " " + p.info.lastname
+                    : "Not Found"}
+                </span>
+              </div>
+              <div className="col-12">
+                ID Number:
+                <span className="mid-bold">{p.info.ident}</span>
+              </div>
             </div>
           </div>
           <div className="col-6 d-flex justify-content-end">
-            <div>
-              Date: <span className="mid-bold">{formDate}</span>
+            <div className="row">
+              <div className="col-12 d-flex justify-content-end">
+                <span className="mid-bold">{p.day}</span>
+              </div>
+              <div className="col-12 d-flex justify-content-end">
+                <span className="mid-bold">{formDate}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -46,7 +45,7 @@ export default function DetailsInformationTable({ p, darkMode }) {
               Total:
               <span className="mid-bold">
                 {" "}
-                {allValue}
+                {p.payment.totalValue}
                 <span style={{ fontSize: "0.575rem" }}>NIS</span>
               </span>
             </div>
@@ -66,7 +65,10 @@ export default function DetailsInformationTable({ p, darkMode }) {
               </div>
               <div className="col-4 d-flex">
                 <div>
-                  Perc: <span className="mid-bold">{percentage}%</span>
+                  Perc:{" "}
+                  <span className="mid-bold">
+                    {p.payment.InsuranceCompPers}%
+                  </span>
                 </div>
               </div>
             </div>
@@ -76,7 +78,7 @@ export default function DetailsInformationTable({ p, darkMode }) {
               Paid:
               <span className="mid-bold">
                 {" "}
-                {p.payment.value}
+                {p.payment.paiedvalue}
                 <span style={{ fontSize: "0.575rem" }}>NIS</span>
               </span>
             </div>
