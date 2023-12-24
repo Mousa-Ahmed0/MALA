@@ -187,27 +187,36 @@ module.exports.getAllResultsById = asyncHandler(async (req, res) => {
         usersDoctor = detailsAnalyze.doctorName;
       }
       const resultDate = detailsAnalyze.date;
+      const currentResult = detailsAnalyze;
       //loop on id
       allId.forEach(async (index) => {
         const analyzeId = index;
 
         allResult.forEach(async (ind) => {
-          //for of resultSet to get result
-          ind.resultSet.forEach(async (ele) => {
-            //for of result to get anlyzeId
-            if (ele.anlyzeId == analyzeId) {
-              const userDetails = {
-                date: "ele.date",
-                result: ele,
-              };
-              userAnalyze.push(userDetails);
-            }
-          });
+          if (
+            ind.id === detailsAnalyze.id ||
+            new Date(ind.date) > new Date(detailsAnalyze.date)
+          ) {
+            return;
+          } else {
+            //for of resultSet to get result
+            ind.resultSet.forEach(async (ele) => {
+              //for of result to get anlyzeId
+              if (ele.anlyzeId == analyzeId) {
+                const userDetails = {
+                  date: ind.date,
+                  result: ele,
+                };
+                userAnalyze.push(userDetails);
+              }
+            });
+          }
         });
       });
       //send a response to client
       res.status(201).json({
         analyzComponent,
+        currentResult,
         resultDate,
         usersStaff,
         usersDoctor,

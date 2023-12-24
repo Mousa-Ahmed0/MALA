@@ -78,11 +78,11 @@ export default function ResultsPreviewContainer({}) {
                 <div className="col-sm-12 col-md-3 d-md-flex d-none align-items-center p-0">
                   <p className="mb-0 text-truncate">
                     {result.usersDoctor
-                      ? result.usersDoctor.firstname +
-                        " " +
-                        result.usersDoctor.lastname
-                      : result.isDone.doctorName.length > 0
-                      ? result.isDone.doctorName
+                      ? result.usersDoctor.firstname
+                        ? result.usersDoctor.firstname +
+                          " " +
+                          result.usersDoctor.lastname
+                        : result.isDone.doctorName
                       : "Not Found"}
                   </p>
                 </div>

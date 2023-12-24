@@ -11,7 +11,7 @@ export default function DetailsInformation({
   const formattedDate = formatDate(new Date(date));
   ////
   useEffect(() => {
-    console.log("patintInformation", patintInformation);
+    // console.log("patintInformation", patintInformation);
   }, []);
   return (
     <>

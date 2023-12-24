@@ -18,7 +18,7 @@ export default function ResultDetails() {
   async function getResultDetails() {
     try {
       let response = await getDetailsResult(id);
-      console.log(response);
+      //console.log(response);
       setResuultDetails(response.data);
     } catch (error) {
       console.error("Error", error);
@@ -34,12 +34,12 @@ export default function ResultDetails() {
             darkMode={darkMode}
             doctorInformation={
               resultDetails.usersDoctor
-                ? typeof resultDetails.usersDoctor === "string"
-                  ? resultDetails.usersDoctor
-                  : resultDetails.usersDoctor.doctorName.firstname +
+                ? resultDetails.usersDoctor.firstname
+                  ? resultDetails.usersDoctor.firstname +
                     " " +
-                    resultDetails.usersDoctor.doctorName.lastname
-                : "Doctor"
+                    resultDetails.usersDoctor.lastname
+                  : resultDetails.usersDoctor
+                : "Not Found"
             }
             patintInformation={resultDetails.usersPatint}
             staffInformation={resultDetails.usersStaff}
