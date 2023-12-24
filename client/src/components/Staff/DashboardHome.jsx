@@ -8,6 +8,8 @@ import AdsSection from "../UserComponenet/Ads/AdsSection";
 import MessageBox from "./MessagesHandale/MessageBox/MessageBox";
 import PaymentLineChartContainer from "./Charts/PaymentLineChart/PaymentLineChartContainer";
 import VisitorsLineChartContainer from "./Charts/VisitorsLineChart/VisitorsLineChartContainer";
+import { getUnPaidSamples } from "../../apis/ApisHandale";
+import { Link } from "react-router-dom";
 export default function DashboardHome({ user }) {
   const { darkMode } = useDarkMode();
   const width = "-webkit-fill-available";
@@ -15,7 +17,38 @@ export default function DashboardHome({ user }) {
   const [patientCount, setPatientCount] = useState(0);
   const [doctorsCount, setDoctorsCount] = useState(0);
   const [nonReadNo, setNonReadNo] = useState(0);
+  const [unpreperdSambles, setunpreperdSambles] = useState(0);
+  const [unPaymentResults, setunPaymentResults] = useState(0);
 
+  //get count of unpreperdSambles
+  async function getunpreperdSambles() {
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/api/result/getResults/ifDoneCount",
+        {
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+        }
+      );
+      setunpreperdSambles(response.data.Number_of_false);
+    } catch (error) {
+      console.error("Error from getNonReadMessagesCount:", error);
+    }
+  }
+  //get count of unPaymentResults
+  async function getunPaymentResults() {
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/api/result/getResults/ifPaiedCount",
+        {
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+        }
+      );
+      console.log(response);
+      setunPaymentResults(response.data.Number_of_false);
+    } catch (error) {
+      console.error("Error from getNonReadMessagesCount:", error);
+    }
+  }
   //get count of non-read messages
   async function getNonReadMessagesCount() {
     try {
@@ -80,6 +113,8 @@ export default function DashboardHome({ user }) {
     getStaffCount();
     getDoctorsCount();
     getNonReadMessagesCount();
+    getunpreperdSambles();
+    getunPaymentResults();
   }, []);
   return (
     <div className="ST-section ST-Dashboard">
@@ -253,8 +288,48 @@ export default function DashboardHome({ user }) {
               </span>
               <h1 className=" h5 m-0">Important Notes:</h1>
             </div>
+            {unpreperdSambles === 0 && unPaymentResults === 0 ? (
+              <div className="row detailes-size d-flex align-items-center mt-3 mb-4">
+                You are Finished!
+              </div>
+            ) : (
+              ""
+            )}
+            {unpreperdSambles !== 0 ? (
+              <div className="row detailes-size d-flex align-items-center mt-3 mb-4">
+                <div className="col-10">
+                  You Have {unpreperdSambles} Sambles Not Ready Yet!
+                </div>
+                <div className="col-2 d-flex justify-content-end">
+                  <Link
+                    to={"/Staff/ResultsController/UnpreparedSamples"}
+                    className="btn m-0 nav-link position-relative"
+                  >
+                    <i class="fa-solid fa-eye"></i>
+                  </Link>
+                </div>
+              </div>
+            ) : (
+              ""
+            )}
+            {unPaymentResults !== 0 ? (
+              <div className="row detailes-size d-flex align-items-center mt-3 mb-4">
+                <div className="col-10">
+                  You Have {unPaymentResults} Samples didnt payed yet!
+                </div>
+                <div className="col-2 d-flex justify-content-end">
+                  <Link
+                    to={"/Staff/PaymentsController/NotPaidPayments"}
+                    className="btn m-0 nav-link position-relative"
+                  >
+                    <i class="fa-solid fa-eye"></i>
+                  </Link>
+                </div>
+              </div>
+            ) : (
+              ""
+            )}
           </div>
-          <MessageBox darkMode={darkMode} />
         </div>
       </div>
       <hr className="my-4" />
