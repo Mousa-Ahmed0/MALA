@@ -3,6 +3,16 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 from sklearn.metrics import accuracy_score, classification_report
+import numpy as np
+###########################################
+print("---Start of Program---")
+
+dataSet = pd.read_csv("CBC data_for_meandeley_csv.csv")
+print(f"hh",dataSet.head(3))
+##
+
+
+
 
 # E.g dataset
 data = {
@@ -36,25 +46,18 @@ print("_______________DF X:__________________")
 print(X)
 
 # create numarical labels
-label_encoder_patient = LabelEncoder()
-label_encoder_doctor = LabelEncoder()
-label_encoder_date = LabelEncoder()
-label_encoder_C1 = LabelEncoder()
-label_encoder_C2 = LabelEncoder()
-
-# convert X Df to be contain numarical categories
-X['patient_Ident'] = label_encoder_patient.fit_transform(X['patient_Ident'])
-X['doctor_Ident'] = label_encoder_doctor.fit_transform(X['doctor_Ident'])
-X['date'] = label_encoder_date.fit_transform(X['date'])
-X['C1_resultValue'] = label_encoder_C1.fit_transform(X['C1_resultValue'])
-X['C2_resultValue'] = label_encoder_C2.fit_transform(X['C2_resultValue'])
-
+label_encoders = {}
+for column in ['patient_Ident', 'doctor_Ident', 'date', 'C1_resultValue', 'C2_resultValue']:
+    label_encoder = LabelEncoder()
+    X[column] = label_encoder.fit_transform(X[column])
+    label_encoders[column] = label_encoder
 ###
 print("________________DF X after converted to numercal:_________________")
 print(X)
 
 # convert ' predicted_issue ' to numarical
-y = label_encoder_patient.fit_transform(df['predicted_issue'])
+label_encoder_issue = LabelEncoder()
+y = label_encoder_issue.fit_transform(df['predicted_issue'])
 
 ###
 print("--- Predicted Issue y: ---")
@@ -64,7 +67,7 @@ print(y)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 # Initialize the RandomForestClassifier
-clf = RandomForestClassifier(random_state=42)
+clf = RandomForestClassifier(random_state=42, n_estimators=20)
 
 # Train the model
 clf.fit(X_train, y_train)
@@ -83,6 +86,9 @@ accuracy = accuracy_score(y_test, y_pred)
 classification_rep = classification_report(y_test, y_pred, zero_division=1)
 
 ###
+print("--- Score: ---")
+score = clf.score(X_test,y_test)
+print({score})
 print("--- Accuracy: ---")
 print({accuracy})
 print("--- Classification Report:: ---")
@@ -117,16 +123,30 @@ print(newResult)
 
 #
 
-# create numarical labels
-newResult['patient_Ident'] = label_encoder_patient.transform(newResult['patient_Ident'])
-newResult['doctor_Ident'] = label_encoder_doctor.transform(newResult['doctor_Ident'])
-newResult['date'] = label_encoder_date.transform(newResult['date'])
-newResult['C1_resultValue'] = label_encoder_C1.transform(newResult['C1_resultValue'])
-newResult['C2_resultValue'] = label_encoder_C2.transform(newResult['C2_resultValue'])
+# Check for new categories in each column
+for column in newResult.columns:
+    if column in label_encoders:
+        new_categories = set(newResult[column]) - set(label_encoders[column].classes_)
+        if new_categories:
+            # Add new categories to the label encoder classes
+            label_encoders[column].classes_ = np.concatenate([label_encoders[column].classes_, list(new_categories)])
+            # Transform the new data for the current column
+            newResult[column] = label_encoders[column].transform(newResult[column])
+
+        else: newResult[column] = label_encoder.transform(newResult[column])
 
 
 ###
 print("____________DF newResult after converted to numercal:_________________")
 print(newResult)
+# Make predictions on the new data
+new_pred = clf.predict(newResult)
+
+print("--- New Data Prediction: ---")
+cond = "Healthy"
+if new_pred == 1:
+    cond = "UnHealthy"
+
+print(f"new_pred: ",new_pred,", so its", cond)
 
 
