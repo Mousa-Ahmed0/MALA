@@ -341,13 +341,44 @@ module.exports.getResultsDoctor = asyncHandler(async (req, res) => {
     doctorIdent: req.query.doctorIdent,
     isDone: true,
   });
-  if (detailsAnalyze != "") {
+  let usersArray = [];
+  if (detailsAnalyze.length) {
+    for (let i = 0; i < detailsAnalyze.length; i++) {
+      //user staff
+      const usersStaff = await user
+        .findOne({ ident: detailsAnalyze[i].staffIdent })
+        .select("firstname lastname -_id ");
+
+      //user patient
+      const usersPatint = await user
+        .findOne({ ident: detailsAnalyze[i].patientIdent })
+        .select("firstname lastname sex birthday -_id ");
+      //user doctor
+      let usersDoctor = null;
+      if (detailsAnalyze[i].doctorIdent != "")
+        usersDoctor = await user
+          .findOne({ ident: detailsAnalyze[i].doctorIdent })
+          .select("firstname lastname -_id");
+      else {
+        usersDoctor = detailsAnalyze[i].doctorName;
+      }
+      // Create an object with the required properties
+      const userDetails = {
+        detailsAnalyze: detailsAnalyze[i],
+        usersPatient: usersPatint,
+        usersStaff: usersStaff,
+        usersDoctor: usersDoctor,
+      };
+      // Push the object to the array
+      usersArray.push(userDetails);
+    }
     //send a response to client
     res.status(201).json({
-      detailsAnalyze,
+      usersArray,
       message: "done...........",
     });
-  } else {
+  }
+  else {
     if (res.status(404)) res.status(404).json({ message: "User not found" });
     else if (res.status(403))
       res.status(404).json({ message: "No Results Found" });
