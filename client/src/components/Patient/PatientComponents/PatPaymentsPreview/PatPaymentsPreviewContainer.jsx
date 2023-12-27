@@ -60,10 +60,10 @@ export default function PatPaymentsPreviewContainer({ setIsPdfLoading }) {
                 <div className="col-1 col-md-1 d-flex align-items-center p-0">
                   <p className="mb-0 text-truncate">{index + 1}:</p>
                 </div>
-                <div className="col-6 col-md-2 d-flex align-items-center p-0">
+                <div className="col-6 col-md-3 d-flex align-items-center p-0">
                   <p className="mb-0 text-truncate">{formatDate(p.date)}</p>
                 </div>
-                <div className="col-6 col-md-6 d-flex align-items-center p-0">
+                <div className="col-6 col-md-5 d-flex align-items-center p-0">
                   <p className="mb-0 text-truncate">
                     {p.payment.paiedvalue}
                     <span style={{ fontSize: "0.758rem" }}>NIS</span>
@@ -73,17 +73,9 @@ export default function PatPaymentsPreviewContainer({ setIsPdfLoading }) {
                 <div className="col-12 col-md-3 d-flex flex-row-reverse flex-md-row align-items-center">
                   <div className="col-6 col-md-12 ">
                     <div className="row">
-                      <div className="col-6 col-md-7 d-flex align-items-center">
-                        <Link
-                          style={{ cursor: "pointer" }}
-                          className="position-relative nav-link mb-0 text-truncate"
-                          to={`/ResultDetails/${p.payment.id}`}
-                        >
-                          More Details
-                        </Link>
-                      </div>
-                      <div className="col-6 col-md-1 d-flex justify-content-end align-items-center">
+                      <div className="col-12 d-flex justify-content-center align-items-center">
                         <PaymentToPDF
+                          paymentDetails={p}
                           darkMode={darkMode}
                           setIsPdfLoading={setIsPdfLoading}
                         />
@@ -163,21 +155,21 @@ export default function PatPaymentsPreviewContainer({ setIsPdfLoading }) {
                         Pay #:
                       </div>
                       <div
-                        className={`col-md-2 text-truncate text-muted p-0 ${
+                        className={`col-md-3 text-truncate text-muted p-0 ${
                           darkMode ? " dark-theme" : ""
                         }`}
                       >
                         Paymnet Date:
                       </div>
                       <div
-                        className={`col-md-6 text-truncate text-muted p-0 ${
+                        className={`col-md-5 text-truncate text-muted p-0 ${
                           darkMode ? " dark-theme" : ""
                         }`}
                       >
                         Paid Value:
                       </div>
                       <div
-                        className={`col-md-3 text-truncate text-muted p-0 ${
+                        className={`col-md-3 text-truncate text-muted  d-flex justify-content-center align-items-center p-0 ${
                           darkMode ? " dark-theme" : ""
                         }`}
                       >

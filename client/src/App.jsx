@@ -72,6 +72,10 @@ import BMI from "./components/Patient/PatientComponents/HealthCalcs/HealthCalcsC
 import BFC from "./components/Patient/PatientComponents/HealthCalcs/HealthCalcsComponenets/BFC.jsx";
 import PatResultsPreviewContainer from "./components/Patient/PatientComponents/PatResultsPreview/PatResultsPreviewContainer.jsx";
 
+//Doctor
+/* DoctorHome */
+import DoctorHome from "./components/Doctor/DoctorHome.jsx";
+
 import { useDarkMode } from "./context/DarkModeContext.jsx";
 import PatPaymentsPreviewContainer from "./components/Patient/PatientComponents/PatPaymentsPreview/PatPaymentsPreviewContainer.jsx";
 
@@ -138,6 +142,15 @@ export default function App() {
     },
     { id: 6, text: "|", path: null },
   ];
+  const DoctorNavBarValues = [
+    { id: 1, text: "Home", path: "/Doctor/Home" },
+    {
+      id: 2,
+      text: "Contact Us",
+      path: `/Doctor/contactLab/${userDetails.id}`,
+    },
+    { id: 6, text: "|", path: null },
+  ];
   ///////////////
   useEffect(() => {
     setLoading(false);
@@ -178,6 +191,8 @@ export default function App() {
                   ? staffNavBarValues
                   : userDetails.usertype === "Patient"
                   ? PatientNavBarValues
+                  : userDetails.usertype === "Doctor"
+                  ? DoctorNavBarValues
                   : guestNavBarValues
               }
               userDetails={userDetails}
@@ -205,6 +220,8 @@ export default function App() {
                         isPdfLoading={isPdfLoading}
                         setIsPdfLoading={setIsPdfLoading}
                       />
+                    ) : userDetails.usertype === "Doctor" ? (
+                      <DoctorHome user={userDetails} />
                     ) : (
                       <Home />
                     )
@@ -251,6 +268,16 @@ export default function App() {
                 <Route path="*" element={<Error />} />
               </Route>
               <Route path="/Doctor" element={<Doctor />}>
+                <Route
+                  path="/Doctor/Home"
+                  element={<DoctorHome user={userDetails} />}
+                />
+                <Route
+                  path="/Doctor/contactLab/:id"
+                  element={
+                    <MessageInterface user={userDetails} darkMode={darkMode} />
+                  }
+                />
                 <Route path="*" element={<Error />} />
               </Route>
               <Route

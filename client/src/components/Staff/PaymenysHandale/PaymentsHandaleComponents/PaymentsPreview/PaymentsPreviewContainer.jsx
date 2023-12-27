@@ -114,10 +114,7 @@ export default function PaymentsPreviewContainer({ setIsPdfLoading }) {
                     <span style={{ fontSize: "0.758rem" }}>NIS</span>
                   </p>
                 </div>
-                <div className="col-5 col-md-1 d-flex justify-content-center align-items-center gap-4">
-                  <Link className="btn m-0 nav-link position-relative">
-                    <i class="fa-solid fa-eye"></i>
-                  </Link>
+                <div className="col-5 col-md-1 d-flex  align-items-center gap-4">
                   <PaymentToPDF
                     paymentDetails={p}
                     darkMode={darkMode}

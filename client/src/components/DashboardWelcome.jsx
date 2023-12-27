@@ -20,7 +20,11 @@ export default function DashboardWelcome({ user }) {
         <div className="h2 d-flex flex-column">
           <span className="h5 mid-bold m-0">Welcome</span>
           <span className="high-bold colorMain">
-            {user.firstname} {user.lastname}
+            {user
+              ? user.usertype === "Doctor"
+                ? "Dr. " + user.firstname + " " + user.lastname
+                : user.firstname + " " + user.lastname
+              : ""}
           </span>
         </div>
         {/*  <div

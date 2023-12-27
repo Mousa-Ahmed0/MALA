@@ -5,13 +5,11 @@ import { useDarkMode } from "../../context/DarkModeContext";
 import { Link } from "react-router-dom";
 import { getPateinrPayments, getPateinrResults } from "../../apis/ApisHandale";
 import AdsSection from "../UserComponenet/Ads/AdsSection";
-import PaymentToPDF from "../PaymentToPDF";
-export default function PatientHome({ user, setIsPdfLoading }) {
+import axios from "axios";
+export default function DoctorHome({ user }) {
   const { darkMode } = useDarkMode();
   const [allResults, setAllResults] = useState([]);
   const [resultError, setResultError] = useState(false);
-  const [allPayments, setAllPayments] = useState([]);
-  const [paymentError, setPaymentError] = useState(false);
   let apiErrorMessage = (
     <div class="w-100 h-100 d-flex flex-column align-items-center">
       <div class="alert alert-danger my-4 mid-bold w-100 d-flex justify-content-center">
@@ -26,13 +24,17 @@ export default function PatientHome({ user, setIsPdfLoading }) {
   //get patient results
   async function getResults() {
     try {
-      let response = await getPateinrResults({ patientIdent: user.ident });
-      setAllResults(response.data.usersArray);
-      //console.log("Results", response);
+      let response = await axios.get(
+        `http://localhost:5000/api/result/getDoctorAnzlyze?doctorIdent=125623652`,
+        {
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+        }
+      );
+      console.log("Results", response);
       setResultError(false);
     } catch (error) {
-      setResultError(true);
       console.error("Error From getResults - patienthome: ", error);
+      setResultError(true);
     }
   }
 
@@ -69,49 +71,9 @@ export default function PatientHome({ user, setIsPdfLoading }) {
     });
   }
 
-  //get patient Payments
-  async function getPayments() {
-    try {
-      let response = await getPateinrPayments({ identPatient: user.ident });
-      console.log("Payments", response);
-      setAllPayments(response.data.paumentArray);
-      setPaymentError(false);
-    } catch (error) {
-      setPaymentError(true);
-      console.error("Error From getResults - patienthome: ", error);
-    }
-  }
-
-  //display patient results
-  function displayPayments() {
-    return allPayments.map((p, index) => {
-      return (
-        <>
-          <div key={index} className="row overflow-yAxis detailes-size my-4">
-            <div className="col-3 d-flex align-items-center text-truncate">
-              {formatDateWithouHour(p.date)}
-            </div>
-            <div className="col-5 d-flex align-items-center">
-              {p.payment.paiedvalue}
-              <span style={{ fontSize: "0.758rem" }}>NIS</span>
-            </div>
-            <div className="col-4 d-flex justify-content-center align-items-center gap-4">
-              <PaymentToPDF
-                paymentDetails={p}
-                darkMode={darkMode}
-                setIsPdfLoading={setIsPdfLoading}
-              />
-            </div>
-          </div>
-        </>
-      );
-    });
-  }
-
-  /////////
+  ///////
   useEffect(() => {
     getResults();
-    getPayments();
   }, []);
   return (
     <>
@@ -120,7 +82,7 @@ export default function PatientHome({ user, setIsPdfLoading }) {
         <hr />
         <div className="row">
           <div
-            className={`p-4 col-12 col-md-6 my-4 maxHeight-inhert overflow-hidden  ${
+            className={`p-4 col-12 my-4 maxHeight-inhert overflow-hidden  ${
               darkMode ? " spic-dark-mode" : " bg-white"
             }`}
           >
@@ -139,7 +101,7 @@ export default function PatientHome({ user, setIsPdfLoading }) {
               </div>
             </div>
             <div className=" overflow-yAxis  maxHeight-part">
-              {allResults.length !== 0 ? (
+              {allResults.length !== 0 && 0 ? (
                 displayResults()
               ) : resultError ? (
                 apiErrorMessage
@@ -158,48 +120,6 @@ export default function PatientHome({ user, setIsPdfLoading }) {
                 className="btn btn-primary"
               >
                 All Results
-              </Link>
-            </div>
-          </div>
-          <div className="col-12 col-md-1"></div>
-          <div
-            className={`p-4 col-12 col-md-5 my-4 maxHeight-inhert overflow-hidden ${
-              darkMode ? " spic-dark-mode" : " bg-white"
-            }`}
-          >
-            <h1 className="h5">
-              <span>
-                <i class="fa-solid fa-file-invoice-dollar"></i>
-              </span>{" "}
-              Last Payments:
-            </h1>
-            <hr className="my-4" />
-            <div className="row details-size  mt-2 mb-4">
-              <div className="col-md-3 mid-bold">P. Date:</div>
-              <div className="col-md-6 mid-bold">Paid Value:</div>
-              <div className="col-md-3 mid-bold ">More:</div>
-            </div>
-            <div className=" overflow-yAxis  maxHeight-part">
-              {allPayments.length !== 0 ? (
-                displayPayments()
-              ) : paymentError ? (
-                apiErrorMessage
-              ) : (
-                <div className="d-flex justify-content-center align-items-center">
-                  <div className="spinner-border text-primary" role="status">
-                    <span className="sr-only">Loading...</span>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <hr className="my-4" />
-            <div className="d-flex justify-content-end mt-4">
-              <Link
-                to={`/Patient/PaymentsReview/${user.ident}`}
-                className="btn btn-primary"
-              >
-                All Payments
               </Link>
             </div>
           </div>

@@ -5,7 +5,7 @@ import { getPateinrResults } from "../../../../apis/ApisHandale";
 import { Link } from "react-router-dom";
 import BackBtn from "../../../BackBtn";
 import SearchBar from "../../../SearchBar/SearchBar";
-import { formatDate } from "../../../../methods/FormateDate";
+import { formatDateWithouHour } from "../../../../methods/FormateDate";
 
 export default function PatResultsPreviewContainer() {
   const patientIdent = useParams("ident").ident;
@@ -59,7 +59,7 @@ export default function PatResultsPreviewContainer() {
                 </div>
                 <div className="col-6 col-md-2 d-flex align-items-center p-0">
                   <p className="mb-0 text-truncate">
-                    {formatDate(result.detailsAnalyze.date)}
+                    {formatDateWithouHour(result.detailsAnalyze.date)}
                   </p>
                 </div>
                 <div className="col-5 col-md-2 justify-content-end justify-content-md-start d-flex align-items-center p-0">

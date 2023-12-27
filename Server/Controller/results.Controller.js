@@ -347,7 +347,11 @@ module.exports.getResultsDoctor = asyncHandler(async (req, res) => {
       detailsAnalyze,
       message: "done...........",
     });
-  } else res.status(404).json({ message: "User not found" });
+  } else {
+    if (res.status(404)) res.status(404).json({ message: "User not found" });
+    else if (res.status(403))
+      res.status(404).json({ message: "No Results Found" });
+  }
 });
 /**--------------------------------
  * @desc get resuls by ident of Staff
@@ -637,12 +641,11 @@ module.exports.isDoneCount = asyncHandler(async (req, res) => {
   const isDoneTrue = await analyzeResult.find({ isDone: true }).count();
   const isDoneFalse = await analyzeResult.find({ isDone: false }).count();
 
-  if (isDoneTrue ||isDoneFalse) {
-
-    res.status(200).json({ "Number_of_true":isDoneTrue ,"Number_of_false":isDoneFalse});
-  }
-
-  else res.status(404).json({ message: "Not repot " });
+  if (isDoneTrue || isDoneFalse) {
+    res
+      .status(200)
+      .json({ Number_of_true: isDoneTrue, Number_of_false: isDoneFalse });
+  } else res.status(404).json({ message: "Not repot " });
 });
 /**--------------------------------
  * @desc count result done or not dont
@@ -654,12 +657,11 @@ module.exports.isPaiedCount = asyncHandler(async (req, res) => {
   const isPaiedTrue = await analyzeResult.find({ isPaied: true }).count();
   const isPaiedFalse = await analyzeResult.find({ isPaied: false }).count();
 
-  if (isPaiedTrue ||isPaiedFalse) {
-
-    res.status(200).json({ "Number_of_true":isPaiedTrue ,"Number_of_false":isPaiedFalse});
-  }
-
-  else res.status(404).json({ message: "Not repot " });
+  if (isPaiedTrue || isPaiedFalse) {
+    res
+      .status(200)
+      .json({ Number_of_true: isPaiedTrue, Number_of_false: isPaiedFalse });
+  } else res.status(404).json({ message: "Not repot " });
 });
 /**--------------------------------
  * @desc if result done edit to true
@@ -678,7 +680,6 @@ module.exports.isDoneEdit = asyncHandler(async (req, res) => {
     }
   } else res.status(404).json({ message: "Does not exist " });
 });
-
 
 /**--------------------------------
  * @desc if result paied
