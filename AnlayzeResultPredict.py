@@ -47,7 +47,7 @@ print(X)
 # create numarical labels
 label_encoders = {} #save the label encoders in dictinory as ' label_encoder[column] = label_encoder ' to handale new labels in new data
 # for on all our df columns
-for column in ['patient_Ident', 'doctor_Ident', 'date', 'C1_resultValue', 'C2_resultValue']:
+for column in X.columns:
     label_encoder = LabelEncoder()
     X[column] = label_encoder.fit_transform(X[column])
     label_encoders[column] = label_encoder

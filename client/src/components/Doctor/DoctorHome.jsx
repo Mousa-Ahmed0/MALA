@@ -31,6 +31,7 @@ export default function DoctorHome({ user }) {
         }
       );
       console.log("Results", response);
+      setAllResults(response.data.usersArray.reverse());
       setResultError(false);
     } catch (error) {
       console.error("Error From getResults - patienthome: ", error);
@@ -47,15 +48,13 @@ export default function DoctorHome({ user }) {
             key={index}
             className="row detailes-size d-flex align-items-center my-4"
           >
-            <div className="col-3 d-flex align-items-center text-truncate">
+            <div className="col-2 d-flex align-items-center text-truncate">
               {formatDateWithouHour(result.detailsAnalyze.date)}
             </div>
-            <div className="col-6 d-flex align-items-center">
-              {result.detailsAnalyze.doctorName.length > 0
-                ? result.detailsAnalyze.doctorName
-                : result.usersDoctor.firstname +
-                  " " +
-                  result.usersDoctor.lastname}
+            <div className="col-7 d-flex align-items-center">
+              {result.usersPatient.firstname +
+                " " +
+                result.usersPatient.lastname}
             </div>
             <div className="col-3 d-flex justify-content-center align-items-center">
               <Link
@@ -93,15 +92,15 @@ export default function DoctorHome({ user }) {
               Last Results:
             </h1>
             <hr className="my-4" />
-            <div className="row details-size  mt-2 mb-4">
-              <div className="col-md-3 mid-bold">A. Date:</div>
-              <div className="col-md-6 mid-bold">Doctor:</div>
+            <div className="row details-size  my-3">
+              <div className="col-md-2 mid-bold">A. Date:</div>
+              <div className="col-md-7 mid-bold">Patient Name:</div>
               <div className="col-md-3 mid-bold d-flex justify-content-center">
                 More:
               </div>
             </div>
             <div className=" overflow-yAxis  maxHeight-part">
-              {allResults.length !== 0 && 0 ? (
+              {allResults.length !== 0 ? (
                 displayResults()
               ) : resultError ? (
                 apiErrorMessage

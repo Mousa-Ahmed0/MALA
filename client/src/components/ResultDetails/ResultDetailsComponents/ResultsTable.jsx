@@ -118,7 +118,7 @@ export default function ResultsTable({ darkMode, resultDetails }) {
 
   ///////////
   useEffect(() => {
-    console.log("resultDetails: ", resultDetails);
+    console.log("resultDetails tttttt: ", resultDetails);
   }, []);
   return <>{resultDetails ? renderResult() : ""}</>;
 }
