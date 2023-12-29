@@ -6,14 +6,19 @@ import { Link } from "react-router-dom";
 
 import { useDarkMode } from "../../../../../context/DarkModeContext";
 import { getAllAnalysis } from "../../../../../apis/ApisHandale";
+import axios from "axios";
 
 export default function PreviewAnlysisContainer() {
   const { darkMode } = useDarkMode();
   const navigate = useNavigate();
   let [allAnlysis, setAllAnlysis] = useState([]);
   let [visibleAnlysis, setVisibleAnlysis] = useState([]);
+  let [searchResults, setSearchResults] = useState([]);
   let [apiError, setApiError] = useState(false);
   let [noResults, setNoResults] = useState(false);
+  //Category
+  const [avilableCategories, setAvilableCategories] = useState([]);
+  const [categoryOption, setCategoryOption] = useState("noValue");
   let [Anlyze, setAnlyze] = useState({
     name: "",
     code: "",
@@ -46,7 +51,7 @@ export default function PreviewAnlysisContainer() {
   async function getAnalysis() {
     try {
       const response = await getAllAnalysis();
-
+      console.log(response);
       setApiError(false);
 
       if (response.data.length === 0) {
@@ -125,6 +130,75 @@ export default function PreviewAnlysisContainer() {
   }
 
   /** ====================== Search Section ====================== **/
+  //get current categories
+  async function getCategories() {
+    try {
+      let response = await axios.get(
+        "http://localhost:5000/api/analyze/getCategorys",
+        {
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+        }
+      );
+      console.log(response);
+      if (response.data.length > 0) setAvilableCategories(response.data);
+    } catch (error) {
+      console.error("Error From getCategories: ", error);
+    }
+  }
+  function handaleCategory(e) {
+    if (e && e.target && e.target.value) {
+      setCategoryOption(e.target.value);
+      const option = e.target.value;
+      if (searchResults.length === 0 || !searchResults || val === "") {
+        console.log("No Search");
+        if (option === "noValue") {
+          clearResults();
+        } else if (avilableCategories.includes(option)) {
+          const filterdAnalysis = allAnlysis.filter(
+            (analyze) => analyze.analyzeCategory === option
+          );
+          console.log(filterdAnalysis);
+          setVisibleAnlysis(filterdAnalysis);
+        }
+      } else {
+        console.log("Search");
+        if (option === "noValue") {
+          console.log("hh");
+          setVisibleAnlysis(searchResults);
+        } else if (avilableCategories.includes(option)) {
+          const filterdAnalysis = searchResults.filter(
+            (analyze) => analyze.analyzeCategory === option
+          );
+          if (filterdAnalysis.length > 0) setVisibleAnlysis(filterdAnalysis);
+          else {
+            setVisibleAnlysis([]);
+            setNoResults(true);
+          }
+        }
+      }
+      if (visibleAnlysis.length === 0) {
+        setNoResults(true);
+      }
+    } else {
+      if (searchResults.length === 0 || !searchResults || val === "") {
+        clearResults();
+      } else {
+        setVisibleAnlysis(searchResults);
+      }
+    }
+  }
+  /* Render renderCategoriesArray */
+  function renderCategoriesArray() {
+    return avilableCategories.map((category, index) => {
+      if (category) {
+        return (
+          <option key={index} value={category}>
+            {category}
+          </option>
+        );
+      }
+    });
+  }
   function clearResults() {
     setVisibleAnlysis(allAnlysis);
   }
@@ -146,22 +220,27 @@ export default function PreviewAnlysisContainer() {
       setVisibleAnlysis([]);
       setNoResults(true);
     } else {
-      setVisibleAnlysis(srchResultsArray);
+      setSearchResults(srchResultsArray);
     }
   }
 
   // initial use Effect
   useEffect(() => {
     getAnalysis();
+    getCategories();
   }, []);
   //use Effect
   useEffect(() => {
     searchForAnlyze();
   }, [val]);
+  useEffect(() => {
+    // Filter and display users when the filter option or data changes
+    handaleCategory(categoryOption);
+  }, [categoryOption, searchResults]);
   //use Effect
   useEffect(() => {
-    console.log(Anlyze);
-  }, [Anlyze]);
+    console.log("visibleAnlysis", visibleAnlysis);
+  }, [visibleAnlysis]);
   return (
     <PreviewAnlysisPresintation
       handaleSearchVlue={handaleSearchVlue}
@@ -171,6 +250,9 @@ export default function PreviewAnlysisContainer() {
       apiError={apiError}
       apiErrorMessage={apiErrorMessage}
       noResults={noResults}
+      renderCategoriesArray={renderCategoriesArray}
+      handaleCategory={handaleCategory}
+      avilableCategories={avilableCategories}
     />
   );
 }

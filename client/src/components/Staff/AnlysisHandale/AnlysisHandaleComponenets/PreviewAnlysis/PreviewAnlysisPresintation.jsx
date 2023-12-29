@@ -12,14 +12,38 @@ export default function PreviewAnlysisPresintation({
   apiError,
   apiErrorMessage,
   noResults,
+  renderCategoriesArray,
+  handaleCategory,
+  avilableCategories,
 }) {
   return (
     <>
       <BackBtn />
       <div className="row my-5">
         <div className="row">
-          <div className="col-lg-12">
-            <SearchBar handaleSearchVlue={handaleSearchVlue} />
+          <div className="col-12 col-lg-10">
+            <SearchBar
+              handaleSearchVlue={handaleSearchVlue}
+              placeHolder={"Analyze Name ..."}
+            />
+          </div>
+          <div className="col-6 col-lg-2 d-flex align-items-center">
+            <select
+              className={`form-select ${
+                darkMode ? " spic-dark-mode" : ""
+              } w-100`}
+              aria-label="Default select example"
+              name="analyzeCategory"
+              onChange={(e) => handaleCategory(e)}
+            >
+              <option value={""} hidden>
+                Category:
+              </option>
+              <option value="noValue">All Categories</option>
+              {avilableCategories.length > 0
+                ? renderCategoriesArray()
+                : "Loading ... "}
+            </select>
           </div>
         </div>
         <section className="px-4">
@@ -62,12 +86,12 @@ export default function PreviewAnlysisPresintation({
               </div>
             </div>
           </div>{" "}
-          <div className="row">
+          <div className="row my-4">
             {Array.isArray(visibleAnlysis) && visibleAnlysis.length > 0 ? (
               displayAnlysis()
             ) : apiError ? (
               apiErrorMessage
-            ) : noResults ? (
+            ) : noResults || visibleAnlysis.length === 0 ? (
               <div className="my-4 mid-bold">No results Found.</div>
             ) : (
               <div className="d-flex justify-content-center align-items-center my-4">
