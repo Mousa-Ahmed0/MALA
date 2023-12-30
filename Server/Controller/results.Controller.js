@@ -102,15 +102,25 @@ module.exports.getResults = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.getResultsById = asyncHandler(async (req, res) => {
   const detailsAnalyze = await analyzeResult.findById(req.params.id);
+  if(detailsAnalyze==null) res.status(400).json({message:"User not found"});
+  console.log(detailsAnalyze);
   let analysArray = [];
 
   //analyze id componet
-  for (let i = 0; i < detailsAnalyze.resultSet.length; i++) {
-    const analyzeComp = await analyze.findById(
-      detailsAnalyze.resultSet[i].anlyzeId
-    );
-    analysArray.push(analyzeComp);
-  }
+  const analyzePromises = detailsAnalyze.resultSet.map(async (result) => {
+    const analyzeComp = await analyze
+      .findById(result.anlyzeId)
+      .sort({ createdAt: 1 }); // Adjust the field for sorting as needed
+    return analyzeComp;
+  });
+
+  analysArray = await Promise.all(analyzePromises);
+  // for (let i = 0; i < detailsAnalyze.resultSet.length; i++) {
+  //   const analyzeComp = await analyze.findById(
+  //     detailsAnalyze.resultSet[i].anlyzeId
+  //   ).sort({ createdAt: 1 });
+  //   analysArray.push(analyzeComp);
+  // }
   //user staff
   const usersStaff = await user
     .findOne({ ident: detailsAnalyze.staffIdent })
