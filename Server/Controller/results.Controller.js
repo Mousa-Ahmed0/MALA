@@ -34,7 +34,7 @@ module.exports.addResults = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.pythonResults = asyncHandler(async (req, res) => {
   let options={
- 
+    args:["test","test2"],
     scriptPath:"D:/fullstck/final project/MALA/Server/utils/python",
   } 
   console.log("test")

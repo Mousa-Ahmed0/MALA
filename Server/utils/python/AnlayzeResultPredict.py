@@ -4,6 +4,10 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 from sklearn.metrics import accuracy_score, classification_report
 import numpy as np
+import sys
+#test
+print(sys.argv[1])
+print(sys.argv[2])
 ###########################################
 print("---Start of Program---")
 
