@@ -377,8 +377,7 @@ module.exports.getResultsDoctor = asyncHandler(async (req, res) => {
       usersArray,
       message: "done...........",
     });
-  }
-  else {
+  } else {
     if (res.status(404)) res.status(404).json({ message: "User not found" });
     else if (res.status(403))
       res.status(404).json({ message: "No Results Found" });
