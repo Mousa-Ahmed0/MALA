@@ -78,8 +78,6 @@ export default function PaymentLineChartContainer({ darkMode }) {
   //Handel Filter
   async function handaleFilterOption(option) {
     setFilterOption(option);
-    let currentDate = new Date();
-    let currentDay = currentDate.getDate();
     switch (option) {
       case "noValue":
         break;
@@ -91,7 +89,7 @@ export default function PaymentLineChartContainer({ darkMode }) {
             payDate: formatDate(new Date()),
             number: 0,
           });
-          // console.log(response);
+          console.log(response);
           //check is there data?
           if (response.data.paumentArray) {
             //create new prop
@@ -102,20 +100,26 @@ export default function PaymentLineChartContainer({ darkMode }) {
             //set total count of paid value
             setTotalCount(response.data.count);
             newLineChartProperties.lineLabels = getPastDayNames(7); //get name of last 7 days
-            for (let i = currentDay - 7; i <= currentDay; i++) {
-              //move 7 times loop "one for each day"
-              let count = 0; //total count for each day
-              response.data.paumentArray.map((pay) => {
-                //move on all data returned to get total value for each
-                let date = new Date(pay.date);
-                let day = date.getDate();
-                if (day === i) {
+            for (let i = 0; i <= 6; i++) {
+              let currentDate = new Date();
+              currentDate.setDate(currentDate.getDate() - i);
+
+              let count = 0; // total count for each day
+              response.data.paumentArray.forEach((pay) => {
+                let payDate = new Date(pay.date);
+                if (
+                  payDate.getDate() === currentDate.getDate() &&
+                  payDate.getMonth() === currentDate.getMonth() &&
+                  payDate.getFullYear() === currentDate.getFullYear()
+                ) {
                   count += pay.payment.totalValue;
                 }
               });
-              //push the count of day to array "0 if day not exist in data"
+
+              // push the count of day to array "0 if day not exist in data"
               newLineChartProperties.lineData.push(count.toString());
             }
+
             //set the chart prop to our state
             setLineChartProperties(newLineChartProperties);
           } else {
@@ -145,21 +149,28 @@ export default function PaymentLineChartContainer({ darkMode }) {
             };
             setTotalCount(response.data.count);
 
-            let month = currentDate.getMonth() + 1; //get current month
-            for (let i = month - 3; i <= currentDate.getMonth(); i++) {
-              // move on months count
-              newLineChartProperties.lineLabels.push(monthsOfYear[i]); // get name of month then add it to label array
-              let count = 0; // total count of paid value for each month
-              response.data.paumentArray.map((pay) => {
-                //move on data to count each
-                let date = new Date(pay.date);
-                let payMonth = date.getMonth();
-                if (payMonth === i) {
+            for (let i = 0; i <= 2; i++) {
+              let currentDate = new Date();
+              currentDate.setMonth(currentDate.getMonth() - i);
+              // get name of month then add it to label array
+              newLineChartProperties.lineLabels.push(
+                monthsOfYear[currentDate.getMonth()]
+              );
+              let count = 0; // total count for each month
+              response.data.paumentArray.forEach((pay) => {
+                let payDate = new Date(pay.date);
+                if (
+                  payDate.getMonth() === currentDate.getMonth() &&
+                  payDate.getFullYear() === currentDate.getFullYear()
+                ) {
                   count += pay.payment.totalValue;
                 }
               });
-              newLineChartProperties.lineData.push(count.toString()); //push the count to array
+
+              // push the count of month to array "0 if month not exist in data"
+              newLineChartProperties.lineData.push(count.toString());
             }
+
             //set the propretes to our state
             setLineChartProperties(newLineChartProperties);
           } else {
@@ -186,21 +197,28 @@ export default function PaymentLineChartContainer({ darkMode }) {
             };
             setTotalCount(response.data.count);
 
-            let month = currentDate.getMonth() + 1; //get current month
-            for (let i = month - 6; i <= currentDate.getMonth(); i++) {
-              // move on months count
-              newLineChartProperties.lineLabels.push(monthsOfYear[i]); // get name of month then add it to label array
-              let count = 0; // total count of paid value for each month
-              response.data.paumentArray.map((pay) => {
-                //move on data to count each
-                let date = new Date(pay.date);
-                let payMonth = date.getMonth();
-                if (payMonth === i) {
+            for (let i = 0; i <= 5; i++) {
+              let currentDate = new Date();
+              currentDate.setMonth(currentDate.getMonth() - i);
+              // get name of month then add it to label array
+              newLineChartProperties.lineLabels.push(
+                monthsOfYear[currentDate.getMonth()]
+              );
+              let count = 0; // total count for each month
+              response.data.paumentArray.forEach((pay) => {
+                let payDate = new Date(pay.date);
+                if (
+                  payDate.getMonth() === currentDate.getMonth() &&
+                  payDate.getFullYear() === currentDate.getFullYear()
+                ) {
                   count += pay.payment.totalValue;
                 }
               });
-              newLineChartProperties.lineData.push(count.toString()); //push the count to array
+
+              // push the count of month to array "0 if month not exist in data"
+              newLineChartProperties.lineData.push(count.toString());
             }
+
             //set the propretes to our state
             setLineChartProperties(newLineChartProperties);
           } else {
@@ -226,21 +244,29 @@ export default function PaymentLineChartContainer({ darkMode }) {
             };
             setTotalCount(response.data.count);
 
-            let month = currentDate.getMonth() + 1; //get current month
-            for (let i = month - 12; i <= currentDate.getMonth(); i++) {
-              // move on months count
-              newLineChartProperties.lineLabels.push(monthsOfYear[i]); // get name of month then add it to label array
-              let count = 0; // total count of paid value for each month
-              response.data.paumentArray.map((pay) => {
-                //move on data to count each
-                let date = new Date(pay.date);
-                let payMonth = date.getMonth();
-                if (payMonth === i) {
+            for (let i = 0; i <= 11; i++) {
+              let currentDate = new Date();
+              currentDate.setMonth(currentDate.getMonth() - i);
+              // get name of month then add it to label array
+              newLineChartProperties.lineLabels.push(
+                monthsOfYear[currentDate.getMonth()]
+              );
+
+              let count = 0; // total count for each month
+              response.data.paumentArray.forEach((pay) => {
+                let payDate = new Date(pay.date);
+                if (
+                  payDate.getMonth() === currentDate.getMonth() &&
+                  payDate.getFullYear() === currentDate.getFullYear()
+                ) {
                   count += pay.payment.totalValue;
                 }
               });
-              newLineChartProperties.lineData.push(count.toString()); //push the count to array
+
+              // push the count of month to array "0 if month not exist in data"
+              newLineChartProperties.lineData.push(count.toString());
             }
+
             //set the propretes to our state
             setLineChartProperties(newLineChartProperties);
           } else {
