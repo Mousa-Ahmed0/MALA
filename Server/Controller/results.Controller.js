@@ -2,6 +2,8 @@ const asyncHandler = require("express-async-handler");
 const { analyzeResult } = require("../models/patienResults");
 const { user } = require("../models/user");
 const { analyze } = require("../models/Analyze");
+const {PythonShell}=require("python-shell");
+
 /**--------------------------------
  * @desc add result
  * @router /api/result/addResults
@@ -23,6 +25,27 @@ module.exports.addResults = asyncHandler(async (req, res) => {
   await newResult.save();
   //send a response to client
   res.status(201).json({ newResult, message: "done..........." });
+});
+/**--------------------------------
+ * @desc pyhton code
+ * @router /api/result/getResults/pythonResults
+ * @method post
+ * @access  (staff or admin)
+ * ------------------------------------------ */
+module.exports.pythonResults = asyncHandler(async (req, res) => {
+  let options={
+    args:["test","test2"],
+    scriptPath:"D:/fullstck/final project/MALA/Server/utils/python",
+  } 
+  console.log("test")
+  
+  PythonShell.run("AnlayzeResultPredict.py",options).then(messages=>{
+    // results is an array consisting of messages collected during execution
+    messages.forEach((index)=>{
+      console.log('results: %j', index); 
+    })
+  });
+  res.status(201).json({  message: "done..........." });
 });
 /**--------------------------------
  * @desc edit result
@@ -102,15 +125,25 @@ module.exports.getResults = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.getResultsById = asyncHandler(async (req, res) => {
   const detailsAnalyze = await analyzeResult.findById(req.params.id);
+  if(detailsAnalyze==null) res.status(400).json({message:"User not found"});
+  console.log(detailsAnalyze);
   let analysArray = [];
 
   //analyze id componet
-  for (let i = 0; i < detailsAnalyze.resultSet.length; i++) {
-    const analyzeComp = await analyze.findById(
-      detailsAnalyze.resultSet[i].anlyzeId
-    );
-    analysArray.push(analyzeComp);
-  }
+  const analyzePromises = detailsAnalyze.resultSet.map(async (result) => {
+    const analyzeComp = await analyze
+      .findById(result.anlyzeId)
+      .sort({ createdAt: 1 }); // Adjust the field for sorting as needed
+    return analyzeComp;
+  });
+
+  analysArray = await Promise.all(analyzePromises);
+  // for (let i = 0; i < detailsAnalyze.resultSet.length; i++) {
+  //   const analyzeComp = await analyze.findById(
+  //     detailsAnalyze.resultSet[i].anlyzeId
+  //   ).sort({ createdAt: 1 });
+  //   analysArray.push(analyzeComp);
+  // }
   //user staff
   const usersStaff = await user
     .findOne({ ident: detailsAnalyze.staffIdent })
