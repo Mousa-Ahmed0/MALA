@@ -12,7 +12,7 @@ print(sys.argv[2])
 print("---Start of Program---")
 
 #get Data from .csv file
-dataSet = pd.read_csv("D:/fullstck/final project/MALA/Server/utils/python/CBC data_for_meandeley_csv.csv")
+dataSet = pd.read_csv("../Server/utils/python/CBC data_for_meandeley_csv.csv")
 print(dataSet.head(3)) #print to sure that the data is true
 #
 

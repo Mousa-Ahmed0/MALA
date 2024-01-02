@@ -2,7 +2,7 @@ const asyncHandler = require("express-async-handler");
 const { analyzeResult } = require("../models/patienResults");
 const { user } = require("../models/user");
 const { analyze } = require("../models/Analyze");
-const {PythonShell}=require("python-shell");
+const { PythonShell } = require("python-shell");
 
 /**--------------------------------
  * @desc add result
@@ -33,19 +33,19 @@ module.exports.addResults = asyncHandler(async (req, res) => {
  * @access  (staff or admin)
  * ------------------------------------------ */
 module.exports.pythonResults = asyncHandler(async (req, res) => {
-  let options={
-    args:["test","test2"],
-    scriptPath:"D:/fullstck/final project/MALA/Server/utils/python",
-  } 
-  console.log("test")
-  
-  PythonShell.run("AnlayzeResultPredict.py",options).then(messages=>{
+  let options = {
+    args: ["test", "test2"],
+    scriptPath: "../Server/utils/python",
+  };
+  console.log("test");
+
+  PythonShell.run("AnlayzeResultPredict.py", options).then((messages) => {
     // results is an array consisting of messages collected during execution
-    messages.forEach((index)=>{
-      console.log('results: %j', index); 
-    })
+    messages.forEach((index) => {
+      console.log(index);
+    });
   });
-  res.status(201).json({  message: "done..........." });
+  res.status(201).json({ message: "done..........." });
 });
 /**--------------------------------
  * @desc edit result
@@ -125,7 +125,8 @@ module.exports.getResults = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.getResultsById = asyncHandler(async (req, res) => {
   const detailsAnalyze = await analyzeResult.findById(req.params.id);
-  if(detailsAnalyze==null) res.status(400).json({message:"User not found"});
+  if (detailsAnalyze == null)
+    res.status(400).json({ message: "User not found" });
   console.log(detailsAnalyze);
   let analysArray = [];
 

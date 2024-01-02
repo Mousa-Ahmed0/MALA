@@ -27,14 +27,6 @@ export default function DashboardWelcome({ user }) {
               : ""}
           </span>
         </div>
-        {/*  <div
-          className={`btn d-flex align-items-center gap-2 border ${
-            darkMode ? "border-white text-white" : "border-black"
-          }`}
-        >
-         /  <i class="fa-regular fa-message"></i>{" "}
-          <span className="h3 mid-bold colorMain">{2}</span>
-        </div>*/}
         <div className="d-flex flex-column">
           <span className="h2 high-bold">
             {time}
