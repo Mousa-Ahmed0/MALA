@@ -48,6 +48,10 @@ import ResultsPreview from "./components/Staff/ResultsHandale/ResultsHandaleComp
 import UnpreparedSamples from "./components/Staff/ResultsHandale/ResultsHandaleComponents/ResultsPreview/UnpreparedSamples/UnpreparedSamplesContainer.jsx";
 import AddResult from "./components/Staff/ResultsHandale/ResultsHandaleComponents/AddResult/AddResultContainer.jsx";
 import EditResult from "./components/Staff/ResultsHandale/ResultsHandaleComponents/EditResult/EditResultContainer.jsx";
+/* Messages */
+import MessageController from "./components/Staff/MessagesHandale/MessageController.jsx";
+import UsersMessages from "./components/Staff/MessagesHandale/MessagePreview/UsersMessages.jsx";
+import GuestsMessages from "./components/Staff/MessagesHandale/MessagePreview/GuestsMessages.jsx";
 
 /* PaymentsController */
 import PaymentsController from "./components/Staff/PaymenysHandale/PaymentsController.jsx";
@@ -121,14 +125,25 @@ export default function App() {
     { id: 6, text: "|", path: null },
     { id: 7, text: "Login", path: "/Login" },
   ];
-  const staffNavBarValues = [
+  const adminNavBarValues = [
     { id: 1, text: "Home", path: "/Staff/dashboard" },
+    { id: 10, text: "Messenger", path: "/Staff/MessagePreview" },
     { id: 2, text: "Users", path: "/Staff/UsersController" },
     { id: 3, text: "Anlysis", path: "/Staff/AnlysisController" },
     { id: 4, text: "Storage", path: "/Staff/StorageController" },
     { id: 5, text: "Results", path: "/Staff/ResultsController" },
     { id: 7, text: "Payments", path: "/Staff/PaymentsController" },
     { id: 8, text: "Ads", path: "/Staff/AdsController" },
+    { id: 6, text: "|", path: null },
+  ];
+  const staffNavBarValues = [
+    { id: 1, text: "Home", path: "/Staff/dashboard" },
+    { id: 10, text: "Messenger", path: "/Staff/MessagePreview" },
+    { id: 2, text: "Users", path: "/Staff/UsersController" },
+    { id: 3, text: "Anlysis", path: "/Staff/AnlysisController" },
+    { id: 4, text: "Storage", path: "/Staff/StorageController" },
+    { id: 5, text: "Results", path: "/Staff/ResultsController" },
+    { id: 7, text: "Payments", path: "/Staff/PaymentsController" },
     { id: 6, text: "|", path: null },
   ];
   const PatientNavBarValues = [
@@ -186,8 +201,9 @@ export default function App() {
           >
             <Navbar
               values={
-                userDetails.usertype === "Staff" ||
                 userDetails.usertype === "Admin"
+                  ? adminNavBarValues
+                  : userDetails.usertype === "Staff"
                   ? staffNavBarValues
                   : userDetails.usertype === "Patient"
                   ? PatientNavBarValues
@@ -378,6 +394,19 @@ export default function App() {
                   <Route
                     path="/Staff/AdsController/AdsPreview"
                     element={<AdsPreviewContainer />}
+                  />
+                </Route>
+                <Route
+                  path="/Staff/MessagePreview"
+                  element={<MessageController darkMode={darkMode} />}
+                >
+                  <Route
+                    path="/Staff/MessagePreview/UsersMessages"
+                    element={<UsersMessages darkMode={darkMode} />}
+                  />
+                  <Route
+                    path="/Staff/MessagePreview/GuestMessages"
+                    element={<GuestsMessages darkMode={darkMode} />}
                   />
                 </Route>
 

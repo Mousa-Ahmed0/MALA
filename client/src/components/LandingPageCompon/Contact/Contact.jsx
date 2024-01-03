@@ -1,40 +1,80 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Joi from "joi";
 
 import { useDarkMode } from "../../../context/DarkModeContext";
+import axios from "axios";
 
 export default function Contact() {
   const { darkMode } = useDarkMode();
-  let [Message, setMessage] = useState({
-    Guest_Name: "",
-    Guest_Email: "",
-    Guest_Message: "",
+  let [guestMessage, setguestMessage] = useState({
+    fullName: "",
+    email: "",
+    message: "",
   });
-
   let [errorList, setErrorList] = useState([]);
+  let [apiMessage, setApiMessage] = useState("");
+  let [apiError, setApiError] = useState(false);
 
   /* Submite Function */
-  function onFormSubmit(e) {
+  async function onFormSubmit(e) {
     e.preventDefault();
     // Call Validation Function
     let validateResult = validateForm();
     if (validateResult.error) {
       setErrorList(validateResult.error.details);
     }
+    try {
+      await axios
+        .post("http://localhost:5000/api/guest/addGuestMeassage", guestMessage)
+        .then((response) => {
+          // Handle the response data
+          console.log("Axios response:", response);
+          setApiError(false);
+          setApiMessage(response.data.message);
+        })
+        .catch((error) => {
+          // Handle errors
+          if (error.response) {
+            console.log("Error data:", error.response.data);
+            setApiError(true);
+            setApiMessage(error.response.data.message);
+          }
+          console.error("Axios error:", error);
+        });
+    } catch (error) {
+      console.error(error);
+    }
+    setguestMessage({
+      fullName: "",
+      email: "",
+      message: "",
+    });
+  }
+
+  /* Get Changes */
+  function getData(e) {
+    setApiMessage("");
+    let newguestMessage = { ...guestMessage };
+    newguestMessage[e.target.name] = e.target.value;
+    setguestMessage(newguestMessage);
   }
 
   /* Validation Function */
   function validateForm() {
     const schema = Joi.object({
-      Patient_Email: Joi.string()
+      email: Joi.string()
         .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
         .required(),
-      Guest_Name: Joi.string().min(4).max(12).required(),
-      Guest_Message: Joi.string().min(4).required(),
+      fullName: Joi.string().min(4).max(12).required(),
+      message: Joi.string().min(4).required(),
     });
 
-    return schema.validate(Message, { abortEarly: false });
+    return schema.validate(guestMessage, { abortEarly: false });
   }
+  /////////////
+  useEffect(() => {
+    console.log("New guestMessage: ", guestMessage);
+  }, [guestMessage]);
   return (
     <div className="LP-section LP-Contact Con-Pat">
       <div
@@ -47,6 +87,7 @@ export default function Contact() {
         >
           Send Us An Email:
         </h1>
+        {apiMessage ? <div className="alert alert-info">{apiMessage}</div> : ""}
         <div className="LP-Contact-Box row flex-column flex-md-row justify-content-between align-items-center">
           <div className="col-12 col-md-7 LP-Cont-Form ">
             {errorList.map((error, index) => (
@@ -65,7 +106,9 @@ export default function Contact() {
                 </label>
                 <input
                   type="text"
-                  name="Guest_Name"
+                  name="fullName"
+                  onChange={getData}
+                  value={guestMessage.fullName}
                   className="form-control"
                   id="g_name"
                 />
@@ -79,7 +122,9 @@ export default function Contact() {
                 </label>
                 <input
                   type="email"
-                  name="Guest_Email"
+                  name="email"
+                  onChange={getData}
+                  value={guestMessage.email}
                   className="form-control"
                   id="g_email"
                   aria-describedby="emailHelp"
@@ -93,7 +138,9 @@ export default function Contact() {
                   Message:
                 </label>
                 <textarea
-                  name="Guest_Message"
+                  name="message"
+                  onChange={getData}
+                  value={guestMessage.message}
                   className="form-control"
                   id="g_msg"
                   rows={3}
