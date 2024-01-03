@@ -37,10 +37,8 @@ module.exports.pythonResults = asyncHandler(async (req, res) => {
     args:["test","test2"],
     scriptPath:"D:/fullstck/final project/MALA/Server/utils/python",
   } 
-  console.log("test")
   
   PythonShell.run("AnlayzeResultPredict.py",options).then(messages=>{
-    // results is an array consisting of messages collected during execution
     messages.forEach((index)=>{
       console.log('results: %j', index); 
     })
