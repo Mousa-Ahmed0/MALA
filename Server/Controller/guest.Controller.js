@@ -48,6 +48,13 @@ module.exports.deleeteGuestMeassage = asyncHandler(async (req, res) => {
 });
 
 
+/**--------------------------------
+ * @desc send Email
+ * @router /api/Guest/sendEmail
+ * @method post
+ * @access  (staff or admin)
+ * ------------------------------------------ */
+
 module.exports.sendEmail = asyncHandler(async (req, res) => {
     try {
         const email = req.body.email;

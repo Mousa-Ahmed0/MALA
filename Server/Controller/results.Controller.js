@@ -78,9 +78,9 @@ module.exports.editResult = asyncHandler(async (req, res) => {
  * @access private (staff or admin)
  * ------------------------------------------ */
 module.exports.getResults = asyncHandler(async (req, res) => {
-  const POST_PER_PAGE=10;
-  const pageNumber=req.query.pageNumber;
-  const detailsAnalyze = await analyzeResult.find().skip((pageNumber -1)* POST_PER_PAGE).limit(POST_PER_PAGE);
+  const POST_PER_PAGE = 10;
+  const pageNumber = req.query.pageNumber;
+  const detailsAnalyze = await analyzeResult.find().skip((pageNumber - 1) * POST_PER_PAGE).limit(POST_PER_PAGE);
   let usersArray = [];
   // let usersPatint = null;
   // let usersDoctor = null;
