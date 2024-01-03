@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const { Guest } = require("../models/guest");
+const { sendEmail } = require("../utils/Email/user.Email");
 
 /**--------------------------------
  * @desc add Guest meassage
@@ -41,7 +42,23 @@ module.exports.getGuestMeassage = asyncHandler(async (req, res) => {
 module.exports.deleeteGuestMeassage = asyncHandler(async (req, res) => {
     const delMeass = await Guest.findByIdAndDelete(req.params.id);
     if (delMeass)
-        res.status(200).json({  message: " Delete done..........." });
+        res.status(200).json({ message: " Delete done..........." });
     else
         res.status(404).json({ message: "User not found" });
-})
+});
+
+
+module.exports.sendEmail = asyncHandler(async (req, res) => {
+    try {
+        const email = req.body.email;
+        const massage = req.body.massage;
+
+        // Assuming sendEmail is an asynchronous function that can throw errors
+        await sendEmail({ email, massage });
+        res.status(200).json({ message: "Send massage" });
+    } catch (error) {
+        // Handle the error here, you can log it or send a specific error response to the client
+        console.error("Error sending email:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
