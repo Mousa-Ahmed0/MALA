@@ -97,7 +97,7 @@ export default function VisitorsLineChartContainer({ darkMode }) {
               },
             }
           );
-          // console.log(response);
+          console.log(response);
           //check is there data?
           if (response.data.resultArray) {
             //create new prop
@@ -108,18 +108,23 @@ export default function VisitorsLineChartContainer({ darkMode }) {
             //set total count of paid value
             setTotalVisitors(response.data.resultArray.length);
             newLineChartProperties.lineLabels = getPastDayNames(7); //get name of last 7 days
-            for (let i = currentDay - 7; i <= currentDay; i++) {
-              //move 7 times loop "one for each day"
-              let count = 0; //total count for each day
-              response.data.resultArray.map((res) => {
-                //move on all data returned to get total value for each
-                let date = new Date(res.date);
-                let day = date.getDate();
-                if (day === i) {
+            for (let i = 0; i <= 6; i++) {
+              let currentDate = new Date();
+              currentDate.setDate(currentDate.getDate() - i);
+
+              let count = 0; // total count for each day
+              response.data.resultArray.forEach((res) => {
+                let resDate = new Date(res.date);
+                if (
+                  resDate.getDate() === currentDate.getDate() &&
+                  resDate.getMonth() === currentDate.getMonth() &&
+                  resDate.getFullYear() === currentDate.getFullYear()
+                ) {
                   count += 1;
                 }
               });
-              //push the count of day to array "0 if day not exist in data"
+
+              // push the count of day to array "0 if day not exist in data"
               newLineChartProperties.lineData.push(count.toString());
             }
             //set the chart prop to our state
@@ -153,20 +158,26 @@ export default function VisitorsLineChartContainer({ darkMode }) {
               lineData: [],
             };
             setTotalVisitors(response.data.resultArray.length);
-            let month = currentDate.getMonth() + 1; //get current month
-            for (let i = month - 3; i <= currentDate.getMonth(); i++) {
-              // move on months count
-              newLineChartProperties.lineLabels.push(monthsOfYear[i]); // get name of month then add it to label array
-              let count = 0; // total count of paid value for each month
-              response.data.resultArray.map((res) => {
-                //move on data to count each
-                let date = new Date(res.date);
-                let resMonth = date.getMonth();
-                if (resMonth === i) {
+            for (let i = 0; i <= 2; i++) {
+              let currentDate = new Date();
+              currentDate.setMonth(currentDate.getMonth() - i);
+              // get name of month then add it to label array
+              newLineChartProperties.lineLabels.push(
+                monthsOfYear[currentDate.getMonth()]
+              );
+              let count = 0; // total count for each month
+              response.data.resultArray.forEach((res) => {
+                let resDate = new Date(res.date);
+                if (
+                  resDate.getMonth() === currentDate.getMonth() &&
+                  resDate.getFullYear() === currentDate.getFullYear()
+                ) {
                   count += 1;
                 }
               });
-              newLineChartProperties.lineData.push(count.toString()); //push the count to array
+
+              // push the count of month to array "0 if month not exist in data"
+              newLineChartProperties.lineData.push(count.toString());
             }
             //set the propretes to our state
             setLineChartProperties(newLineChartProperties);
@@ -197,21 +208,29 @@ export default function VisitorsLineChartContainer({ darkMode }) {
               lineData: [],
             };
             setTotalVisitors(response.data.resultArray.length);
-            let month = currentDate.getMonth() + 1; //get current month
-            for (let i = month - 6; i <= currentDate.getMonth(); i++) {
-              // move on months count
-              newLineChartProperties.lineLabels.push(monthsOfYear[i]); // get name of month then add it to label array
-              let count = 0; // total count of paid value for each month
-              response.data.resultArray.map((res) => {
-                //move on data to count each
-                let date = new Date(res.date);
-                let resMonth = date.getMonth();
-                if (resMonth === i) {
+            for (let i = 0; i <= 5; i++) {
+              let currentDate = new Date();
+              currentDate.setMonth(currentDate.getMonth() - i);
+              // get name of month then add it to label array
+              newLineChartProperties.lineLabels.push(
+                monthsOfYear[currentDate.getMonth()]
+              );
+
+              let count = 0; // total count for each month
+              response.data.resultArray.forEach((res) => {
+                let resDate = new Date(res.date);
+                if (
+                  resDate.getMonth() === currentDate.getMonth() &&
+                  resDate.getFullYear() === currentDate.getFullYear()
+                ) {
                   count += 1;
                 }
               });
-              newLineChartProperties.lineData.push(count.toString()); //push the count to array
+
+              // push the count of month to array "0 if month not exist in data"
+              newLineChartProperties.lineData.push(count.toString());
             }
+
             //set the propretes to our state
             setLineChartProperties(newLineChartProperties);
           } else {
@@ -241,21 +260,28 @@ export default function VisitorsLineChartContainer({ darkMode }) {
               lineData: [],
             };
             setTotalVisitors(response.data.resultArray.length);
-            let month = currentDate.getMonth() + 1; //get current month
-            for (let i = month - 12; i <= currentDate.getMonth(); i++) {
-              // move on months count
-              newLineChartProperties.lineLabels.push(monthsOfYear[i]); // get name of month then add it to label array
-              let count = 0; // total count of paid value for each month
-              response.data.resultArray.map((res) => {
-                //move on data to count each
-                let date = new Date(res.date);
-                let resMonth = date.getMonth();
-                if (resMonth === i) {
+            for (let i = 0; i <= 11; i++) {
+              let currentDate = new Date();
+              currentDate.setMonth(currentDate.getMonth() - i);
+              // get name of month then add it to label array
+              newLineChartProperties.lineLabels.push(
+                monthsOfYear[currentDate.getMonth()]
+              );
+              let count = 0; // total count for each month
+              response.data.resultArray.forEach((res) => {
+                let resDate = new Date(res.date);
+                if (
+                  resDate.getMonth() === currentDate.getMonth() &&
+                  resDate.getFullYear() === currentDate.getFullYear()
+                ) {
                   count += 1;
                 }
               });
-              newLineChartProperties.lineData.push(count.toString()); //push the count to array
+
+              // push the count of month to array "0 if month not exist in data"
+              newLineChartProperties.lineData.push(count.toString());
             }
+
             //set the propretes to our state
             setLineChartProperties(newLineChartProperties);
           } else {

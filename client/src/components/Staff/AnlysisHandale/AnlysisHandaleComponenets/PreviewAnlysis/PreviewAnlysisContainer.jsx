@@ -148,43 +148,36 @@ export default function PreviewAnlysisContainer() {
   function handaleCategory(e) {
     if (e && e.target && e.target.value) {
       setCategoryOption(e.target.value);
-      const option = e.target.value;
-      if (searchResults.length === 0 || !searchResults || val === "") {
-        console.log("No Search");
-        if (option === "noValue") {
-          clearResults();
-        } else if (avilableCategories.includes(option)) {
-          const filterdAnalysis = allAnlysis.filter(
-            (analyze) => analyze.analyzeCategory === option
-          );
-          console.log(filterdAnalysis);
-          setVisibleAnlysis(filterdAnalysis);
-        }
-      } else {
-        console.log("Search");
-        if (option === "noValue") {
-          console.log("hh");
-          setVisibleAnlysis(searchResults);
-        } else if (avilableCategories.includes(option)) {
-          const filterdAnalysis = searchResults.filter(
-            (analyze) => analyze.analyzeCategory === option
-          );
-          if (filterdAnalysis.length > 0) setVisibleAnlysis(filterdAnalysis);
-          else {
-            setVisibleAnlysis([]);
-            setNoResults(true);
-          }
-        }
-      }
-      if (visibleAnlysis.length === 0) {
-        setNoResults(true);
+    }
+  }
+  function handaleFilter() {
+    if (searchResults.length === 0 || !searchResults || val === "") {
+      if (categoryOption === "noValue") {
+        clearResults();
+      } else if (avilableCategories.includes(categoryOption)) {
+        const filterdAnalysis = allAnlysis.filter(
+          (analyze) => analyze.analyzeCategory === categoryOption
+        );
+        console.log(filterdAnalysis);
+        setVisibleAnlysis(filterdAnalysis);
       }
     } else {
-      if (searchResults.length === 0 || !searchResults || val === "") {
-        clearResults();
-      } else {
+      if (categoryOption === "noValue") {
+        console.log("hh");
         setVisibleAnlysis(searchResults);
+      } else if (avilableCategories.includes(categoryOption)) {
+        const filterdAnalysis = searchResults.filter(
+          (analyze) => analyze.analyzeCategory === categoryOption
+        );
+        if (filterdAnalysis.length > 0) setVisibleAnlysis(filterdAnalysis);
+        else {
+          setVisibleAnlysis([]);
+          setNoResults(true);
+        }
       }
+    }
+    if (visibleAnlysis.length === 0) {
+      setNoResults(true);
     }
   }
   /* Render renderCategoriesArray */
@@ -207,23 +200,27 @@ export default function PreviewAnlysisContainer() {
       clearResults();
     }
     setVal(value);
+    setSearchResults([]);
   }
   async function searchForAnlyze() {
     console.log(val);
     if (val.trim() === "") {
       return;
     }
-    let srchResultsArray = allAnlysis.filter((Analyze) =>
-      Analyze.name.toLowerCase().includes(val.toLowerCase())
+    let srchResultsArray = allAnlysis.filter(
+      (Analyze) =>
+        Analyze.name.toLowerCase().includes(val.toLowerCase()) ||
+        Analyze.code.toLowerCase().includes(val.toLowerCase())
     );
     if (srchResultsArray.length === 0) {
       setVisibleAnlysis([]);
       setNoResults(true);
     } else {
+      console.log("search:", srchResultsArray);
       setSearchResults(srchResultsArray);
     }
   }
-
+  /////////////////////////
   // initial use Effect
   useEffect(() => {
     getAnalysis();
@@ -235,8 +232,12 @@ export default function PreviewAnlysisContainer() {
   }, [val]);
   useEffect(() => {
     // Filter and display users when the filter option or data changes
-    handaleCategory(categoryOption);
+    handaleFilter();
   }, [categoryOption, searchResults]);
+  //use Effect
+  useEffect(() => {
+    console.log("searchResults", searchResults);
+  }, [searchResults]);
   //use Effect
   useEffect(() => {
     console.log("visibleAnlysis", visibleAnlysis);

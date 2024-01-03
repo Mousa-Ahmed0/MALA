@@ -129,7 +129,7 @@ export default function PatResultsPreviewContainer() {
     } else {
       const srchResultsArray = allResults.filter((result) =>
         result.usersDoctor
-          ? (result.usersDoctor.fname + result.usersDoctor.lastname)
+          ? (result.usersDoctor.firstname + " " + result.usersDoctor.lastname)
               .toLowerCase()
               .includes(val.toLowerCase())
           : result.detailsAnalyze.doctorName
@@ -148,8 +148,12 @@ export default function PatResultsPreviewContainer() {
     getResults();
   }, []);
   useEffect(() => {
+    console.log(val);
     searchForAResult();
   }, [val]);
+  useEffect(() => {
+    console.log(visibleResults);
+  }, [visibleResults]);
   return (
     <>
       <div className="ST-section  p-0">
