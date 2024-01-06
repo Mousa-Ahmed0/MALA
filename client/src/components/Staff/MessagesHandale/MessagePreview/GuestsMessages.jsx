@@ -6,6 +6,7 @@ import { formatDate } from "../../../../methods/FormateDate";
 export default function GuestsMessages({ darkMode, setIsFormOpen }) {
   const [allMessages, setAllMessages] = useState([]);
   const [isSendFormOpen, setIsSendFormOpen] = useState(false);
+  const [toUser, setToUser] = useState();
   //Errors variables
   let [apiError, setApiError] = useState(false);
   let [noResults, setNoResults] = useState(false);
@@ -97,8 +98,8 @@ export default function GuestsMessages({ darkMode, setIsFormOpen }) {
                   </div>
                   <div className="col-2 d-flex align-items-center">
                     <i
-                      onClick={() => handaleSendEmailFormOpen()}
-                      style={{ cursor: "pointer", fontSize: "1.875rem" }}
+                      onClick={() => handaleSendEmailFormOpen(msg)}
+                      style={{ cursor: "pointer", fontSize: "1.375rem" }}
                       className={`fa-solid normal-btn fa-comment-dots border-0 m-0 p-0 text-truncate  ${
                         darkMode ? " dark-theme" : ""
                       }`}
@@ -128,9 +129,10 @@ export default function GuestsMessages({ darkMode, setIsFormOpen }) {
   }
   /* *************** Handale Pop Forms *************** */
   // form open
-  function handaleSendEmailFormOpen(a) {
+  function handaleSendEmailFormOpen(msg) {
     setIsFormOpen(true);
     setIsSendFormOpen(true);
+    setToUser(msg);
   }
 
   function closeForm() {
@@ -155,6 +157,7 @@ export default function GuestsMessages({ darkMode, setIsFormOpen }) {
             darkMode={darkMode}
             closeForm={closeForm}
             setApiError={setApiError}
+            toUser={toUser}
           />
         </div>
         <BackBtn />
