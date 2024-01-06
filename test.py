@@ -4,7 +4,6 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import accuracy_score, classification_report
 import numpy as np
-import sys
 
 ###########################################
 print("---Start of Program---")
