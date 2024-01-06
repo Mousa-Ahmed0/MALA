@@ -9,6 +9,8 @@ import UserFilter from "../../../../UserFilter/UserFilter";
 import { getAllUsers } from "../../../../../apis/ApisHandale";
 import { getAllDoctPat } from "../../../../../apis/ApisHandale";
 import { deleteAUser } from "../../../../../apis/ApisHandale";
+import axios from "axios";
+import { func } from "joi";
 
 export default function UsersPreview({ user }) {
   const { darkMode } = useDarkMode();
@@ -32,14 +34,31 @@ export default function UsersPreview({ user }) {
       </div>
     </div>
   );
+  const [pageNo, setPageNo] = useState(1);
+  const [usersCount, setUsersCount] = useState();
 
+  // get Users Count
+  async function getCount() {
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/api/user/getCount",
+        {
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+        }
+      );
+      setUsersCount(response.data);
+      console.log(response);
+    } catch (error) {
+      console.error("Error fron getCount: ", error);
+    }
+  }
   // Get all Users from API
   async function getUsers() {
     console.log("gg", user);
     let response;
     try {
       if (user.usertype === "Admin") {
-        response = (await getAllUsers()).data;
+        response = (await getAllUsers(pageNo)).data;
       } else if (user.usertype === "Staff") {
         response = (await getAllDoctPat()).data;
       }
@@ -201,11 +220,35 @@ export default function UsersPreview({ user }) {
       console.log("Error", error);
     }
   }
+
+  //
+  function displyPaginationItems() {
+    let result = [];
+    for (let i = 0; i < usersCount / 3; i++) {
+      result.push(
+        <li className="page-item" onClick={() => setPageNo(i + 1)} key={i}>
+          <a className="page-link">{i + 1}</a>
+        </li>
+      );
+    }
+    return result;
+  }
+
+  //////////////////
   //initial rendring
   useEffect(() => {
+    // get Users count
+    getCount();
     // Fetch users when the component mounts
     getUsers();
   }, []);
+  //
+  useEffect(() => {
+    getUsers();
+  }, [pageNo]);
+  useEffect(() => {
+    console.log("pageNo: ", pageNo);
+  }, [pageNo]);
 
   useEffect(() => {
     // Filter and display users when the filter option or data changes
@@ -234,22 +277,30 @@ export default function UsersPreview({ user }) {
         <section className="px-4">
           <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-center">
-              <li class="page-item disabled">
-                <a class="page-link" tabindex="-1">
+              <li className={`page-item ${pageNo === 1 ? "disabled" : ""}`}>
+                <a
+                  className="page-link"
+                  onClick={() => {
+                    setPageNo((prevNo) => prevNo - 1);
+                  }}
+                >
                   Previous
                 </a>
               </li>
-              <li class="page-item">
-                <a class="page-link">1</a>
-              </li>
-              <li class="page-item">
-                <a class="page-link">2</a>
-              </li>
-              <li class="page-item">
-                <a class="page-link">3</a>
-              </li>
-              <li class="page-item">
-                <a class="page-link">Next</a>
+              {displyPaginationItems()}
+              <li
+                className={`page-item ${
+                  pageNo === usersCount / 3 ? "disabled" : ""
+                }`}
+              >
+                <a
+                  className="page-link"
+                  onClick={() => {
+                    setPageNo((prevNo) => prevNo + 1);
+                  }}
+                >
+                  Next
+                </a>
               </li>
             </ul>
           </nav>
@@ -315,22 +366,30 @@ export default function UsersPreview({ user }) {
           </div>
           <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-center">
-              <li class="page-item disabled">
-                <a class="page-link" tabindex="-1">
+              <li className={`page-item ${pageNo === 1 ? "disabled" : ""}`}>
+                <a
+                  className="page-link"
+                  onClick={() => {
+                    setPageNo((prevNo) => prevNo - 1);
+                  }}
+                >
                   Previous
                 </a>
               </li>
-              <li class="page-item">
-                <a class="page-link">1</a>
-              </li>
-              <li class="page-item">
-                <a class="page-link">2</a>
-              </li>
-              <li class="page-item">
-                <a class="page-link">3</a>
-              </li>
-              <li class="page-item">
-                <a class="page-link">Next</a>
+              {displyPaginationItems()}
+              <li
+                className={`page-item ${
+                  pageNo === usersCount / 3 ? "disabled" : ""
+                }`}
+              >
+                <a
+                  className="page-link"
+                  onClick={() => {
+                    setPageNo((prevNo) => prevNo + 1);
+                  }}
+                >
+                  Next
+                </a>
               </li>
             </ul>
           </nav>

@@ -27,10 +27,13 @@ export const addANewAnalyze = async (anlyze) => {
   );
 };
 /* Users API`s */
-export const getAllUsers = async () => {
-  return await axios.get("http://localhost:5000/api/user/get-users", {
-    headers: { Authorization: "Bearer " + localStorage.getItem("token") },
-  });
+export const getAllUsers = async (pageNo) => {
+  return await axios.get(
+    `http://localhost:5000/api/user/get-users?userNumber=${pageNo}`,
+    {
+      headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+    }
+  );
 };
 export const getAllDoctPat = async () => {
   return await axios.get("http://localhost:5000/api/user/getAllDoctorPatient", {
