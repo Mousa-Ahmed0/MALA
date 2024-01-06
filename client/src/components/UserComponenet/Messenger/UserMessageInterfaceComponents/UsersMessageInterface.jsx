@@ -56,7 +56,8 @@ export default function UsersMessageInterface({
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         }
       );
-      setAllMessages(response.data[0]);
+      if (response.data.length > 0) setAllMessages(response.data[0]);
+      else setNoResults(true);
     } catch (error) {
       console.error("Error from Sending Message: ", error);
     }
@@ -94,7 +95,7 @@ export default function UsersMessageInterface({
               key={index}
               onMouseEnter={() => setMouseOnMsgIndex(index)}
               onMouseLeave={() => setMouseOnMsgIndex(null)}
-              className={`col-6 alert text-wrap overflow-auto ${
+              className={`col-6 alert  text-break ${
                 message.senderId === user.id
                   ? "alert-primary"
                   : "alert-secondry"

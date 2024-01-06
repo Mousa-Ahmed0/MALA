@@ -91,7 +91,7 @@ export default function PreviewAnlysisPresintation({
               displayAnlysis()
             ) : apiError ? (
               apiErrorMessage
-            ) : noResults || visibleAnlysis.length === 0 ? (
+            ) : noResults ? (
               <div className="my-4 mid-bold">No results Found.</div>
             ) : (
               <div className="d-flex justify-content-center align-items-center my-4">

@@ -61,7 +61,7 @@ export default function LabMessageInterface({
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         }
       );
-      console.log(response);
+      console.log("Lab response: ", response);
       setAllMessages(response.data);
       if (response.data.massage.length === 0) setNoResults(true);
       setMessage({

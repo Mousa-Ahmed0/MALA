@@ -22,6 +22,8 @@ export default function PatientHome({ user, setIsPdfLoading }) {
       </div>
     </div>
   );
+  const [noPayments, setNoPayments] = useState(false);
+  const [noResults, setNoResults] = useState(false);
 
   //get patient results
   async function getResults() {
@@ -74,7 +76,9 @@ export default function PatientHome({ user, setIsPdfLoading }) {
     try {
       let response = await getPateinrPayments({ identPatient: user.ident });
       console.log("Payments", response);
-      setAllPayments(response.data.paumentArray);
+      if (response.data.paumentArray.length > 0)
+        setAllPayments(response.data.paumentArray);
+      else setNoPayments(true);
       setPaymentError(false);
     } catch (error) {
       setPaymentError(true);
@@ -184,6 +188,8 @@ export default function PatientHome({ user, setIsPdfLoading }) {
                 displayPayments()
               ) : paymentError ? (
                 apiErrorMessage
+              ) : noPayments ? (
+                <div>No Payments Found.</div>
               ) : (
                 <div className="d-flex justify-content-center align-items-center">
                   <div className="spinner-border text-primary" role="status">
