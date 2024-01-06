@@ -116,8 +116,7 @@ module.exports.getMass = asyncHandler(async (req, res) => {
 module.exports.getUserMass = asyncHandler(async (req, res) => {
   const newMass = await Massage.findById(req.params.id)
     .populate("secondUser", ["-password"])
-    .populate("firstUser", ["-password"])
-    .sort({ createdAt: -1 });
+    .populate("firstUser", ["-password"]);
   //.populate('secondUser', ['-password'])
   if (newMass) {
     if (newMass.firstUser && newMass.firstUser.equals(req.user.id)) {
