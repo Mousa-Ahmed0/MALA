@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 import { useDarkMode } from "../../../../../context/DarkModeContext";
 
 import SearchBar from "../../../../SearchBar/SearchBar";
 import UserFilter from "../../../../UserFilter/UserFilter";
+import PaginationNav from "../../../../PaginationNav";
 
 import { getAllUsers } from "../../../../../apis/ApisHandale";
 import { getAllDoctPat } from "../../../../../apis/ApisHandale";
 import { deleteAUser } from "../../../../../apis/ApisHandale";
-import axios from "axios";
-import { func } from "joi";
 
 export default function UsersPreview({ user }) {
   const { darkMode } = useDarkMode();
@@ -221,19 +221,6 @@ export default function UsersPreview({ user }) {
     }
   }
 
-  //
-  function displyPaginationItems() {
-    let result = [];
-    for (let i = 0; i < usersCount / 3; i++) {
-      result.push(
-        <li className="page-item" onClick={() => setPageNo(i + 1)} key={i}>
-          <a className="page-link">{i + 1}</a>
-        </li>
-      );
-    }
-    return result;
-  }
-
   //////////////////
   //initial rendring
   useEffect(() => {
@@ -245,9 +232,6 @@ export default function UsersPreview({ user }) {
   //
   useEffect(() => {
     getUsers();
-  }, [pageNo]);
-  useEffect(() => {
-    console.log("pageNo: ", pageNo);
   }, [pageNo]);
 
   useEffect(() => {
@@ -275,35 +259,11 @@ export default function UsersPreview({ user }) {
           </div>
         </div>
         <section className="px-4">
-          <nav aria-label="Page navigation example">
-            <ul class="pagination justify-content-center">
-              <li className={`page-item ${pageNo === 1 ? "disabled" : ""}`}>
-                <a
-                  className="page-link"
-                  onClick={() => {
-                    setPageNo((prevNo) => prevNo - 1);
-                  }}
-                >
-                  Previous
-                </a>
-              </li>
-              {displyPaginationItems()}
-              <li
-                className={`page-item ${
-                  pageNo === usersCount / 3 ? "disabled" : ""
-                }`}
-              >
-                <a
-                  className="page-link"
-                  onClick={() => {
-                    setPageNo((prevNo) => prevNo + 1);
-                  }}
-                >
-                  Next
-                </a>
-              </li>
-            </ul>
-          </nav>
+          <PaginationNav
+            counts={usersCount}
+            pageNo={pageNo}
+            setPageNo={setPageNo}
+          />
           <div className="row my-0 d-none d-md-block">
             <div className="col-lg-12">
               <div className="card border-0 bg-transparent">
@@ -364,35 +324,11 @@ export default function UsersPreview({ user }) {
               </div>
             )}
           </div>
-          <nav aria-label="Page navigation example">
-            <ul class="pagination justify-content-center">
-              <li className={`page-item ${pageNo === 1 ? "disabled" : ""}`}>
-                <a
-                  className="page-link"
-                  onClick={() => {
-                    setPageNo((prevNo) => prevNo - 1);
-                  }}
-                >
-                  Previous
-                </a>
-              </li>
-              {displyPaginationItems()}
-              <li
-                className={`page-item ${
-                  pageNo === usersCount / 3 ? "disabled" : ""
-                }`}
-              >
-                <a
-                  className="page-link"
-                  onClick={() => {
-                    setPageNo((prevNo) => prevNo + 1);
-                  }}
-                >
-                  Next
-                </a>
-              </li>
-            </ul>
-          </nav>
+          <PaginationNav
+            counts={usersCount}
+            pageNo={pageNo}
+            setPageNo={setPageNo}
+          />
         </section>
       </div>
     </div>

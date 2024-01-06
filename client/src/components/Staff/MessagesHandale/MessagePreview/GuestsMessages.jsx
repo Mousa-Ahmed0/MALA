@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
-import BackBtn from "../../../BackBtn";
 import axios from "axios";
+import BackBtn from "../../../BackBtn";
+import SendEmail from "../MessageComponents/SendEmail";
 import { formatDate } from "../../../../methods/FormateDate";
-export default function GuestsMessages({ darkMode }) {
+export default function GuestsMessages({ darkMode, setIsFormOpen }) {
   const [allMessages, setAllMessages] = useState([]);
+  const [isSendFormOpen, setIsSendFormOpen] = useState(false);
   //Errors variables
   let [apiError, setApiError] = useState(false);
   let [noResults, setNoResults] = useState(false);
@@ -50,10 +52,19 @@ export default function GuestsMessages({ darkMode }) {
               <div className="card-Top d-flex   align-items-center">
                 <div className="card-Top-Details d-flexflex-column">
                   <div className="row">
-                    <div className="col-12">
-                      <h1 className="h4 mid-bold text-truncate">
+                    <div className="col-10">
+                      <h1 className="h4 mid-bold text-truncate colorMain">
                         {msg.fullName}
                       </h1>
+                    </div>
+                    <div className="col-2 d-flex align-items-center">
+                      <i
+                        onClick={() => deleeteGuestMeassage(msg.id)}
+                        style={{ cursor: "pointer" }}
+                        className={`fa-solid delete-btn fa-trash border-0 m-0 p-0 text-truncate  ${
+                          darkMode ? " dark-theme" : ""
+                        }`}
+                      />
                     </div>
                     <div className="col-12">
                       <p className="home-size mid-bold my-1 text-truncate">
@@ -86,9 +97,9 @@ export default function GuestsMessages({ darkMode }) {
                   </div>
                   <div className="col-2 d-flex align-items-center">
                     <i
-                      onClick={() => deleeteGuestMeassage(msg.id)}
-                      style={{ cursor: "pointer" }}
-                      className={`fa-solid delete-btn fa-trash border-0 m-0 p-0 text-truncate  ${
+                      onClick={() => handaleSendEmailFormOpen()}
+                      style={{ cursor: "pointer", fontSize: "1.875rem" }}
+                      className={`fa-solid normal-btn fa-comment-dots border-0 m-0 p-0 text-truncate  ${
                         darkMode ? " dark-theme" : ""
                       }`}
                     />
@@ -115,6 +126,17 @@ export default function GuestsMessages({ darkMode }) {
       console.error("error from getGuestMessages:", error);
     }
   }
+  /* *************** Handale Pop Forms *************** */
+  // form open
+  function handaleSendEmailFormOpen(a) {
+    setIsFormOpen(true);
+    setIsSendFormOpen(true);
+  }
+
+  function closeForm() {
+    setIsFormOpen(false);
+    setIsSendFormOpen(false);
+  }
   /////////////
   useEffect(() => {
     getGuestMessages();
@@ -122,6 +144,19 @@ export default function GuestsMessages({ darkMode }) {
   return (
     <>
       <div className="ST-section my-4">
+        <div
+          className={`position-relative my-4 ${
+            isSendFormOpen ? "d-flex" : "d-none"
+          } ${
+            darkMode ? " spic-dark-mode border-0" : "bg-white"
+          } justify-content-center align-items-center h-100 w-100 z-200`}
+        >
+          <SendEmail
+            darkMode={darkMode}
+            closeForm={closeForm}
+            setApiError={setApiError}
+          />
+        </div>
         <BackBtn />
         <section className="px-4">
           <div className="row ">

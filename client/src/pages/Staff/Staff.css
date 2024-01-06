@@ -65,13 +65,11 @@
 .delete-btn:hover {
   border: 1px solid #ccc;
   color: #d00032;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1) !important;
   transition: 0.5s;
 }
 .normal-btn:hover {
   border: 1px solid #ccc;
   color: var(--main-bg);
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1) !important;
   transition: 0.5s;
 }
 /* ------------------------------------------------------- AddAnlyze -------------------------------------------------------  */

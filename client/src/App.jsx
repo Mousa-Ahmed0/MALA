@@ -406,7 +406,12 @@ export default function App() {
                   />
                   <Route
                     path="/Staff/MessagePreview/GuestMessages"
-                    element={<GuestsMessages darkMode={darkMode} />}
+                    element={
+                      <GuestsMessages
+                        darkMode={darkMode}
+                        setIsFormOpen={setIsFormOpen}
+                      />
+                    }
                   />
                 </Route>
 
