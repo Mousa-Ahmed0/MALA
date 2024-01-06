@@ -58,10 +58,11 @@ module.exports.deleeteGuestMeassage = asyncHandler(async (req, res) => {
 module.exports.sendEmail = asyncHandler(async (req, res) => {
     try {
         const email = req.body.email;
+        const subject = req.body.subject;
         const massage = req.body.massage;
 
         // Assuming sendEmail is an asynchronous function that can throw errors
-        await sendEmail({ email, massage });
+        await sendEmail({ email, massage, subject });
         res.status(200).json({ message: "Send massage" });
     } catch (error) {
         // Handle the error here, you can log it or send a specific error response to the client

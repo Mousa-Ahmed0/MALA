@@ -11,13 +11,12 @@ module.exports.sendEmail=async (option)=>{
 
   // send mail with defined transport object
   let info =  transporter.sendMail({
-    from: '"Fred Foo 👻" <ma5055928@gmail.com', // sender address
+    from: '<ma5055928@gmail.com', // sender address
     to: option.email, // list of receivers
-    subject: "Hello ✔", // Subject line
-    text: "Hello world?", // plain text body
+    subject: option.subject, // Subject line
     html: `
           <div style="background:#f1f1f1;color:#000">
-           <p style="color:#f1f1f1">${option.massage}</p>
+           <p style="color:#000">${option.massage}</p>
           </div>
           `, // html body
   },(err,info)=>{
