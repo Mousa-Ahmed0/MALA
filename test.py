@@ -11,17 +11,9 @@ print("---Start of Program---")
 
 # Get Data from .csv file
 dataSet = pd.read_csv("CBC data_for_meandeley_csv.csv")
-print(dataSet.head(3))  # Print to ensure that the data is correct
 
 # Create DataFrame 'df'
 df = pd.DataFrame(dataSet)
-
-# Extract 'component_results' and create columns for 'C1_resultValue' and 'C2_resultValue'
-# df['C1_resultValue'] = df['component_results'].apply(lambda x: next((item['resultValue'] for item in x if item['componentName'] == 'C1'), None))
-# df['C2_resultValue'] = df['component_results'].apply(lambda x: next((item['resultValue'] for item in x if item['componentName'] == 'C2'), None))
-
-# Drop 'component_results' column
-# df.drop('component_results', axis=1, inplace=True)
 
 # Create new DF 'X' with needed labels
 X = df.iloc[:, 1:12]
@@ -30,13 +22,7 @@ X = df.iloc[:, 1:12]
 print("_______________DF X:__________________")
 print(X)
 
-# Create numerical labels
-
-###
-print("________________DF X after converted to numerical:_________________")
-print(X)
-
-# Convert 'predicted_issue' to numerical using LabelEncoder
+#df for issues: Healthe: 0, Anemia: 1
 y = df['disease']
 
 ###
@@ -76,9 +62,9 @@ new_data = {'Age': [38], 'Sex': [0], 'RBC': [4.47], 'PCV': [30.02], 'MCV': [88.7
 
 # Create a DataFrame for the new data
 new_df = pd.DataFrame(new_data)
-
 ###
 newResult = new_df[['Age', 'Sex', 'RBC', 'PCV', 'MCV', 'MCH', 'MCHC', 'RDW', 'TLC', 'PLT /mm3', 'HGB']]
+
 # Make predictions on the new data
 pred = clf.predict(newResult)
 #
