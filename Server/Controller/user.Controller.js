@@ -13,8 +13,10 @@ const jwt = require("jsonwebtoken");
  * @method GET
  * @access private just admin
  * ------------------------------------------ */
-module.exports.getAllUsers = asyncHandler(async (req, res) => {
-  const users = await user.find().select("-password");
+module.exports.getAllUsers = asyncHandler(async (req, res) => {  
+  const USER_PER_PAGE = 10;
+  const userNumber = req.query.userNumber;
+  const users = await user.find().select("-password").skip((userNumber - 1) * USER_PER_PAGE).limit(USER_PER_PAGE);
   res.status(200).json(users);
 });
 /**--------------------------------
