@@ -77,6 +77,11 @@ export default function PaymentLineChartContainer({ darkMode }) {
   //Handel Chart Data
   //Handel Filter
   async function handaleFilterOption(option) {
+    setTotalCount(0);
+    setLineChartProperties({
+      lineLabels: [],
+      lineData: [],
+    });
     setFilterOption(option);
     switch (option) {
       case "noValue":
@@ -327,6 +332,9 @@ export default function PaymentLineChartContainer({ darkMode }) {
           lineData={lineChartPropreties.lineData}
           filterOption={filterOption}
         />
+      ) : lineChartPropreties.lineData.length === 0 ||
+        lineChartPropreties.lineLabels.length === 0 ? (
+        <div>No Payments Found</div>
       ) : (
         <div className="d-flex justify-content-center align-items-center">
           <div className="spinner-border text-primary" role="status">

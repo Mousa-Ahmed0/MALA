@@ -54,7 +54,6 @@ export default function ResultsPreviewContainer({}) {
       setVisibleResults(response.data.usersArray);
     } catch (error) {
       console.error("Error From getResults: ", error);
-      setApiError(error.data.message);
     }
   }
 

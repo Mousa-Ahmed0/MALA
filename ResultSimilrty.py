@@ -23,14 +23,19 @@ print(records)
 
 # Function to calculate cosine similarity between two vectors
 def calc_similarity_vectors(vec1, vec2):
-    dot_product = np.dot(vec1, vec2) # a.b
-    norm_vec1 = np.linalg.norm(vec1) # |a|
-    norm_vec2 = np.linalg.norm(vec2) # |b|
+    maxVec1 = np.max(vec1)
+    maxVec2 = np.max(vec2)
+    vec1_norm = vec1 / maxVec1
+    vec2_norm = vec2 / maxVec2
+ 
+    dot_product = np.dot(vec1_norm, vec2_norm) # a.b
+    norm_vec1 = np.linalg.norm(vec1_norm) # |a|
+    norm_vec2 = np.linalg.norm(vec2_norm) # |b|
     cos_theta  = dot_product / (norm_vec1 * norm_vec2) # (a · b) / (|a| |b|)
     cos_theta = np.clip(cos_theta, -1.0, 1.0) # sure that cos-1 between -1 and 1
     theta = np.arccos(cos_theta) # Get θ in rad
     theta_degrees = np.degrees(theta) # convert to deg
-
+    print(f"Theta is: {theta_degrees}")
     return theta_degrees
 ############
 # Function to convert a new record to vector

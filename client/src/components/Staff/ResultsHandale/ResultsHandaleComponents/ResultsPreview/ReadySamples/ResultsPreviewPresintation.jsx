@@ -175,7 +175,7 @@ export default function ResultsPreviewPresintation({
               displayResults()
             ) : apiError ? (
               apiErrorMessage
-            ) : noResults ? (
+            ) : visibleResults.length === 0 ? (
               <div className="my-4 mid-bold">No results Found.</div>
             ) : (
               <div className="d-flex justify-content-center align-items-center my-4">
