@@ -10,7 +10,7 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
   //if Patient must be determain admin _id
   let objectIdString = "";
   if (req.user.usertype === "Patient") objectIdString = process.env.ADMIN_ID;
-  //admin _id - 657061843f25f53b9f23d19c
+  //admin _id - 659928039f6a2dee27595dcc
   else objectIdString = req.body.secondUser;
 
   let massRecord = await Massage.findOne({
@@ -120,10 +120,10 @@ module.exports.getUserMass = asyncHandler(async (req, res) => {
     .sort({ createdAt: -1 });
   //.populate('secondUser', ['-password'])
   if (newMass) {
-    if (newMass.firstUser.equals(req.user.id)) {
+    if (newMass.firstUser && newMass.firstUser.equals(req.user.id)) {
       newMass.ifReadyFirstUser = true;
       await newMass.save();
-    } else if (newMass.secondUser.equals(req.user.id)) {
+    } else if (newMass.secondUser && newMass.secondUser.equals(req.user.id)) {
       newMass.ifReadySecondUser = true;
       await newMass.save();
     }
