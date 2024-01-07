@@ -147,10 +147,10 @@ export default function LabMessageInterface({
     // Fetch messages initially
     getMessages();
     // Set up interval to fetch messages every 5 seconds (adjust as needed)
-    const intervalId = setInterval(getMessages, 5000);
+    // const intervalId = setInterval(getMessages, 5000);
     ////
     // Clean up interval when the component unmounts
-    return () => clearInterval(intervalId);
+    // return () => clearInterval(intervalId);
   }, []); // Empty dependency array means this effect runs once after the initial render
   //scroll if message changed "send or rescive a message"
   useEffect(() => {
