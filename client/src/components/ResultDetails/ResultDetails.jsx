@@ -10,7 +10,7 @@ import { useParams } from "react-router-dom";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 
-export default function ResultDetails() {
+export default function ResultDetails({ user }) {
   const [loader, setLoader] = useState(false);
   const { darkMode } = useDarkMode();
   const { id } = useParams();
@@ -46,12 +46,18 @@ export default function ResultDetails() {
             date={resultDetails.resultDate}
           />
         </div>
-        <ResultsTable darkMode={darkMode} resultDetails={resultDetails} />
+        <ResultsTable
+          user={user}
+          darkMode={darkMode}
+          resultDetails={resultDetails}
+        />
       </div>
     );
   }
 
   const downloadPDF = () => {
+    const ai = document.querySelector(".ai-pridict");
+    ai.classList.add("d-none");
     const capture = document.querySelector(".print-section");
     capture.style.padding = "20px 65px"; // Padding
 
@@ -75,6 +81,7 @@ export default function ResultDetails() {
       setLoader(false);
       doc.save("receipt.pdf");
     });
+    ai.classList.remove("d-none");
   };
   useEffect(() => {
     getResultDetails();

@@ -25,7 +25,7 @@ export default function DoctorHome({ user }) {
   async function getResults() {
     try {
       let response = await axios.get(
-        `http://localhost:5000/api/result/getDoctorAnzlyze?doctorIdent=125623652`,
+        `http://localhost:5000/api/result/getDoctorAnzlyze?doctorIdent=${user.ident}`,
         {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         }
