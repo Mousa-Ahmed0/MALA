@@ -111,7 +111,8 @@ export default function LabMessageInterface({
             >
               {message.mass}{" "}
               <div
-                className={`detailes-size m-0 position-absolute text-center top-0 end-0 bg-light bottom-shadow bg-info w-25 ${
+                style={{ fontSize: "0.745rem" }}
+                className={`m-0 position-absolute text-center top-0 end-0 bg-light bottom-shadow bg-info w-25 ${
                   mouseOnMsgIndex === index ? "d-block" : "d-none"
                 }`}
               >
