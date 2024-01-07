@@ -53,7 +53,7 @@ export default function ResultDetails() {
 
   const downloadPDF = () => {
     const capture = document.querySelector(".print-section");
-    capture.style.padding = "20px 100px"; // Padding
+    capture.style.padding = "20px 65px"; // Padding
 
     setLoader(true);
     html2canvas(capture).then((canvas) => {
@@ -70,7 +70,7 @@ export default function ResultDetails() {
         0,
         0,
         componentWidth * 1,
-        componentHeight * 0.4
+        componentHeight * 0.65
       );
       setLoader(false);
       doc.save("receipt.pdf");

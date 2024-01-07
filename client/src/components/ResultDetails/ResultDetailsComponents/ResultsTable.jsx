@@ -7,32 +7,35 @@ export default function ResultsTable({ darkMode, resultDetails }) {
       return resultDetails.currentResult.resultSet.map((anlyze, index) => {
         console.log("anlyze: ", resultDetails.analyzComponent[index]);
         return (
-          <div key={index} className="table-responsive mt-2 mb-2">
-            <h1 className="h4 mid-bold">
-              {resultDetails.analyzComponent[index] &&
-                resultDetails.analyzComponent[index].name && (
-                  <>
-                    {resultDetails.analyzComponent[index].name} ({" "}
-                    {resultDetails.analyzComponent[index].code} )
-                  </>
-                )}{" "}
-            </h1>
-            <table
-              className={`table table-bordered table-hover table-sm  ${
-                darkMode ? " table-dark border-white" : ""
-              }`}
-            >
-              <thead class="thead-light">
-                <tr>
-                  <th className="comp-name"></th>
-                  {renderResultsNo(anlyze)}
-                  <th className="normal-range">Normal Range</th>
-                  <th className="unit">Unit</th>
-                </tr>
-              </thead>
-              <tbody>{renderComponentsResult(anlyze, index)}</tbody>
-            </table>
-          </div>
+          <>
+            <div key={index} className="table-responsive mt-2 mb-2">
+              <h1 className="h4 mid-bold">
+                {resultDetails.analyzComponent[index] &&
+                  resultDetails.analyzComponent[index].name && (
+                    <>
+                      {resultDetails.analyzComponent[index].name} ({" "}
+                      {resultDetails.analyzComponent[index].code} )
+                    </>
+                  )}{" "}
+              </h1>
+              <table
+                className={`table table-bordered table-hover table-sm  ${
+                  darkMode ? " table-dark border-white" : ""
+                }`}
+              >
+                <thead class="thead-light">
+                  <tr>
+                    <th className="comp-name"></th>
+                    {renderResultsNo(anlyze)}
+                    <th className="normal-range">Normal Range</th>
+                    <th className="unit">Unit</th>
+                  </tr>
+                </thead>
+                <tbody>{renderComponentsResult(anlyze, index)}</tbody>
+              </table>
+            </div>
+            <hr className="my-2" />
+          </>
         );
       });
     } else {
