@@ -1,41 +1,99 @@
 import React from "react";
 
 export default function PaginationNav({ counts, pageNo, setPageNo }) {
-  function displyPaginationItems() {
-    let result = [];
-    for (let i = 0; i < counts / 3; i++) {
+  const totalPages = Math.ceil(counts / 1);
+
+  function displayPaginationItems() {
+    const result = [];
+
+    // Always show the first page
+    result.push(
+      <li
+        className={`page-item ${pageNo === 1 ? "active" : ""}`}
+        onClick={() => setPageNo(1)}
+        key={1}
+      >
+        <a style={{ cursor: "pointer" }} className="page-link">
+          1
+        </a>
+      </li>
+    );
+
+    // Display ellipsis if not starting from the first page
+    if (pageNo > 3) {
       result.push(
-        <li className="page-item" onClick={() => setPageNo(i + 1)} key={i}>
-          <a className="page-link">{i + 1}</a>
+        <li key="ellipsis-start" className="page-item disabled">
+          <span className="page-link">...</span>
         </li>
       );
     }
+
+    // Display pages between first and last, or all pages if less than 5
+    const startPage = Math.max(2, pageNo - 1);
+    const endPage = Math.min(totalPages - 1, startPage + 2);
+
+    for (let i = startPage; i <= endPage; i++) {
+      result.push(
+        <li
+          className={`page-item ${pageNo === i ? "active" : ""}`}
+          onClick={() => setPageNo(i)}
+          key={i}
+        >
+          <a style={{ cursor: "pointer" }} className="page-link">
+            {i}
+          </a>
+        </li>
+      );
+    }
+
+    // Display ellipsis if not ending at the last page
+    if (totalPages - pageNo > 2) {
+      result.push(
+        <li key="ellipsis-end" className="page-item disabled">
+          <span className="page-link">...</span>
+        </li>
+      );
+    }
+
+    // Always show the last page
+    result.push(
+      <li
+        className={`page-item ${pageNo === totalPages ? "active" : ""}`}
+        onClick={() => setPageNo(totalPages)}
+        key={totalPages}
+      >
+        <a style={{ cursor: "pointer" }} className="page-link">
+          {totalPages}
+        </a>
+      </li>
+    );
+
     return result;
   }
+
   return (
     <>
-      {" "}
       <nav aria-label="Page navigation example">
-        <ul class="pagination justify-content-center">
+        <ul className="pagination justify-content-center">
           <li className={`page-item ${pageNo === 1 ? "disabled" : ""}`}>
             <a
+              style={{ cursor: "pointer" }}
               className="page-link"
-              onClick={() => {
-                setPageNo((prevNo) => prevNo - 1);
-              }}
+              onClick={() => setPageNo((prevNo) => Math.max(1, prevNo - 1))}
             >
               Previous
             </a>
           </li>
-          {displyPaginationItems()}
+          {displayPaginationItems()}
           <li
-            className={`page-item ${pageNo === counts / 3 ? "disabled" : ""}`}
+            className={`page-item ${pageNo === totalPages ? "disabled" : ""}`}
           >
             <a
+              style={{ cursor: "pointer" }}
               className="page-link"
-              onClick={() => {
-                setPageNo((prevNo) => prevNo + 1);
-              }}
+              onClick={() =>
+                setPageNo((prevNo) => Math.min(totalPages, prevNo + 1))
+              }
             >
               Next
             </a>

@@ -78,6 +78,11 @@ export default function VisitorsLineChartContainer({ darkMode }) {
   //Handel Chart Data
   //Handel Filter
   async function handaleFilterOption(option) {
+    setTotalVisitors(0);
+    setLineChartProperties({
+      lineLabels: [],
+      lineData: [],
+    });
     setFilterOption(option);
     let currentDate = new Date();
     let currentDateString = formatDate(currentDate);
@@ -339,6 +344,9 @@ export default function VisitorsLineChartContainer({ darkMode }) {
           lineData={lineChartPropreties.lineData}
           filterOption={filterOption}
         />
+      ) : lineChartPropreties.lineData.length === 0 &&
+        lineChartPropreties.lineLabels.length === 0 ? (
+        <div>No Results Found.</div>
       ) : (
         <div className="d-flex justify-content-center align-items-center">
           <div className="spinner-border text-primary" role="status">
