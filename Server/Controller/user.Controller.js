@@ -14,7 +14,7 @@ const jwt = require("jsonwebtoken");
  * @access private just admin
  * ------------------------------------------ */
 module.exports.getAllUsers = asyncHandler(async (req, res) => {
-  const USER_PER_PAGE = 3;
+  const USER_PER_PAGE = 1;
   const userNumber = req.query.userNumber;
   const users = await user
     .find()
