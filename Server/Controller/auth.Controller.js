@@ -1,9 +1,9 @@
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
 const {
-  user,
   validateRegisterUser,
   validateLoginUser,
+  user,
 } = require("../models/user");
 /**--------------------------------
  * @desc Register new user
@@ -63,6 +63,37 @@ module.exports.loginUser = asyncHandler(async (req, res) => {
   if (!newUser)
     return res.status(400).json({ message: "invaild Phone or Password" });
 
+  //check the password
+  const match = await bcrypt.compare(req.body.password, newUser.password);
+  if (!match) return res.status(400).json({ message: "invaild  password" });
+  //Generate Token(jwt)
+  const token = newUser.generateAuthToken();
+  //send a response to client
+  res.status(201).json({
+    message: "Your Login successfully",
+    token,
+  });
+});
+
+
+/**--------------------------------
+ * @desc send forgot password link
+ * @router /api/auth/password/passwoed-forgot
+ * @method post
+ * @access public
+ * ------------------------------------------ */
+
+module.exports.sendLinkForgotPassword = asyncHandler(async (req, res) => {
+  //validation
+  // const { error } = validateLoginUser(req.body);
+  // if (error) return res.status(400).json({ message: error.details[0].message });
+
+  //is user already exists
+  // const user = await user
+  if (!user)
+    return res.status(404).json({ message: "user not found" });
+
+  const secret=process.env.SECRET_KEY+user
   //check the password
   const match = await bcrypt.compare(req.body.password, newUser.password);
   if (!match) return res.status(400).json({ message: "invaild  password" });

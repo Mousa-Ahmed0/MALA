@@ -26,6 +26,18 @@ module.exports.addResults = asyncHandler(async (req, res) => {
   //send a response to client
   res.status(201).json({ newResult, message: "done..........." });
 });
+function calAge(birthday) {
+  const birthdate = new Date(birthday);
+  const currentDate = new Date();
+
+  // Calculate the time difference in milliseconds
+  const timeDiff = currentDate - birthdate;
+
+  // Calculate the age
+  const ageInMilliseconds = new Date(timeDiff);
+  const years = Math.abs(ageInMilliseconds.getUTCFullYear() - 1970);
+  return years;
+}
 /**--------------------------------
  * @desc pyhton code
  * @router /api/result/getResults/pythonResults
@@ -33,11 +45,30 @@ module.exports.addResults = asyncHandler(async (req, res) => {
  * @access  (staff or admin)
  * ------------------------------------------ */
 module.exports.pythonResults = asyncHandler(async (req, res) => {
+  const detailsAnalyze = await analyzeResult.findById("659a8fbe14aac856b3a4dcfa");
+  let result = [];
+
+  for (const index of detailsAnalyze.resultSet) {
+    let analyzeComp = await analyze.findById(index.anlyzeId);
+    if (analyzeComp.code.toUpperCase() === "CBC") {
+      result = [...index.result];
+
+      break;  // Exit the loop if the condition is met
+    }
+  }
+  //user staff
+  const usersStaff = await user
+    .findOne({ ident: detailsAnalyze.patientIdent })
+    .select("-password -_id ");
+  // console.log(result);
+  const years = calAge(usersStaff.birthday);
+  const sex = usersStaff.sex === "Male" ? 1 : 0;
+  // console.log(result);
+  
   let options = {
-    args: ["test", "test2"],
+    args: [years, sex,result],
     scriptPath: "../Server/utils/python",
   };
-  console.log("test");
 
   PythonShell.run("AnlayzeResultPredict.py", options).then((messages) => {
     // results is an array consisting of messages collected during execution
