@@ -45,7 +45,9 @@ function calAge(birthday) {
  * @access  (staff or admin)
  * ------------------------------------------ */
 module.exports.pythonResults = asyncHandler(async (req, res) => {
-  const detailsAnalyze = await analyzeResult.findById("659a8fbe14aac856b3a4dcfa");
+  const detailsAnalyze = await analyzeResult.findById(
+    "659d43291a0d40f0a65eee49"
+  );
   let result = [];
 
   for (const index of detailsAnalyze.resultSet) {
@@ -53,7 +55,7 @@ module.exports.pythonResults = asyncHandler(async (req, res) => {
     if (analyzeComp.code.toUpperCase() === "CBC") {
       result = [...index.result];
 
-      break;  // Exit the loop if the condition is met
+      break; // Exit the loop if the condition is met
     }
   }
   //user staff
@@ -64,9 +66,32 @@ module.exports.pythonResults = asyncHandler(async (req, res) => {
   const years = calAge(usersStaff.birthday);
   const sex = usersStaff.sex === "Male" ? 1 : 0;
   // console.log(result);
-  
+
+  // componentResults for Python
+  let componentResults = [
+    { name: "RBC", value: 0 },
+    { name: "PCV", value: 0 },
+    { name: "MCV", value: 0 },
+    { name: "MCH", value: 0 },
+    { name: "MCHC", value: 0 },
+    { name: "RDW", value: 0 },
+    { name: "TLC", value: 0 },
+    { name: "PLT /mm3", value: 0 },
+    { name: "HGB", value: 0 },
+  ];
+  result.map((r) => {
+    componentResults.map((compResult) => {
+      if (compResult.name === r.name) {
+        compResult.value = r.value;
+      }
+    });
+  });
+  let results = [];
+  for (const comp of componentResults) {
+    results.push(comp.value);
+  }
   let options = {
-    args: [years, sex,result],
+    args: [years, sex, results],
     scriptPath: "../Server/utils/python",
   };
 
@@ -111,7 +136,10 @@ module.exports.editResult = asyncHandler(async (req, res) => {
 module.exports.getResults = asyncHandler(async (req, res) => {
   const POST_PER_PAGE = 10;
   const pageNumber = req.query.pageNumber;
-  const detailsAnalyze = await analyzeResult.find().skip((pageNumber - 1) * POST_PER_PAGE).limit(POST_PER_PAGE);
+  const detailsAnalyze = await analyzeResult
+    .find()
+    .skip((pageNumber - 1) * POST_PER_PAGE)
+    .limit(POST_PER_PAGE);
   let usersArray = [];
   // let usersPatint = null;
   // let usersDoctor = null;
