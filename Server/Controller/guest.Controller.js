@@ -26,7 +26,7 @@ module.exports.addGuestMessage = asyncHandler(async (req, res) => {
  * @access  (staff or admin)
  * ------------------------------------------ */
 module.exports.getGuestMeassage = asyncHandler(async (req, res) => {
-    const allMeass = await Guest.find({});
+    const allMeass = await Guest.find({}).sort({ createdAt: 1 });;
 
     if (allMeass.length) {
         for (const index of allMeass) {
