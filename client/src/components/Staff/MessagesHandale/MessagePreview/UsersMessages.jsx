@@ -38,7 +38,7 @@ export default function UsersMessages({ user }) {
     console.log("gg", user);
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/massage/getAllMassage",
+        `http://localhost:5000/api/massage/getAllMassage?pageNumber=${pageNo}`,
         {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         }
