@@ -56,8 +56,8 @@ print(classification_rep)
 print("________________________________________________")
 
 # New data for prediction
-new_data = {'Age': [38], 'Sex': [0], 'RBC': [4.47], 'PCV': [30.02], 'MCV': [88.78], 'MCH': [29.65], 'MCHC': [29.45],
-            'RDW': [14.54], 'TLC': [8.55], 'PLT /mm3': [225.44], 'HGB': [3.55]}
+new_data = {'Age': [38], 'Sex': [0], 'RBC': [4.47], 'PCV': [45.02], 'MCV': [88.78], 'MCH': [29.65], 'MCHC': [29.45],
+            'RDW': [14.54], 'TLC': [8.55], 'PLT /mm3': [225.44], 'HGB': [13.55]}
 
 # Create a DataFrame for the new data
 new_df = pd.DataFrame(new_data)
@@ -72,5 +72,8 @@ cond = "Healthy"
 if pred == 1:
     cond = "Unhealthy - Anemia"
 
-print(f"new_pred: {pred}, so it's {cond}")
+# Get perc. '%' accuracy of the predict result
+accuracy_perc = accuracy * 100
+
+print(f"new_pred: {pred}, so it's {cond} with {accuracy_perc}% accuracy.")
 #

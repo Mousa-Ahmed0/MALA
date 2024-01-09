@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { formatDateWithouHour } from "../../../methods/FormateDate";
-export default function ResultsTable({ darkMode, resultDetails }) {
+export default function ResultsTable({ user, darkMode, resultDetails }) {
   // render initial information of tabels
   function renderResult() {
     if (resultDetails.currentResult) {
@@ -34,6 +34,38 @@ export default function ResultsTable({ darkMode, resultDetails }) {
                 <tbody>{renderComponentsResult(anlyze, index)}</tbody>
               </table>
             </div>
+            {/*Ai Pridict if CBC  && User is Doctor*/}
+            {resultDetails.analyzComponent[index].code === "CBC" ? (
+              <div
+                className={`ai-pridict${
+                  user.usertype === "Doctor" ? "" : "d-none"
+                }`}
+              >
+                <button
+                  className="btn btn-primary my-2"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseExample"
+                  aria-expanded="false"
+                  aria-controls="collapseExample"
+                >
+                  Using Ai - Predict the issue.
+                </button>
+                <div className="collapse" id="collapseExample">
+                  <div className="card card-body d-flex flex-row gap-2 bg-transparent">
+                    Using <span className="colorMain h5 m-0 mid-bold">Ai</span>{" "}
+                    Owner of this{" "}
+                    <span className="colorMain h5 m-0 mid-bold">CBC</span>{" "}
+                    Result Can be have:{" "}
+                    <span className="colorMain h5 m-0 mid-bold">
+                      {"Healthy or Anemia!"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              ""
+            )}
             <hr className="my-2" />
           </>
         );

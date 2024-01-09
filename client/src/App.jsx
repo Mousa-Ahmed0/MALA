@@ -273,7 +273,10 @@ export default function App() {
                     />
                   }
                 />
-                <Route path="/ResultDetails/:id" element={<ResultDetails />} />
+                <Route
+                  path="/ResultDetails/:id"
+                  element={<ResultDetails user={userDetails} />}
+                />
                 <Route path="/AddAPayment/:id" element={<AddAPayment />} />
 
                 <Route path="/ForgotPassword" element={<ForgotPassword />} />

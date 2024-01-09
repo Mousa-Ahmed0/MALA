@@ -32,26 +32,19 @@ body {
 }
 
 @media print {
-  /* Hide the navbar when printing */
-
   .container {
     max-width: 100%;
   }
-  nav {
-    display: none !important;
-  }
-  header {
-    display: none;
-  }
-  .BackBtn {
-    display: none;
-  }
-  .print-button {
-    display: none !important;
-  }
+  nav,
+  header,
+  .BackBtn,
+  .print-button,
   footer,
   footer .fot-Copyright,
   footer .fot-Details {
+    display: none !important;
+  }
+  .print-section .print-result .ai-pridict {
     display: none !important;
   }
   .payments-array-print {
