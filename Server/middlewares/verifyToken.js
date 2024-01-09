@@ -25,7 +25,13 @@ function ifAdmin(req, res, next) {
     else return res.status(403).json({ meassage: "Not allwed,only admin" });
   });
 }
-
+//if doctor
+function ifDoctor(req, res, next) {
+  verifyToken(req, res, () => {
+    if (req.user.usertype === "Doctor") next();
+    else return res.status(403).json({ meassage: "Not allwed,only Doctor" });
+  });
+}
 //if admin or Staff
 function ifAdminOrStaff(req, res, next) {
   verifyToken(req, res, () => {
@@ -62,6 +68,7 @@ module.exports = {
   ifAdminOrStaff,
   verifyTokenOnlyUser,
   verifyTokenOnlyUserOrAdmin,
+  ifDoctor,
 };
 
 // const { data } = await qxiw.put(`/api/users/Profile/${userId}`, profile, {

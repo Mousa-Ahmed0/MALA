@@ -46,62 +46,64 @@ function calAge(birthday) {
  * ------------------------------------------ */
 module.exports.pythonResults = asyncHandler(async (req, res) => {
   const detailsAnalyze = await analyzeResult.findById(
-    "659d43291a0d40f0a65eee49"
+    req.params.id
   );
-  let result = [];
+  if (detailsAnalyze) {
+    let result = [];
 
-  for (const index of detailsAnalyze.resultSet) {
-    let analyzeComp = await analyze.findById(index.anlyzeId);
-    if (analyzeComp.code.toUpperCase() === "CBC") {
-      result = [...index.result];
+    for (const index of detailsAnalyze.resultSet) {
+      let analyzeComp = await analyze.findById(index.anlyzeId);
+      if (analyzeComp.code.toUpperCase() === "CBC") {
+        result = [...index.result];
 
-      break; // Exit the loop if the condition is met
-    }
-  }
-  //user staff
-  const usersStaff = await user
-    .findOne({ ident: detailsAnalyze.patientIdent })
-    .select("-password -_id ");
-  // console.log(result);
-  const years = calAge(usersStaff.birthday);
-  const sex = usersStaff.sex === "Male" ? 1 : 0;
-  // console.log(result);
-
-  // componentResults for Python
-  let componentResults = [
-    { name: "RBC", value: 0 },
-    { name: "PCV", value: 0 },
-    { name: "MCV", value: 0 },
-    { name: "MCH", value: 0 },
-    { name: "MCHC", value: 0 },
-    { name: "RDW", value: 0 },
-    { name: "TLC", value: 0 },
-    { name: "PLT /mm3", value: 0 },
-    { name: "HGB", value: 0 },
-  ];
-  result.map((r) => {
-    componentResults.map((compResult) => {
-      if (compResult.name === r.name) {
-        compResult.value = r.value;
+        break; // Exit the loop if the condition is met
       }
-    });
-  });
-  let results = [];
-  for (const comp of componentResults) {
-    results.push(comp.value);
-  }
-  let options = {
-    args: [years, sex, results],
-    scriptPath: "../Server/utils/python",
-  };
+    }
+    //user staff
+    const usersStaff = await user
+      .findOne({ ident: detailsAnalyze.patientIdent })
+      .select("-password -_id ");
+    // console.log(result);
+    const years = calAge(usersStaff.birthday);
+    const sex = usersStaff.sex === "Male" ? 1 : 0;
+    // console.log(result);
 
-  PythonShell.run("AnlayzeResultPredict.py", options).then((messages) => {
-    // results is an array consisting of messages collected during execution
-    messages.forEach((index) => {
-      console.log(index);
+    // componentResults for Python
+    let componentResults = [
+      { name: "RBC", value: 0 },
+      { name: "PCV", value: 0 },
+      { name: "MCV", value: 0 },
+      { name: "MCH", value: 0 },
+      { name: "MCHC", value: 0 },
+      { name: "RDW", value: 0 },
+      { name: "TLC", value: 0 },
+      { name: "PLT /mm3", value: 0 },
+      { name: "HGB", value: 0 },
+    ];
+    result.map((r) => {
+      componentResults.map((compResult) => {
+        if (compResult.name === r.name) {
+          compResult.value = r.value;
+        }
+      });
     });
-  });
-  res.status(201).json({ message: "done..........." });
+    let results = [];
+    for (const comp of componentResults) {
+      results.push(comp.value);
+    }
+    let options = {
+      args: [years, sex, results],
+      scriptPath: "../Server/utils/python",
+    };
+    PythonShell.run("AnlayzeResultPredict.py", options).then((result) => {
+      // results is an array consisting of result collected during execution
+      console.log(result);
+      res.status(200).json({ messag: "done...........", result });
+    });
+  }
+  else
+    res.status(404).json({ message: "User not found" });
+
 });
 /**--------------------------------
  * @desc edit result
@@ -247,14 +249,12 @@ module.exports.getAllResultsById = asyncHandler(async (req, res) => {
   if (detailsAnalyze) {
     let allId = []; //get all analyze id from req.params.id
     let analyzComponent = [];
-
-    detailsAnalyze.resultSet.forEach(async (index) => {
+    for (const index of detailsAnalyze.resultSet) {
       let analyzeComp = await analyze.findById(index.anlyzeId);
       analyzComponent.push(analyzeComp);
       allId.push(index.anlyzeId.toString());
-    });
+    }
 
-    console.log(allId);
     const patIdent = detailsAnalyze.patientIdent; //patientIdent form req.params.id
 
     const allResult = await analyzeResult.find({ patientIdent: patIdent });

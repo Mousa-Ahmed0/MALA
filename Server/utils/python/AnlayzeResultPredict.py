@@ -42,7 +42,6 @@ components_results = [float(value) for value in sys.argv[3].split(',')]
 new_data = {'Age': [float(sys.argv[1])], 'Sex': [sys.argv[2]], 'RBC': [components_results[0]], 'PCV': [components_results[1]], 'MCV': [components_results[2]], 'MCH': [components_results[3]], 'MCHC': [components_results[4]],
             'RDW': [components_results[5]], 'TLC': [components_results[6]], 'PLT /mm3': [components_results[7]], 'HGB': [components_results[8]]}
 
-print(new_data)
 # Create a DataFrame for the new data
 new_df = pd.DataFrame(new_data)
 
@@ -58,4 +57,5 @@ if pred == 1:
 # Get perc. '%' accuracy of the predict result
 accuracy_perc = accuracy * 100
 
-print(f"{cond} with {accuracy_perc}% accuracy.")
+print(cond)
+print(accuracy_perc)
