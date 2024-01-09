@@ -45,7 +45,9 @@ function calAge(birthday) {
  * @access  (staff or admin)
  * ------------------------------------------ */
 module.exports.pythonResults = asyncHandler(async (req, res) => {
-  const detailsAnalyze = await analyzeResult.findById("659a8fbe14aac856b3a4dcfa");
+  const detailsAnalyze = await analyzeResult.findById(
+    "659a8fbe14aac856b3a4dcfa"
+  );
   let result = [];
 
   for (const index of detailsAnalyze.resultSet) {
@@ -53,7 +55,7 @@ module.exports.pythonResults = asyncHandler(async (req, res) => {
     if (analyzeComp.code.toUpperCase() === "CBC") {
       result = [...index.result];
 
-      break;  // Exit the loop if the condition is met
+      break; // Exit the loop if the condition is met
     }
   }
   //user staff
@@ -64,9 +66,22 @@ module.exports.pythonResults = asyncHandler(async (req, res) => {
   const years = calAge(usersStaff.birthday);
   const sex = usersStaff.sex === "Male" ? 1 : 0;
   // console.log(result);
-  
+
+  // componentResults for Python
+  let componentResults = [
+    { 1: 0 },
+    { 2: 0 },
+    { 3: 0 },
+    { 4: 0 },
+    { 5: 0 },
+    { 6: 0 },
+    { 7: 0 },
+    { 8: 0 },
+    { 9: 0 },
+  ];
+
   let options = {
-    args: [years, sex,result],
+    args: [years, sex, result],
     scriptPath: "../Server/utils/python",
   };
 
@@ -111,7 +126,10 @@ module.exports.editResult = asyncHandler(async (req, res) => {
 module.exports.getResults = asyncHandler(async (req, res) => {
   const POST_PER_PAGE = 10;
   const pageNumber = req.query.pageNumber;
-  const detailsAnalyze = await analyzeResult.find().skip((pageNumber - 1) * POST_PER_PAGE).limit(POST_PER_PAGE);
+  const detailsAnalyze = await analyzeResult
+    .find()
+    .skip((pageNumber - 1) * POST_PER_PAGE)
+    .limit(POST_PER_PAGE);
   let usersArray = [];
   // let usersPatint = null;
   // let usersDoctor = null;

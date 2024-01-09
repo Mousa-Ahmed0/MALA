@@ -43,10 +43,13 @@ classification_rep = classification_report(y_test, y_pred, zero_division=1)
 
 ###
 score = clf.score(X_test, y_test)
-print(sys.argv[3])
 # New data for prediction
-new_data = {'Age': sys.argv[1], 'Sex': sys.argv[2], 'RBC': [4.47], 'PCV': [45.02], 'MCV': [88.78], 'MCH': [29.65], 'MCHC': [29.45],
-            'RDW': [14.54], 'TLC': [8.55], 'PLT /mm3': [225.44], 'HGB': [13.55]}
+new_data = {'Age': sys.argv[1], 'Sex': sys.argv[2], 'RBC': 0, 'PCV': 0, 'MCV': 0, 'MCH': 0, 'MCHC': 0,
+            'RDW': 0, 'TLC': 0, 'PLT /mm3': 0, 'HGB': 0}
+
+print(sys.argv[3])
+
+
 
 # Create a DataFrame for the new data
 new_df = pd.DataFrame(new_data)
