@@ -49,8 +49,7 @@ export default function GuestsMessages({ darkMode, setIsFormOpen }) {
             }`}
           >
             <div style={{ height: 300 }} className="card-body bottom-shadow ">
-              <div className="row"></div>
-              <div className="card-Top d-flex   align-items-center">
+              <div className="card-Top">
                 <div className="card-Top-Details d-flexflex-column">
                   <div className="row">
                     <div className="col-10">
@@ -76,17 +75,17 @@ export default function GuestsMessages({ darkMode, setIsFormOpen }) {
                   <hr />
                 </div>
               </div>
-              <div style={{ overflowY: "auto" }} className="card-body p-0">
-                <div
-                  style={{
-                    maxHeight: "75px",
-                    minHeight: "75px",
-                    lineHeight: "1.25",
-                  }}
-                  className="h5 m-0"
-                >
-                  {msg.message}
-                </div>
+            </div>
+            <div style={{ overflowY: "auto" }} className="card-body p-0">
+              <div
+                style={{
+                  maxHeight: "75px",
+                  minHeight: "75px",
+                  lineHeight: "1.25",
+                }}
+                className="h5 m-0"
+              >
+                {msg.message}
               </div>
               <hr />
               <div className="col-12 w-100 ">

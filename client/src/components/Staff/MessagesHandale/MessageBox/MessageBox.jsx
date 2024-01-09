@@ -27,7 +27,7 @@ export default function MessageBox({ darkMode }) {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         }
       );
-      console.log(response.data);
+      console.log(response);
       if (response.data.length > 0) setAllMessages(response.data);
       else setNoResults(true);
     } catch (error) {
