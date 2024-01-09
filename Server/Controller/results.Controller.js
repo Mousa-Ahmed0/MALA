@@ -46,7 +46,7 @@ function calAge(birthday) {
  * ------------------------------------------ */
 module.exports.pythonResults = asyncHandler(async (req, res) => {
   const detailsAnalyze = await analyzeResult.findById(
-    "659a8fbe14aac856b3a4dcfa"
+    "659d43291a0d40f0a65eee49"
   );
   let result = [];
 
@@ -69,19 +69,29 @@ module.exports.pythonResults = asyncHandler(async (req, res) => {
 
   // componentResults for Python
   let componentResults = [
-    { 1: 0 },
-    { 2: 0 },
-    { 3: 0 },
-    { 4: 0 },
-    { 5: 0 },
-    { 6: 0 },
-    { 7: 0 },
-    { 8: 0 },
-    { 9: 0 },
+    { name: "RBC", value: 0 },
+    { name: "PCV", value: 0 },
+    { name: "MCV", value: 0 },
+    { name: "MCH", value: 0 },
+    { name: "MCHC", value: 0 },
+    { name: "RDW", value: 0 },
+    { name: "TLC", value: 0 },
+    { name: "PLT /mm3", value: 0 },
+    { name: "HGB", value: 0 },
   ];
-
+  result.map((r) => {
+    componentResults.map((compResult) => {
+      if (compResult.name === r.name) {
+        compResult.value = r.value;
+      }
+    });
+  });
+  let results = [];
+  for (const comp of componentResults) {
+    results.push(comp.value);
+  }
   let options = {
-    args: [years, sex, result],
+    args: [years, sex, results],
     scriptPath: "../Server/utils/python",
   };
 
