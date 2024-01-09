@@ -11,6 +11,6 @@ router.post("/register",registerUser);
 router.post("/login",loginUser );
 
 // /api/auth/resetPasword
-router.post("/resetPaswordEmailLink",verifyToken,sendLinkForgotPassword );
-router.post("/password/rest-passwoed/:userId/:token",validateId,verifyToken,restPassword );
+router.post("/resetPaswordEmailLink",sendLinkForgotPassword );
+router.post("/password/rest-passwoed/:userId/:token",restPassword );
 module.exports=router;
