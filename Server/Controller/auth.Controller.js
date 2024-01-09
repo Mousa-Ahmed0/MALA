@@ -92,24 +92,23 @@ module.exports.sendLinkForgotPassword = asyncHandler(async (req, res) => {
   // const { error } = validateLoginUser(req.body);
   // if (error) return res.status(400).json({ message: error.details[0].message });
 
-  //is user already exists
-  const oUser = await user.findOne({ email: req.body.email });
-  if (!oUser)
-    return res.status(404).json({ message: "user not found" });
-    try {
-     
-      const email=req.body.email;
-      const secret = process.env.SECRET_KEY + oUser.password;
-      const token = Jwt.sign({ email: oUser.email, id: oUser.id }, secret, { expiresIn: '20m' });
-      const link=`http://localhost:3000/password/reset-password/${oUser._id}/${token}`;
-      await sendEmailForRestPassword({email,link})
-      res.status(200).json({ message: "click on link",reset:link });
+  try {
+    //is user already exists
+    const oUser = await user.findOne({ email: req.body.email });
+    if (!oUser)
+      return res.status(404).json({ message: "user not found" });
+    const email = req.body.email;
+    const secret = process.env.SECRET_KEY + oUser.password;
+    const token = Jwt.sign({ email: oUser.email, id: oUser.id }, secret, { expiresIn: '20m' });
+    const link = `http://localhost:3000/password/reset-password/${oUser._id}/${token}`;
+    await sendEmailForRestPassword({ email, link })
+    res.status(200).json({ message: "click on link", reset: link });
 
   } catch (error) {
-      // Handle the error here, you can log it or send a specific error response to the client
-      console.error("Error sending email:", error);
-      res.status(500).json({ error: "Internal Server Error" });
+    // Handle the error here, you can log it or send a specific error response to the client
+    console.error("Error sending email:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
- 
+
 
 });
