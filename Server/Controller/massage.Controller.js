@@ -109,9 +109,13 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
  * @access public
  * ------------------------------------------ */
 module.exports.getAllMass = asyncHandler(async (req, res) => {
+  const POST_PER_PAGE = 5;
+
   const newMass = await Massage.find({})
     .populate("firstUser", ["-password"])
     .populate("secondUser", ["-password"])
+    .skip((pageNumber - 1) * POST_PER_PAGE)
+    .limit(POST_PER_PAGE)
     .sort({ createdAt: -1 });
   //.populate('secondUser', ['-password'])
   if (newMass) {
