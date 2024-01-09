@@ -79,7 +79,6 @@ module.exports.loginUser = asyncHandler(async (req, res) => {
   });
 });
 
-
 /**--------------------------------
  * @desc send forgot password link
  * @router /api/auth/password/passwoed-forgot
@@ -91,22 +90,20 @@ module.exports.sendLinkForgotPassword = asyncHandler(async (req, res) => {
   try {
     //is user already exists
     const oUser = await user.findOne({ email: req.body.email });
-    if (!oUser)
-      return res.status(404).json({ message: "user not found" });
+    if (!oUser) return res.status(404).json({ message: "user not found" });
     const email = req.body.email;
     const secret = process.env.SECRET_KEY + oUser.password;
-    const token = Jwt.sign({ email: oUser.email, id: oUser.id }, secret, { expiresIn: '20m' });
+    const token = Jwt.sign({ email: oUser.email, id: oUser.id }, secret, {
+      expiresIn: "20m",
+    });
     const link = `http://localhost:3000/auth/password/reset-password/${oUser._id}/${token}`;
-    await sendEmailForRestPassword({ email, link })
+    await sendEmailForRestPassword({ email, link });
     res.status(200).json({ message: "click on link", reset: link });
-
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
     console.error("Error sending email:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
-
-
 });
 
 /**--------------------------------
@@ -120,25 +117,21 @@ module.exports.restPassword = asyncHandler(async (req, res) => {
   try {
     //is user already exists
     const oUser = await user.findById(req.params.userId);
-    if (!oUser)
-      return res.status(404).json({ message: "user not found" });
+    if (!oUser) return res.status(404).json({ message: "user not found" });
 
     const secret = process.env.SECRET_KEY + oUser.password;
-    Jwt.verify(req.params.token,secret);
+    Jwt.verify(req.params.token, secret);
 
-    const salt=await bcrypt.genSalt(10);
-    req.body.password=await bcrypt.hash(req.body.password,salt);
-    oUser.password=req.body.password;
+    const salt = await bcrypt.genSalt(10);
+    req.body.password = await bcrypt.hash(req.body.password, salt);
+    oUser.password = req.body.password;
 
     await oUser.save();
     console.log(oUser.password);
     res.status(201).json({ message: "password is change" });
-
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
     console.error("Error :", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
-
-
 });

@@ -9,7 +9,7 @@ export default function ResetPassword({ darkMode }) {
   });
   const [success, setSuccess] = useState(false);
   //
-  const params=useParams();
+  const params = useParams();
   console.log(params);
   async function onFormSubmit(e) {
     e.preventDefault();
@@ -18,10 +18,6 @@ export default function ResetPassword({ darkMode }) {
       const response = await axios.post(
         `http://localhost:5000/api/auth/password/rest-passwoed/${params.userId}/${params.token}`,
         forgotPass
-        // ,
-        // {
-        //   headers: { Authorization: "Bearer " + localStorage.getItem("token") },
-        // }
       );
       console.log(response);
     } catch (error) {

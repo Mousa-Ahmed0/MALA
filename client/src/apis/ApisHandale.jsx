@@ -163,7 +163,7 @@ export const getPateinrResults = async (ident) => {
   );
 };
 export const getResultsFromTo = async (date) => {
-  // console.log(" custome date: ", date);
+  console.log(" custome date: ", date);
   return await axios.get(
     `http://localhost:5000/api/result/getResults/resultDateFromTo?firstDate=${date.firstDate}&secondtDate=${date.secondtDate}`,
     {

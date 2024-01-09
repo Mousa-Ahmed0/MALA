@@ -509,6 +509,7 @@ export default function ResultsPreviewContainer({}) {
   }, [val, fillterdResults]);
 
   useEffect(() => {
+    console.log("dateRange: ", dateRange);
     filterByDataRange();
   }, [dateRange]);
   useEffect(() => {
