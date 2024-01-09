@@ -26,7 +26,9 @@ module.exports.addGuestMessage = asyncHandler(async (req, res) => {
  * @access  (staff or admin)
  * ------------------------------------------ */
 module.exports.getGuestMeassage = asyncHandler(async (req, res) => {
-    const allMeass = await Guest.find({}).sort({ createdAt: -1 });;
+    const POST_PER_PAGE = 5;
+
+    const allMeass = await Guest.find({}).skip((pageNumber - 1) * POST_PER_PAGE).limit(POST_PER_PAGE).sort({ createdAt: -1 });
 
     if (allMeass.length) {
         for (const index of allMeass) {
