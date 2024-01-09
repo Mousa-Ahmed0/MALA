@@ -18,7 +18,7 @@ module.exports.addGuestMessage = asyncHandler(async (req, res) => {
     //send a response to client
     res.status(201).json({ newGuest, message: "done..........." });
 });
- 
+
 /**--------------------------------
  * @desc get All Guest meassage
  * @router /api/Guest/getGuestMeassage
@@ -27,8 +27,14 @@ module.exports.addGuestMessage = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.getGuestMeassage = asyncHandler(async (req, res) => {
     const allMeass = await Guest.find({});
-    if (allMeass.length)
+
+    if (allMeass.length) {
+        for (const index of allMeass) {
+            index.ifReady = true;
+            await index.save();
+        }
         res.status(200).json({ allMeass, message: "done..........." });
+    }
     else
         res.status(404).json({ message: "User not found" });
 })
@@ -45,6 +51,19 @@ module.exports.deleeteGuestMeassage = asyncHandler(async (req, res) => {
         res.status(200).json({ message: " Delete done..........." });
     else
         res.status(404).json({ message: "User not found" });
+});
+/**--------------------------------
+ * @desc count if not read
+ * @router /api/Guest/countIfRead
+ * @method GET
+ * @access  (staff or admin)
+ * ------------------------------------------ */
+module.exports.countIfRead = asyncHandler(async (req, res) => {
+    const Meass = await Guest.findOneAndDelete({ ifReady: false }).count();
+    if (Meass) {
+        res.status(200).json({ "count": Meass});
+    } else
+        res.status(404).json({ message: "All of massge is reade" ,Meass});
 });
 
 
