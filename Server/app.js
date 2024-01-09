@@ -4,6 +4,10 @@ const cors = require("cors");
 const dbConnection = require("./config/dbConnection");
 const { notFound, errorHandler } = require("./middlewares/error");
 const morgan = require("morgan");
+//
+// const Sockit = require("socket.io");
+// const { Server } = require("socket.io");
+// const http = require('http');
 
 //init app
 const app = express();
@@ -40,3 +44,24 @@ dbConnection()
 
   })
   .catch((err) => console.log(err));
+//Sockit io
+// try {
+//   // const io = Sockit(app);
+//   const io = new Server();
+//   io.on('connection', (socket) => {
+//     socket.emit("hello");
+//     console.log(socket.id);
+//     console.log("done");
+//     socket.on("ttt",(arg)=>{
+//       console.log(arg);
+
+//     })
+//   })
+//   console.log("zzzzzzzzzz");
+
+// } catch (error) { // intercept the error in catch block
+//   console.log("rrrrrrrrr");
+
+//   console.log("not done");
+
+// }

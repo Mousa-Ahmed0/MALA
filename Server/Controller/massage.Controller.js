@@ -1,24 +1,25 @@
 const asyncHandler = require("express-async-handler");
 const { Massage } = require("../models/message");
 const socketIO = require('socket.io');
-const http = require('http');
-const express = require('express');
+// const http = require('http');
+// const express = require('express');
+// const { Server } = require("socket.io");
 
 
-const app = express();
-const server = http.createServer(app);
-const io = socketIO(server);
+// const app = express();
+// const server = http.createServer(app);
+// const io = socketIO(server);
 
 
-// Socket.io integration for sending/receiving messages
-io.on('connection', (socket) => {
-  console.log('A user connected');
+// // Socket.io integration for sending/receiving messages
+// io.on('connection', (socket) => {
+//   console.log('A user connected');
 
-  // Handle disconnect event
-  socket.on('disconnect', () => {
-    console.log('User disconnected');
-  });
-});
+//   // Handle disconnect event
+//   socket.on('disconnect', () => {
+//     console.log('User disconnected');
+//   });
+// });
 
 
 /**--------------------------------
@@ -77,7 +78,7 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
       date: new Date(),
     });
     await massRecord.save();
-    io.emit('message', massRecord); // Emit a message to all connected clients
+    // io.emit('message', massRecord); // Emit a message to all connected clients
     return res.status(200).json(massRecord);
   } else {
     // First massage
@@ -94,8 +95,10 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
       ifReadyFirstUser: true,
       ifReadySecondUser: false,
     });
-    console.log(newMass.massage[0].senderId);
     await newMass.save();
+    // io.emit('message', newMass); // Emit a message to all connected clients
+    console.log('message', newMass);
+
     return res.status(200).json(newMass);
   }
 });
