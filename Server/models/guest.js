@@ -13,6 +13,10 @@ const guestSchema = new mongoose.Schema(
             type: String,
             require: true,
         },
+        ifReady: {
+            type: Boolean,
+            default: false
+        },
     },
     {
         timestamps: true,
