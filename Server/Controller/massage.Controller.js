@@ -107,7 +107,7 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.getAllMass = asyncHandler(async (req, res) => {
   const POST_PER_PAGE = 10;
-
+  const pageNumber = req.query.pageNumber;
   const newMass = await Massage.find({})
     .populate("firstUser", ["-password"])
     .populate("secondUser", ["-password"])
