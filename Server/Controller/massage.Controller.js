@@ -1,15 +1,13 @@
 const asyncHandler = require("express-async-handler");
 const { Massage } = require("../models/message");
-const socketIO = require('socket.io');
+const socketIO = require("socket.io");
 // const http = require('http');
 // const express = require('express');
 // const { Server } = require("socket.io");
 
-
 // const app = express();
 // const server = http.createServer(app);
 // const io = socketIO(server);
-
 
 // // Socket.io integration for sending/receiving messages
 // io.on('connection', (socket) => {
@@ -20,7 +18,6 @@ const socketIO = require('socket.io');
 //     console.log('User disconnected');
 //   });
 // });
-
 
 /**--------------------------------
  * @desc Send Massage
@@ -97,7 +94,7 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
     });
     await newMass.save();
     // io.emit('message', newMass); // Emit a message to all connected clients
-    console.log('message', newMass);
+    console.log("message", newMass);
 
     return res.status(200).json(newMass);
   }
@@ -110,7 +107,7 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.getAllMass = asyncHandler(async (req, res) => {
   const POST_PER_PAGE = 5;
-
+  const pageNumber = req.query.pageNumber;
   const newMass = await Massage.find({})
     .populate("firstUser", ["-password"])
     .populate("secondUser", ["-password"])
@@ -122,8 +119,7 @@ module.exports.getAllMass = asyncHandler(async (req, res) => {
     // io.emit('allMessages', newMass); // Emit all messages to all connected clients
 
     return res.status(200).json(newMass);
-  }
-  else return res.status(400).json({ massage: "Massage dose not exist" });
+  } else return res.status(400).json({ massage: "Massage dose not exist" });
 });
 
 /**--------------------------------
@@ -160,8 +156,7 @@ module.exports.getUserMass = asyncHandler(async (req, res) => {
       await newMass.save();
     }
     return res.status(200).json(newMass);
-  }
-  else return res.status(400).json({ massage: "Massage dose not exist" });
+  } else return res.status(400).json({ massage: "Massage dose not exist" });
 });
 
 /**--------------------------------
@@ -188,7 +183,6 @@ module.exports.countIfRead = asyncHandler(async (req, res) => {
       { firstUser: req.user.id, ifReadyFirstUser: false },
       { secondUser: req.user.id, ifReadySecondUser: false },
     ],
-
   }).count();
   if (!newMass)
     return res
