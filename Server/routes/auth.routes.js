@@ -1,4 +1,4 @@
-const { registerUser, loginUser, sendLinkForgotPassword } = require('../Controller/auth.Controller');
+const { registerUser, loginUser, sendLinkForgotPassword, restPassword } = require('../Controller/auth.Controller');
 
 const router=require('express').Router();
 // /api/auth/register
@@ -8,4 +8,5 @@ router.post("/login",loginUser );
 
 // /api/auth/resetPasword
 router.post("/resetPaswordEmailLink",sendLinkForgotPassword );
+router.post("/password/rest-passwoed/:userId/:token",restPassword );
 module.exports=router;
