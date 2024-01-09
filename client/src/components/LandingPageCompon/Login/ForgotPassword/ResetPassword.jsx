@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import BackBtn from "../../../BackBtn";
 import axios from "axios";
+import { useParams } from "react-router";
 
 export default function ResetPassword({ darkMode }) {
   const [forgotPass, setForgotPass] = useState({
@@ -8,13 +9,19 @@ export default function ResetPassword({ darkMode }) {
   });
   const [success, setSuccess] = useState(false);
   //
+  const params=useParams();
+  console.log(params);
   async function onFormSubmit(e) {
     e.preventDefault();
     console.log(forgotPass);
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/resetPaswordEmailLink",
+        `http://localhost:5000/api/auth/password/rest-passwoed/${params.userId}/${params.token}`,
         forgotPass
+        // ,
+        // {
+        //   headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+        // }
       );
       console.log(response);
     } catch (error) {

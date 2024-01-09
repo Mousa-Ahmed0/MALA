@@ -285,7 +285,7 @@ export default function App() {
                   element={<ForgotPassword darkMode={darkMode} />}
                 />
                 <Route
-                  path="/password/reset-password/:userId/:token"
+                  path="auth/password/reset-password/:userId/:token"
                   element={<ResetPasowrd darkMode={darkMode} />}
                 />
                 <Route
