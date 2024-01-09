@@ -115,7 +115,7 @@ module.exports.getAllMass = asyncHandler(async (req, res) => {
     .sort({ createdAt: -1 });
   //.populate('secondUser', ['-password'])
   if (newMass) {
-    io.emit('allMessages', newMass); // Emit all messages to all connected clients
+    // io.emit('allMessages', newMass); // Emit all messages to all connected clients
 
     return res.status(200).json(newMass);
   }
