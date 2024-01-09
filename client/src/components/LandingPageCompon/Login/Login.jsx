@@ -132,7 +132,7 @@ export default function Login({ setUserData, goToPage, userDetails }) {
           <div className="mb-5">
             <Link
               className={`${darkMode ? "spic-dark-mode" : "colorMain"}`}
-              to="/ForgotPassword"
+              to="/password/forgot-password"
             >
               Forget Your Password ?
             </Link>
