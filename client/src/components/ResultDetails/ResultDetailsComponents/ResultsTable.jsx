@@ -1,6 +1,23 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { formatDateWithouHour } from "../../../methods/FormateDate";
+import axios from "axios";
 export default function ResultsTable({ user, darkMode, resultDetails }) {
+  const [aiResult, setAiResult] = useState([]);
+
+  //
+  async function getAiResult(resID) {
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/api/result/getResults/pythonResults/${resID}`,
+        {
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+        }
+      );
+      setAiResult(response.data.result);
+    } catch (error) {
+      console.error("Error from getAiResult: ", error);
+    }
+  }
   // render initial information of tabels
   function renderResult() {
     if (resultDetails.currentResult) {
@@ -42,6 +59,7 @@ export default function ResultsTable({ user, darkMode, resultDetails }) {
                 }`}
               >
                 <button
+                  onClick={() => getAiResult(resultDetails.currentResult._id)}
                   className="btn btn-primary my-2"
                   type="button"
                   data-bs-toggle="collapse"
@@ -53,13 +71,35 @@ export default function ResultsTable({ user, darkMode, resultDetails }) {
                 </button>
                 <div className="collapse" id="collapseExample">
                   <div className="card card-body d-flex flex-row gap-2 bg-transparent">
-                    Using <span className="colorMain h5 m-0 mid-bold">Ai</span>{" "}
-                    Owner of this{" "}
-                    <span className="colorMain h5 m-0 mid-bold">CBC</span>{" "}
-                    Result Can be have:{" "}
-                    <span className="colorMain h5 m-0 mid-bold">
-                      {"Healthy or Anemia!"}
-                    </span>
+                    {aiResult.length > 0 ? (
+                      <>
+                        {" "}
+                        Using{" "}
+                        <span className="colorMain h5 m-0 mid-bold">
+                          Ai
+                        </span>{" "}
+                        Owner of this{" "}
+                        <span className="colorMain h5 m-0 mid-bold">CBC</span>{" "}
+                        Result Can be have:{" "}
+                        <span className="colorMain h5 m-0 mid-bold">
+                          {aiResult[0]}
+                        </span>
+                        with
+                        <span className="colorMain h5 m-0 mid-bold">
+                          {Math.ceil(aiResult[1])}%
+                        </span>{" "}
+                        accuracy.
+                      </>
+                    ) : (
+                      <div className="d-flex justify-content-center align-items-center my-4">
+                        <div
+                          className="spinner-border text-primary"
+                          role="status"
+                        >
+                          <span className="sr-only">Loading...</span>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

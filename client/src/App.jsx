@@ -26,7 +26,8 @@ import About from "./components/LandingPageCompon/About/About";
 import GuestAnlyses from "./components/LandingPageCompon/GuestAnlyses/Ganlyses";
 import Contact from "./components/LandingPageCompon/Contact/Contact";
 import Login from "./components/LandingPageCompon/Login/Login.jsx";
-import ForgotPassword from "./components/LandingPageCompon/Login/ForgotPassword.jsx";
+import ForgotPassword from "./components/LandingPageCompon/Login/ForgotPassword/ForgotPassword.jsx";
+import ResetPasowrd from "./components/LandingPageCompon/Login/ForgotPassword/ResetPassword.jsx";
 //StaffPage Components
 import DashboardHome from "./components/Staff/DashboardHome.jsx";
 /* Analysis */
@@ -279,7 +280,14 @@ export default function App() {
                 />
                 <Route path="/AddAPayment/:id" element={<AddAPayment />} />
 
-                <Route path="/ForgotPassword" element={<ForgotPassword />} />
+                <Route
+                  path="/password/forgot-password"
+                  element={<ForgotPassword darkMode={darkMode} />}
+                />
+                <Route
+                  path="/password/reset-password/:userId/:token"
+                  element={<ResetPasowrd darkMode={darkMode} />}
+                />
                 <Route
                   path="/AdDetails/:id"
                   element={<AdDetails darkMode={darkMode} />}
