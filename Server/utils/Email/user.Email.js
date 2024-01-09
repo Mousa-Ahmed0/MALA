@@ -12,7 +12,7 @@ module.exports.sendEmail = async (option) => {
   // send mail with defined transport object
   let info = transporter.sendMail(
     {
-      from: "MALM", // sender address
+      from: "ma5055928@gmail.com", // sender address
       to: option.email, // list of receivers
       subject: option.subject, // Subject line
       html: `
@@ -29,7 +29,8 @@ module.exports.sendEmail = async (option) => {
   );
 };
 
-module.exports.sendEmailForRestPassword = async (option) => {
+module.exports.sendEmailForRestPassword = async (optionRest) => {
+  console.log(optionRest.email);
   let transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -41,13 +42,13 @@ module.exports.sendEmailForRestPassword = async (option) => {
   // send mail with defined transport object
   let info = transporter.sendMail(
     {
-      from: "MALM", // sender address
-      to: option.email, // list of receivers
-      subject: option.subject, // Subject line
+      from: "ma5055928@gmail.com", // sender address
+      to: optionRest.email, // list of receivers
+      subject: "Reset of password", // Subject line
       html: `
           <div style="font-size:2.5rem;color:#113f67 !important; display:flex;justify-content:center;">MALM</div>
           <div style="font-size:1.275rem;color:#000000 !important;line-height:1.25;">
-              <p style="font-size:1.275rem;color:#000000 !important;line-height:1.25">${option.massage}</p>
+              <p style="font-size:1.275rem;color:#000000 !important;line-height:1.25">${optionRest.link}</p>
           </div>
           `, // html body
     },

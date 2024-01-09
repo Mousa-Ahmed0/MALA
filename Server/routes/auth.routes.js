@@ -8,5 +8,5 @@ router.post("/register",registerUser);
 router.post("/login",loginUser );
 
 // /api/auth/resetPasword
-router.post("/resetPasword",sendEmailForRestPassword );
+router.post("/resetPaswordEmailLink",sendEmailForRestPassword );
 module.exports=router;

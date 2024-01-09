@@ -5,6 +5,10 @@ const {
   validateLoginUser,
   user,
 } = require("../models/user");
+const Jwt = require("jsonwebtoken");
+const { sendEmailForRestPassword } = require("../utils/Email/user.Email");
+const nodemailer = require("nodemailer");
+
 /**--------------------------------
  * @desc Register new user
  * @router /api/auth/register
@@ -89,19 +93,23 @@ module.exports.sendLinkForgotPassword = asyncHandler(async (req, res) => {
   // if (error) return res.status(400).json({ message: error.details[0].message });
 
   //is user already exists
-  // const user = await user
-  if (!user)
+  const oUser = await user.findOne({ email: req.body.email });
+  if (!oUser)
     return res.status(404).json({ message: "user not found" });
+    try {
+     
+      const email=req.body.email;
+      const secret = process.env.SECRET_KEY + oUser.password;
+      const token = Jwt.sign({ email: oUser.email, id: oUser.id }, secret, { expiresIn: '20m' });
+      const link=`http://localhost:3000/password/reset-password/${oUser._id}/${token}`;
+      await sendEmailForRestPassword({email,link})
+      res.status(200).json({ message: "click on link",reset:link });
 
-  const secret=process.env.SECRET_KEY+user
-  //check the password
-  const match = await bcrypt.compare(req.body.password, newUser.password);
-  if (!match) return res.status(400).json({ message: "invaild  password" });
-  //Generate Token(jwt)
-  const token = newUser.generateAuthToken();
-  //send a response to client
-  res.status(201).json({
-    message: "Your Login successfully",
-    token,
-  });
+  } catch (error) {
+      // Handle the error here, you can log it or send a specific error response to the client
+      console.error("Error sending email:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+  }
+ 
+
 });
