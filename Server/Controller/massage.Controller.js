@@ -106,20 +106,21 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
  * @access public
  * ------------------------------------------ */
 module.exports.getAllMass = asyncHandler(async (req, res) => {
+
   const POST_PER_PAGE = 10;
   const pageNumber = req.query.pageNumber;
   const newMass = await Massage.find({})
-    .populate("firstUser", ["-password"])
-    .populate("secondUser", ["-password"])
     .skip((pageNumber - 1) * POST_PER_PAGE)
     .limit(POST_PER_PAGE)
-    .sort({ createdAt: -1 });
+    .sort({ createdAt: -1 })
+    .populate("firstUser", ["-password"])
+    .populate("secondUser", ["-password"]);
   //.populate('secondUser', ['-password'])
   if (newMass) {
     // io.emit('allMessages', newMass); // Emit all messages to all connected clients
     const count = await Massage.find({}).count();
 
-    return res.status(200).json(newMass, count);
+    return res.status(200).json({ newMass, count });
   } else return res.status(400).json({ massage: "Massage dose not exist" });
 });
 
