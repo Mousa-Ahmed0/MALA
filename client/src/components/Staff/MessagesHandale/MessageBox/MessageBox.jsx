@@ -87,6 +87,8 @@ export default function MessageBox({ darkMode }) {
         <div>No Messages Yet...</div>
       ) : allMessages.length > 0 ? (
         renderRecentMessages()
+      ) : apiError ? (
+        apiErrorMessage
       ) : (
         <div className="d-flex justify-content-center align-items-center my-4">
           <div className="spinner-border text-primary" role="status">

@@ -49,43 +49,47 @@ export default function GuestsMessages({ darkMode, setIsFormOpen }) {
             }`}
           >
             <div style={{ height: 300 }} className="card-body bottom-shadow ">
-              <div className="card-Top">
-                <div className="card-Top-Details d-flexflex-column">
-                  <div className="row">
-                    <div className="col-10">
-                      <h1 className="h4 mid-bold text-truncate colorMain">
-                        {msg.fullName}
-                      </h1>
-                    </div>
-                    <div className="col-2 d-flex align-items-center">
-                      <i
-                        onClick={() => deleeteGuestMeassage(msg.id)}
-                        style={{ cursor: "pointer" }}
-                        className={`fa-solid delete-btn fa-trash border-0 m-0 p-0 text-truncate  ${
-                          darkMode ? " dark-theme" : ""
-                        }`}
-                      />
-                    </div>
-                    <div className="col-12">
-                      <p className="home-size mid-bold my-1 text-truncate">
-                        {msg.email}
-                      </p>
+              <div className="row">
+                <div className="col-12">
+                  <div className="card-Top">
+                    <div className="card-Top-Details d-flexflex-column">
+                      <div className="row">
+                        <div className="col-10">
+                          <h1 className="h4 mid-bold text-truncate colorMain">
+                            {msg.fullName}
+                          </h1>
+                        </div>
+                        <div className="col-2 d-flex align-items-center">
+                          <i
+                            onClick={() => deleeteGuestMeassage(msg.id)}
+                            style={{ cursor: "pointer" }}
+                            className={`fa-solid delete-btn fa-trash border-0 m-0 p-0 text-truncate  ${
+                              darkMode ? " dark-theme" : ""
+                            }`}
+                          />
+                        </div>
+                        <div className="col-12">
+                          <p className="home-size mid-bold my-1 text-truncate">
+                            {msg.email}
+                          </p>
+                        </div>
+                      </div>
+                      <hr />
                     </div>
                   </div>
-                  <hr />
                 </div>
-              </div>
-            </div>
-            <div style={{ overflowY: "auto" }} className="card-body p-0">
-              <div
-                style={{
-                  maxHeight: "75px",
-                  minHeight: "75px",
-                  lineHeight: "1.25",
-                }}
-                className="h5 m-0"
-              >
-                {msg.message}
+                <div style={{ overflowY: "auto" }} className="card-body p-0">
+                  <div
+                    style={{
+                      maxHeight: "75px",
+                      minHeight: "75px",
+                      lineHeight: "1.25",
+                    }}
+                    className="h5 m-0"
+                  >
+                    {msg.message}
+                  </div>
+                </div>
               </div>
               <hr />
               <div className="col-12 w-100 ">
