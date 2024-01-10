@@ -535,13 +535,13 @@ module.exports.resultDate = asyncHandler(async (req, res) => {
             ident: getAllResult[i].patientIdent,
           })
           .select("-password");
-          //
+        //
         const usersStaff = await user
           .findOne({
             ident: getAllResult[i].staffIdent,
           })
           .select("-password");
-          //
+        //
         const usersDoctor = await user
           .findOne({
             ident: getAllResult[i].doctorIdent,
@@ -555,7 +555,7 @@ module.exports.resultDate = asyncHandler(async (req, res) => {
           day: dayName,
           date: getAllResult[i].date,
           isDone: getAllResult[i],
-          usersPatint: userinfo,
+          usersPatient: userinfo,
           usersStaff,
           usersDoctor,
         };
@@ -564,7 +564,7 @@ module.exports.resultDate = asyncHandler(async (req, res) => {
 
       if (!responseSent) {
         res.status(201).json({
-          "usersArray":resultArray,
+          "usersArray": resultArray,
           message: "Reports generated successfully.",
         });
         responseSent = true; // Set the flag to true to indicate response has been sent
@@ -592,6 +592,18 @@ module.exports.resultDate = asyncHandler(async (req, res) => {
             ident: getAllResult[i].patientIdent,
           })
           .select("-password");
+        //
+        const usersStaff = await user
+          .findOne({
+            ident: getAllResult[i].staffIdent,
+          })
+          .select("-password");
+        //
+        const usersDoctor = await user
+          .findOne({
+            ident: getAllResult[i].doctorIdent,
+          })
+          .select("-password");
         const dayOfWeek = getAllResult[i].date.getDay(); //find day
         const dayName = daysOfWeek[dayOfWeek]; //find name of day
 
@@ -599,7 +611,9 @@ module.exports.resultDate = asyncHandler(async (req, res) => {
           day: dayName,
           date: getAllResult[i].date,
           Result: getAllResult[i],
-          info: userinfo,
+          usersPatient: userinfo,
+          usersStaff,
+          usersDoctor,
         };
         resultArray.push(pymentDetails);
       }
@@ -657,6 +671,18 @@ module.exports.resultDateFromTo = asyncHandler(async (req, res) => {
           ident: getAllResult[i].patientIdent,
         })
         .select("-password");
+      //
+      const usersStaff = await user
+        .findOne({
+          ident: getAllResult[i].staffIdent,
+        })
+        .select("-password");
+      //
+      const usersDoctor = await user
+        .findOne({
+          ident: getAllResult[i].doctorIdent,
+        })
+        .select("-password");
       const dayOfWeek = getAllResult[i].date.getDay(); //find day
       const dayName = daysOfWeek[dayOfWeek]; //find name of day
 
@@ -664,7 +690,9 @@ module.exports.resultDateFromTo = asyncHandler(async (req, res) => {
         day: dayName,
         date: getAllResult[i].date,
         Result: getAllResult[i],
-        info: userinfo,
+        usersPatient: userinfo,
+        usersStaff,
+        usersDoctor,
       };
       resultArray.push(pymentDetails);
     }
@@ -707,13 +735,27 @@ module.exports.dayResult = asyncHandler(async (req, res) => {
           ident: getAllResult[i].patientIdent,
         })
         .select("-password");
+      //
+      const usersStaff = await user
+        .findOne({
+          ident: getAllResult[i].staffIdent,
+        })
+        .select("-password");
+      //
+      const usersDoctor = await user
+        .findOne({
+          ident: getAllResult[i].doctorIdent,
+        })
+        .select("-password");
       const dayOfWeek = getAllResult[i].date.getDay(); //find day
       const dayName = daysOfWeek[dayOfWeek]; //find name of day
       const pymentDetails = {
         day: dayName,
         date: getAllResult[i].date,
         Result: getAllResult[i],
-        info: userinfo,
+        usersPatient: userinfo,
+        usersStaff,
+        usersDoctor,
       };
       resultArray.push(pymentDetails);
     }
