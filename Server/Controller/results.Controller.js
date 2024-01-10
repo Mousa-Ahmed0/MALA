@@ -775,6 +775,8 @@ module.exports.dayResult = asyncHandler(async (req, res) => {
  * @access private (staff or admin)
  * ------------------------------------------ */
 module.exports.isDone = asyncHandler(async (req, res) => {
+  const USER_PER_PAGE = 10;
+  const userNumber = req.query.userNumber;
   const isDone = await analyzeResult.find({ isDone: req.query.isDone });
   let usersArray = [];
 
