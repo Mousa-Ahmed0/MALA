@@ -50,8 +50,11 @@ module.exports.getPayment = asyncHandler(async (req, res) => {
     "Friday",
     "Saturday",
   ];
-
-  const getPayment = await payments.find();
+  const USER_PER_PAGE = 10;
+  const pageNumber = req.query.pageNumber;
+  const getPayment = await payments.find()
+    .skip((pageNumber - 1) * USER_PER_PAGE)
+    .limit(USER_PER_PAGE);
   let paumentArray = [];
   if (getPayment.length) {
     let count = 0;
