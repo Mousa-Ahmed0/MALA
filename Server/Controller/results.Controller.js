@@ -517,9 +517,13 @@ module.exports.resultDate = asyncHandler(async (req, res) => {
   if (number == 0) {
     //week
     startDate.setDate(currentDate.getDate() - 7);
+    const USER_PER_PAGE = 10;
+    const pageNumber = req.query.pageNumber;
+
     const getAllResult = await analyzeResult.find({
       date: { $gte: startDate, $lte: currentDate },
-    });
+    }).skip((pageNumber - 1) * USER_PER_PAGE)
+      .limit(USER_PER_PAGE);
     let resultArray = [];
 
     if (getAllResult.length) {
@@ -578,9 +582,13 @@ module.exports.resultDate = asyncHandler(async (req, res) => {
   } else if (number >= 1 && number <= 12) {
     //number of month
     startDate.setMonth(currentDate.getMonth() - number);
+    const USER_PER_PAGE = 10;
+    const pageNumber = req.query.pageNumber;
+
     const getAllResult = await analyzeResult.find({
       date: { $gte: startDate, $lte: currentDate },
-    });
+    }).skip((pageNumber - 1) * USER_PER_PAGE)
+      .limit(USER_PER_PAGE);
 
     let resultArray = [];
 
@@ -662,10 +670,13 @@ module.exports.resultDateFromTo = asyncHandler(async (req, res) => {
   ];
   const firstDate = new Date(req.query.firstDate);
   const secondtDate = new Date(req.query.secondtDate);
+  const USER_PER_PAGE = 10;
+  const pageNumber = req.query.pageNumber;
 
   const getAllResult = await analyzeResult.find({
     date: { $gte: firstDate, $lte: secondtDate },
-  });
+  }).skip((pageNumber - 1) * USER_PER_PAGE)
+    .limit(USER_PER_PAGE);
 
   let resultArray = [];
   if (getAllResult.length) {
@@ -730,10 +741,13 @@ module.exports.dayResult = asyncHandler(async (req, res) => {
     "Friday",
     "Saturday",
   ];
-  console.log(req.query.date);
+  const USER_PER_PAGE = 10;
+  const pageNumber = req.query.pageNumber;
+
   const getAllResult = await analyzeResult.find({
     date: req.query.date,
-  });
+  }).skip((pageNumber - 1) * USER_PER_PAGE)
+    .limit(USER_PER_PAGE);
 
   let resultArray = [];
   if (getAllResult.length) {
@@ -826,7 +840,7 @@ module.exports.isDone = asyncHandler(async (req, res) => {
       // Push the object to the array
       usersArray.push(userDetails);
     }
-    res.status(200).json({ count,usersArray });
+    res.status(200).json({ count, usersArray });
   }
 
   if (isDone.length) res.status(200).json({ isDone });
