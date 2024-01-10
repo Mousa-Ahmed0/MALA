@@ -359,9 +359,9 @@ export default function ResultsPreviewContainer({}) {
               console.log(res);
               if (
                 (
-                  p.usersPatient.firstname?.toLowerCase() +
+                  res.usersPatient.firstname?.toLowerCase() +
                   " " +
-                  p.usersPatient.lastname?.toLowerCase()
+                  res.usersPatient.lastname?.toLowerCase()
                 ).includes(val)
               ) {
                 srchResultsArray.push(res);
@@ -376,20 +376,18 @@ export default function ResultsPreviewContainer({}) {
           }
           // Doctor search filter
           else if (srchFilterOption === "Doctor") {
-            let srchResultsArray = allResults.filter((p) =>
-              p.usersDoctor
-                ? (
-                    p.usersDoctor.firstname?.toLowerCase() +
-                    " " +
-                    p.usersDoctor.lastname?.toLowerCase()
-                  ).includes(val.toLowerCase())
-                : false
-            );
-            if (srchResultsArray.length === 0) {
-              setNoResults(true);
-              setVisibleResults([]);
-            } else {
-              setVisibleResults(srchResultsArray);
+            let srchResultsArray = [];
+            for (const res of allResults) {
+              console.log(res);
+              const fullName = res.usersDoctor.firstname
+                ? res.usersDoctor.firstname?.toLowerCase() +
+                  " " +
+                  res.usersDoctor.lastname?.toLowerCase()
+                : res.usersDoctor.toLowerCase();
+              const matches = fullName.includes(val);
+              if (matches) {
+                srchResultsArray.push(res);
+              }
             }
           }
         } // data range is changed
@@ -400,9 +398,19 @@ export default function ResultsPreviewContainer({}) {
             srchFilterOption === "noValue" ||
             srchFilterOption === "Patient"
           ) {
-            let srchResultsArray = fillterdResults.filter((p) =>
-              p.info ? p.info.ident.toString().includes(val) : false
-            );
+            let srchResultsArray = [];
+            allResults.map((res, index) => {
+              console.log(res);
+              if (
+                (
+                  res.usersPatient.firstname?.toLowerCase() +
+                  " " +
+                  res.usersPatient.lastname?.toLowerCase()
+                ).includes(val)
+              ) {
+                srchResultsArray.push(res);
+              }
+            });
             if (srchResultsArray.length === 0) {
               setNoResults(true);
               setVisibleResults([]);
@@ -411,13 +419,21 @@ export default function ResultsPreviewContainer({}) {
             }
           } // Doctor search filter
           else if (srchFilterOption === "Doctor") {
-            let srchResultsArray = fillterdResults.filter((p) =>
-              p.payment
-                ? p.payment.InsuranceCompName.toLowerCase().includes(
-                    val.toLowerCase()
-                  )
-                : false
-            );
+            let srchResultsArray = [];
+
+            for (const res of allResults) {
+              console.log(res);
+
+              const fullName = res.usersDoctor.firstname
+                ? res.usersDoctor.firstname?.toLowerCase() +
+                  " " +
+                  res.usersDoctor.lastname?.toLowerCase()
+                : res.usersDoctor.toLowerCase();
+              const matches = fullName && fullName.includes(val);
+              if (matches) {
+                srchResultsArray.push(res);
+              }
+            }
             if (srchResultsArray.length === 0) {
               setNoResults(true);
               setVisibleResults([]);
@@ -439,9 +455,19 @@ export default function ResultsPreviewContainer({}) {
             srchFilterOption === "noValue" ||
             srchFilterOption === "Patient" // patient search filter
           ) {
-            let srchResultsArray = allResults.filter((p) =>
-              p.info ? p.info.ident.toString().includes(val) : false
-            );
+            let srchResultsArray = [];
+            allResults.map((res, index) => {
+              console.log(res);
+              if (
+                (
+                  res.usersPatient.firstname?.toLowerCase() +
+                  " " +
+                  res.usersPatient.lastname?.toLowerCase()
+                ).includes(val)
+              ) {
+                srchResultsArray.push(res);
+              }
+            });
             if (srchResultsArray.length === 0) {
               setNoResults(true);
               setVisibleResults([]);
@@ -449,14 +475,21 @@ export default function ResultsPreviewContainer({}) {
               setVisibleResults(srchResultsArray);
             }
           } else if (srchFilterOption === "Doctor") {
-            // Doctor search filter
-            let srchResultsArray = allResults.filter((p) =>
-              p.payment
-                ? p.payment.InsuranceCompName.toLowerCase().includes(
-                    val.toLowerCase()
-                  )
-                : false
-            );
+            let srchResultsArray = [];
+
+            for (const res of allResults) {
+              console.log(res);
+
+              const fullName = res.usersDoctor.firstname
+                ? res.usersDoctor.firstname?.toLowerCase() +
+                  " " +
+                  res.usersDoctor.lastname?.toLowerCase()
+                : res.usersDoctor.toLowerCase();
+              const matches = fullName && fullName.includes(val);
+              if (matches) {
+                srchResultsArray.push(res);
+              }
+            }
             if (srchResultsArray.length === 0) {
               setNoResults(true);
               setVisibleResults([]);
@@ -470,9 +503,19 @@ export default function ResultsPreviewContainer({}) {
             srchFilterOption === "noValue" ||
             srchFilterOption === "Patient"
           ) {
-            let srchResultsArray = fillterdResults.filter((p) =>
-              p.info ? p.info.ident.toString().includes(val) : false
-            );
+            let srchResultsArray = [];
+            fillterdResults.map((res, index) => {
+              console.log(res);
+              if (
+                (
+                  res.usersPatient.firstname?.toLowerCase() +
+                  " " +
+                  res.usersPatient.lastname?.toLowerCase()
+                ).includes(val)
+              ) {
+                srchResultsArray.push(res);
+              }
+            });
             if (srchResultsArray.length === 0) {
               setNoResults(true);
               setVisibleResults([]);
@@ -481,14 +524,21 @@ export default function ResultsPreviewContainer({}) {
             }
           } // Doctor search filter
           else if (srchFilterOption === "Doctor") {
-            // Doctor search filter
-            let srchResultsArray = fillterdResults.filter((p) =>
-              p.payment
-                ? p.payment.InsuranceCompName.toLowerCase().includes(
-                    val.toLowerCase()
-                  )
-                : false
-            );
+            let srchResultsArray = [];
+
+            for (const res of fillterdResults) {
+              console.log(res);
+
+              const fullName = res.usersDoctor.firstname
+                ? res.usersDoctor.firstname?.toLowerCase() +
+                  " " +
+                  res.usersDoctor.lastname?.toLowerCase()
+                : res.usersDoctor.toLowerCase();
+              const matches = fullName && fullName.includes(val);
+              if (matches) {
+                srchResultsArray.push(res);
+              }
+            }
             if (srchResultsArray.length === 0) {
               setNoResults(true);
               setVisibleResults([]);
