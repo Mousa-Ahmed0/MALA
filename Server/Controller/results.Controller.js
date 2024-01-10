@@ -529,26 +529,42 @@ module.exports.resultDate = asyncHandler(async (req, res) => {
 
     if (getAllResult.length) {
       for (let i = 0; i < getAllResult.length; i++) {
+        //
         const userinfo = await user
           .findOne({
             ident: getAllResult[i].patientIdent,
           })
           .select("-password");
+          //
+        const usersStaff = await user
+          .findOne({
+            ident: getAllResult[i].staffIdent,
+          })
+          .select("-password");
+          //
+        const usersDoctor = await user
+          .findOne({
+            ident: getAllResult[i].doctorIdent,
+          })
+          .select("-password");
+        console.log(userinfo);
         const dayOfWeek = getAllResult[i].date.getDay(); //find day
         const dayName = daysOfWeek[dayOfWeek]; //find name of day
 
         const pymentDetails = {
           day: dayName,
           date: getAllResult[i].date,
-          Result: getAllResult[i],
-          info: userinfo,
+          isDone: getAllResult[i],
+          usersPatint: userinfo,
+          usersStaff,
+          usersDoctor,
         };
         resultArray.push(pymentDetails);
       }
 
       if (!responseSent) {
         res.status(201).json({
-          resultArray,
+          "usersArray":resultArray,
           message: "Reports generated successfully.",
         });
         responseSent = true; // Set the flag to true to indicate response has been sent
