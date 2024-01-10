@@ -35,7 +35,11 @@ module.exports.addItem = asyncHandler(async (req, res) => {
  * @access private just admin or staff
  * ------------------------------------------ */
 module.exports.getAllItem = asyncHandler(async (req, res) => {
-  const allItem = await Storage.find();
+  const USER_PER_PAGE = 10;
+  const pageNumber = req.query.pageNumber;
+  const allItem = await Storage.find()
+    .skip((pageNumber - 1) * USER_PER_PAGE)
+    .limit(USER_PER_PAGE);
   if (allItem) {
     res.status(200).json({ message: "All Item", allItem });
   } else {
