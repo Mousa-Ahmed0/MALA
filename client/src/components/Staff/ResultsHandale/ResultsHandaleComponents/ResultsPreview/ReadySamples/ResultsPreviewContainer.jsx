@@ -44,11 +44,13 @@ export default function ResultsPreviewContainer({}) {
       </div>
     </div>
   );
+  const [pageNo, setPageNo] = useState(1);
+  const [usersCount, setUsersCount] = useState();
 
   //get all results
   async function getResults() {
     try {
-      let response = await getSamples(true);
+      let response = await getSamples(true, pageNo);
       console.log("response from gg", response);
       setAllResults(response.data.usersArray);
       setVisibleResults(response.data.usersArray);
@@ -608,6 +610,9 @@ export default function ResultsPreviewContainer({}) {
         srchFilterOption={srchFilterOption}
         dateRange={dateRange}
         deleteUser={deleteUser}
+        setPageNo={setPageNo}
+        pageNo={pageNo}
+        usersCount={usersCount}
       />
     </>
   );

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import SearchBar from "../../../../../SearchBar/SearchBar";
 import UserFilter from "../../../../../UserFilter/UserFilter";
+import PaginationNav from "../../../../../PaginationNav";
 
 export default function ResultsPreviewPresintation({
   darkMode,
@@ -21,7 +22,9 @@ export default function ResultsPreviewPresintation({
   handaleSearchVlue,
   srchFilterOption,
   dateRange,
-  deleteUser,
+  usersCount,
+  pageNo,
+  setPageNo,
 }) {
   return (
     <div className="ST-section my-2 p-0">
@@ -118,6 +121,12 @@ export default function ResultsPreviewPresintation({
           </div>
         </div>
         <section className="px-4">
+          <PaginationNav
+            counts={usersCount}
+            pageNo={pageNo}
+            setPageNo={setPageNo}
+            countPerPage={10}
+          />{" "}
           <div className="row my-0 d-none d-md-block">
             <div className="col-lg-12">
               <div className="card border-0 bg-transparent">
@@ -185,6 +194,12 @@ export default function ResultsPreviewPresintation({
               </div>
             )}
           </div>
+          <PaginationNav
+            counts={usersCount}
+            pageNo={pageNo}
+            setPageNo={setPageNo}
+            countPerPage={10}
+          />
         </section>
       </div>
     </div>

@@ -121,10 +121,10 @@ export const getAllResults = async () => {
     },
   });
 };
-export const getSamples = async (cond) => {
+export const getSamples = async (cond, pageNo) => {
   // console.log(cond);
   return await axios.get(
-    `http://localhost:5000/api/result/Results/ifDone?isDone=${cond}`,
+    `http://localhost:5000/api/result/Results/ifDone?isDone=${cond}&pageNumber=${pageNo}`,
     {
       headers: {
         Authorization: "Bearer " + localStorage.getItem("token"),
