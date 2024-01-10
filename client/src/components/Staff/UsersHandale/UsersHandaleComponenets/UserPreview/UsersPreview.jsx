@@ -263,6 +263,7 @@ export default function UsersPreview({ user }) {
             counts={usersCount}
             pageNo={pageNo}
             setPageNo={setPageNo}
+            countPerPage={1}
           />
           <div className="row my-0 d-none d-md-block">
             <div className="col-lg-12">
@@ -328,6 +329,7 @@ export default function UsersPreview({ user }) {
             counts={usersCount}
             pageNo={pageNo}
             setPageNo={setPageNo}
+            countPerPage={1}
           />
         </section>
       </div>

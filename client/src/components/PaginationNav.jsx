@@ -1,7 +1,12 @@
 import React from "react";
 
-export default function PaginationNav({ counts, pageNo, setPageNo }) {
-  const totalPages = Math.ceil(counts / 1);
+export default function PaginationNav({
+  counts,
+  pageNo,
+  setPageNo,
+  countPerPage,
+}) {
+  const totalPages = Math.ceil(counts / countPerPage);
 
   function displayPaginationItems() {
     const result = [];
@@ -56,17 +61,19 @@ export default function PaginationNav({ counts, pageNo, setPageNo }) {
     }
 
     // Always show the last page
-    result.push(
-      <li
-        className={`page-item ${pageNo === totalPages ? "active" : ""}`}
-        onClick={() => setPageNo(totalPages)}
-        key={totalPages}
-      >
-        <a style={{ cursor: "pointer" }} className="page-link">
-          {totalPages}
-        </a>
-      </li>
-    );
+    if (totalPages > 1) {
+      result.push(
+        <li
+          className={`page-item ${pageNo === totalPages ? "active" : ""}`}
+          onClick={() => setPageNo(totalPages)}
+          key={totalPages}
+        >
+          <a style={{ cursor: "pointer" }} className="page-link">
+            {totalPages}
+          </a>
+        </li>
+      );
+    }
 
     return result;
   }
