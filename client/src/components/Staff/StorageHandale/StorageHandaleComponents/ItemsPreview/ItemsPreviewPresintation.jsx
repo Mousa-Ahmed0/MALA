@@ -3,6 +3,7 @@ import React from "react";
 import BackBtn from "../../../../BackBtn";
 import SearchBar from "../../../../SearchBar/SearchBar";
 import UpdateItem from "./ItemPreviewComponents/UpdateItem";
+import PaginationNav from "../../../../PaginationNav";
 
 export default function ItemsPreviewPresintation({
   handaleSearchVlue,
@@ -18,6 +19,9 @@ export default function ItemsPreviewPresintation({
   setItem,
   getAllItems,
   setApiError,
+  usersCount,
+  pageNo,
+  setPageNo,
 }) {
   return (
     <>
@@ -46,6 +50,12 @@ export default function ItemsPreviewPresintation({
           </div>
         </div>
         <section className="px-4">
+          <PaginationNav
+            counts={usersCount}
+            pageNo={pageNo}
+            setPageNo={setPageNo}
+            countPerPage={10}
+          />{" "}
           <div className="row my-0 d-none d-md-block">
             <div className="col-lg-12">
               <div className="card border-0 bg-transparent">
@@ -107,6 +117,12 @@ export default function ItemsPreviewPresintation({
               </div>
             )}
           </div>
+          <PaginationNav
+            counts={usersCount}
+            pageNo={pageNo}
+            setPageNo={setPageNo}
+            countPerPage={10}
+          />{" "}
         </section>
       </div>
     </>

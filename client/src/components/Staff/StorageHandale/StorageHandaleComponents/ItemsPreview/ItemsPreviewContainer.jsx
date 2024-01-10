@@ -30,6 +30,8 @@ export default function ItemsPreviewContainer({ setIsFormOpen }) {
     </div>
   );
   const [isUpdateFormOpen, setIsUpdateFormOpen] = useState(false);
+  const [pageNo, setPageNo] = useState(1);
+  const [usersCount, setUsersCount] = useState();
 
   /* *************** Handale Pop Forms *************** */
   //update form open
@@ -46,7 +48,7 @@ export default function ItemsPreviewContainer({ setIsFormOpen }) {
   //get All Anlysis
   async function getAllItems() {
     try {
-      const response = await getItems();
+      const response = await getItems(pageNo);
 
       setApiError(false);
 
@@ -55,6 +57,7 @@ export default function ItemsPreviewContainer({ setIsFormOpen }) {
       } else {
         setAllItems(response.data.allItem);
         setVisibleItems(response.data.allItem);
+        setUsersCount(response.data.count);
       }
     } catch (error) {
       console.error(error);
@@ -194,6 +197,9 @@ export default function ItemsPreviewContainer({ setIsFormOpen }) {
       setItem={setItem}
       getAllItems={getAllItems}
       setApiError={setApiError}
+      setPageNo={setPageNo}
+      pageNo={pageNo}
+      usersCount={usersCount}
     />
   );
 }

@@ -75,10 +75,13 @@ export const deleteAUser = async (id) => {
   });
 };
 /* Storage API`s */
-export const getItems = async () => {
-  return await axios.get("http://localhost:5000/api/storage/getAllItem?", {
-    headers: { Authorization: "Bearer " + localStorage.getItem("token") },
-  });
+export const getItems = async (pageNo) => {
+  return await axios.get(
+    `http://localhost:5000/api/storage/getAllItem?pageNumber=${pageNo}`,
+    {
+      headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+    }
+  );
 };
 export const addItem = async (item) => {
   return await axios.post("http://localhost:5000/api/storage/additem", item, {
