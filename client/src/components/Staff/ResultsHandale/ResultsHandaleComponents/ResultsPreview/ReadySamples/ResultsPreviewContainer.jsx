@@ -204,7 +204,7 @@ export default function ResultsPreviewContainer({}) {
     setVal("");
   }
 
-  //handale search value filter - patient or IC -
+  //handale search value filter - patient or Doctor -
   function searchFilterOption(option) {
     clearResults();
     setSrchFilterOption(option);
@@ -354,9 +354,19 @@ export default function ResultsPreviewContainer({}) {
             srchFilterOption === "noValue" ||
             srchFilterOption === "Patient"
           ) {
-            let srchResultsArray = allResults.filter((p) =>
-              p.info ? p.info.ident.toString().includes(val) : false
-            );
+            let srchResultsArray = [];
+            allResults.map((res, index) => {
+              console.log(res);
+              if (
+                (
+                  res.usersPatient.firstname?.toLowerCase() +
+                  " " +
+                  res.usersPatient.lastname?.toLowerCase()
+                ).includes(val)
+              ) {
+                srchResultsArray.push(res);
+              }
+            });
             if (srchResultsArray.length === 0) {
               setNoResults(true);
               setVisibleResults([]);
@@ -364,20 +374,20 @@ export default function ResultsPreviewContainer({}) {
               setVisibleResults(srchResultsArray);
             }
           }
-          // IC search filter
-          else if (srchFilterOption === "IC") {
-            let srchResultsArray = allResults.filter((p) =>
-              p.payment
-                ? p.payment.InsuranceCompName.toLowerCase().includes(
-                    val.toLowerCase()
-                  )
-                : false
-            );
-            if (srchResultsArray.length === 0) {
-              setNoResults(true);
-              setVisibleResults([]);
-            } else {
-              setVisibleResults(srchResultsArray);
+          // Doctor search filter
+          else if (srchFilterOption === "Doctor") {
+            let srchResultsArray = [];
+            for (const res of allResults) {
+              console.log(res);
+              const fullName = res.usersDoctor.firstname
+                ? res.usersDoctor.firstname?.toLowerCase() +
+                  " " +
+                  res.usersDoctor.lastname?.toLowerCase()
+                : res.usersDoctor.toLowerCase();
+              const matches = fullName.includes(val);
+              if (matches) {
+                srchResultsArray.push(res);
+              }
             }
           }
         } // data range is changed
@@ -388,24 +398,42 @@ export default function ResultsPreviewContainer({}) {
             srchFilterOption === "noValue" ||
             srchFilterOption === "Patient"
           ) {
-            let srchResultsArray = fillterdResults.filter((p) =>
-              p.info ? p.info.ident.toString().includes(val) : false
-            );
+            let srchResultsArray = [];
+            allResults.map((res, index) => {
+              console.log(res);
+              if (
+                (
+                  res.usersPatient.firstname?.toLowerCase() +
+                  " " +
+                  res.usersPatient.lastname?.toLowerCase()
+                ).includes(val)
+              ) {
+                srchResultsArray.push(res);
+              }
+            });
             if (srchResultsArray.length === 0) {
               setNoResults(true);
               setVisibleResults([]);
             } else {
               setVisibleResults(srchResultsArray);
             }
-          } // IC search filter
-          else if (srchFilterOption === "IC") {
-            let srchResultsArray = fillterdResults.filter((p) =>
-              p.payment
-                ? p.payment.InsuranceCompName.toLowerCase().includes(
-                    val.toLowerCase()
-                  )
-                : false
-            );
+          } // Doctor search filter
+          else if (srchFilterOption === "Doctor") {
+            let srchResultsArray = [];
+
+            for (const res of allResults) {
+              console.log(res);
+
+              const fullName = res.usersDoctor.firstname
+                ? res.usersDoctor.firstname?.toLowerCase() +
+                  " " +
+                  res.usersDoctor.lastname?.toLowerCase()
+                : res.usersDoctor.toLowerCase();
+              const matches = fullName && fullName.includes(val);
+              if (matches) {
+                srchResultsArray.push(res);
+              }
+            }
             if (srchResultsArray.length === 0) {
               setNoResults(true);
               setVisibleResults([]);
@@ -427,24 +455,41 @@ export default function ResultsPreviewContainer({}) {
             srchFilterOption === "noValue" ||
             srchFilterOption === "Patient" // patient search filter
           ) {
-            let srchResultsArray = allResults.filter((p) =>
-              p.info ? p.info.ident.toString().includes(val) : false
-            );
+            let srchResultsArray = [];
+            allResults.map((res, index) => {
+              console.log(res);
+              if (
+                (
+                  res.usersPatient.firstname?.toLowerCase() +
+                  " " +
+                  res.usersPatient.lastname?.toLowerCase()
+                ).includes(val)
+              ) {
+                srchResultsArray.push(res);
+              }
+            });
             if (srchResultsArray.length === 0) {
               setNoResults(true);
               setVisibleResults([]);
             } else {
               setVisibleResults(srchResultsArray);
             }
-          } else if (srchFilterOption === "IC") {
-            // IC search filter
-            let srchResultsArray = allResults.filter((p) =>
-              p.payment
-                ? p.payment.InsuranceCompName.toLowerCase().includes(
-                    val.toLowerCase()
-                  )
-                : false
-            );
+          } else if (srchFilterOption === "Doctor") {
+            let srchResultsArray = [];
+
+            for (const res of allResults) {
+              console.log(res);
+
+              const fullName = res.usersDoctor.firstname
+                ? res.usersDoctor.firstname?.toLowerCase() +
+                  " " +
+                  res.usersDoctor.lastname?.toLowerCase()
+                : res.usersDoctor.toLowerCase();
+              const matches = fullName && fullName.includes(val);
+              if (matches) {
+                srchResultsArray.push(res);
+              }
+            }
             if (srchResultsArray.length === 0) {
               setNoResults(true);
               setVisibleResults([]);
@@ -458,25 +503,42 @@ export default function ResultsPreviewContainer({}) {
             srchFilterOption === "noValue" ||
             srchFilterOption === "Patient"
           ) {
-            let srchResultsArray = fillterdResults.filter((p) =>
-              p.info ? p.info.ident.toString().includes(val) : false
-            );
+            let srchResultsArray = [];
+            fillterdResults.map((res, index) => {
+              console.log(res);
+              if (
+                (
+                  res.usersPatient.firstname?.toLowerCase() +
+                  " " +
+                  res.usersPatient.lastname?.toLowerCase()
+                ).includes(val)
+              ) {
+                srchResultsArray.push(res);
+              }
+            });
             if (srchResultsArray.length === 0) {
               setNoResults(true);
               setVisibleResults([]);
             } else {
               setVisibleResults(srchResultsArray);
             }
-          } // IC search filter
-          else if (srchFilterOption === "IC") {
-            // IC search filter
-            let srchResultsArray = fillterdResults.filter((p) =>
-              p.payment
-                ? p.payment.InsuranceCompName.toLowerCase().includes(
-                    val.toLowerCase()
-                  )
-                : false
-            );
+          } // Doctor search filter
+          else if (srchFilterOption === "Doctor") {
+            let srchResultsArray = [];
+
+            for (const res of fillterdResults) {
+              console.log(res);
+
+              const fullName = res.usersDoctor.firstname
+                ? res.usersDoctor.firstname?.toLowerCase() +
+                  " " +
+                  res.usersDoctor.lastname?.toLowerCase()
+                : res.usersDoctor.toLowerCase();
+              const matches = fullName && fullName.includes(val);
+              if (matches) {
+                srchResultsArray.push(res);
+              }
+            }
             if (srchResultsArray.length === 0) {
               setNoResults(true);
               setVisibleResults([]);

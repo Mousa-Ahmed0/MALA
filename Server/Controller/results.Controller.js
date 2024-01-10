@@ -787,9 +787,11 @@ module.exports.dayResult = asyncHandler(async (req, res) => {
 module.exports.isDone = asyncHandler(async (req, res) => {
   const USER_PER_PAGE = 10;
   const pageNumber = req.query.pageNumber;
-  const isDone = await analyzeResult.find({ isDone: req.query.isDone })
+  const isDone = await analyzeResult
+    .find({ isDone: req.query.isDone })
     .skip((pageNumber - 1) * USER_PER_PAGE)
-    .limit(USER_PER_PAGE);
+    .limit(USER_PER_PAGE)
+    .sort({ createdAt: -1 });
   let usersArray = [];
 
   if (isDone.length) {
@@ -835,7 +837,7 @@ module.exports.isDone = asyncHandler(async (req, res) => {
  * @router /api/Results/ifDoneCount
  * @method GET
  * @access private (staff or admin)
- * ------------------------------------------ */ 
+ * ------------------------------------------ */
 module.exports.isDoneCount = asyncHandler(async (req, res) => {
   const isDoneTrue = await analyzeResult.find({ isDone: true }).count();
   const isDoneFalse = await analyzeResult.find({ isDone: false }).count();
