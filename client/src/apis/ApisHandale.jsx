@@ -162,10 +162,10 @@ export const getPateinrResults = async (ident) => {
     }
   );
 };
-export const getResultsFromTo = async (date) => {
+export const getResultsFromTo = async (date, pageNo) => {
   console.log(" custome date: ", date);
   return await axios.get(
-    `http://localhost:5000/api/result/getResults/resultDateFromTo?firstDate=${date.firstDate}&secondtDate=${date.secondtDate}`,
+    `http://localhost:5000/api/result/getResults/resultDateFromTo?firstDate=${date.firstDate}&secondtDate=${date.secondtDate}&pageNumber=${pageNo}`,
     {
       headers: {
         Authorization: "Bearer " + localStorage.getItem("token"),
@@ -173,10 +173,10 @@ export const getResultsFromTo = async (date) => {
     }
   );
 };
-export const getResultsFiltered = async (date) => {
+export const getResultsFiltered = async (date, pageNo) => {
   //console.log(" custome date: ", date);
   return await axios.get(
-    `http://localhost:5000/api/result/getResults/resultDate?number=${date.number}&date=${date.payDate}`,
+    `http://localhost:5000/api/result/getResults/resultDate?number=${date.number}&date=${date.payDate}&pageNumber=${pageNo}`,
     {
       headers: {
         Authorization: "Bearer " + localStorage.getItem("token"),
@@ -218,10 +218,10 @@ export const getUnPaidSamples = async () => {
     }
   );
 };
-export const getPaymentsFromTo = async (date) => {
-  //console.log(" custome date: ", date);
+export const getPaymentsFromTo = async (date, pageNo) => {
+  console.log(" custome date: ", date, ":::", pageNo);
   return await axios.get(
-    "http://localhost:5000/api/payment/getFromToDate",
+    `http://localhost:5000/api/payment/getFromToDate?firstDate=${date.firstDate}&secondtDate=${date.secondtDate}&pageNumber=${pageNo}`,
     {
       params: date, // Use 'params' to send data as query parameters
     },
@@ -232,10 +232,10 @@ export const getPaymentsFromTo = async (date) => {
     }
   );
 };
-export const getPaymentsFiltered = async (date) => {
+export const getPaymentsFiltered = async (date, pageNo) => {
   // console.log(" custome date: ", date);
   return await axios.get(
-    `http://localhost:5000/api/payment/week?payDate=${date.payDate}&number=${date.number}`,
+    `http://localhost:5000/api/payment/week?payDate=${date.payDate}&number=${date.number}&pageNumber=${pageNo}`,
     {
       headers: {
         Authorization: "Bearer " + localStorage.getItem("token"),

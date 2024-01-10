@@ -2,6 +2,7 @@ import React from "react";
 import SearchBar from "../../../../SearchBar/SearchBar";
 import UserFilter from "../../../../UserFilter/UserFilter";
 import PaymentsArrayPrint from "../../../../PaymentsReport/PaymentsArrayPrint/PaymentsArrayPrint";
+import PaginationNav from "../../../../PaginationNav";
 
 export default function PaymentsPreviewPresintation({
   darkMode,
@@ -21,6 +22,9 @@ export default function PaymentsPreviewPresintation({
   handaleSearchVlue,
   srchFilterOption,
   dateRange,
+  usersCount,
+  pageNo,
+  setPageNo,
 }) {
   return (
     <div className="ST-section my-2 p-0">
@@ -124,6 +128,12 @@ export default function PaymentsPreviewPresintation({
         </div>
       </div>
       <section className="px-4 preview-section">
+        <PaginationNav
+          counts={usersCount}
+          pageNo={pageNo}
+          setPageNo={setPageNo}
+          countPerPage={10}
+        />
         <div className="row my-0 d-none d-md-block">
           <div className="col-lg-12">
             <div className="card border-0 bg-transparent">
@@ -195,18 +205,24 @@ export default function PaymentsPreviewPresintation({
           {Array.isArray(visiblePayments) && visiblePayments.length > 0 ? (
             <>
               {displayUsers()}
+              <PaginationNav
+                counts={usersCount}
+                pageNo={pageNo}
+                setPageNo={setPageNo}
+                countPerPage={10}
+              />
               <div className="d-flex align-items-center justify-content-center print-button mt-4">
                 <button
-                  className="btn btn-info text-white p-3"
+                  className="btn btn-primary d-flex justify-content-center BTN-Bold my-3"
                   onClick={() => window.print()}
                 >
-                  <span className="h4 mid-bold">Print</span>
+                  <span className="">Print</span>
                 </button>
               </div>
             </>
           ) : apiError ? (
             apiErrorMessage
-          ) : noResults ? (
+          ) : visiblePayments.length === 0 ? (
             <div className="my-4 mid-bold">No results Found.</div>
           ) : (
             <div className="d-flex justify-content-center align-items-center my-4">

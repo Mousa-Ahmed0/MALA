@@ -43,14 +43,17 @@ export default function PaymentsPreviewContainer({ setIsPdfLoading }) {
       </div>
     </div>
   );
+  const [pageNo, setPageNo] = useState(1);
+  const [usersCount, setUsersCount] = useState();
 
   /*get all pyments */
   async function getPayments() {
     try {
       let response = await getAllPayments();
-      //console.log(response);
+      console.log("response from gg", response);
       setAllPayments(response.data.paumentArray);
       setVisiblePayments(response.data.paumentArray);
+      setUsersCount(response.data.countPage);
     } catch (error) {
       console.error("Error from disply all pyments: ", error);
     }
@@ -158,7 +161,8 @@ export default function PaymentsPreviewContainer({ setIsPdfLoading }) {
   //filter based on data range
   async function filterByDataRange() {
     try {
-      let response = await getPaymentsFromTo(dateRange);
+      let response = await getPaymentsFromTo(dateRange, pageNo);
+      console.log("response from payment to: ", response);
       if (response.data.paumentArray) {
         setfillterdResults(response.data.paumentArray);
         setVisiblePayments(response.data.paumentArray);
@@ -205,47 +209,43 @@ export default function PaymentsPreviewContainer({ setIsPdfLoading }) {
 
       case "Last Week":
         try {
-          let response = await getPaymentsFiltered({
-            payDate: formatDate(new Date()),
-            number: 0,
-          });
+          let response = await getPaymentsFiltered(
+            {
+              payDate: formatDate(new Date()),
+              number: 0,
+            },
+            pageNo
+          );
+          console.log("Last Week", response);
           if (response.data.paumentArray) {
             setfillterdResults(response.data.paumentArray);
             setVisiblePayments(response.data.paumentArray);
+            setUsersCount(response.data.conutPage);
           } else {
             setNoResults(true);
             setfillterdResults([]);
+            setVisiblePayments([]);
           }
         } catch (error) {
           console.error("error", error);
+          setVisiblePayments([]);
         }
         break;
+
       case "Last Month":
         try {
-          let response = await getPaymentsFiltered({
-            payDate: formatDate(new Date()),
-            number: 1,
-          });
+          let response = await getPaymentsFiltered(
+            {
+              payDate: formatDate(new Date()),
+              number: 1,
+            },
+            pageNo
+          );
+          console.log("Last Month", response);
           if (response.data.paumentArray) {
             setfillterdResults(response.data.paumentArray);
             setVisiblePayments(response.data.paumentArray);
-          } else {
-            setNoResults(true);
-            setfillterdResults([]);
-          }
-        } catch (error) {
-          console.error("error", error);
-        }
-        break;
-      case "Last Month":
-        try {
-          let response = await getPaymentsFiltered({
-            payDate: formatDate(new Date()),
-            number: 1,
-          });
-          if (response.data.paumentArray) {
-            setfillterdResults(response.data.paumentArray);
-            setVisiblePayments(response.data.paumentArray);
+            setUsersCount(response.data.conutPage);
           } else {
             setNoResults(true);
             setfillterdResults([]);
@@ -256,13 +256,17 @@ export default function PaymentsPreviewContainer({ setIsPdfLoading }) {
         break;
       case "Last 3 Months":
         try {
-          let response = await getPaymentsFiltered({
-            payDate: formatDate(new Date()),
-            number: 3,
-          });
+          let response = await getPaymentsFiltered(
+            {
+              payDate: formatDate(new Date()),
+              number: 3,
+            },
+            pageNo
+          );
           if (response.data.paumentArray) {
             setfillterdResults(response.data.paumentArray);
             setVisiblePayments(response.data.paumentArray);
+            setUsersCount(response.data.conutPage);
           } else {
             setNoResults(true);
             setfillterdResults([]);
@@ -273,13 +277,17 @@ export default function PaymentsPreviewContainer({ setIsPdfLoading }) {
         break;
       case "Last 6 Months":
         try {
-          let response = await getPaymentsFiltered({
-            payDate: formatDate(new Date()),
-            number: 6,
-          });
+          let response = await getPaymentsFiltered(
+            {
+              payDate: formatDate(new Date()),
+              number: 6,
+            },
+            pageNo
+          );
           if (response.data.paumentArray) {
             setfillterdResults(response.data.paumentArray);
             setVisiblePayments(response.data.paumentArray);
+            setUsersCount(response.data.conutPage);
           } else {
             setNoResults(true);
             setfillterdResults([]);
@@ -290,13 +298,17 @@ export default function PaymentsPreviewContainer({ setIsPdfLoading }) {
         break;
       case "Last Year":
         try {
-          let response = await getPaymentsFiltered({
-            payDate: formatDate(new Date()),
-            number: 12,
-          });
+          let response = await getPaymentsFiltered(
+            {
+              payDate: formatDate(new Date()),
+              number: 12,
+            },
+            pageNo
+          );
           if (response.data.paumentArray) {
             setfillterdResults(response.data.paumentArray);
             setVisiblePayments(response.data.paumentArray);
+            setUsersCount(response.data.conutPage);
           } else {
             setNoResults(true);
             setfillterdResults([]);
@@ -511,7 +523,7 @@ export default function PaymentsPreviewContainer({ setIsPdfLoading }) {
   }, [visiblePayments]);
   useEffect(() => {
     if (isCustomeDate) {
-      // console.log("Custome Date Function");
+      console.log("Custome Date Function");
     } else {
       handaleFilterOption(filterOption);
     }
@@ -536,6 +548,9 @@ export default function PaymentsPreviewContainer({ setIsPdfLoading }) {
       handaleSearchVlue={handaleSearchVlue}
       srchFilterOption={srchFilterOption}
       dateRange={dateRange}
+      setPageNo={setPageNo}
+      pageNo={pageNo}
+      usersCount={usersCount}
     />
   );
 }

@@ -54,6 +54,7 @@ export default function ResultsPreviewContainer({}) {
       console.log("response from gg", response);
       setAllResults(response.data.usersArray);
       setVisibleResults(response.data.usersArray);
+      setUsersCount(response.data.count);
     } catch (error) {
       console.error("Error From getResults: ", error);
     }
@@ -176,7 +177,7 @@ export default function ResultsPreviewContainer({}) {
   //filter based on data range
   async function filterByDataRange() {
     try {
-      let response = await getResultsFromTo(dateRange);
+      let response = await getResultsFromTo(dateRange, pageNo);
       console.log("response from range", response);
       if (response.data.usersArray) {
         setfillterdResults(response.data.usersArray);
@@ -224,14 +225,18 @@ export default function ResultsPreviewContainer({}) {
 
       case "Last Week":
         try {
-          let response = await getResultsFiltered({
-            payDate: formatDate(new Date()),
-            number: 0,
-          });
+          let response = await getResultsFiltered(
+            {
+              payDate: formatDate(new Date()),
+              number: 0,
+            },
+            pageNo
+          );
           console.log("Response from week filter", response);
           if (response.data.usersArray) {
             setfillterdResults(response.data.usersArray);
             setVisibleResults(response.data.usersArray);
+            setUsersCount(response.data.count);
           } else {
             setNoResults(true);
             setfillterdResults([]);
@@ -242,13 +247,17 @@ export default function ResultsPreviewContainer({}) {
         break;
       case "Last Month":
         try {
-          let response = await getResultsFiltered({
-            payDate: formatDate(new Date()),
-            number: 1,
-          });
+          let response = await getResultsFiltered(
+            {
+              payDate: formatDate(new Date()),
+              number: 1,
+            },
+            pageNo
+          );
           if (response.data.usersArray) {
             setfillterdResults(response.data.usersArray);
             setVisibleResults(response.data.usersArray);
+            setUsersCount(response.data.count);
           } else {
             setNoResults(true);
             setfillterdResults([]);
@@ -259,15 +268,19 @@ export default function ResultsPreviewContainer({}) {
         break;
       case "Last 3 Months":
         try {
-          let response = await getResultsFiltered({
-            payDate: formatDate(new Date()),
-            number: 3,
-          });
+          let response = await getResultsFiltered(
+            {
+              payDate: formatDate(new Date()),
+              number: 3,
+            },
+            pageNo
+          );
 
           console.log("Last 3 Months", response);
           if (response.data.usersArray) {
             setfillterdResults(response.data.usersArray);
             setVisibleResults(response.data.usersArray);
+            setUsersCount(response.data.count);
           } else {
             setNoResults(true);
             setfillterdResults([]);
@@ -278,13 +291,17 @@ export default function ResultsPreviewContainer({}) {
         break;
       case "Last 6 Months":
         try {
-          let response = await getResultsFiltered({
-            payDate: formatDate(new Date()),
-            number: 6,
-          });
+          let response = await getResultsFiltered(
+            {
+              payDate: formatDate(new Date()),
+              number: 6,
+            },
+            pageNo
+          );
           if (response.data.usersArray) {
             setfillterdResults(response.data.usersArray);
             setVisibleResults(response.data.usersArray);
+            setUsersCount(response.data.count);
           } else {
             setNoResults(true);
             setfillterdResults([]);
@@ -295,13 +312,17 @@ export default function ResultsPreviewContainer({}) {
         break;
       case "Last Year":
         try {
-          let response = await getResultsFiltered({
-            payDate: formatDate(new Date()),
-            number: 12,
-          });
+          let response = await getResultsFiltered(
+            {
+              payDate: formatDate(new Date()),
+              number: 12,
+            },
+            pageNo
+          );
           if (response.data.usersArray) {
             setfillterdResults(response.data.usersArray);
             setVisibleResults(response.data.usersArray);
+            setUsersCount(response.data.count);
           } else {
             setNoResults(true);
             setfillterdResults([]);
@@ -575,7 +596,6 @@ export default function ResultsPreviewContainer({}) {
   }, [val, fillterdResults]);
 
   useEffect(() => {
-    console.log("dateRange: ", dateRange);
     filterByDataRange();
   }, [dateRange]);
   useEffect(() => {
