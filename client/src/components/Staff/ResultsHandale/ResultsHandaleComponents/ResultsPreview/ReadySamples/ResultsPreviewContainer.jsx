@@ -204,7 +204,7 @@ export default function ResultsPreviewContainer({}) {
     setVal("");
   }
 
-  //handale search value filter - patient or IC -
+  //handale search value filter - patient or Doctor -
   function searchFilterOption(option) {
     clearResults();
     setSrchFilterOption(option);
@@ -354,9 +354,19 @@ export default function ResultsPreviewContainer({}) {
             srchFilterOption === "noValue" ||
             srchFilterOption === "Patient"
           ) {
-            let srchResultsArray = allResults.filter((p) =>
-              p.info ? p.info.ident.toString().includes(val) : false
-            );
+            let srchResultsArray = [];
+            allResults.map((res, index) => {
+              console.log(res);
+              if (
+                (
+                  p.usersPatient.firstname?.toLowerCase() +
+                  " " +
+                  p.usersPatient.lastname?.toLowerCase()
+                ).includes(val)
+              ) {
+                srchResultsArray.push(res);
+              }
+            });
             if (srchResultsArray.length === 0) {
               setNoResults(true);
               setVisibleResults([]);
@@ -364,13 +374,15 @@ export default function ResultsPreviewContainer({}) {
               setVisibleResults(srchResultsArray);
             }
           }
-          // IC search filter
-          else if (srchFilterOption === "IC") {
+          // Doctor search filter
+          else if (srchFilterOption === "Doctor") {
             let srchResultsArray = allResults.filter((p) =>
-              p.payment
-                ? p.payment.InsuranceCompName.toLowerCase().includes(
-                    val.toLowerCase()
-                  )
+              p.usersDoctor
+                ? (
+                    p.usersDoctor.firstname?.toLowerCase() +
+                    " " +
+                    p.usersDoctor.lastname?.toLowerCase()
+                  ).includes(val.toLowerCase())
                 : false
             );
             if (srchResultsArray.length === 0) {
@@ -397,8 +409,8 @@ export default function ResultsPreviewContainer({}) {
             } else {
               setVisibleResults(srchResultsArray);
             }
-          } // IC search filter
-          else if (srchFilterOption === "IC") {
+          } // Doctor search filter
+          else if (srchFilterOption === "Doctor") {
             let srchResultsArray = fillterdResults.filter((p) =>
               p.payment
                 ? p.payment.InsuranceCompName.toLowerCase().includes(
@@ -436,8 +448,8 @@ export default function ResultsPreviewContainer({}) {
             } else {
               setVisibleResults(srchResultsArray);
             }
-          } else if (srchFilterOption === "IC") {
-            // IC search filter
+          } else if (srchFilterOption === "Doctor") {
+            // Doctor search filter
             let srchResultsArray = allResults.filter((p) =>
               p.payment
                 ? p.payment.InsuranceCompName.toLowerCase().includes(
@@ -467,9 +479,9 @@ export default function ResultsPreviewContainer({}) {
             } else {
               setVisibleResults(srchResultsArray);
             }
-          } // IC search filter
-          else if (srchFilterOption === "IC") {
-            // IC search filter
+          } // Doctor search filter
+          else if (srchFilterOption === "Doctor") {
+            // Doctor search filter
             let srchResultsArray = fillterdResults.filter((p) =>
               p.payment
                 ? p.payment.InsuranceCompName.toLowerCase().includes(

@@ -38,8 +38,8 @@ export default function ResultsPreviewPresintation({
               val={val}
               placeHolder={
                 srchFilterOption === "Patient"
-                  ? "Enter User Ident No. ..."
-                  : "Enter IC. Name ..."
+                  ? "Enter Patient Name ..."
+                  : "Enter Doctor Name ..."
               }
             />
           </div>
