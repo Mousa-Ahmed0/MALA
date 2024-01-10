@@ -261,6 +261,8 @@ export default function ResultsPreviewContainer({}) {
             payDate: formatDate(new Date()),
             number: 3,
           });
+
+          console.log("Last 3 Months", response);
           if (response.data.usersArray) {
             setfillterdResults(response.data.usersArray);
             setVisibleResults(response.data.usersArray);

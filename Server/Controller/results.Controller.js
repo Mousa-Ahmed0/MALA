@@ -45,9 +45,7 @@ function calAge(birthday) {
  * @access  (staff or admin)
  * ------------------------------------------ */
 module.exports.pythonResults = asyncHandler(async (req, res) => {
-  const detailsAnalyze = await analyzeResult.findById(
-    req.params.id
-  );
+  const detailsAnalyze = await analyzeResult.findById(req.params.id);
   if (detailsAnalyze) {
     let result = [];
 
@@ -100,10 +98,7 @@ module.exports.pythonResults = asyncHandler(async (req, res) => {
       console.log(result);
       res.status(200).json({ messag: "done...........", result });
     });
-  }
-  else
-    res.status(404).json({ message: "User not found" });
-
+  } else res.status(404).json({ message: "User not found" });
 });
 /**--------------------------------
  * @desc edit result
@@ -564,7 +559,7 @@ module.exports.resultDate = asyncHandler(async (req, res) => {
 
       if (!responseSent) {
         res.status(201).json({
-          "usersArray": resultArray,
+          usersArray: resultArray,
           message: "Reports generated successfully.",
         });
         responseSent = true; // Set the flag to true to indicate response has been sent
@@ -610,7 +605,7 @@ module.exports.resultDate = asyncHandler(async (req, res) => {
         const pymentDetails = {
           day: dayName,
           date: getAllResult[i].date,
-          Result: getAllResult[i],
+          isDone: getAllResult[i],
           usersPatient: userinfo,
           usersStaff,
           usersDoctor,
@@ -619,7 +614,7 @@ module.exports.resultDate = asyncHandler(async (req, res) => {
       }
       if (!responseSent) {
         res.status(201).json({
-          resultArray,
+          usersArray: resultArray,
           message: "Reports generated successfully.",
         });
         responseSent = true; // Set the flag to true to indicate response has been sent
@@ -689,7 +684,7 @@ module.exports.resultDateFromTo = asyncHandler(async (req, res) => {
       const pymentDetails = {
         day: dayName,
         date: getAllResult[i].date,
-        Result: getAllResult[i],
+        isDone: getAllResult[i],
         usersPatient: userinfo,
         usersStaff,
         usersDoctor,
@@ -697,7 +692,7 @@ module.exports.resultDateFromTo = asyncHandler(async (req, res) => {
       resultArray.push(pymentDetails);
     }
     res.status(201).json({
-      resultArray,
+      usersArray: resultArray,
       message: "Reports generated successfully.",
     });
   } else {
