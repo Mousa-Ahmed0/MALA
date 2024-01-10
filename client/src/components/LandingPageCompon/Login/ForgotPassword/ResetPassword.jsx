@@ -1,25 +1,26 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router";
 import BackBtn from "../../../BackBtn";
 import axios from "axios";
-import { useParams } from "react-router";
 
 export default function ResetPassword({ darkMode }) {
+  const { userId, token } = useParams();
   const [forgotPass, setForgotPass] = useState({
     password: "",
   });
   const [success, setSuccess] = useState(false);
   //
-  const params = useParams();
-  console.log(params);
   async function onFormSubmit(e) {
     e.preventDefault();
     console.log(forgotPass);
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/auth/password/rest-passwoed/${params.userId}/${params.token}`,
+        `http://localhost:5000/api/auth/password/rest-passwoed/${userId}/${token}`,
         forgotPass
       );
-      console.log(response);
+      if (response.data.message === "password is change") {
+        setSuccess(true);
+      }
     } catch (error) {
       console.error("Error form Forgot Passowrd: ", error);
     }

@@ -49,8 +49,8 @@ module.exports.sendEmailForRestPassword = async (optionRest) => {
           <div style="font-size:2.5rem;color:#113f67 !important; display:flex;justify-content:center;">MALM</div>
           <div style="font-size:1.275rem;color:#000000 !important;line-height:1.25;">
               <p style="font-size:1.275rem;color:#000000 !important;line-height:1.25">
-                <a style="background-color: #f44336; color: white; padding: 14px 25px; text-align: center; text-decoration: none; display: inline-block;"
-                href="${optionRest.link}">
+                <a style="background-color: #226597; color: white; padding: 14px 25px; text-align: center; text-decoration: none; display: inline-block;"
+                href="${optionRest.link}" > 
                 Rest Password
                 </a>
               </p>

@@ -35,7 +35,6 @@ export default function UsersMessages({ user }) {
 
   // Get all Users from API
   async function getUsers() {
-    console.log("gg", user);
     try {
       const response = await axios.get(
         `http://localhost:5000/api/massage/getAllMassage?pageNumber=${pageNo}`,
@@ -49,8 +48,9 @@ export default function UsersMessages({ user }) {
       if (response.data.length === 0) {
         setNoResults(true);
       } else {
-        setAllUsers(response.data);
-        setVisibleUsers(response.data);
+        setAllUsers(response.data.newMass);
+        setVisibleUsers(response.data.newMass);
+        setUsersCount(response.data.count);
       }
     } catch (error) {
       console.error(error);
@@ -231,6 +231,7 @@ export default function UsersMessages({ user }) {
             counts={usersCount}
             pageNo={pageNo}
             setPageNo={setPageNo}
+            countPerPage={10}
           />
           <div className="row my-0 d-none d-md-block">
             <div className="col-lg-12">
@@ -296,6 +297,7 @@ export default function UsersMessages({ user }) {
             counts={usersCount}
             pageNo={pageNo}
             setPageNo={setPageNo}
+            countPerPage={10}
           />
         </section>
       </div>

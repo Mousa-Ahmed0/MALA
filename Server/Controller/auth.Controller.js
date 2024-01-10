@@ -102,7 +102,7 @@ module.exports.sendLinkForgotPassword = asyncHandler(async (req, res) => {
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
     console.error("Error sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ error: "Internal Server Error", error });
   }
 });
 

@@ -176,9 +176,9 @@ export default function ResultsPreviewContainer({}) {
     try {
       let response = await getResultsFromTo(dateRange);
       console.log("response from range", response);
-      if (response.data.paumentArray) {
-        setfillterdResults(response.data.resultArray);
-        setVisibleResults(response.data.resultArray);
+      if (response.data.usersArray) {
+        setfillterdResults(response.data.usersArray);
+        setVisibleResults(response.data.usersArray);
       } else {
         setNoResults(true);
         setfillterdResults([]);
@@ -227,9 +227,9 @@ export default function ResultsPreviewContainer({}) {
             number: 0,
           });
           console.log("Response from week filter", response);
-          if (response.data.paumentArray) {
-            setfillterdResults(response.data.paumentArray);
-            setVisibleResults(response.data.paumentArray);
+          if (response.data.usersArray) {
+            setfillterdResults(response.data.usersArray);
+            setVisibleResults(response.data.usersArray);
           } else {
             setNoResults(true);
             setfillterdResults([]);
@@ -244,9 +244,9 @@ export default function ResultsPreviewContainer({}) {
             payDate: formatDate(new Date()),
             number: 1,
           });
-          if (response.data.paumentArray) {
-            setfillterdResults(response.data.paumentArray);
-            setVisibleResults(response.data.paumentArray);
+          if (response.data.usersArray) {
+            setfillterdResults(response.data.usersArray);
+            setVisibleResults(response.data.usersArray);
           } else {
             setNoResults(true);
             setfillterdResults([]);
@@ -261,9 +261,9 @@ export default function ResultsPreviewContainer({}) {
             payDate: formatDate(new Date()),
             number: 3,
           });
-          if (response.data.paumentArray) {
-            setfillterdResults(response.data.paumentArray);
-            setVisibleResults(response.data.paumentArray);
+          if (response.data.usersArray) {
+            setfillterdResults(response.data.usersArray);
+            setVisibleResults(response.data.usersArray);
           } else {
             setNoResults(true);
             setfillterdResults([]);
@@ -278,9 +278,9 @@ export default function ResultsPreviewContainer({}) {
             payDate: formatDate(new Date()),
             number: 6,
           });
-          if (response.data.paumentArray) {
-            setfillterdResults(response.data.paumentArray);
-            setVisibleResults(response.data.paumentArray);
+          if (response.data.usersArray) {
+            setfillterdResults(response.data.usersArray);
+            setVisibleResults(response.data.usersArray);
           } else {
             setNoResults(true);
             setfillterdResults([]);
@@ -295,9 +295,9 @@ export default function ResultsPreviewContainer({}) {
             payDate: formatDate(new Date()),
             number: 12,
           });
-          if (response.data.paumentArray) {
-            setfillterdResults(response.data.paumentArray);
-            setVisibleResults(response.data.paumentArray);
+          if (response.data.usersArray) {
+            setfillterdResults(response.data.usersArray);
+            setVisibleResults(response.data.usersArray);
           } else {
             setNoResults(true);
             setfillterdResults([]);
