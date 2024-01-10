@@ -227,8 +227,12 @@ module.exports.getByDate = asyncHandler(async (req, res) => {
     "Friday",
     "Saturday",
   ];
+  const USER_PER_PAGE = 10;
+  const pageNumber = req.query.pageNumber;
 
-  const getPayment = await payments.find({ payDate: paymentDate });
+  const getPayment = await payments.find({ payDate: paymentDate })
+    .skip((pageNumber - 1) * USER_PER_PAGE)
+    .limit(USER_PER_PAGE);
   let paumentArray = [];
   if (getPayment.length) {
     const conutPage = await payments.find({ payDate: paymentDate }).count();
@@ -286,10 +290,13 @@ module.exports.getFromToDate = asyncHandler(async (req, res) => {
   const secondtDate = new Date(req.query.secondtDate);
 
   let paumentArray = [];
+  const USER_PER_PAGE = 10;
+  const pageNumber = req.query.pageNumber;
 
   const getAllPayment = await payments.find({
     payDate: { $gte: firstDate, $lte: secondtDate },
-  });
+  }).skip((pageNumber - 1) * USER_PER_PAGE)
+    .limit(USER_PER_PAGE);
   if (getAllPayment.length) {
     const conutPage = await payments.find({
       payDate: { $gte: firstDate, $lte: secondtDate },
@@ -353,9 +360,13 @@ module.exports.test = asyncHandler(async (req, res) => {
 
   if (number == 0) {//week
     startDate.setDate(currentDate.getDate() - 7);
+    const USER_PER_PAGE = 10;
+    const pageNumber = req.query.pageNumber;
+
     const getAllPayment = await payments.find({
       payDate: { $gte: startDate, $lte: currentDate },
-    });
+    }).skip((pageNumber - 1) * USER_PER_PAGE)
+      .limit(USER_PER_PAGE);
     if (getAllPayment.length) {
       const conutPage = await payments.find({
         payDate: { $gte: startDate, $lte: currentDate },
@@ -399,9 +410,13 @@ module.exports.test = asyncHandler(async (req, res) => {
   }
   else if (number >= 1 && number <= 12) {//number of month
     startDate.setMonth(currentDate.getMonth() - number);
+    const USER_PER_PAGE = 10;
+    const pageNumber = req.query.pageNumber;
+
     const getAllPayment = await payments.find({
       payDate: { $gte: startDate, $lte: currentDate },
-    });
+    }).skip((pageNumber - 1) * USER_PER_PAGE)
+      .limit(USER_PER_PAGE);
 
     if (getAllPayment.length) {
       const conutPage = await payments.find({
