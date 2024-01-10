@@ -523,6 +523,9 @@ module.exports.resultDate = asyncHandler(async (req, res) => {
     let resultArray = [];
 
     if (getAllResult.length) {
+      const count = await analyzeResult.find({
+        date: { $gte: startDate, $lte: currentDate },
+      }).count();
       for (let i = 0; i < getAllResult.length; i++) {
         //
         const userinfo = await user
@@ -559,6 +562,7 @@ module.exports.resultDate = asyncHandler(async (req, res) => {
 
       if (!responseSent) {
         res.status(201).json({
+          count,
           usersArray: resultArray,
           message: "Reports generated successfully.",
         });
@@ -581,6 +585,10 @@ module.exports.resultDate = asyncHandler(async (req, res) => {
     let resultArray = [];
 
     if (getAllResult.length) {
+      const count = await analyzeResult.find({
+        date: { $gte: startDate, $lte: currentDate },
+      }).count();
+
       for (let i = 0; i < getAllResult.length; i++) {
         const userinfo = await user
           .findOne({
@@ -614,6 +622,7 @@ module.exports.resultDate = asyncHandler(async (req, res) => {
       }
       if (!responseSent) {
         res.status(201).json({
+          count,
           usersArray: resultArray,
           message: "Reports generated successfully.",
         });
@@ -660,6 +669,9 @@ module.exports.resultDateFromTo = asyncHandler(async (req, res) => {
 
   let resultArray = [];
   if (getAllResult.length) {
+    const count = await analyzeResult.find({
+      date: { $gte: firstDate, $lte: secondtDate },
+    }).count();
     for (let i = 0; i < getAllResult.length; i++) {
       const userinfo = await user
         .findOne({
@@ -692,6 +704,7 @@ module.exports.resultDateFromTo = asyncHandler(async (req, res) => {
       resultArray.push(pymentDetails);
     }
     res.status(201).json({
+      count,
       usersArray: resultArray,
       message: "Reports generated successfully.",
     });
@@ -724,6 +737,7 @@ module.exports.dayResult = asyncHandler(async (req, res) => {
 
   let resultArray = [];
   if (getAllResult.length) {
+    const count = await analyzeResult.find({}).count();
     for (let i = 0; i < getAllResult.length; i++) {
       const userinfo = await user
         .findOne({
@@ -755,6 +769,7 @@ module.exports.dayResult = asyncHandler(async (req, res) => {
       resultArray.push(pymentDetails);
     }
     res.status(201).json({
+      count,
       resultArray,
       message: "Reports generated successfully.",
     });
@@ -778,6 +793,8 @@ module.exports.isDone = asyncHandler(async (req, res) => {
   let usersArray = [];
 
   if (isDone.length) {
+    const count = await analyzeResult.find({}).count();
+
     for (let i = 0; i < isDone.length; i++) {
       //user staff
       const usersStaff = await user
@@ -807,7 +824,7 @@ module.exports.isDone = asyncHandler(async (req, res) => {
       // Push the object to the array
       usersArray.push(userDetails);
     }
-    res.status(200).json({ usersArray });
+    res.status(200).json({ count,usersArray });
   }
 
   if (isDone.length) res.status(200).json({ isDone });

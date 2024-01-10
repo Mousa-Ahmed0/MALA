@@ -41,7 +41,9 @@ module.exports.getAllItem = asyncHandler(async (req, res) => {
     .skip((pageNumber - 1) * USER_PER_PAGE)
     .limit(USER_PER_PAGE);
   if (allItem) {
-    res.status(200).json({ message: "All Item", allItem });
+    const count = await Storage.find({}).count();
+
+    res.status(200).json({count, message: "All Item", allItem });
   } else {
     res.status(404).json({ message: "Error........." });
   }

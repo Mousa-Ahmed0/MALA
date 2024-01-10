@@ -57,6 +57,8 @@ module.exports.getPayment = asyncHandler(async (req, res) => {
     .limit(USER_PER_PAGE);
   let paumentArray = [];
   if (getPayment.length) {
+    const countPay = await payments.find({}).count();
+
     let count = 0;
     for (let i = 0; i < getPayment.length; i++) {
 
@@ -82,6 +84,7 @@ module.exports.getPayment = asyncHandler(async (req, res) => {
       count += getPayment[i].totalValue;
     }
     res.status(201).json({
+      "count page": countPay,
       count,
       paumentArray,
       message: "Reports generated successfully.",
@@ -228,6 +231,8 @@ module.exports.getByDate = asyncHandler(async (req, res) => {
   const getPayment = await payments.find({ payDate: paymentDate });
   let paumentArray = [];
   if (getPayment.length) {
+    const conutPage = await payments.find({ payDate: paymentDate }).count();
+
     let count = 0;
     for (let i = 0; i < getPayment.length; i++) {
 
@@ -250,6 +255,7 @@ module.exports.getByDate = asyncHandler(async (req, res) => {
       count += getPayment[i].totalValue;
     }
     res.status(201).json({
+      conutPage,
       count,
       paumentArray,
       message: "Reports generated successfully.",
@@ -285,6 +291,9 @@ module.exports.getFromToDate = asyncHandler(async (req, res) => {
     payDate: { $gte: firstDate, $lte: secondtDate },
   });
   if (getAllPayment.length) {
+    const conutPage = await payments.find({
+      payDate: { $gte: firstDate, $lte: secondtDate },
+    }).count();
     let count = 0;
     for (let i = 0; i < getAllPayment.length; i++) {
 
@@ -307,6 +316,7 @@ module.exports.getFromToDate = asyncHandler(async (req, res) => {
       count += getAllPayment[i].totalValue;
     }
     res.status(201).json({
+      conutPage,
       count,
       paumentArray,
       message: "Reports generated successfully.",
@@ -347,6 +357,9 @@ module.exports.test = asyncHandler(async (req, res) => {
       payDate: { $gte: startDate, $lte: currentDate },
     });
     if (getAllPayment.length) {
+      const conutPage = await payments.find({
+        payDate: { $gte: startDate, $lte: currentDate },
+      }).count();
       let count = 0;
       for (let i = 0; i < getAllPayment.length; i++) {
         const dayOfWeek = getAllPayment[i].payDate.getDay(); //find day
@@ -369,6 +382,7 @@ module.exports.test = asyncHandler(async (req, res) => {
       }
       if (!responseSent) {
         res.status(201).json({
+          conutPage,
           count,
           paumentArray,
           message: "Reports generated successfully.",
@@ -390,6 +404,9 @@ module.exports.test = asyncHandler(async (req, res) => {
     });
 
     if (getAllPayment.length) {
+      const conutPage = await payments.find({
+        payDate: { $gte: startDate, $lte: currentDate },
+      }).count();
       let count = 0;
       for (let i = 0; i < getAllPayment.length; i++) {
 
@@ -415,6 +432,7 @@ module.exports.test = asyncHandler(async (req, res) => {
       if (!responseSent) {
         responseSent = true; // Set the flag to true to indicate response has been sent
         res.status(201).json({
+          conutPage,
           count,
           paumentArray,
           message: "Reports generated successfully.",
