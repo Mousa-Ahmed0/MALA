@@ -16,38 +16,44 @@ const nodemailer = require("nodemailer");
  * @access public
  * ------------------------------------------ */
 module.exports.registerUser = asyncHandler(async (req, res) => {
-  // validation
-  const { error } = validateRegisterUser(req.body);
-  if (error) {
-    return res.status(400).json({ message: error.details[0].message });
-  }
-  //is user already exists
-  let newUser = await user.findOne({ ident: req.body.ident });
+  try {
+    // validation
+    const { error } = validateRegisterUser(req.body);
+    if (error) {
+      return res.status(400).json({ message: error.details[0].message });
+    }
+    //is user already exists
+    let newUser = await user.findOne({ ident: req.body.ident });
 
-  if (newUser) {
-    return res.status(400).json({ message: "User already exist" });
+    if (newUser) {
+      return res.status(400).json({ message: "User already exist" });
+    }
+    //hash  the password
+    const salt = await bcrypt.genSalt(8);
+    const hashPassword = await bcrypt.hash(req.body.password, salt);
+    //new user and save it to database
+    newUser = new user({
+      ident: req.body.ident,
+      firstname: req.body.firstname,
+      lastname: req.body.lastname,
+      sex: req.body.sex,
+      phone: req.body.phone,
+      email: req.body.email,
+      birthday: req.body.birthday,
+      city: req.body.city,
+      password: hashPassword,
+      usertype: req.body.usertype,
+    });
+    await newUser.save();
+    //send a response to client
+    res
+      .status(201)
+      .json({ message: "You registered successfully, please log In" });
+  } catch (error) {
+    // Handle the error here, you can log it or send a specific error response to the client
+    console.error("Error sending email:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
-  //hash  the password
-  const salt = await bcrypt.genSalt(8);
-  const hashPassword = await bcrypt.hash(req.body.password, salt);
-  //new user and save it to database
-  newUser = new user({
-    ident: req.body.ident,
-    firstname: req.body.firstname,
-    lastname: req.body.lastname,
-    sex: req.body.sex,
-    phone: req.body.phone,
-    email: req.body.email,
-    birthday: req.body.birthday,
-    city: req.body.city,
-    password: hashPassword,
-    usertype: req.body.usertype,
-  });
-  await newUser.save();
-  //send a response to client
-  res
-    .status(201)
-    .json({ message: "You registered successfully, please log In" });
 });
 
 /**--------------------------------
@@ -59,24 +65,31 @@ module.exports.registerUser = asyncHandler(async (req, res) => {
 
 module.exports.loginUser = asyncHandler(async (req, res) => {
   //validation
-  const { error } = validateLoginUser(req.body);
-  if (error) return res.status(400).json({ message: error.details[0].message });
+  try {
 
-  //is user already exists
-  const newUser = await user.findOne({ phone: req.body.phone });
-  if (!newUser)
-    return res.status(400).json({ message: "invaild Phone or Password" });
+    const { error } = validateLoginUser(req.body);
+    if (error) return res.status(400).json({ message: error.details[0].message });
 
-  //check the password
-  const match = await bcrypt.compare(req.body.password, newUser.password);
-  if (!match) return res.status(400).json({ message: "invaild  password" });
-  //Generate Token(jwt)
-  const token = newUser.generateAuthToken();
-  //send a response to client
-  res.status(201).json({
-    message: "Your Login successfully",
-    token,
-  });
+    //is user already exists
+    const newUser = await user.findOne({ phone: req.body.phone });
+    if (!newUser)
+      return res.status(400).json({ message: "invaild Phone or Password" });
+
+    //check the password
+    const match = await bcrypt.compare(req.body.password, newUser.password);
+    if (!match) return res.status(400).json({ message: "invaild  password" });
+    //Generate Token(jwt)
+    const token = newUser.generateAuthToken();
+    //send a response to client
+    res.status(201).json({
+      message: "Your Login successfully",
+      token,
+    });
+  } catch (error) {
+    // Handle the error here, you can log it or send a specific error response to the client
+    console.error("Error sending email:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 
 /**--------------------------------

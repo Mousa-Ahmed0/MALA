@@ -8,24 +8,31 @@ const { analyze, validateAnalyze } = require("../models/Analyze");
  * @access private (only admin or staff)
  * ------------------------------------------ */
 module.exports.addAnalyze = asyncHandler(async (req, res) => {
-  //if anzlyze already exist
-  const oldZ = await analyze.findOne({ code: req.body.code});
-  if (oldZ) return res.status(400).json({ message: "Analyze eixst" });
+  try {
 
-  const newAnalyze = new analyze({
-    name: req.body.name,
-    code: req.body.code,
-    cost: req.body.cost,
-    description: req.body.description,
-    isAvailable: req.body.isAvailable,
-    analyzeCategory: req.body.analyzeCategory,
-    compnents: req.body.compnents,
-  });
-  //save analyze
-  await newAnalyze.save();
+    //if anzlyze already exist
+    const oldZ = await analyze.findOne({ code: req.body.code });
+    if (oldZ) return res.status(400).json({ message: "Analyze eixst" });
 
-  //send a response to cilnt
-  res.status(200).json({ message: "Done.........." });
+    const newAnalyze = new analyze({
+      name: req.body.name,
+      code: req.body.code,
+      cost: req.body.cost,
+      description: req.body.description,
+      isAvailable: req.body.isAvailable,
+      analyzeCategory: req.body.analyzeCategory,
+      compnents: req.body.compnents,
+    });
+    //save analyze
+    await newAnalyze.save();
+
+    //send a response to cilnt
+    res.status(200).json({ message: "Done.........." });
+  } catch (error) {
+    // Handle the error here, you can log it or send a specific error response to the client
+    console.error("Error sending email:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 
 /**--------------------------------
@@ -36,27 +43,34 @@ module.exports.addAnalyze = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.updateAnalyze = asyncHandler(async (req, res) => {
   //vaildation front end
-  const updateA = await analyze.findOneAndUpdate(
-    { code: req.body.code },
-    {
-      $set: {
-        name: req.body.name,
-        code: req.body.code,
-        cost: req.body.cost,
-        description: req.body.description,
-        isAvailable: req.body.isAvailable,
-        analyzeCategory: req.body.analyzeCategory,
-        compnents: req.body.compnents,
-      },
-    },
-    { new: true }
-  );
+  try {
 
-  //send a response to cilnt
-  if (updateA) {
-    res.status(200).json({ updateA, message: "Analyze is Updated" });
-  } else {
-    res.status(404).json({ message: "Analyze not found" });
+    const updateA = await analyze.findOneAndUpdate(
+      { code: req.body.code },
+      {
+        $set: {
+          name: req.body.name,
+          code: req.body.code,
+          cost: req.body.cost,
+          description: req.body.description,
+          isAvailable: req.body.isAvailable,
+          analyzeCategory: req.body.analyzeCategory,
+          compnents: req.body.compnents,
+        },
+      },
+      { new: true }
+    );
+
+    //send a response to cilnt
+    if (updateA) {
+      res.status(200).json({ updateA, message: "Analyze is Updated" });
+    } else {
+      res.status(404).json({ message: "Analyze not found" });
+    }
+  } catch (error) {
+    // Handle the error here, you can log it or send a specific error response to the client
+    console.error("Error sending email:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
@@ -67,9 +81,16 @@ module.exports.updateAnalyze = asyncHandler(async (req, res) => {
  * @access public
  * ------------------------------------------ */
 module.exports.getAllAnalze = asyncHandler(async (req, res) => {
-  const allAn = await analyze.find();
-  if (!allAn) return res.status(404).json({ message: "Analyze not found" });
-  res.status(200).json(allAn);
+  try {
+
+    const allAn = await analyze.find();
+    if (!allAn) return res.status(404).json({ message: "Analyze not found" });
+    res.status(200).json(allAn);
+  } catch (error) {
+    // Handle the error here, you can log it or send a specific error response to the client
+    console.error("Error sending email:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 /**--------------------------------
  * @desc Get   Analyze
@@ -78,10 +99,17 @@ module.exports.getAllAnalze = asyncHandler(async (req, res) => {
  * @access public
  * ------------------------------------------ */
 module.exports.getAnalze = asyncHandler(async (req, res) => {
-  const oneAnalyze = await analyze.findOne({ code: req.params.code });
-  if (!oneAnalyze)
-    return res.status(404).json({ message: "Analyze not found" });
-  res.status(200).json(oneAnalyze);
+  try {
+
+    const oneAnalyze = await analyze.findOne({ code: req.params.code });
+    if (!oneAnalyze)
+      return res.status(404).json({ message: "Analyze not found" });
+    res.status(200).json(oneAnalyze);
+  } catch (error) {
+    // Handle the error here, you can log it or send a specific error response to the client
+    console.error("Error sending email:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 
 
@@ -92,8 +120,15 @@ module.exports.getAnalze = asyncHandler(async (req, res) => {
  * @access private (only admin)
  * ------------------------------------------ */
 module.exports.getAnalyzeCount = asyncHandler(async (req, res) => {
-  const count = await analyze.count();
-  res.status(200).json(count);
+  try {
+
+    const count = await analyze.count();
+    res.status(200).json(count);
+  } catch (error) {
+    // Handle the error here, you can log it or send a specific error response to the client
+    console.error("Error sending email:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 })
 
 /**--------------------------------
@@ -103,14 +138,20 @@ module.exports.getAnalyzeCount = asyncHandler(async (req, res) => {
  * @access private (only admin)
  * ------------------------------------------ */
 module.exports.getCategoryCount = asyncHandler(async (req, res) => {
-  let arrayCat=[];
-  const analyzeCategory = await analyze.find({}, { analyzeCategory: 1, _id: 0 });
-  if (analyzeCategory){
-    const uniqueCategories = new Set(analyzeCategory.map(item => item.analyzeCategory));
-    arrayCat = [...uniqueCategories];
-      res.status(200).json(arrayCat);
-  }
-  else
-    res.status(400).json({message:"does not exist"},arrayCat);
+  try {
 
+    let arrayCat = [];
+    const analyzeCategory = await analyze.find({}, { analyzeCategory: 1, _id: 0 });
+    if (analyzeCategory) {
+      const uniqueCategories = new Set(analyzeCategory.map(item => item.analyzeCategory));
+      arrayCat = [...uniqueCategories];
+      res.status(200).json(arrayCat);
+    }
+    else
+      res.status(400).json({ message: "does not exist" }, arrayCat);
+  } catch (error) {
+    // Handle the error here, you can log it or send a specific error response to the client
+    console.error("Error sending email:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 })

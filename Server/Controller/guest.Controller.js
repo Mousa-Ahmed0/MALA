@@ -9,14 +9,21 @@ const { sendEmail } = require("../utils/Email/user.Email");
  * @access  (staff or admin)
  * ------------------------------------------ */
 module.exports.addGuestMessage = asyncHandler(async (req, res) => {
-    const newGuest = new Guest({
-        fullName: req.body.fullName,
-        email: req.body.email,
-        message: req.body.message,
-    });
-    await newGuest.save();
-    //send a response to client
-    res.status(201).json({ newGuest, message: "done..........." });
+    try {
+
+        const newGuest = new Guest({
+            fullName: req.body.fullName,
+            email: req.body.email,
+            message: req.body.message,
+        });
+        await newGuest.save();
+        //send a response to client
+        res.status(201).json({ newGuest, message: "done..........." });
+    } catch (error) {
+        // Handle the error here, you can log it or send a specific error response to the client
+        console.error("Error sending email:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
 });
 
 /**--------------------------------
@@ -26,18 +33,24 @@ module.exports.addGuestMessage = asyncHandler(async (req, res) => {
  * @access  (staff or admin)
  * ------------------------------------------ */
 module.exports.getGuestMeassage = asyncHandler(async (req, res) => {
+    try {
 
-    const allMeass = await Guest.find({}).sort({ createdAt: -1 });
+        const allMeass = await Guest.find({}).sort({ createdAt: -1 });
 
-    if (allMeass.length) {
-        for (const index of allMeass) {
-            index.ifReady = true;
-            await index.save();
+        if (allMeass.length) {
+            for (const index of allMeass) {
+                index.ifReady = true;
+                await index.save();
+            }
+            res.status(200).json({ allMeass, message: "done..........." });
         }
-        res.status(200).json({ allMeass, message: "done..........." });
+        else
+            res.status(404).json({ message: "User not found" });
+    } catch (error) {
+        // Handle the error here, you can log it or send a specific error response to the client
+        console.error("Error sending email:", error);
+        res.status(500).json({ error: "Internal Server Error" });
     }
-    else
-        res.status(404).json({ message: "User not found" });
 })
 
 /**--------------------------------
@@ -47,11 +60,18 @@ module.exports.getGuestMeassage = asyncHandler(async (req, res) => {
  * @access  (staff or admin)
  * ------------------------------------------ */
 module.exports.deleeteGuestMeassage = asyncHandler(async (req, res) => {
-    const delMeass = await Guest.findByIdAndDelete(req.params.id);
-    if (delMeass)
-        res.status(200).json({ message: " Delete done..........." });
-    else
-        res.status(404).json({ message: "User not found" });
+    try {
+
+        const delMeass = await Guest.findByIdAndDelete(req.params.id);
+        if (delMeass)
+            res.status(200).json({ message: " Delete done..........." });
+        else
+            res.status(404).json({ message: "User not found" });
+    } catch (error) {
+        // Handle the error here, you can log it or send a specific error response to the client
+        console.error("Error sending email:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
 });
 /**--------------------------------
  * @desc count if not read
@@ -60,11 +80,18 @@ module.exports.deleeteGuestMeassage = asyncHandler(async (req, res) => {
  * @access  (staff or admin)
  * ------------------------------------------ */
 module.exports.countIfRead = asyncHandler(async (req, res) => {
-    const Meass = await Guest.findOneAndDelete({ ifReady: false }).count();
-    if (Meass) {
-        res.status(200).json({ "count": Meass});
-    } else
-        res.status(404).json({ message: "All of massge is reade" ,Meass});
+    try {
+
+        const Meass = await Guest.findOneAndDelete({ ifReady: false }).count();
+        if (Meass) {
+            res.status(200).json({ "count": Meass });
+        } else
+            res.status(404).json({ message: "All of massge is reade", Meass });
+    } catch (error) {
+        // Handle the error here, you can log it or send a specific error response to the client
+        console.error("Error sending email:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
 });
 
 
