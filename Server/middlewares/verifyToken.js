@@ -70,9 +70,3 @@ module.exports = {
   verifyTokenOnlyUserOrAdmin,
   ifDoctor,
 };
-
-// const { data } = await qxiw.put(`/api/users/Profile/${userId}`, profile, {
-//     headers: {
-//         Authorization: "Bearer " + token ,
-//     }
-// });
