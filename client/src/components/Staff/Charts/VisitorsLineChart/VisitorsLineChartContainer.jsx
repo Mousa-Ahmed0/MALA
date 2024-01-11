@@ -104,21 +104,21 @@ export default function VisitorsLineChartContainer({ darkMode }) {
           );
           console.log(response);
           //check is there data?
-          if (response.data.resultArray) {
+          if (response.data.usersArray) {
             //create new prop
             const newLineChartProperties = {
               lineLabels: [],
               lineData: [],
             };
             //set total count of paid value
-            setTotalVisitors(response.data.resultArray.length);
+            setTotalVisitors(response.data.usersArray.length);
             newLineChartProperties.lineLabels = getPastDayNames(7); //get name of last 7 days
             for (let i = 0; i <= 6; i++) {
               let currentDate = new Date();
               currentDate.setDate(currentDate.getDate() - i);
 
               let count = 0; // total count for each day
-              response.data.resultArray.forEach((res) => {
+              response.data.usersArray.forEach((res) => {
                 let resDate = new Date(res.date);
                 if (
                   resDate.getDate() === currentDate.getDate() &&
@@ -156,13 +156,13 @@ export default function VisitorsLineChartContainer({ darkMode }) {
             }
           );
           //check is there data?
-          if (response.data.resultArray) {
+          if (response.data.usersArray) {
             //create new prop
             const newLineChartProperties = {
               lineLabels: [],
               lineData: [],
             };
-            setTotalVisitors(response.data.resultArray.length);
+            setTotalVisitors(response.data.usersArray.length);
             for (let i = 0; i <= 2; i++) {
               let currentDate = new Date();
               currentDate.setMonth(currentDate.getMonth() - i);
@@ -171,7 +171,7 @@ export default function VisitorsLineChartContainer({ darkMode }) {
                 monthsOfYear[currentDate.getMonth()]
               );
               let count = 0; // total count for each month
-              response.data.resultArray.forEach((res) => {
+              response.data.usersArray.forEach((res) => {
                 let resDate = new Date(res.date);
                 if (
                   resDate.getMonth() === currentDate.getMonth() &&
@@ -206,13 +206,13 @@ export default function VisitorsLineChartContainer({ darkMode }) {
             }
           );
           //check is there data?
-          if (response.data.resultArray) {
+          if (response.data.usersArray) {
             //create new prop
             const newLineChartProperties = {
               lineLabels: [],
               lineData: [],
             };
-            setTotalVisitors(response.data.resultArray.length);
+            setTotalVisitors(response.data.usersArray.length);
             for (let i = 0; i <= 5; i++) {
               let currentDate = new Date();
               currentDate.setMonth(currentDate.getMonth() - i);
@@ -222,7 +222,7 @@ export default function VisitorsLineChartContainer({ darkMode }) {
               );
 
               let count = 0; // total count for each month
-              response.data.resultArray.forEach((res) => {
+              response.data.usersArray.forEach((res) => {
                 let resDate = new Date(res.date);
                 if (
                   resDate.getMonth() === currentDate.getMonth() &&
@@ -258,13 +258,13 @@ export default function VisitorsLineChartContainer({ darkMode }) {
             }
           );
           //check is there data?
-          if (response.data.resultArray) {
+          if (response.data.usersArray) {
             //create new prop
             const newLineChartProperties = {
               lineLabels: [],
               lineData: [],
             };
-            setTotalVisitors(response.data.resultArray.length);
+            setTotalVisitors(response.data.usersArray.length);
             for (let i = 0; i <= 11; i++) {
               let currentDate = new Date();
               currentDate.setMonth(currentDate.getMonth() - i);
@@ -273,7 +273,7 @@ export default function VisitorsLineChartContainer({ darkMode }) {
                 monthsOfYear[currentDate.getMonth()]
               );
               let count = 0; // total count for each month
-              response.data.resultArray.forEach((res) => {
+              response.data.usersArray.forEach((res) => {
                 let resDate = new Date(res.date);
                 if (
                   resDate.getMonth() === currentDate.getMonth() &&

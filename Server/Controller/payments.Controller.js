@@ -345,7 +345,7 @@ module.exports.getFromToDate = asyncHandler(async (req, res) => {
       message: "Reports generated successfully.",
     });
   } else {
-    res.status(400).json({ message: "Can't find report" });
+    res.status(200).json({ message: "Can't find report" });
   }
 });
 
@@ -429,7 +429,7 @@ module.exports.test = asyncHandler(async (req, res) => {
       // Send the response if there are no results
       if (!responseSent) {
         responseSent = true; // Set the flag to true to indicate response has been sent
-        res.status(400).json({ message: "Can't find report" });
+        res.status(200).json({ message: "Can't find report" });
       }
     }
   } else if (number >= 1 && number <= 12) {
@@ -489,7 +489,7 @@ module.exports.test = asyncHandler(async (req, res) => {
       // Send the response if there are no results
       if (!responseSent) {
         responseSent = true; // Set the flag to true to indicate response has been sent
-        res.status(400).json({ message: "Can't find report" });
+        res.status(200).json({ message: "Can't find report" });
       }
     }
   }

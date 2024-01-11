@@ -177,7 +177,7 @@ export const getResultsFromTo = async (date, pageNo) => {
   );
 };
 export const getResultsFiltered = async (date, pageNo) => {
-  //console.log(" custome date: ", date);
+  console.log(" custome date: ", date);
   return await axios.get(
     `http://localhost:5000/api/result/getResults/resultDate?number=${date.number}&date=${date.payDate}&pageNumber=${pageNo}`,
     {
@@ -225,9 +225,6 @@ export const getPaymentsFromTo = async (date, pageNo) => {
   console.log(" custome date: ", date, ":::", pageNo);
   return await axios.get(
     `http://localhost:5000/api/payment/getFromToDate?firstDate=${date.firstDate}&secondtDate=${date.secondtDate}&pageNumber=${pageNo}`,
-    {
-      params: date, // Use 'params' to send data as query parameters
-    },
     {
       headers: {
         Authorization: "Bearer " + localStorage.getItem("token"),

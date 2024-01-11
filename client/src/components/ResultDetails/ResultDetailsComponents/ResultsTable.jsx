@@ -25,7 +25,7 @@ export default function ResultsTable({ user, darkMode, resultDetails }) {
         console.log("anlyze: ", resultDetails.analyzComponent[index]);
         return (
           <>
-            <div key={index} className="table-responsive mt-2 mb-2">
+            <div key={index} className="table-responsive my-5">
               <h1 className="h4 mid-bold">
                 {resultDetails.analyzComponent[index] &&
                   resultDetails.analyzComponent[index].name && (
@@ -54,7 +54,7 @@ export default function ResultsTable({ user, darkMode, resultDetails }) {
             {/*Ai Pridict if CBC  && User is Doctor*/}
             {resultDetails.analyzComponent[index].code === "CBC" ? (
               <div
-                className={`ai-pridict${
+                className={`ai-pridict ${
                   user.usertype === "Doctor" ? "" : "d-none"
                 }`}
               >

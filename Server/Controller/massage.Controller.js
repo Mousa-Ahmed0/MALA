@@ -106,7 +106,6 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
  * @access public
  * ------------------------------------------ */
 module.exports.getAllMass = asyncHandler(async (req, res) => {
-
   const POST_PER_PAGE = 10;
   const pageNumber = req.query.pageNumber;
   const newMass = await Massage.find({})
@@ -188,7 +187,7 @@ module.exports.countIfRead = asyncHandler(async (req, res) => {
   }).count();
   if (!newMass)
     return res
-      .status(404)
+      .status(200)
       .json({ message: "All masage is ready", count: newMass });
   else return res.status(200).json({ No: newMass });
 });

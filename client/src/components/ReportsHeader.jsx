@@ -27,7 +27,7 @@ export default function ReportsHeader({ darkMode }) {
             </div>
           </div>
         </div>
-        <div className="col-12 my-2">
+        <div className="col-12 my-4">
           <div className={`row alert alert-info text-black px-1 py-0`}>
             <div
               className={`col-6 d-flex align-items-center detailes-size m-0 my-1 p-0`}

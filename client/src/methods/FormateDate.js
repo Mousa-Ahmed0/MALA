@@ -22,7 +22,7 @@ export const formatDate = (inputDate) => {
 
   return formattedDate;
 };
-
+//
 export const formatDateWithouHour = (inputDate) => {
   // Create a new Date object
   const currentDate = new Date(inputDate);
@@ -38,4 +38,21 @@ export const formatDateWithouHour = (inputDate) => {
   const formattedYear = year;
 
   return `${formattedDay}/${formattedMonth}/${formattedYear}`;
+};
+//
+export const formatDateYYMMDD = (inputDate) => {
+  // Create a new Date object
+  const currentDate = new Date(inputDate);
+  const daysOfWeek = ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"];
+  // Get the current time
+
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth() + 1;
+  const day = currentDate.getDate();
+  // Format with leading zeros
+  const formattedDay = day < 10 ? `0${day}` : day;
+  const formattedMonth = month < 10 ? `0${month}` : month;
+  const formattedYear = year;
+
+  return `${formattedYear}/${formattedMonth}/${formattedDay}`;
 };

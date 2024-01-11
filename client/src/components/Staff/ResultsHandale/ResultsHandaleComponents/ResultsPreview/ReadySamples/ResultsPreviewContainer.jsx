@@ -9,6 +9,7 @@ import {
   getResultsFromTo,
   getSamples,
 } from "../../../../../../apis/ApisHandale";
+import { formatDateYYMMDD } from "../../../../../../methods/FormateDate";
 
 export default function ResultsPreviewContainer({}) {
   const { darkMode } = useDarkMode();
@@ -153,18 +154,10 @@ export default function ResultsPreviewContainer({}) {
   const startDate = new Date(endDate); // start date "Before 3 Years for initial"
   startDate.setFullYear(endDate.getFullYear() - 3);
 
-  //format date as "yy-mm-dd" formula
-  const formatDate = (date) => {
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    return `${year}-${month}-${day}`;
-  };
-
   // Data Range Variable
   const [dateRange, setDateRange] = useState({
-    firstDate: formatDate(startDate),
-    secondtDate: formatDate(endDate),
+    firstDate: formatDateYYMMDD(startDate),
+    secondtDate: formatDateYYMMDD(endDate),
   });
 
   // save new data range
@@ -227,7 +220,7 @@ export default function ResultsPreviewContainer({}) {
         try {
           let response = await getResultsFiltered(
             {
-              payDate: formatDate(new Date()),
+              payDate: formatDateYYMMDD(new Date()),
               number: 0,
             },
             pageNo
@@ -249,11 +242,12 @@ export default function ResultsPreviewContainer({}) {
         try {
           let response = await getResultsFiltered(
             {
-              payDate: formatDate(new Date()),
+              payDate: formatDateYYMMDD(new Date()),
               number: 1,
             },
             pageNo
           );
+          console.log(response);
           if (response.data.usersArray) {
             setfillterdResults(response.data.usersArray);
             setVisibleResults(response.data.usersArray);
@@ -270,7 +264,7 @@ export default function ResultsPreviewContainer({}) {
         try {
           let response = await getResultsFiltered(
             {
-              payDate: formatDate(new Date()),
+              payDate: formatDateYYMMDD(new Date()),
               number: 3,
             },
             pageNo
@@ -293,7 +287,7 @@ export default function ResultsPreviewContainer({}) {
         try {
           let response = await getResultsFiltered(
             {
-              payDate: formatDate(new Date()),
+              payDate: formatDateYYMMDD(new Date()),
               number: 6,
             },
             pageNo
@@ -314,7 +308,7 @@ export default function ResultsPreviewContainer({}) {
         try {
           let response = await getResultsFiltered(
             {
-              payDate: formatDate(new Date()),
+              payDate: formatDateYYMMDD(new Date()),
               number: 12,
             },
             pageNo
@@ -600,9 +594,11 @@ export default function ResultsPreviewContainer({}) {
   }, [dateRange]);
   useEffect(() => {
     console.log("useEffect 4");
-
     if (isCustomeDate) {
-      console.log("Custome Date Function");
+      setDateRange({
+        firstDate: formatDateYYMMDD(startDate),
+        secondtDate: formatDateYYMMDD(endDate),
+      });
     } else {
       handaleFilterOption(filterOption);
     }

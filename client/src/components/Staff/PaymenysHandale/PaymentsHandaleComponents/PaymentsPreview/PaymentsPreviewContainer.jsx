@@ -8,7 +8,7 @@ import {
   getPaymentsFiltered,
   getPaymentsFromTo,
 } from "../../../../../apis/ApisHandale";
-import { formatDate } from "../../../../../methods/FormateDate";
+import { formatDateYYMMDD } from "../../../../../methods/FormateDate";
 import PaymentToPDF from "../../../../PaymentToPDF";
 export default function PaymentsPreviewContainer({ setIsPdfLoading }) {
   const { darkMode } = useDarkMode();
@@ -29,6 +29,7 @@ export default function PaymentsPreviewContainer({ setIsPdfLoading }) {
     "Last 6 Months",
     "Last Year",
   ];
+
   const srchFilterOptions = ["Patient", "IC"];
   //Errors variables
   let [apiError, setApiError] = useState(false);
@@ -65,9 +66,6 @@ export default function PaymentsPreviewContainer({ setIsPdfLoading }) {
       /// get date and formate it
       const dateString = p.payment.payDate;
 
-      // Create the formatted date string as yy/mm/dd
-      const formDate = formatDate(new Date(dateString));
-
       return (
         <div key={index} className="col-lg-12">
           <div
@@ -90,7 +88,7 @@ export default function PaymentsPreviewContainer({ setIsPdfLoading }) {
                   </Link>
                 </div>
                 <div className="col-sm-12 col-md-1 d-md-flex d-none align-items-center p-0">
-                  <p className="mb-0 text-truncate">{formDate}</p>
+                  <p className="mb-0 text-truncate">{formatDateYYMMDD}</p>
                 </div>
                 <div className="col-sm-12 col-md-1 d-md-flex d-none align-items-center p-0">
                   <p className="mb-0 text-truncate">
@@ -137,18 +135,10 @@ export default function PaymentsPreviewContainer({ setIsPdfLoading }) {
   const startDate = new Date(endDate); // start date "Before 3 Years for initial"
   startDate.setFullYear(endDate.getFullYear() - 3);
 
-  //format date as "yy-mm-dd" formula
-  const formatDate = (date) => {
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    return `${year}-${month}-${day}`;
-  };
-
   // Data Range Variable
   const [dateRange, setDateRange] = useState({
-    firstDate: formatDate(startDate),
-    secondtDate: formatDate(endDate),
+    firstDate: formatDateYYMMDD(startDate),
+    secondtDate: formatDateYYMMDD(endDate),
   });
 
   // save new data range
@@ -171,7 +161,7 @@ export default function PaymentsPreviewContainer({ setIsPdfLoading }) {
         setfillterdResults([]);
       }
     } catch (error) {
-      console.error("error", error);
+      console.error("error from payments range", error);
     }
   }
 
@@ -211,7 +201,7 @@ export default function PaymentsPreviewContainer({ setIsPdfLoading }) {
         try {
           let response = await getPaymentsFiltered(
             {
-              payDate: formatDate(new Date()),
+              payDate: formatDateYYMMDD(new Date()),
               number: 0,
             },
             pageNo
@@ -228,7 +218,6 @@ export default function PaymentsPreviewContainer({ setIsPdfLoading }) {
           }
         } catch (error) {
           console.error("error", error);
-          setVisiblePayments([]);
         }
         break;
 
@@ -236,7 +225,7 @@ export default function PaymentsPreviewContainer({ setIsPdfLoading }) {
         try {
           let response = await getPaymentsFiltered(
             {
-              payDate: formatDate(new Date()),
+              payDate: formatDateYYMMDD(new Date()),
               number: 1,
             },
             pageNo
@@ -258,7 +247,7 @@ export default function PaymentsPreviewContainer({ setIsPdfLoading }) {
         try {
           let response = await getPaymentsFiltered(
             {
-              payDate: formatDate(new Date()),
+              payDate: formatDateYYMMDD(new Date()),
               number: 3,
             },
             pageNo
@@ -279,7 +268,7 @@ export default function PaymentsPreviewContainer({ setIsPdfLoading }) {
         try {
           let response = await getPaymentsFiltered(
             {
-              payDate: formatDate(new Date()),
+              payDate: formatDateYYMMDD(new Date()),
               number: 6,
             },
             pageNo
@@ -300,7 +289,7 @@ export default function PaymentsPreviewContainer({ setIsPdfLoading }) {
         try {
           let response = await getPaymentsFiltered(
             {
-              payDate: formatDate(new Date()),
+              payDate: formatDateYYMMDD(new Date()),
               number: 12,
             },
             pageNo
@@ -523,7 +512,10 @@ export default function PaymentsPreviewContainer({ setIsPdfLoading }) {
   }, [visiblePayments]);
   useEffect(() => {
     if (isCustomeDate) {
-      console.log("Custome Date Function");
+      setDateRange({
+        firstDate: formatDateYYMMDD(startDate),
+        secondtDate: formatDateYYMMDD(endDate),
+      });
     } else {
       handaleFilterOption(filterOption);
     }
