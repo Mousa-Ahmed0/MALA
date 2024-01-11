@@ -286,66 +286,72 @@ module.exports.getByDate = asyncHandler(async (req, res) => {
  * -----------------------------------*/
 module.exports.getFromToDate = asyncHandler(async (req, res) => {
   //vaildition @front end
-  const daysOfWeek = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
-  const firstDate = new Date(req.query.firstDate);
-  const secondtDate = new Date(req.query.secondtDate);
+  try {
 
-  let paumentArray = [];
-  const USER_PER_PAGE = 10;
-  const pageNumber = req.query.pageNumber;
+    const daysOfWeek = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+    const firstDate = new Date(req.query.firstDate);
+    const secondtDate = new Date(req.query.secondtDate);
 
-  const getAllPayment = await payments
-    .find({
-      payDate: { $gte: firstDate, $lte: secondtDate },
-    })
-    .skip((pageNumber - 1) * USER_PER_PAGE)
-    .limit(USER_PER_PAGE);
-  if (getAllPayment.length) {
-    const conutPage = await payments
+    let paumentArray = [];
+    const USER_PER_PAGE = 10;
+    const pageNumber = req.query.pageNumber;
+
+    const getAllPayment = await payments
       .find({
         payDate: { $gte: firstDate, $lte: secondtDate },
       })
-      .count();
-    let count = 0;
-    for (let i = 0; i < getAllPayment.length; i++) {
-      const dayOfWeek = getAllPayment[i].payDate.getDay(); //find day
-      const dayName = daysOfWeek[dayOfWeek]; //find name of day
-
-      const resultInfo = await analyzeResult.findById(
-        getAllPayment[i].resultId
-      );
-      const userinfo = await user
-        .findOne({
-          ident: resultInfo.patientIdent,
+      .skip((pageNumber - 1) * USER_PER_PAGE)
+      .limit(USER_PER_PAGE);
+    if (getAllPayment.length) {
+      const conutPage = await payments
+        .find({
+          payDate: { $gte: firstDate, $lte: secondtDate },
         })
-        .select("-password");
-      const pymentDetails = {
-        day: dayName,
-        date: getAllPayment[i].payDate,
-        result: resultInfo,
-        value: getAllPayment[i].value,
-        payment: getAllPayment[i],
-        info: userinfo,
-      };
-      paumentArray.push(pymentDetails);
-      count += getAllPayment[i].totalValue;
+        .count();
+      let count = 0;
+      for (let i = 0; i < getAllPayment.length; i++) {
+        const dayOfWeek = getAllPayment[i].payDate.getDay(); //find day
+        const dayName = daysOfWeek[dayOfWeek]; //find name of day
+
+        const resultInfo = await analyzeResult.findById(
+          getAllPayment[i].resultId
+        );
+        const userinfo = await user
+          .findOne({
+            ident: resultInfo.patientIdent,
+          })
+          .select("-password");
+        const pymentDetails = {
+          day: dayName,
+          date: getAllPayment[i].payDate,
+          result: resultInfo,
+          value: getAllPayment[i].value,
+          payment: getAllPayment[i],
+          info: userinfo,
+        };
+        paumentArray.push(pymentDetails);
+        count += getAllPayment[i].totalValue;
+      }
+      res.status(201).json({
+        conutPage,
+        count,
+        paumentArray,
+        message: "Reports generated successfully.",
+      });
+    } else {
+      res.status(400).json({ message: "Can't find report" });
     }
-    res.status(201).json({
-      conutPage,
-      count,
-      paumentArray,
-      message: "Reports generated successfully.",
-    });
-  } else {
-    res.status(400).json({ message: "Can't find report" });
+  } catch (error) {
+    console.error("Error in getFromToDate:", error);
+    res.status(500).json({ message: "Internal Server Error",error });
   }
 });
 
