@@ -13,7 +13,6 @@ const { analyzeResult } = require("../models/patienResults");
  * -----------------------------------*/
 module.exports.addPayment = asyncHandler(async (req, res) => {
   try {
-
     //vaildition @front end
     const newPayment = new payments({
       resultId: req.body.resultId,
@@ -49,7 +48,6 @@ module.exports.getPayment = asyncHandler(async (req, res) => {
   //vaildition @front end
   // const getAllPayment = await payments.find().select("value -_id ");
   try {
-
     const daysOfWeek = [
       "Sunday",
       "Monday",
@@ -119,10 +117,11 @@ module.exports.getPayment = asyncHandler(async (req, res) => {
 module.exports.countPayment = asyncHandler(async (req, res) => {
   //vaildition @front end
   try {
-
     const count = await payments.count();
     if (count)
-      res.status(201).json({ count, message: "Reports generated successfully." });
+      res
+        .status(201)
+        .json({ count, message: "Reports generated successfully." });
     else res.status(400).json({ message: "Can't find repoet" });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
@@ -142,7 +141,6 @@ module.exports.countPayment = asyncHandler(async (req, res) => {
 module.exports.getPaymentIdentPatient = asyncHandler(async (req, res) => {
   //vaildition @front end
   try {
-
     const daysOfWeek = [
       "Sunday",
       "Monday",
@@ -204,7 +202,6 @@ module.exports.getPaymentIdentPatient = asyncHandler(async (req, res) => {
  * -----------------------------------*/
 module.exports.getPaymentId = asyncHandler(async (req, res) => {
   try {
-
     //vaildition @front end
     const daysOfWeek = [
       "Sunday",
@@ -258,7 +255,6 @@ module.exports.getPaymentId = asyncHandler(async (req, res) => {
 module.exports.getByDate = asyncHandler(async (req, res) => {
   //vaildition @front end
   try {
-
     const paymentDate = new Date(req.query.payDate);
     const daysOfWeek = [
       "Sunday",
@@ -329,7 +325,6 @@ module.exports.getByDate = asyncHandler(async (req, res) => {
 module.exports.getFromToDate = asyncHandler(async (req, res) => {
   //vaildition @front end
   try {
-
     const daysOfWeek = [
       "Sunday",
       "Monday",
@@ -391,20 +386,9 @@ module.exports.getFromToDate = asyncHandler(async (req, res) => {
     } else {
       res.status(400).json({ message: "Can't find report" });
     }
-<<<<<<< HEAD
-    res.status(201).json({
-      conutPage,
-      count,
-      paumentArray,
-      message: "Reports generated successfully.",
-    });
-  } else {
-    res.status(200).json({ message: "Can't find report" });
-=======
   } catch (error) {
     console.error("Error in getFromToDate:", error);
     res.status(500).json({ message: "Internal Server Error", error });
->>>>>>> 60cb39f35ac3c45310302beffd7c520f64e1a362
   }
 });
 
@@ -419,7 +403,6 @@ module.exports.getFromToDate = asyncHandler(async (req, res) => {
 module.exports.test = asyncHandler(async (req, res) => {
   //vaildition @front end
   try {
-
     const daysOfWeek = [
       "Sunday",
       "Monday",
@@ -452,47 +435,11 @@ module.exports.test = asyncHandler(async (req, res) => {
           .find({
             payDate: { $gte: startDate, $lte: currentDate },
           })
-<<<<<<< HEAD
-          .select("-password");
-        const pymentDetails = {
-          day: dayName,
-          date: getAllPayment[i].payDate,
-          result: resultInfo,
-          value: getAllPayment[i].value,
-          payment: getAllPayment[i],
-          info: userinfo,
-        };
-        paumentArray.push(pymentDetails);
-        count += getAllPayment[i].totalValue;
-      }
-      if (!responseSent) {
-        res.status(201).json({
-          conutPage,
-          count,
-          paumentArray,
-          message: "Reports generated successfully.",
-        });
-        responseSent = true; // Set the flag to true to indicate response has been sent
-      }
-    } else {
-      // Send the response if there are no results
-      if (!responseSent) {
-        responseSent = true; // Set the flag to true to indicate response has been sent
-        res.status(200).json({ message: "Can't find report" });
-      }
-    }
-  } else if (number >= 1 && number <= 12) {
-    //number of month
-    startDate.setMonth(currentDate.getMonth() - number);
-    const USER_PER_PAGE = 10;
-    const pageNumber = req.query.pageNumber;
-=======
           .count();
         let count = 0;
         for (let i = 0; i < getAllPayment.length; i++) {
           const dayOfWeek = getAllPayment[i].payDate.getDay(); //find day
           const dayName = daysOfWeek[dayOfWeek]; //find name of day
->>>>>>> 60cb39f35ac3c45310302beffd7c520f64e1a362
 
           const resultInfo = await analyzeResult.findById(
             getAllPayment[i].resultId
@@ -553,33 +500,6 @@ module.exports.test = asyncHandler(async (req, res) => {
           const dayOfWeek = getAllPayment[i].payDate.getDay(); //find day
           const dayName = daysOfWeek[dayOfWeek]; //find name of day
 
-<<<<<<< HEAD
-        const pymentDetails = {
-          day: dayName,
-          date: getAllPayment[i].payDate,
-          result: resultInfo,
-          value: getAllPayment[i].value,
-          payment: getAllPayment[i],
-          info: userinfo,
-        };
-        paumentArray.push(pymentDetails);
-        count += getAllPayment[i].totalValue;
-      }
-      if (!responseSent) {
-        responseSent = true; // Set the flag to true to indicate response has been sent
-        res.status(201).json({
-          conutPage,
-          count,
-          paumentArray,
-          message: "Reports generated successfully.",
-        });
-      }
-    } else {
-      // Send the response if there are no results
-      if (!responseSent) {
-        responseSent = true; // Set the flag to true to indicate response has been sent
-        res.status(200).json({ message: "Can't find report" });
-=======
           const resultInfo = await analyzeResult.findById(
             getAllPayment[i].resultId
           );
@@ -615,7 +535,6 @@ module.exports.test = asyncHandler(async (req, res) => {
           responseSent = true; // Set the flag to true to indicate response has been sent
           res.status(400).json({ message: "Can't find report" });
         }
->>>>>>> 60cb39f35ac3c45310302beffd7c520f64e1a362
       }
     }
     if (!responseSent) {
