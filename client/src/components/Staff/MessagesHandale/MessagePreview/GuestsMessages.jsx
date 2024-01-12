@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import BackBtn from "../../../BackBtn";
 import SendEmail from "../MessageComponents/SendEmail";
 import { formatDate } from "../../../../methods/FormateDate";
 export default function GuestsMessages({ darkMode, setIsFormOpen }) {
@@ -163,7 +162,6 @@ export default function GuestsMessages({ darkMode, setIsFormOpen }) {
             toUser={toUser}
           />
         </div>
-        <BackBtn />
         <section className="px-4">
           <div className="row ">
             {Array.isArray(allMessages) && allMessages.length > 0 ? (

@@ -1,6 +1,5 @@
 import React from "react";
 
-import BackBtn from "../../../../BackBtn";
 import SearchBar from "../../../../SearchBar/SearchBar";
 import UpdateItem from "./ItemPreviewComponents/UpdateItem";
 import PaginationNav from "../../../../PaginationNav";
@@ -42,7 +41,6 @@ export default function ItemsPreviewPresintation({
           setApiError={setApiError}
         />
       </div>
-      <BackBtn />
       <div className="row my-5">
         <div className="row">
           <div className="col-lg-12">

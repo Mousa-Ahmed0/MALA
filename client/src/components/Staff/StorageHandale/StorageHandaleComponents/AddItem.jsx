@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import { addItem } from "../../../../apis/ApisHandale";
 import { useDarkMode } from "../../../../context/DarkModeContext";
 
-import BackBtn from "../../../BackBtn";
-
 export default function AddItem() {
   const { darkMode } = useDarkMode();
   const [item, setItem] = useState({
@@ -55,7 +53,6 @@ export default function AddItem() {
   return (
     <>
       <div className="ST-section my-1">
-        <BackBtn />
         <div className="Reg-Pat my-4">
           <div className={`page-form ${darkMode ? " spic-dark-mode" : ""}`}>
             <h1

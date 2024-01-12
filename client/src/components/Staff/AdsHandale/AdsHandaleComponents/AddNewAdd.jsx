@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useDarkMode } from "../../../../context/DarkModeContext";
 
-import BackBtn from "../../../BackBtn";
 export default function AddNewAdd({ setIsFormOpen }) {
   const { darkMode } = useDarkMode();
   const [isLoading, setIsLoading] = useState(false);
@@ -120,7 +119,6 @@ export default function AddNewAdd({ setIsFormOpen }) {
   }, [ad]);*/
   return (
     <div className="ST-section my-1">
-      <BackBtn />
       <div className="Reg-Pat my-4">
         <div
           className={`page-form ${darkMode ? " spic-dark-mode border-0" : ""}`}

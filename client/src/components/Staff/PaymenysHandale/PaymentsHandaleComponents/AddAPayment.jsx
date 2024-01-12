@@ -152,8 +152,8 @@ export default function AddAPayment() {
                       <div className="row">
                         <div className="col-12 mb-3">Patient Name:</div>
                         <div className="col-12 text-center colorMain h3 m-0 high-bold">
-                          {resutlDetails.usersPatint.firstname}{" "}
-                          {resutlDetails.usersPatint.lastname}
+                          {resutlDetails.usersPatint?.firstname || "fname"}{" "}
+                          {resutlDetails.usersPatint?.lastname || "lname"}
                         </div>
                       </div>
                     </div>

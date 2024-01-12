@@ -282,7 +282,7 @@ th {
     width: 100% !important;
   }
   .nav-xsmall-screens {
-    justify-content: center !important;
+    justify-content: space-between !important;
   }
 }
 @media (max-width: 742px) {

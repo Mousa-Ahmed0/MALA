@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useDarkMode } from "../../../../context/DarkModeContext";
 
-import BackBtn from "../../../BackBtn";
-
 export default function AddAnlyze() {
   const { darkMode } = useDarkMode();
   let [anlyze, setAnlyze] = useState({
@@ -222,7 +220,6 @@ export default function AddAnlyze() {
   }, [components, anlyze]);
   return (
     <div className="ST-section my-1">
-      <BackBtn />
       <div className="Reg-Pat my-4">
         <div
           className={`page-form ${darkMode ? " spic-dark-mode border-0" : ""}`}
@@ -273,7 +270,11 @@ export default function AddAnlyze() {
                   id="a_code"
                 />
               </div>
-              <div className="col-1 d-none d-md-flex justify-content-center align-items-center">
+              <div
+                className={`col-1 d-none d-md-flex justify-content-center align-items-center ${
+                  darkMode ? "text-white" : ""
+                }`}
+              >
                 |
               </div>
               <div className="col-12 col-md-2">
@@ -293,7 +294,11 @@ export default function AddAnlyze() {
                   id="a_cost"
                 />
               </div>
-              <div className="col-1 d-none d-md-flex justify-content-center align-items-center">
+              <div
+                className={`col-1 d-none d-md-flex justify-content-center align-items-center ${
+                  darkMode ? "text-white" : ""
+                }`}
+              >
                 |
               </div>
               <div className="col-12 col-md-2">
@@ -313,7 +318,12 @@ export default function AddAnlyze() {
                   id="a_code"
                 />
               </div>
-              <div className="col-1 d-none d-md-flex justify-content-center align-items-center ">
+              <div
+                className={`col-1 d-none d-md-flex justify-content-center align-items-center ${
+                  darkMode ? "text-white" : ""
+                }`}
+              >
+                {" "}
                 |
               </div>
               <div className="col-12 col-md-3 custom-select">
@@ -374,7 +384,11 @@ export default function AddAnlyze() {
                   disabled={isCategoryChoosen}
                 />
               </div>
-              <div className="col-1 d-none d-md-flex justify-content-center align-items-center">
+              <div
+                className={`col-1 d-none d-md-flex justify-content-center align-items-center ${
+                  darkMode ? "text-white" : ""
+                }`}
+              >
                 |
               </div>
               <div className="col-12 col-md-6">

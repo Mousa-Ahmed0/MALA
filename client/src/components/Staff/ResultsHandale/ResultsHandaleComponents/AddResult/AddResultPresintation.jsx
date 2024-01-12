@@ -1,5 +1,4 @@
 import React from "react";
-import BackBtn from "../../../../BackBtn";
 export default function AddResultPresintation({
   darkMode,
   result,
@@ -13,7 +12,6 @@ export default function AddResultPresintation({
   return (
     <>
       <div className="ST-section my-1">
-        <BackBtn />
         <div className="Reg-Pat my-4">
           <div className={`page-form ${darkMode ? " spic-dark-mode" : ""}`}>
             <form className="mx-5" onSubmit={onSubmitForm}>

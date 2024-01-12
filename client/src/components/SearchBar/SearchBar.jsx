@@ -31,7 +31,7 @@ function SearchBarContainer({ handaleSearchVlue, val, placeHolder }) {
                 } form-control border-0`}
                 id="floatingInputGroup1"
                 type="search"
-                placeholder={placeHolder}
+                placeholder={placeHolder ? placeHolder : "Search ..."}
                 aria-label="Search"
                 value={val}
               />
