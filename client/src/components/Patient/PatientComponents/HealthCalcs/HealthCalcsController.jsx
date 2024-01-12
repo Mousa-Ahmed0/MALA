@@ -19,6 +19,8 @@ export default function HealthCalcsController() {
       path: "/Patient/HealthCalculators/BFC",
     },
   ];
+  ///////
+
   return (
     <>
       <div className="d-flex justify-content-center">

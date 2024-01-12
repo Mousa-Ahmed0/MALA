@@ -13,7 +13,6 @@ const { analyzeResult } = require("../models/patienResults");
  * -----------------------------------*/
 module.exports.addPayment = asyncHandler(async (req, res) => {
   try {
-
     //vaildition @front end
     const newPayment = new payments({
       resultId: req.body.resultId,
@@ -49,7 +48,6 @@ module.exports.getPayment = asyncHandler(async (req, res) => {
   //vaildition @front end
   // const getAllPayment = await payments.find().select("value -_id ");
   try {
-
     const daysOfWeek = [
       "Sunday",
       "Monday",
@@ -119,10 +117,11 @@ module.exports.getPayment = asyncHandler(async (req, res) => {
 module.exports.countPayment = asyncHandler(async (req, res) => {
   //vaildition @front end
   try {
-
     const count = await payments.count();
     if (count)
-      res.status(201).json({ count, message: "Reports generated successfully." });
+      res
+        .status(201)
+        .json({ count, message: "Reports generated successfully." });
     else res.status(400).json({ message: "Can't find repoet" });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
@@ -142,7 +141,6 @@ module.exports.countPayment = asyncHandler(async (req, res) => {
 module.exports.getPaymentIdentPatient = asyncHandler(async (req, res) => {
   //vaildition @front end
   try {
-
     const daysOfWeek = [
       "Sunday",
       "Monday",
@@ -204,7 +202,6 @@ module.exports.getPaymentIdentPatient = asyncHandler(async (req, res) => {
  * -----------------------------------*/
 module.exports.getPaymentId = asyncHandler(async (req, res) => {
   try {
-
     //vaildition @front end
     const daysOfWeek = [
       "Sunday",
@@ -258,7 +255,6 @@ module.exports.getPaymentId = asyncHandler(async (req, res) => {
 module.exports.getByDate = asyncHandler(async (req, res) => {
   //vaildition @front end
   try {
-
     const paymentDate = new Date(req.query.payDate);
     const daysOfWeek = [
       "Sunday",
@@ -329,7 +325,6 @@ module.exports.getByDate = asyncHandler(async (req, res) => {
 module.exports.getFromToDate = asyncHandler(async (req, res) => {
   //vaildition @front end
   try {
-
     const daysOfWeek = [
       "Sunday",
       "Monday",
@@ -408,7 +403,6 @@ module.exports.getFromToDate = asyncHandler(async (req, res) => {
 module.exports.test = asyncHandler(async (req, res) => {
   //vaildition @front end
   try {
-
     const daysOfWeek = [
       "Sunday",
       "Monday",

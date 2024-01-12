@@ -1,8 +1,6 @@
 import React from "react";
 
-import BackBtn from "../../../../BackBtn";
 import SearchBar from "../../../../SearchBar/SearchBar";
-import UpdateAnlyze from "./PreviewAnlysisComponents/UpdateAnlyze";
 
 export default function PreviewAnlysisPresintation({
   handaleSearchVlue,
@@ -18,7 +16,6 @@ export default function PreviewAnlysisPresintation({
 }) {
   return (
     <>
-      <BackBtn />
       <div className="row my-5">
         <div className="row">
           <div className="col-12 col-lg-10">

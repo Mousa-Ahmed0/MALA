@@ -1,9 +1,10 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useDarkMode } from "../../context/DarkModeContext";
 import DarkModeBtn from "../../components/DarkModeBtn";
 
 export default function Navbar({ values, userDetails, logout }) {
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const { darkMode, toggleDarkMode } = useDarkMode();
   let [activeId, setActiveId] = useState();
   let [clickOnProfile, setClickOnProfile] = useState(false);
@@ -19,6 +20,18 @@ export default function Navbar({ values, userDetails, logout }) {
     logout();
     setActiveId(7);
   }
+  /////
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return (
     <nav
@@ -76,6 +89,14 @@ export default function Navbar({ values, userDetails, logout }) {
                       </div>
                     ) : (
                       <Link
+                        style={{
+                          display:
+                            windowWidth < 742 && val.text === "|"
+                              ? "none"
+                              : "block",
+                          transition:
+                            windowWidth < 742 && val.text === "|" ? "0s" : "",
+                        }}
                         className={`
                           ${
                             activeId === val.id ? "nav-link active" : "nav-link"

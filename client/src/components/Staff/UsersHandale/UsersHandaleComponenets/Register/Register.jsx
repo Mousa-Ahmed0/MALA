@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Joi from "joi";
 import axios from "axios";
-import BackBtn from "../../../../BackBtn";
 import { useDarkMode } from "../../../../../context/DarkModeContext";
 import { newUser } from "../../../../../apis/ApisHandale";
 
@@ -122,7 +121,6 @@ export default function Register({ usertype }) {
   }
   return (
     <div className="ST-section my-1">
-      <BackBtn />
       <div className="Reg-Pat my-4">
         <div className={`page-form ${darkMode ? " spic-dark-mode" : ""}`}>
           <h1
