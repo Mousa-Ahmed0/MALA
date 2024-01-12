@@ -16,8 +16,11 @@ export default function AnlysisPresintation({
       <BackBtn />
       <div className="row my-5">
         <div className="row">
-          <div className="col-lg-12">
+          <div className="col-12 col-md-7">
             <SearchBar handaleSearchVlue={handaleSearchVlue} />
+          </div>
+          <div className="col-12 d-md-none">
+            <hr className="my-4 " />
           </div>
         </div>
         <section className="px-4">

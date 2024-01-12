@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useDarkMode } from "../context/DarkModeContext";
 
 export default function UserDashbordNav({ values }) {
-  let [activeId, setActiveId] = useState();
+  let [activeId, setActiveId] = useState(1);
   const { darkMode } = useDarkMode();
 
   useEffect(() => {

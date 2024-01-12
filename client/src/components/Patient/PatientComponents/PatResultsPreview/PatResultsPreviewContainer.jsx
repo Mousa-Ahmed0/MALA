@@ -163,8 +163,11 @@ export default function PatResultsPreviewContainer() {
         </div>
         <div className="container">
           <div className="row searchSection mb-5">
-            <div className="col-sm-12 col-md-8 d-flex align-items-center p-0">
-              <SearchBar handaleSearchVlue={handaleSearchVlue} />
+            <div className="col-sm-12 col-md-7 d-flex align-items-center p-0">
+              <SearchBar
+                handaleSearchVlue={handaleSearchVlue}
+                placeHolder={"Search for a Doctor .."}
+              />
             </div>
           </div>
           <section className="px-4">

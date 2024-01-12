@@ -91,6 +91,9 @@ i {
   padding: 0 1rem !important;
 }
 
+.min-w-85 {
+  min-width: 85% !important;
+}
 /* Scroll */
 ::-webkit-scrollbar {
   width: 0.5rem;
@@ -289,10 +292,6 @@ th {
   .general-nav.navbar {
     width: 100%;
     text-align: center;
-  }
-  .general-nav.navbar .collapse.navbar-collapse .navbar-nav li:nth-child(6) {
-    transition: 0 !important;
-    display: none !important;
   }
 }
 .general-nav.navbar .dropDawn {
