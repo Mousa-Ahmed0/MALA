@@ -621,7 +621,6 @@ module.exports.resultDate = asyncHandler(async (req, res) => {
               ident: getAllResult[i].doctorIdent,
             })
             .select("-password");
-          console.log(userinfo);
           const dayOfWeek = getAllResult[i].date.getDay(); //find day
           const dayName = daysOfWeek[dayOfWeek]; //find name of day
 

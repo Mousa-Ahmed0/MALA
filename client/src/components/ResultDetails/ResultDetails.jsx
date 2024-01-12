@@ -59,7 +59,7 @@ export default function ResultDetails({ user }) {
     const ai = document.querySelector(".ai-pridict");
     ai.classList.add("d-none");
     const capture = document.querySelector(".print-section");
-    capture.style.padding = "20px 65px"; // Padding
+    capture.style.padding = "40px 65px"; // Padding
 
     setLoader(true);
     html2canvas(capture).then((canvas) => {
@@ -89,8 +89,8 @@ export default function ResultDetails({ user }) {
 
   return (
     <>
-      <div className="section my-2">
-        <div className="BackBtn my-4">
+      <div className="section my-0">
+        <div className="BackBtn my-2">
           <BackBtn />
         </div>
         {Object.keys(resultDetails).length > 0 && resultDetails ? (

@@ -16,7 +16,7 @@ export default function DetailsInformation({
   return (
     <>
       <div
-        className={`d-flex  justify-content-around border p-1 mid-bold detailes-size mb-4 ${
+        className={`d-flex  justify-content-around border p-1 mid-bold detailes-size mb-5 ${
           darkMode ? " spic-dark-mode border-white" : "border-black"
         }`}
       >

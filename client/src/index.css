@@ -8,7 +8,7 @@
   --section-bg: #87c0cd;
   --main-bg: #113f67;
   --color: #226597;
-  --veryLightGray-color: #fafafa;
+  --veryLightGray-color: #fff;
   --height-form: 50px;
   --HomePageSize: 1rem;
   --DetailPageSize: 0.875rem;
@@ -26,7 +26,7 @@ html {
 }
 body {
   font-family: "Nunito Sans", sans-serif !important;
-  background-color: var(--veryLightGray-color);
+  background-color: var(--veryLightGray-color) !important;
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -41,12 +41,13 @@ body {
   .print-button,
   footer,
   footer .fot-Copyright,
-  footer .fot-Details {
+  footer .fot-Details,
+  .ai-pridict {
     display: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
-  .print-section .print-result .ai-pridict {
-    display: none !important;
-  }
+
   .payments-array-print {
     display: block !important;
   }

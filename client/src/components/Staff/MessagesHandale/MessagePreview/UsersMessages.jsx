@@ -16,11 +16,11 @@ export default function UsersMessages({ user }) {
   let [val, setVal] = useState(""); //search value
   let [filterOption, setFilterOption] = useState("noValue");
   let [searchResults, setSearchResults] = useState([]);
-  const filterOptions = ["noValue", "Staff", "Patient", "Doctor"];
+  const filterOptions = ["noValue", "Staff", "Patient", "Doctor"]; 
   //Errors variables
   let [apiError, setApiError] = useState(false);
   let [noResults, setNoResults] = useState(false);
-  let apiErrorMessage = (
+  let apiErrorMessage = ( 
     <div className="w-100 h-100 d-flex flex-column align-items-center">
       <div className="alert alert-danger my-4 mid-bold w-100 d-flex justify-content-center">
         Error!!!

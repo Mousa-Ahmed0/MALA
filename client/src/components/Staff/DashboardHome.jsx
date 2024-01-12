@@ -59,7 +59,7 @@ export default function DashboardHome({ user }) {
         }
       );
       console.log(response);
-      setNonReadNo(response.data.No);
+      setNonReadNo(response.data.count);
     } catch (error) {
       console.error("Error from getNonReadMessagesCount:", error);
     }

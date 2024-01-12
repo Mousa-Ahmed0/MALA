@@ -27,8 +27,11 @@ export default function MessageBox({ darkMode }) {
         }
       );
       console.log(response);
-      if (response.data.length > 0) setAllMessages(response.data);
-      else setNoResults(true);
+      if (response.data.newMass) {
+        setAllMessages(response.data.newMass);
+      } else {
+        setNoResults(true);
+      }
     } catch (error) {
       setApiError(true);
       console.error("Error From GetRecentMessages: ", error);
@@ -82,7 +85,7 @@ export default function MessageBox({ darkMode }) {
   }, []);
   return (
     <div className="maxHeight-inhert overflow-yAxis message-Box">
-      {noResults ? (
+      {allMessages.length === 0 ? (
         <div>No Messages Yet...</div>
       ) : allMessages.length > 0 ? (
         renderRecentMessages()

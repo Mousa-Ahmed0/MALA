@@ -1,33 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const { Massage } = require("../models/message");
-const socketIO = require("socket.io");
-// const http = require('http');
-// const express = require('express');
-// const { Server } = require("socket.io");
+const io = require("socket.io")();
 
-// const app = express();
-// const server = http.createServer(app);
-// const io = socketIO(server);
-
-// // Socket.io integration for sending/receiving messages
-// io.on('connection', (socket) => {
-//   console.log('A user connected');
-
-//   // Handle disconnect event
-//   socket.on('disconnect', () => {
-//     console.log('User disconnected');
-//   });
-// });
-const express = require('express');
-const http = require('http');
-const socketio = require('socket.io');
-
-const app = express();
-const server = http.createServer(app);
-const io = socketio(server);
-server.listen(3005, () => {
-  console.log('WebSocket server is running on port 3005');
-});
 /**--------------------------------
  * @desc Send Massage
  * @router /api/massage/sendMassage
@@ -36,10 +10,15 @@ server.listen(3005, () => {
  * ------------------------------------------ */
 module.exports.sendMass = asyncHandler(async (req, res) => {
   try {
-    let objectIdString = "";
-    if (req.user.usertype === "Patient") objectIdString = process.env.ADMIN_ID;
-    else objectIdString = req.body.secondUser;
 
+    //if Patient must be determain admin _id
+    let objectIdString = "659928039f6a2dee27595dcc";
+    console.log(objectIdString)
+
+    if (req.user.usertype === "Patient"||req.user.usertype === "Doctor") objectIdString = process.env.ADMIN_ID;
+    //admin _id - 659928039f6a2dee27595dcc
+    else objectIdString = req.body.secondUser;
+console.log(objectIdString)
     let massRecord = await Massage.findOne({
       $or: [
         { firstUser: req.user.id, secondUser: objectIdString },
@@ -47,43 +26,47 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
       ],
     });
 
-    const io = socketio(); // Replace with your actual socket.io initialization
-
     if (massRecord) {
+      // Massage record exists, update it
       const indx = massRecord.massage;
       const last = indx[indx.length - 1];
 
+      // const lastId=last.senderId.toString();
+
       if (req.user.id == last.senderId) {
+        //last measage from same user
         if (req.user.id == massRecord.firstUser) {
+          //firstUser
           massRecord.ifReadyFirstUser = true;
           massRecord.ifReadySecondUser = false;
         } else if (req.user.id == massRecord.secondUser) {
+          //secondUser
           massRecord.ifReadyFirstUser = false;
           massRecord.ifReadySecondUser = true;
         }
       } else {
+        //last measage from another user
         if (req.user.id == massRecord.firstUser) {
+          //firstUser
           massRecord.ifReadyFirstUser = true;
           massRecord.ifReadySecondUser = false;
         } else if (req.user.id == massRecord.secondUser) {
+          //secondUser
           massRecord.ifReadyFirstUser = false;
           massRecord.ifReadySecondUser = true;
         }
       }
-
       massRecord.massage.push({
         senderId: req.user.id,
         mass: req.body.massage,
         date: new Date(),
       });
-
       await massRecord.save();
-
-      // Emit a message event to the relevant room (based on the users' IDs)
-      io.to(req.user.id).to(objectIdString).emit('message', massRecord);
-
+      // After saving the message, emit a socket event
+      io.to(objectIdString).emit("newMessage", massRecord);
       return res.status(200).json(massRecord);
     } else {
+      // First massage
       const newMass = new Massage({
         firstUser: req.user.id,
         secondUser: objectIdString,
@@ -97,20 +80,15 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
         ifReadyFirstUser: true,
         ifReadySecondUser: false,
       });
-
       await newMass.save();
-
-      // Create a room for the two users and join them
-      io.join(req.user.id);
-      io.join(objectIdString);
-
-      // Emit a message event to the relevant room
-      io.to(req.user.id).to(objectIdString).emit('message', newMass);
+      console.log(newMass.secondUser);
+      // io.to(objectIdString).emit("newMessage", massRecord);
 
       return res.status(200).json(newMass);
     }
   } catch (error) {
-    console.error("Error sending message:", error);
+    // Handle the error here, you can log it or send a specific error response to the client
+    console.error("Error :", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
@@ -133,14 +111,13 @@ module.exports.getAllMass = asyncHandler(async (req, res) => {
       .populate("secondUser", ["-password"]);
     //.populate('secondUser', ['-password'])
     if (newMass) {
-      // io.emit('allMessages', newMass); // Emit all messages to all connected clients
       const count = await Massage.find({}).count();
 
       return res.status(200).json({ newMass, count });
     } else return res.status(400).json({ massage: "Massage dose not exist" });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
+    console.error("Error :", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
@@ -162,7 +139,7 @@ module.exports.getMass = asyncHandler(async (req, res) => {
     else return res.status(400).json({ massage: "Massage dose not exist" });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
+    console.error("Error :", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
@@ -191,7 +168,7 @@ module.exports.getUserMass = asyncHandler(async (req, res) => {
     } else return res.status(400).json({ massage: "Massage dose not exist" });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
+    console.error("Error :", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
@@ -210,7 +187,7 @@ module.exports.deleteMass = asyncHandler(async (req, res) => {
     else return res.status(200).json({ message: "Massage is delete..." });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
+    console.error("Error :", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
@@ -237,7 +214,7 @@ module.exports.countIfRead = asyncHandler(async (req, res) => {
     else return res.status(200).json({ No: newMass });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
+    console.error("Error :", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
@@ -263,7 +240,7 @@ module.exports.editIfReady = asyncHandler(async (req, res) => {
     }
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
+    console.error("Error :", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
