@@ -6,10 +6,7 @@ const { notFound, errorHandler } = require("./middlewares/error");
 const morgan = require("morgan");
 // Add the following line to import the socket.io library
 const http = require("http");
-const path = require('path')
-
-
-
+const path = require("path");
 
 //init app
 const app = express();
@@ -19,7 +16,6 @@ const port = process.env.PORT || 5000;
 if (process.env.NODE_ENV == "development") {
   app.use(morgan("dev"));
 }
-app.use(express.json());
 app.use(cors());
 //test connetion
 app.get("/", (req, res) => {
@@ -46,38 +42,9 @@ dbConnection()
   .then(() => {
     server = app.listen(port, () => console.log(`http://localhost:${port}`));
     //  console.log(server)
-
-
   })
   .catch((err) => console.log(err));
-const io = require('socket.io')(server)
 
-let socketsConected = new Set()
-// try: catch:
-io.on('connection', onConnected)
-console.log(server)
-console.log(io)
-function onConnected(socket) {
-
-  console.log('Socket connected', socket.id)
-  socketsConected.add(socket.id)
-  io.emit('clients-total', socketsConected.size)
-
-  socket.on('disconnect', () => {
-    console.log('Socket disconnected', socket.id)
-    socketsConected.delete(socket.id)
-    io.emit('clients-total', socketsConected.size)
-  })
-
-  socket.on('message', (data) => {
-    // console.log(data)
-    socket.broadcast.emit('chat-message', data)
-  })
-
-  socket.on('feedback', (data) => {
-    socket.broadcast.emit('feedback', data)
-  })
-}
 //Socket.io connection handling
 // io.on("connection", (socket) => {
 //   console.log("A user connected");
@@ -87,4 +54,28 @@ function onConnected(socket) {
 //     console.log("User disconnected");
 //   });
 // });
+const socketIO = require("socket.io");
+const io = socketIO(server);
 
+io.on("connection", (socket) => {
+  console.log("A user connected");
+
+  // Event handler for when a new chat message is received
+  socket.on("chat-message", (message) => {
+    console.log("Received message:", message);
+    // Broadcast the message to all connected clients
+    io.emit("chat-message", message);
+  });
+
+  // Event handler for when a new feedback is received
+  socket.on("feedback", (data) => {
+    console.log("Received feedback:", data);
+    // Broadcast the feedback to all connected clients
+    io.emit("feedback", data);
+  });
+
+  // Disconnect event handling
+  socket.on("disconnect", () => {
+    console.log("User disconnected");
+  });
+});
