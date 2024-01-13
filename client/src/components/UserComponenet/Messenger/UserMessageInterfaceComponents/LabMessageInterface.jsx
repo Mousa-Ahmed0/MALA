@@ -31,10 +31,6 @@ export default function LabMessageInterface({
       );
       setIsSent(false);
       setUserDetails(response.data.firstUser);
-      setMessage({
-        massage: "",
-        secondUser: response.data.firstUser.id,
-      });
     } catch (error) {
       console.error("Error from Sending Message: ", error);
     }
@@ -42,13 +38,13 @@ export default function LabMessageInterface({
   // send message
   async function sendMessage(e) {
     e.preventDefault();
-
+    const newMessage = { ...message, secondUser: userDetails.id };
     //try to send message with api
     try {
       setIsSent(true);
       let response = await axios.post(
         "http://localhost:5000/api/massage/sendMassage",
-        message,
+        newMessage,
         {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         }
