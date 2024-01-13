@@ -1,6 +1,9 @@
 const asyncHandler = require("express-async-handler");
 const { Massage } = require("../models/message");
-const io = require("socket.io")();
+const express = require('express')
+const path = require('path')
+const app = express()
+const PORT =  4000
 
 /**--------------------------------
  * @desc Send Massage
@@ -9,8 +12,7 @@ const io = require("socket.io")();
  * @access public
  * ------------------------------------------ */
 module.exports.sendMass = asyncHandler(async (req, res) => {
-  try {
-
+  try { 
     //if Patient must be determain admin _id
     let objectIdString = "659928039f6a2dee27595dcc";
     console.log(objectIdString)
