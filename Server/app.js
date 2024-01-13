@@ -4,14 +4,17 @@ const cors = require("cors");
 const dbConnection = require("./config/dbConnection");
 const { notFound, errorHandler } = require("./middlewares/error");
 const morgan = require("morgan");
-//
-// const Sockit = require("socket.io");
-// const { Server } = require("socket.io");
-// const http = require('http');
+// Add the following line to import the socket.io library
+const http = require("http");
+const path = require('path')
+
+
+
 
 //init app
 const app = express();
 const port = process.env.PORT || 5000;
+
 //Middlewares
 if (process.env.NODE_ENV == "development") {
   app.use(morgan("dev"));
@@ -38,30 +41,50 @@ app.use(notFound);
 app.use(errorHandler);
 
 //Connection to database
+let server = null;
 dbConnection()
   .then(() => {
-    app.listen(port, () => console.log(`http://localhost:${port}`));
+    server = app.listen(port, () => console.log(`http://localhost:${port}`));
+    //  console.log(server)
+
 
   })
   .catch((err) => console.log(err));
-//Sockit io
-// try {
-//   // const io = Sockit(app);
-//   const io = new Server();
-//   io.on('connection', (socket) => {
-//     socket.emit("hello");
-//     console.log(socket.id);
-//     console.log("done");
-//     socket.on("ttt",(arg)=>{
-//       console.log(arg);
+const io = require('socket.io')(server)
 
-//     })
-//   })
-//   console.log("zzzzzzzzzz");
+let socketsConected = new Set()
+// try: catch:
+io.on('connection', onConnected)
+console.log(server)
+console.log(io)
+function onConnected(socket) {
 
-// } catch (error) { // intercept the error in catch block
-//   console.log("rrrrrrrrr");
+  console.log('Socket connected', socket.id)
+  socketsConected.add(socket.id)
+  io.emit('clients-total', socketsConected.size)
 
-//   console.log("not done");
+  socket.on('disconnect', () => {
+    console.log('Socket disconnected', socket.id)
+    socketsConected.delete(socket.id)
+    io.emit('clients-total', socketsConected.size)
+  })
 
-// }
+  socket.on('message', (data) => {
+    // console.log(data)
+    socket.broadcast.emit('chat-message', data)
+  })
+
+  socket.on('feedback', (data) => {
+    socket.broadcast.emit('feedback', data)
+  })
+}
+//Socket.io connection handling
+// io.on("connection", (socket) => {
+//   console.log("A user connected");
+
+//   // Disconnect event handling
+//   socket.on("disconnect", () => {
+//     console.log("User disconnected");
+//   });
+// });
+

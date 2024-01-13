@@ -1,23 +1,9 @@
 const asyncHandler = require("express-async-handler");
 const { Massage } = require("../models/message");
-const socketIO = require("socket.io");
-// const http = require('http');
-// const express = require('express');
-// const { Server } = require("socket.io");
-
-// const app = express();
-// const server = http.createServer(app);
-// const io = socketIO(server);
-
-// // Socket.io integration for sending/receiving messages
-// io.on('connection', (socket) => {
-//   console.log('A user connected');
-
-//   // Handle disconnect event
-//   socket.on('disconnect', () => {
-//     console.log('User disconnected');
-//   });
-// });
+const express = require('express')
+const path = require('path')
+const app = express()
+const PORT =  4000
 
 /**--------------------------------
  * @desc Send Massage
@@ -26,13 +12,15 @@ const socketIO = require("socket.io");
  * @access public
  * ------------------------------------------ */
 module.exports.sendMass = asyncHandler(async (req, res) => {
-  try {
+  try { 
     //if Patient must be determain admin _id
-    let objectIdString = "";
-    if (req.user.usertype === "Patient") objectIdString = process.env.ADMIN_ID;
+    let objectIdString = "659928039f6a2dee27595dcc";
+    console.log(objectIdString)
+
+    if (req.user.usertype === "Patient"||req.user.usertype === "Doctor") objectIdString = process.env.ADMIN_ID;
     //admin _id - 659928039f6a2dee27595dcc
     else objectIdString = req.body.secondUser;
-
+console.log(objectIdString)
     let massRecord = await Massage.findOne({
       $or: [
         { firstUser: req.user.id, secondUser: objectIdString },
@@ -76,7 +64,8 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
         date: new Date(),
       });
       await massRecord.save();
-      // io.emit('message', massRecord); // Emit a message to all connected clients
+      // After saving the message, emit a socket event
+      io.to(objectIdString).emit("newMessage", massRecord);
       return res.status(200).json(massRecord);
     } else {
       // First massage
@@ -94,14 +83,14 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
         ifReadySecondUser: false,
       });
       await newMass.save();
-      // io.emit('message', newMass); // Emit a message to all connected clients
-      console.log("message", newMass);
+      console.log(newMass.secondUser);
+      // io.to(objectIdString).emit("newMessage", massRecord);
 
       return res.status(200).json(newMass);
     }
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
+    console.error("Error :", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
@@ -113,6 +102,7 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.getAllMass = asyncHandler(async (req, res) => {
   try {
+
     const POST_PER_PAGE = 10;
     const pageNumber = req.query.pageNumber;
     const newMass = await Massage.find({})
@@ -123,14 +113,13 @@ module.exports.getAllMass = asyncHandler(async (req, res) => {
       .populate("secondUser", ["-password"]);
     //.populate('secondUser', ['-password'])
     if (newMass) {
-      // io.emit('allMessages', newMass); // Emit all messages to all connected clients
       const count = await Massage.find({}).count();
 
       return res.status(200).json({ newMass, count });
     } else return res.status(400).json({ massage: "Massage dose not exist" });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
+    console.error("Error :", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
@@ -143,6 +132,7 @@ module.exports.getAllMass = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.getMass = asyncHandler(async (req, res) => {
   try {
+
     const newMass = await Massage.find({ firstUser: req.user.id })
       .populate("firstUser", ["-password"])
       .sort({ createdAt: 1 });
@@ -151,7 +141,7 @@ module.exports.getMass = asyncHandler(async (req, res) => {
     else return res.status(400).json({ massage: "Massage dose not exist" });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
+    console.error("Error :", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
@@ -163,6 +153,7 @@ module.exports.getMass = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.getUserMass = asyncHandler(async (req, res) => {
   try {
+
     const newMass = await Massage.findById(req.params.id)
       .populate("secondUser", ["-password"])
       .populate("firstUser", ["-password"]);
@@ -179,7 +170,7 @@ module.exports.getUserMass = asyncHandler(async (req, res) => {
     } else return res.status(400).json({ massage: "Massage dose not exist" });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
+    console.error("Error :", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
@@ -192,12 +183,13 @@ module.exports.getUserMass = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.deleteMass = asyncHandler(async (req, res) => {
   try {
+
     const newMass = await Massage.findByIdAndDelete(req.params.id);
     if (!newMass) return res.status(404).json({ message: "Massage not found" });
     else return res.status(200).json({ message: "Massage is delete..." });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
+    console.error("Error :", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
@@ -209,17 +201,24 @@ module.exports.deleteMass = asyncHandler(async (req, res) => {
  * @access public
  * ------------------------------------------ */
 module.exports.countIfRead = asyncHandler(async (req, res) => {
-  const newMass = await Massage.find({
-    $or: [
-      { firstUser: req.user.id, ifReadyFirstUser: false },
-      { secondUser: req.user.id, ifReadySecondUser: false },
-    ],
-  }).count();
-  if (!newMass)
-    return res
-      .status(404)
-      .json({ message: "All masage is ready", count: newMass });
-  else return res.status(200).json({ No: newMass });
+  try {
+
+    const newMass = await Massage.find({
+      $or: [
+        { firstUser: req.user.id, ifReadyFirstUser: false },
+        { secondUser: req.user.id, ifReadySecondUser: false },
+      ],
+    }).count();
+    if (!newMass)
+      return res
+        .status(404)
+        .json({ message: "All masage is ready", count: newMass });
+    else return res.status(200).json({ No: newMass });
+  } catch (error) {
+    // Handle the error here, you can log it or send a specific error response to the client
+    console.error("Error :", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 /**--------------------------------
  * @desc Edit if ready
@@ -229,9 +228,9 @@ module.exports.countIfRead = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.editIfReady = asyncHandler(async (req, res) => {
   try {
+
     const updateReady = await Massage.findById(req.params.id);
-    if (!updateReady)
-      return res.status(404).json({ error: "Massage not found" });
+    if (!updateReady) return res.status(404).json({ error: "Massage not found" });
     else if (updateReady.firstUser == req.user.id) {
       updateReady.ifReadyFirstUser = true;
       await updateReady.save();
@@ -243,7 +242,7 @@ module.exports.editIfReady = asyncHandler(async (req, res) => {
     }
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
+    console.error("Error :", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
