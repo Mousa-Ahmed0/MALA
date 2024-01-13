@@ -14,13 +14,14 @@ if (process.env.NODE_ENV == "development") {
   app.use(morgan("dev"));
 }
 app.use(cors());
+app.use(express.json());
 //test connetion
 app.get("/", (req, res) => {
   res.send("The brave coders");
 });
 //Routes
 app.use("/api/auth", require("./routes/auth.routes"));
-app.use("/api/analyze", require("./routes/Analyze.routes")); 
+app.use("/api/analyze", require("./routes/Analyze.routes"));
 app.use("/api/user", require("./routes/user.routes"));
 app.use("/api/storage", require("./routes/storage.routes"));
 app.use("/api/result", require("./routes/results.routes"));
@@ -40,7 +41,3 @@ dbConnection()
     //  console.log(server)
   })
   .catch((err) => console.log(err));
-
-
-
-

@@ -58,8 +58,8 @@ export default function DashboardHome({ user }) {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         }
       );
-      console.log(response);
-      setNonReadNo(response.data.count);
+      console.log("from non read", response);
+      setNonReadNo(response.data.No);
     } catch (error) {
       console.error("Error from getNonReadMessagesCount:", error);
     }

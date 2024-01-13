@@ -65,10 +65,11 @@ module.exports.registerUser = asyncHandler(async (req, res) => {
 
 module.exports.loginUser = asyncHandler(async (req, res) => {
   //validation
+  console.log("Req: ", req);
   try {
-
     const { error } = validateLoginUser(req.body);
-    if (error) return res.status(400).json({ message: error.details[0].message });
+    if (error)
+      return res.status(400).json({ message: error.details[0].message });
 
     //is user already exists
     const newUser = await user.findOne({ phone: req.body.phone });

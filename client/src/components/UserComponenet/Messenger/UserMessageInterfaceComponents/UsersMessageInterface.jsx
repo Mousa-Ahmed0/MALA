@@ -1,30 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import BackBtn from "../../../BackBtn";
+import MessageContainer from "./MessagesContainer";
 export default function UsersMessageInterface({
   user,
   darkMode,
   formatDate,
   scrollToBottom,
 }) {
-  const messagesContainerRef = useRef(null);
   const [message, setMessage] = useState({
     massage: "",
   });
-  const [allMessages, setAllMessages] = useState();
-  const [noResults, setNoResults] = useState(false);
-  const [apiError, setApiError] = useState(false);
-  let apiErrorMessage = (
-    <div className="w-100 h-100 d-flex flex-column align-items-center">
-      <div className="alert alert-danger my-4 mid-bold w-100 d-flex justify-content-center">
-        Error!!!
-      </div>
-      <div className="my-4 mid-bold">
-        Theres a proplem! Please wait for us to solve the proplem.
-      </div>
-    </div>
-  );
-  const [mouseOnMsgIndex, setMouseOnMsgIndex] = useState(null);
+  const [isSent, setIsSent] = useState(false);
 
   // send message
   async function sendMessage(e) {
@@ -32,6 +18,7 @@ export default function UsersMessageInterface({
 
     //try to send message with api
     try {
+      setIsSent(true);
       let response = await axios.post(
         "http://localhost:5000/api/massage/sendMassage",
         message,
@@ -42,32 +29,16 @@ export default function UsersMessageInterface({
       setMessage({
         massage: "",
       });
-      await getMessages();
-    } catch (error) {
-      console.error("Error from Sending Message: ", error);
-    }
-  }
-  //get All Message In Conversation
-  async function getMessages() {
-    try {
-      let response = await axios.get(
-        "http://localhost:5000/api/massage/getMassage",
-        {
-          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
-        }
-      );
-      if (response.data.length > 0) setAllMessages(response.data[0]);
-      else setNoResults(true);
     } catch (error) {
       console.error("Error from Sending Message: ", error);
     }
   }
   //get Message Details
-  function handaleMessageChange(e) {
+  async function handaleMessageChange(e) {
     // cheack if the function come from " Enter BTN "
     if (e.key === "Enter") {
       try {
-        sendMessage(e);
+        await sendMessage(e);
       } catch (error) {
         console.log(error);
       }
@@ -78,63 +49,13 @@ export default function UsersMessageInterface({
     newMessage[e.target.name] = e.target.value;
     setMessage(newMessage);
   }
-  //display the messages
-  //display the messages
-  function renderMessages() {
-    if (allMessages) {
-      return allMessages.massage.map((message, index) => {
-        return (
-          <div
-            className={`row position-relative ${
-              message.senderId === user.id
-                ? "justify-content-start"
-                : "justify-content-end"
-            }`}
-          >
-            <div
-              key={index}
-              onMouseEnter={() => setMouseOnMsgIndex(index)}
-              onMouseLeave={() => setMouseOnMsgIndex(null)}
-              className={`col-6 alert  text-break ${
-                message.senderId === user.id
-                  ? "alert-primary"
-                  : "alert-secondry"
-              }`}
-            >
-              {message.mass}{" "}
-              <div
-                className={`detailes-size m-0 position-absolute text-center top-0 end-0 bg-light bottom-shadow bg-info w-25 ${
-                  mouseOnMsgIndex === index ? "d-block" : "d-none"
-                }`}
-              >
-                {formatDate(message.date)}
-              </div>
-            </div>
-          </div>
-        );
-      });
-    } else {
-      return <div>Loading ...</div>;
-    }
-  }
-
   //////////////////
   //get all messages
   useEffect(() => {
     console.log("hello user");
-    // Fetch messages initially
-    getMessages();
+  }, []);
+  //get all messages
 
-    // Set up interval to fetch messages every 5 seconds (adjust as needed)
-    // const intervalId = setInterval(getMessages, 5000);
-
-    // Clean up interval when the component unmounts
-    // return () => clearInterval(intervalId);
-  }, []); // Empty dependency array means this effect runs once after the initial render
-  //scroll if message changed "send or rescive a message"
-  useEffect(() => {
-    scrollToBottom(messagesContainerRef);
-  }, [allMessages]);
   return (
     <>
       <div className="my-4 d-flex flex-column align-items-center justify-content-center">
@@ -150,21 +71,13 @@ export default function UsersMessageInterface({
             darkMode ? " spic-dark-mode" : ""
           }`}
         >
-          <div className="col-12 messages" ref={messagesContainerRef}>
-            {allMessages ? (
-              renderMessages()
-            ) : noResults ? (
-              <div className="d-flex justify-content-center align-items-center">
-                You didnt start a conversation yet ...
-              </div>
-            ) : (
-              <div className="d-flex justify-content-center align-items-center my-4">
-                <div className="spinner-border text-primary" role="status">
-                  <span className="sr-only">Loading...</span>
-                </div>
-              </div>
-            )}
-          </div>
+          <MessageContainer
+            user={user}
+            formatDate={formatDate}
+            scrollToBottom={scrollToBottom}
+            isSent={isSent}
+            setIsSent={setIsSent}
+          />
           <hr />
           <div className="col-12">
             <div className="row">

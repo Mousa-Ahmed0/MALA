@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import BackBtn from "../../../BackBtn";
+import MessageContainer from "./MessagesContainer";
 import { Link, useParams } from "react-router-dom";
 export default function LabMessageInterface({
   user,
@@ -9,32 +9,39 @@ export default function LabMessageInterface({
   scrollToBottom,
   messageId,
 }) {
-  const messagesContainerRef = useRef(null);
+  const [userDetails, setUserDetails] = useState();
   const [message, setMessage] = useState({
     massage: "",
     secondUser: "",
   });
-  const [allMessages, setAllMessages] = useState();
-  const [noResults, setNoResults] = useState(false);
-  const [apiError, setApiError] = useState(false);
-  let apiErrorMessage = (
-    <div className="w-100 h-100 d-flex flex-column align-items-center">
-      <div className="alert alert-danger my-4 mid-bold w-100 d-flex justify-content-center">
-        Error!!!
-      </div>
-      <div className="my-4 mid-bold">
-        Theres a proplem! Please wait for us to solve the proplem.
-      </div>
-    </div>
-  );
-  const [mouseOnMsgIndex, setMouseOnMsgIndex] = useState(null);
+  const [isSent, setIsSent] = useState(false);
 
+  //
+  async function getStaffMessages() {
+    try {
+      let response = await axios.get(
+        `http://localhost:5000/api/massage/getUserMassage/${
+          messageId ? messageId : ""
+        }`,
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
+      setIsSent(false);
+      setUserDetails(response.data.firstUser);
+    } catch (error) {
+      console.error("Error from Sending Message: ", error);
+    }
+  }
   // send message
   async function sendMessage(e) {
     e.preventDefault();
 
     //try to send message with api
     try {
+      setIsSent(true);
       let response = await axios.post(
         "http://localhost:5000/api/massage/sendMassage",
         message,
@@ -46,38 +53,16 @@ export default function LabMessageInterface({
         massage: "",
         secondUser: "",
       });
-      await getMessages();
     } catch (error) {
       console.error("Error from Sending Message: ", error);
     }
   }
-
-  //get All Message In Conversation
-  async function getMessages() {
-    try {
-      let response = await axios.get(
-        `http://localhost:5000/api/massage/getUserMassage/${messageId}`,
-        {
-          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
-        }
-      );
-      console.log("Lab response: ", response);
-      setAllMessages(response.data);
-      if (response.data.massage.length === 0) setNoResults(true);
-      setMessage({
-        massage: "",
-        secondUser: response.data.firstUser.id,
-      });
-    } catch (error) {
-      console.error("Error from getting Message by Id: ", error);
-    }
-  }
   //get Message Details
-  function handaleMessageChange(e) {
+  async function handaleMessageChange(e) {
     // cheack if the function come from " Enter BTN "
     if (e.key === "Enter") {
       try {
-        sendMessage(e);
+        await sendMessage(e);
       } catch (error) {
         console.log(error);
       }
@@ -88,80 +73,13 @@ export default function LabMessageInterface({
     newMessage[e.target.name] = e.target.value;
     setMessage(newMessage);
   }
-  //display the messages
-  //display the messages
-  function renderMessages() {
-    if (allMessages) {
-      return allMessages.massage.map((message, index) => {
-        return (
-          <div
-            className={`row position-relative ${
-              message.senderId === user.id
-                ? "justify-content-start"
-                : "justify-content-end"
-            }`}
-          >
-            <div
-              key={index}
-              onMouseEnter={() => setMouseOnMsgIndex(index)}
-              onMouseLeave={() => setMouseOnMsgIndex(null)}
-              className={`col-6 alert text-wrap overflow-auto ${
-                message.senderId === user.id ? "alert-primary" : "alert-light"
-              }`}
-            >
-              {message.mass}{" "}
-              <div
-                style={{ fontSize: "0.745rem" }}
-                className={`m-0 position-absolute text-center top-0 end-0 bg-light bottom-shadow bg-info w-25 ${
-                  mouseOnMsgIndex === index ? "d-block" : "d-none"
-                }`}
-              >
-                {formatDate(message.date)}
-              </div>
-            </div>
-          </div>
-        );
-      });
-    } else {
-      return <div>Loading ...</div>;
-    }
-  }
-  //to convert state to readed
-  /* async function msgReaded() {
-    console.log("hhh");
-    try {
-      const response = axios.put(
-        `http://localhost:5000/api/massage/ifReady/${allMessages._id}`,
-        {
-          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
-        }
-      );
-      console.log(response);
-    } catch (error) {
-      console.error("Error From msgReaded: ", error);
-    }
-  }*/
   //////////////////
   //get all messages
   useEffect(() => {
-    // Fetch messages initially
-    getMessages();
-    // Set up interval to fetch messages every 5 seconds (adjust as needed)
-    // const intervalId = setInterval(getMessages, 5000);
-    ////
-    // Clean up interval when the component unmounts
-    // return () => clearInterval(intervalId);
-  }, []); // Empty dependency array means this effect runs once after the initial render
-  //scroll if message changed "send or rescive a message"
-  useEffect(() => {
-    scrollToBottom(messagesContainerRef);
-    //Make Messages Read
-    // msgReaded();
-    console.log(allMessages);
-  }, [allMessages]);
-  useEffect(() => {
-    console.log(message);
-  }, [message]);
+    console.log("hello staff");
+    getStaffMessages();
+  }, []);
+
   return (
     <>
       <div className="my-4 d-flex flex-column align-items-center justify-content-center">
@@ -173,21 +91,19 @@ export default function LabMessageInterface({
             <img
               className="nav-profile-img mx-2"
               src={
-                allMessages
-                  ? allMessages.firstUser.profilePhoto.url
+                userDetails
+                  ? userDetails.profilePhoto.url
                   : "https://placehold.it/1321x583?text=Loading"
               }
               alt="nav-profile-img"
               style={{ objectFit: "cover" }}
             />
             <Link
-              to={`/Profile/${allMessages ? allMessages.firstUser.id : ""}`}
+              to={`/Profile/${userDetails ? userDetails.id : ""}`}
               className="pt-1 nav-item nav-link position-relative m-0 mid-bold text-truncate"
             >
-              {allMessages
-                ? allMessages.firstUser.firstname +
-                  " " +
-                  allMessages.firstUser.lastname
+              {userDetails
+                ? userDetails.firstname + " " + userDetails.lastname
                 : "User Name"}
             </Link>
           </div>
@@ -200,22 +116,14 @@ export default function LabMessageInterface({
             darkMode ? " spic-dark-mode" : ""
           }`}
         >
-          <div className="col-12 messages" ref={messagesContainerRef}>
-            {" "}
-            {allMessages ? (
-              renderMessages()
-            ) : noResults ? (
-              <div className="d-flex justify-content-center align-items-center">
-                You didnt start a conversation yet ...
-              </div>
-            ) : (
-              <div className="d-flex justify-content-center align-items-center my-4">
-                <div className="spinner-border text-primary" role="status">
-                  <span className="sr-only">Loading...</span>
-                </div>
-              </div>
-            )}
-          </div>
+          <MessageContainer
+            user={user}
+            formatDate={formatDate}
+            scrollToBottom={scrollToBottom}
+            isSent={isSent}
+            setIsSent={setIsSent}
+            id={messageId}
+          />
           <hr />
           <div className="col-12">
             <div className="row">

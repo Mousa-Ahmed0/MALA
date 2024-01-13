@@ -7,12 +7,13 @@ const { Massage } = require("../models/message");
  * @access public
  * ------------------------------------------ */
 module.exports.sendMass = asyncHandler(async (req, res) => {
-  try { 
+  try {
     //if Patient must be determain admin _id
     let objectIdString = "659928039f6a2dee27595dcc";
-    console.log(objectIdString)
+    console.log(objectIdString);
 
-    if (req.user.usertype === "Patient"||req.user.usertype === "Doctor") objectIdString = process.env.ADMIN_ID;
+    if (req.user.usertype === "Patient" || req.user.usertype === "Doctor")
+      objectIdString = process.env.ADMIN_ID;
     //admin _id - 659928039f6a2dee27595dcc
     else objectIdString = req.body.secondUser;
     let massRecord = await Massage.findOne({
@@ -59,7 +60,7 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
       });
       await massRecord.save();
       // After saving the message, emit a socket event
-      io.to(objectIdString).emit("newMessage", massRecord);
+      // io.to(objectIdString).emit("newMessage", massRecord);
       return res.status(200).json(massRecord);
     } else {
       // First massage
@@ -96,7 +97,6 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.getAllMass = asyncHandler(async (req, res) => {
   try {
-
     const POST_PER_PAGE = 10;
     const pageNumber = req.query.pageNumber;
     const newMass = await Massage.find({})
@@ -126,7 +126,6 @@ module.exports.getAllMass = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.getMass = asyncHandler(async (req, res) => {
   try {
-
     const newMass = await Massage.find({ firstUser: req.user.id })
       .populate("firstUser", ["-password"])
       .sort({ createdAt: 1 });
@@ -147,7 +146,6 @@ module.exports.getMass = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.getUserMass = asyncHandler(async (req, res) => {
   try {
-
     const newMass = await Massage.findById(req.params.id)
       .populate("secondUser", ["-password"])
       .populate("firstUser", ["-password"]);
@@ -177,7 +175,6 @@ module.exports.getUserMass = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.deleteMass = asyncHandler(async (req, res) => {
   try {
-
     const newMass = await Massage.findByIdAndDelete(req.params.id);
     if (!newMass) return res.status(404).json({ message: "Massage not found" });
     else return res.status(200).json({ message: "Massage is delete..." });
@@ -196,7 +193,6 @@ module.exports.deleteMass = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.countIfRead = asyncHandler(async (req, res) => {
   try {
-
     const newMass = await Massage.find({
       $or: [
         { firstUser: req.user.id, ifReadyFirstUser: false },
@@ -222,9 +218,9 @@ module.exports.countIfRead = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.editIfReady = asyncHandler(async (req, res) => {
   try {
-
     const updateReady = await Massage.findById(req.params.id);
-    if (!updateReady) return res.status(404).json({ error: "Massage not found" });
+    if (!updateReady)
+      return res.status(404).json({ error: "Massage not found" });
     else if (updateReady.firstUser == req.user.id) {
       updateReady.ifReadyFirstUser = true;
       await updateReady.save();

@@ -26,6 +26,7 @@ export default function Login({ setUserData, goToPage, userDetails }) {
     }
 
     try {
+      console.log("user", user);
       await axios
         .post("http://localhost:5000/api/auth/Login", user)
         .then((response) => {
