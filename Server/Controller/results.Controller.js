@@ -13,7 +13,6 @@ const { PythonShell } = require("python-shell");
 module.exports.addResults = asyncHandler(async (req, res) => {
   //vaildatin fronend
   try {
-
     const newResult = new analyzeResult({
       staffIdent: req.body.staffIdent,
       patientIdent: req.body.patientIdent,
@@ -53,7 +52,6 @@ function calAge(birthday) {
  * ------------------------------------------ */
 module.exports.pythonResults = asyncHandler(async (req, res) => {
   try {
-
     const detailsAnalyze = await analyzeResult.findById(req.params.id);
     if (detailsAnalyze) {
       let result = [];
@@ -122,7 +120,6 @@ module.exports.pythonResults = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.editResult = asyncHandler(async (req, res) => {
   try {
-
     //vaildatin fronend
     const editRes = await analyzeResult.findByIdAndUpdate(
       req.params.id,
@@ -153,7 +150,6 @@ module.exports.editResult = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.getResults = asyncHandler(async (req, res) => {
   try {
-
     const POST_PER_PAGE = 10;
     const pageNumber = req.query.pageNumber;
     const detailsAnalyze = await analyzeResult
@@ -211,11 +207,11 @@ module.exports.getResults = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.getResultsById = asyncHandler(async (req, res) => {
   try {
-
     const detailsAnalyze = await analyzeResult.findById(req.params.id);
     if (detailsAnalyze == null)
-      res.status(400).json({ message: "User not found" });
+      res.status(400).json({ message: "Result not found" });
     console.log(detailsAnalyze);
+
     let analysArray = [];
 
     //analyze id componet
@@ -227,6 +223,7 @@ module.exports.getResultsById = asyncHandler(async (req, res) => {
     });
 
     analysArray = await Promise.all(analyzePromises);
+
     // for (let i = 0; i < detailsAnalyze.resultSet.length; i++) {
     //   const analyzeComp = await analyze.findById(
     //     detailsAnalyze.resultSet[i].anlyzeId
@@ -249,7 +246,7 @@ module.exports.getResultsById = asyncHandler(async (req, res) => {
         .findOne({ ident: detailsAnalyze.doctorIdent })
         .select("firstname lastname -_id");
     else {
-      usersDoctor = detailsAnalyze[i].doctorName;
+      usersDoctor = detailsAnalyze.doctorName;
     }
 
     //send a response to client
@@ -276,7 +273,6 @@ module.exports.getResultsById = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.getAllResultsById = asyncHandler(async (req, res) => {
   try {
-
     const detailsAnalyze = await analyzeResult.findById(req.params.id);
     if (detailsAnalyze) {
       let allId = []; //get all analyze id from req.params.id
@@ -368,7 +364,6 @@ module.exports.getAllResultsById = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.getResultsByIdStaff = asyncHandler(async (req, res) => {
   try {
-
     let analysArray = [];
 
     const detailsAnalyze = await analyzeResult.find({
@@ -426,7 +421,6 @@ module.exports.getResultsByIdStaff = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.getResultsPatient = asyncHandler(async (req, res) => {
   try {
-
     const detailsAnalyze = await analyzeResult.find({
       patientIdent: req.query.patientIdent,
       isDone: true,
@@ -484,7 +478,6 @@ module.exports.getResultsPatient = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.getResultsDoctor = asyncHandler(async (req, res) => {
   try {
-
     const detailsAnalyze = await analyzeResult.find({
       doctorIdent: req.query.doctorIdent,
       isDone: true,
@@ -544,7 +537,6 @@ module.exports.getResultsDoctor = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.getResultsStaff = asyncHandler(async (req, res) => {
   try {
-
     const detailsAnalyze = await analyzeResult.find({
       staffIdent: req.query.staffIdent,
     });
@@ -570,7 +562,6 @@ module.exports.getResultsStaff = asyncHandler(async (req, res) => {
 module.exports.resultDate = asyncHandler(async (req, res) => {
   //vaildition @front end
   try {
-
     const daysOfWeek = [
       "Sunday",
       "Monday",
@@ -592,16 +583,20 @@ module.exports.resultDate = asyncHandler(async (req, res) => {
       const USER_PER_PAGE = 10;
       const pageNumber = req.query.pageNumber;
 
-      const getAllResult = await analyzeResult.find({
-        date: { $gte: startDate, $lte: currentDate },
-      }).skip((pageNumber - 1) * USER_PER_PAGE)
+      const getAllResult = await analyzeResult
+        .find({
+          date: { $gte: startDate, $lte: currentDate },
+        })
+        .skip((pageNumber - 1) * USER_PER_PAGE)
         .limit(USER_PER_PAGE);
       let resultArray = [];
 
       if (getAllResult.length) {
-        const count = await analyzeResult.find({
-          date: { $gte: startDate, $lte: currentDate },
-        }).count();
+        const count = await analyzeResult
+          .find({
+            date: { $gte: startDate, $lte: currentDate },
+          })
+          .count();
         for (let i = 0; i < getAllResult.length; i++) {
           //
           const userinfo = await user
@@ -656,17 +651,21 @@ module.exports.resultDate = asyncHandler(async (req, res) => {
       const USER_PER_PAGE = 10;
       const pageNumber = req.query.pageNumber;
 
-      const getAllResult = await analyzeResult.find({
-        date: { $gte: startDate, $lte: currentDate },
-      }).skip((pageNumber - 1) * USER_PER_PAGE)
+      const getAllResult = await analyzeResult
+        .find({
+          date: { $gte: startDate, $lte: currentDate },
+        })
+        .skip((pageNumber - 1) * USER_PER_PAGE)
         .limit(USER_PER_PAGE);
 
       let resultArray = [];
 
       if (getAllResult.length) {
-        const count = await analyzeResult.find({
-          date: { $gte: startDate, $lte: currentDate },
-        }).count();
+        const count = await analyzeResult
+          .find({
+            date: { $gte: startDate, $lte: currentDate },
+          })
+          .count();
 
         for (let i = 0; i < getAllResult.length; i++) {
           const userinfo = await user
@@ -735,7 +734,6 @@ module.exports.resultDate = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.resultDateFromTo = asyncHandler(async (req, res) => {
   try {
-
     //vaildition @front end
     const daysOfWeek = [
       "Sunday",
@@ -751,16 +749,20 @@ module.exports.resultDateFromTo = asyncHandler(async (req, res) => {
     const USER_PER_PAGE = 10;
     const pageNumber = req.query.pageNumber;
 
-    const getAllResult = await analyzeResult.find({
-      date: { $gte: firstDate, $lte: secondtDate },
-    }).skip((pageNumber - 1) * USER_PER_PAGE)
+    const getAllResult = await analyzeResult
+      .find({
+        date: { $gte: firstDate, $lte: secondtDate },
+      })
+      .skip((pageNumber - 1) * USER_PER_PAGE)
       .limit(USER_PER_PAGE);
 
     let resultArray = [];
     if (getAllResult.length) {
-      const count = await analyzeResult.find({
-        date: { $gte: firstDate, $lte: secondtDate },
-      }).count();
+      const count = await analyzeResult
+        .find({
+          date: { $gte: firstDate, $lte: secondtDate },
+        })
+        .count();
       for (let i = 0; i < getAllResult.length; i++) {
         const userinfo = await user
           .findOne({
@@ -816,7 +818,6 @@ module.exports.resultDateFromTo = asyncHandler(async (req, res) => {
 module.exports.dayResult = asyncHandler(async (req, res) => {
   //vaildition @front end
   try {
-
     const daysOfWeek = [
       "Sunday",
       "Monday",
@@ -829,9 +830,11 @@ module.exports.dayResult = asyncHandler(async (req, res) => {
     const USER_PER_PAGE = 10;
     const pageNumber = req.query.pageNumber;
 
-    const getAllResult = await analyzeResult.find({
-      date: req.query.date,
-    }).skip((pageNumber - 1) * USER_PER_PAGE)
+    const getAllResult = await analyzeResult
+      .find({
+        date: req.query.date,
+      })
+      .skip((pageNumber - 1) * USER_PER_PAGE)
       .limit(USER_PER_PAGE);
 
     let resultArray = [];
@@ -890,7 +893,6 @@ module.exports.dayResult = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.isDone = asyncHandler(async (req, res) => {
   try {
-
     const USER_PER_PAGE = 10;
     const pageNumber = req.query.pageNumber;
     const isDone = await analyzeResult
@@ -951,7 +953,6 @@ module.exports.isDone = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.isDoneCount = asyncHandler(async (req, res) => {
   try {
-
     const isDoneTrue = await analyzeResult.find({ isDone: true }).count();
     const isDoneFalse = await analyzeResult.find({ isDone: false }).count();
 
@@ -974,7 +975,6 @@ module.exports.isDoneCount = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.isPaiedCount = asyncHandler(async (req, res) => {
   try {
-
     const isPaiedTrue = await analyzeResult.find({ isPaied: true }).count();
     const isPaiedFalse = await analyzeResult.find({ isPaied: false }).count();
 
@@ -997,10 +997,10 @@ module.exports.isPaiedCount = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.isDoneEdit = asyncHandler(async (req, res) => {
   try {
-
     const ifDone = await analyzeResult.findById(req.params.id);
     if (ifDone) {
-      if (ifDone.isDone) res.status(200).json({ message: "Alrede True", ifDone });
+      if (ifDone.isDone)
+        res.status(200).json({ message: "Alrede True", ifDone });
       else {
         ifDone.isDone = true;
         await ifDone.save();
@@ -1027,7 +1027,6 @@ module.exports.isPaied = asyncHandler(async (req, res) => {
     res.status(200).json({ "Number of  paied": isPaied.length, isPaied });
   else res.status(404).json({ message: "Not repot " });*/
   try {
-
     const isPaied = await analyzeResult.find({ isPaied: req.query.isPaied });
     let usersArray = [];
 
@@ -1078,7 +1077,6 @@ module.exports.isPaied = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.isPaiedEdit = asyncHandler(async (req, res) => {
   try {
-
     const ifPaied = await analyzeResult.findById(req.params.id);
     if (ifPaied) {
       if (ifPaied.isPaied)
