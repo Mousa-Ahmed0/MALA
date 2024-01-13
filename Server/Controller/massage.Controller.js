@@ -1,10 +1,5 @@
 const asyncHandler = require("express-async-handler");
 const { Massage } = require("../models/message");
-const express = require('express')
-const path = require('path')
-const app = express()
-const PORT =  4000
-
 /**--------------------------------
  * @desc Send Massage
  * @router /api/massage/sendMassage
@@ -20,7 +15,6 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
     if (req.user.usertype === "Patient"||req.user.usertype === "Doctor") objectIdString = process.env.ADMIN_ID;
     //admin _id - 659928039f6a2dee27595dcc
     else objectIdString = req.body.secondUser;
-console.log(objectIdString)
     let massRecord = await Massage.findOne({
       $or: [
         { firstUser: req.user.id, secondUser: objectIdString },
