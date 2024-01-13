@@ -1,5 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const { Massage } = require("../models/message");
+const mongoose = require("mongoose");
+
 /**--------------------------------
  * @desc Send Massage
  * @router /api/massage/sendMassage
@@ -14,8 +16,16 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
 
     if (req.user.usertype === "Patient" || req.user.usertype === "Doctor")
       objectIdString = process.env.ADMIN_ID;
-    //admin _id - 659928039f6a2dee27595dcc
-    else objectIdString = req.body.secondUser;
+    else objectIdString = req.body.secondUser;    //admin _id - 659928039f6a2dee27595dcc
+    console.log(req.body);
+    console.log(req.body.secondUser);
+    console.log(objectIdString);
+
+    // Validate if objectIdString is a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(objectIdString)) {
+      console.log(objectIdString);
+      return res.status(400).json({ message: "Invalid ID" });
+    }
     let massRecord = await Massage.findOne({
       $or: [
         { firstUser: req.user.id, secondUser: objectIdString },
