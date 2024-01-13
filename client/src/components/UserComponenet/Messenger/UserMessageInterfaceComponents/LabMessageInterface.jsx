@@ -31,6 +31,10 @@ export default function LabMessageInterface({
       );
       setIsSent(false);
       setUserDetails(response.data.firstUser);
+      setMessage({
+        massage: "",
+        secondUser: response.data.firstUser.id,
+      });
     } catch (error) {
       console.error("Error from Sending Message: ", error);
     }
