@@ -60,7 +60,7 @@ export default function AddAPayment() {
         });
       }
     } catch (error) {
-      console.error("Error From getResultDetails in AddPayment");
+      console.error("Error From getResultDetails in AddPayment", error);
     }
   }
   /* Get New Payment Details Function */

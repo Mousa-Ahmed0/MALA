@@ -3,7 +3,6 @@ import DashboardWelcome from "../DashboardWelcome";
 import { formatDateWithouHour } from "../../methods/FormateDate";
 import { useDarkMode } from "../../context/DarkModeContext";
 import { Link } from "react-router-dom";
-import { getPateinrPayments, getPateinrResults } from "../../apis/ApisHandale";
 import AdsSection from "../UserComponenet/Ads/AdsSection";
 import axios from "axios";
 export default function DoctorHome({ user }) {

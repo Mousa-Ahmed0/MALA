@@ -8,7 +8,7 @@
   --section-bg: #87c0cd;
   --main-bg: #113f67;
   --color: #226597;
-  --veryLightGray-color: #fff;
+  --veryLightGray-color: #fafafa;
   --height-form: 50px;
   --HomePageSize: 1rem;
   --DetailPageSize: 0.875rem;
@@ -141,6 +141,9 @@ canvas {
 .bottom-shadow {
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1) !important;
 }
+.login-shadow {
+  box-shadow: 0 4px 85px rgba(0, 0, 0, 0.155) !important;
+}
 /* Light & Dark */
 .light-theme {
   background-color: var(--veryLightGray-color) !important;
@@ -176,7 +179,7 @@ canvas {
 /*****/
 .page-form {
   padding: 2.5rem;
-  border: 2px solid var(--main-bg);
+  border: 2px solid var(--color);
   border-radius: 5px;
   transition: 0.5s ease !important;
   animation: slideTop 1s ease forwards;

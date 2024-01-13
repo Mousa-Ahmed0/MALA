@@ -59,8 +59,8 @@ export default function BMR() {
     setResultDone(bmrResult && bmrResult > 0);
   }, [bmrResult]);
   useEffect(() => {
-    console.log("resultDone", resultDone);
-  }, [resultDone]);
+    console.log("details", details);
+  }, [details]);
   return (
     <div className="Reg-Pat">
       <BackBtn />
@@ -133,7 +133,6 @@ export default function BMR() {
                       value={"Female"}
                       id="btnradio2"
                       autoComplete="off"
-                      defaultChecked
                     />
                     <label
                       className="btn btn-outline-primary"

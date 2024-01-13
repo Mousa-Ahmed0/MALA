@@ -80,13 +80,13 @@ export default function Login({ setUserData, goToPage, userDetails }) {
         className={`page-form ${darkMode ? " spic-dark-mode border-0" : ""}`}
       >
         <div className="row">
-          <div className="col-md-5 my-5">
-            <div className="row bottom-shadow my-2">
-              <div className="col-12 d-flex justify-content-center mt-4 mb-2">
+          <div className="col-md-5 my-5 ">
+            <div className="row login-shadow my-2 p-3">
+              <div className="col-12 d-flex justify-content-center my-2">
                 <h1 className="h3 m-0 colorMain mid-bold">Log In:</h1>
               </div>
-              <div className="col-12">
-                {apiMessage ? (
+              {apiMessage ? (
+                <div className="col-12">
                   <div
                     className={
                       apiError ? "alert alert-danger" : "alert alert-primary"
@@ -94,21 +94,21 @@ export default function Login({ setUserData, goToPage, userDetails }) {
                   >
                     {apiMessage}
                   </div>
-                ) : (
-                  ""
-                )}{" "}
-              </div>
-              <div className="col-12">
-                {errorList.map((error, index) => (
+                </div>
+              ) : (
+                ""
+              )}{" "}
+              {errorList.map((error, index) => (
+                <div className="col-12">
                   <div key={index} className="alert alert-danger">
                     {" "}
                     {error.message}{" "}
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
               <div className="col-12 my-4">
                 <form
-                  className={`  ${darkMode ? " spic-dark-mode" : ""}`}
+                  className={` ${darkMode ? " spic-dark-mode" : ""}`}
                   onSubmit={onFormSubmit}
                 >
                   <div className="mb-3">
