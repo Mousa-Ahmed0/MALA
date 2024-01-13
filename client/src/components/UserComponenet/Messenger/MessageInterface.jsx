@@ -7,7 +7,15 @@ import { Link } from "react-router-dom";
 import BackBtn from "../../BackBtn";
 import { useParams } from "react-router";
 import io from "socket.io-client";
-const socket = io("http://localhost:5000");
+// Connect to the Socket.io server
+const socket = io("http://localhost:5000", {
+  path: "/",
+  withCredentials: true,
+  extraHeaders: {
+    "Access-Control-Allow-Origin": "http://localhost:3000",
+  },
+  credentials: true,
+});
 
 export default function MessageInterface({ user, darkMode }) {
   const { id } = useParams();
@@ -156,17 +164,40 @@ export default function MessageInterface({ user, darkMode }) {
   //////////////////
   //get all messages
   useEffect(() => {
-    // getMessages();
-    // Listen for incoming messages from the server
-    socket.on("message", (message) => {
-      setAllMessages((prevMessages) => [...prevMessages, message]);
+    //
+    if (socket) {
+      console.log("socket", socket);
+    }
+    socket.on("connect", () => {
+      console.log("Connected to server");
+    });
+    socket.on("connect_error", (error) => {
+      console.error("Connection error:", error);
+    });
+    // Event handler for when a new message is received
+    socket.on("chat-message", (data) => {
+      console.log("Received message:", data);
+      // Handle the received message as needed
     });
 
-    // Clean up socket connection on component unmount
+    // Event handler for when a new feedback is received
+    socket.on("feedback", (data) => {
+      console.log("Received feedback:", data);
+      // Handle the received feedback as needed
+    });
+
+    // Event handler for when the total number of clients changes
+    socket.on("clients-total", (total) => {
+      console.log("Total clients:", total);
+      // Handle the total number of clients as needed
+    });
+
+    // Cleanup on component unmount
     return () => {
-      socket.disconnect();
+      socket.disconnect(); // Disconnect the socket when the component is unmounted
     };
-  }, []); // Empty dependency array means this effect runs once after the initial render
+  }, []); // Run this effect only once when the component mounts
+
   //scroll if message changed "send or rescive a message"
   useEffect(() => {
     scrollToBottom(messagesContainerRef);
