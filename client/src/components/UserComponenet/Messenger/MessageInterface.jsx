@@ -1,6 +1,8 @@
-import React from "react";
-import LabMessageInterface from "./UserMessageInterfaceComponents/LabMessageInterface";
-import UsersMessageInterface from "./UserMessageInterfaceComponents/UsersMessageInterface";
+import React, { Suspense } from "react";
+import {
+  LabMessageInterface,
+  UsersMessageInterface,
+} from "../../../componentsLoader/ComponentsLoader";
 import BackBtn from "../../BackBtn";
 import { useParams } from "react-router";
 export default function MessageInterface({ user, darkMode }) {
@@ -45,20 +47,37 @@ export default function MessageInterface({ user, darkMode }) {
         <div className="Reg-Pat my-5">
           <div className={`page-form ${darkMode ? " border-white" : ""}`}>
             {user.usertype === "Admin" || user.usertype === "Staff" ? (
-              <LabMessageInterface
-                darkMode={darkMode}
-                user={user}
-                formatDate={formatDate}
-                scrollToBottom={scrollToBottom}
-                messageId={id}
-              />
+              <Suspense
+                fallback={
+                  <div className="spinner-border text-primary" role="status">
+                    <span className="sr-only">Loading...</span>
+                  </div>
+                }
+              >
+                {" "}
+                <LabMessageInterface
+                  darkMode={darkMode}
+                  user={user}
+                  formatDate={formatDate}
+                  scrollToBottom={scrollToBottom}
+                  messageId={id}
+                />
+              </Suspense>
             ) : (
-              <UsersMessageInterface
-                darkMode={darkMode}
-                user={user}
-                formatDate={formatDate}
-                scrollToBottom={scrollToBottom}
-              />
+              <Suspense
+                fallback={
+                  <div className="spinner-border text-primary" role="status">
+                    <span className="sr-only">Loading...</span>
+                  </div>
+                }
+              >
+                <UsersMessageInterface
+                  darkMode={darkMode}
+                  user={user}
+                  formatDate={formatDate}
+                  scrollToBottom={scrollToBottom}
+                />{" "}
+              </Suspense>
             )}
           </div>
         </div>

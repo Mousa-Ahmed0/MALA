@@ -1,21 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-//Pages
-import LandingPage from "./pages/LandingPage/LandingPage";
-import Staff from "./pages/Staff/Staff";
-import Doctor from "./pages/Doctor/Doctor";
-import Patient from "./pages/Patient/Patient";
-import Error from "./pages/Error/Error";
-//Components
-/*analyze*/
-import Anlysis from "./components/Anlysis/AnlysisContainer.jsx";
-import AnlyiseDetails from "./components/AnlyiseDetails/AnlyiseDetails";
-/*result*/
+
+import {
+  LandingPage,
+  Staff,
+  Doctor,
+  Patient,
+  Error,
+  Anlysis,
+  AnlyiseDetails,
+  Profile,
+} from "./componentsLoader/ComponentsLoader.js";
 import ResultDetails from "./components/ResultDetails/ResultDetails.jsx";
 /*profile*/
-import Profile from "./components/UserComponenet/UserProfile/UserProfileContainer.jsx";
+// import Profile from "./components/UserComponenet/UserProfile/UserProfileContainer.jsx";
 /*Ads*/
 import AdDetails from "./components/UserComponenet/Ads/AdDetails.jsx";
 /*User Messenger*/
@@ -87,8 +87,8 @@ import PatPaymentsPreviewContainer from "./components/Patient/PatientComponents/
 export default function App() {
   let [isFormOpen, setIsFormOpen] = useState(false);
   let [isPdfLoading, setIsPdfLoading] = useState(false);
-  const { darkMode, toggleDarkMode } = useDarkMode();
-  let [loading, setLoading] = useState(true);
+  const { darkMode } = useDarkMode();
+
   const navigate = useNavigate();
 
   //login user details
@@ -169,22 +169,14 @@ export default function App() {
   ];
   ///////////////
   useEffect(() => {
-    setLoading(false);
     if (localStorage.getItem("token")) {
       setUserData();
     }
   }, []);
-  useEffect(() => {
-    console.log(userDetails);
-  }, [userDetails]);
 
   return (
     <>
-      {loading ? (
-        <div className="spinner-border text-primary" role="status">
-          <span className="sr-only">Loading...</span>
-        </div>
-      ) : (
+      {
         <>
           <div
             className={`${
@@ -224,7 +216,23 @@ export default function App() {
             ></div>
 
             <Routes>
-              <Route path="/" element={<LandingPage user={userDetails} />}>
+              <Route
+                path="/"
+                element={
+                  <Suspense
+                    fallback={
+                      <div
+                        className="spinner-border text-primary"
+                        role="status"
+                      >
+                        <span className="sr-only">Loading...</span>
+                      </div>
+                    }
+                  >
+                    <LandingPage user={userDetails} />
+                  </Suspense>
+                }
+              >
                 <Route
                   path="/"
                   element={
@@ -249,9 +257,38 @@ export default function App() {
                 <Route path="/GuestAnlyses" element={<GuestAnlyses />} />
                 <Route
                   path="/AnlyiseDetails/:code"
-                  element={<AnlyiseDetails />}
+                  element={
+                    <Suspense
+                      fallback={
+                        <div
+                          className="spinner-border text-primary"
+                          role="status"
+                        >
+                          <span className="sr-only">Loading...</span>
+                        </div>
+                      }
+                    >
+                      <AnlyiseDetails />
+                    </Suspense>
+                  }
                 />
-                <Route path="/Anlysis" element={<Anlysis />} />
+                <Route
+                  path="/Anlysis"
+                  element={
+                    <Suspense
+                      fallback={
+                        <div
+                          className="spinner-border text-primary"
+                          role="status"
+                        >
+                          <span className="sr-only">Loading...</span>
+                        </div>
+                      }
+                    >
+                      <Anlysis />
+                    </Suspense>
+                  }
+                />
                 <Route path="/Contact" element={<Contact />} />
                 <Route
                   path="/Login"
@@ -266,12 +303,23 @@ export default function App() {
                 <Route
                   path="/Profile/:id"
                   element={
-                    <Profile
-                      userDetails={userDetails}
-                      isFormOpen={isFormOpen}
-                      setIsFormOpen={setIsFormOpen}
-                      setUserDetails={setUserDetails}
-                    />
+                    <Suspense
+                      fallback={
+                        <div
+                          className="spinner-border text-primary"
+                          role="status"
+                        >
+                          <span className="sr-only">Loading...</span>
+                        </div>
+                      }
+                    >
+                      <Profile
+                        userDetails={userDetails}
+                        isFormOpen={isFormOpen}
+                        setIsFormOpen={setIsFormOpen}
+                        setUserDetails={setUserDetails}
+                      />
+                    </Suspense>
                   }
                 />
                 <Route
@@ -292,9 +340,41 @@ export default function App() {
                   path="/AdDetails/:id"
                   element={<AdDetails darkMode={darkMode} />}
                 />
-                <Route path="*" element={<Error />} />
+                <Route
+                  path="*"
+                  element={
+                    <Suspense
+                      fallback={
+                        <div
+                          className="spinner-border text-primary"
+                          role="status"
+                        >
+                          <span className="sr-only">Loading...</span>
+                        </div>
+                      }
+                    >
+                      <Error />
+                    </Suspense>
+                  }
+                />
               </Route>
-              <Route path="/Doctor" element={<Doctor />}>
+              <Route
+                path="/Doctor"
+                element={
+                  <Suspense
+                    fallback={
+                      <div
+                        className="spinner-border text-primary"
+                        role="status"
+                      >
+                        <span className="sr-only">Loading...</span>
+                      </div>
+                    }
+                  >
+                    <Doctor />
+                  </Suspense>
+                }
+              >
                 <Route
                   path="/Doctor/Home"
                   element={<DoctorHome user={userDetails} />}
@@ -305,11 +385,40 @@ export default function App() {
                     <MessageInterface user={userDetails} darkMode={darkMode} />
                   }
                 />
-                <Route path="*" element={<Error />} />
+                <Route
+                  path="*"
+                  element={
+                    <Suspense
+                      fallback={
+                        <div
+                          className="spinner-border text-primary"
+                          role="status"
+                        >
+                          <span className="sr-only">Loading...</span>
+                        </div>
+                      }
+                    >
+                      <Error />
+                    </Suspense>
+                  }
+                />
               </Route>
               <Route
                 path="/Staff"
-                element={<Staff user={userDetails} logout={logout} />}
+                element={
+                  <Suspense
+                    fallback={
+                      <div
+                        className="spinner-border text-primary"
+                        role="status"
+                      >
+                        <span className="sr-only">Loading...</span>
+                      </div>
+                    }
+                  >
+                    <Staff user={userDetails} logout={logout} />
+                  </Suspense>
+                }
               >
                 <Route index element={<DashboardHome user={userDetails} />} />
                 <Route
@@ -426,9 +535,41 @@ export default function App() {
                   />
                 </Route>
 
-                <Route path="*" element={<Error />} />
+                <Route
+                  path="*"
+                  element={
+                    <Suspense
+                      fallback={
+                        <div
+                          className="spinner-border text-primary"
+                          role="status"
+                        >
+                          <span className="sr-only">Loading...</span>
+                        </div>
+                      }
+                    >
+                      <Error />
+                    </Suspense>
+                  }
+                />
               </Route>
-              <Route path="/Patient" element={<Patient />}>
+              <Route
+                path="/Patient"
+                element={
+                  <Suspense
+                    fallback={
+                      <div
+                        className="spinner-border text-primary"
+                        role="status"
+                      >
+                        <span className="sr-only">Loading...</span>
+                      </div>
+                    }
+                  >
+                    <Patient />
+                  </Suspense>
+                }
+              >
                 <Route
                   path="/Patient/PatientHome"
                   element={
@@ -473,14 +614,46 @@ export default function App() {
                     <MessageInterface user={userDetails} darkMode={darkMode} />
                   }
                 />
-                <Route path="/Patient/Anlysis" element={<Anlysis />} />
+                <Route
+                  path="/Patient/Anlysis"
+                  element={
+                    <Suspense
+                      fallback={
+                        <div
+                          className="spinner-border text-primary"
+                          role="status"
+                        >
+                          <span className="sr-only">Loading...</span>
+                        </div>
+                      }
+                    >
+                      <Anlysis />
+                    </Suspense>
+                  }
+                />
               </Route>
-              <Route path="*" element={<Error />} />
+              <Route
+                path="*"
+                element={
+                  <Suspense
+                    fallback={
+                      <div
+                        className="spinner-border text-primary"
+                        role="status"
+                      >
+                        <span className="sr-only">Loading...</span>
+                      </div>
+                    }
+                  >
+                    <Error />
+                  </Suspense>
+                }
+              />
             </Routes>
           </main>
           <Footer />
         </>
-      )}
+      }
     </>
   );
 }

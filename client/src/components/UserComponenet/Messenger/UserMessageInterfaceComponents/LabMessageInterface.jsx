@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import axios from "axios";
-import MessageContainer from "./MessagesContainer";
-import { Link, useParams } from "react-router-dom";
+import { MessageContainer } from "../../../../componentsLoader/ComponentsLoader";
+import { Link } from "react-router-dom";
 export default function LabMessageInterface({
   user,
   darkMode,
@@ -76,7 +76,7 @@ export default function LabMessageInterface({
   //////////////////
   //get all messages
   useEffect(() => {
-    console.log("hello staff");
+    // console.log("hello staff");
     getStaffMessages();
   }, []);
 
@@ -116,14 +116,23 @@ export default function LabMessageInterface({
             darkMode ? " spic-dark-mode" : ""
           }`}
         >
-          <MessageContainer
-            user={user}
-            formatDate={formatDate}
-            scrollToBottom={scrollToBottom}
-            isSent={isSent}
-            setIsSent={setIsSent}
-            id={messageId}
-          />
+          {" "}
+          <Suspense
+            fallback={
+              <div className="spinner-border text-primary" role="status">
+                <span className="sr-only">Loading...</span>
+              </div>
+            }
+          >
+            <MessageContainer
+              user={user}
+              formatDate={formatDate}
+              scrollToBottom={scrollToBottom}
+              isSent={isSent}
+              setIsSent={setIsSent}
+              id={messageId}
+            />
+          </Suspense>
           <hr />
           <div className="col-12">
             <div className="row">

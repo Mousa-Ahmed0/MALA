@@ -1,5 +1,5 @@
-import UserProfilePrsintation from "./UserProfilePrsintation";
-import React, { useEffect, useState } from "react";
+import { UserProfilePrsintation } from "../../../componentsLoader/ComponentsLoader";
+import React, { useEffect, useState, Suspense } from "react";
 import { useParams } from "react-router-dom";
 import { useDarkMode } from "../../../context/DarkModeContext";
 
@@ -111,24 +111,33 @@ export default function UserProfileContainer({
 
   return (
     <>
-      <UserProfilePrsintation
-        user={user}
-        userDetails={userDetails}
-        darkMode={darkMode}
-        isImgFormOpen={isImgFormOpen}
-        isUpdateFormOpen={isUpdateFormOpen}
-        closeUpdateForm={closeUpdateForm}
-        handleImageChange={handleImageChange}
-        updatePhoto={updatePhoto}
-        handaleUpdateFormOpen={handaleUpdateFormOpen}
-        handaleImageFormOpen={handaleImageFormOpen}
-        errorList={errorList}
-        apiError={apiError}
-        closeImgForm={closeImgForm}
-        apiErrorMessage={apiErrorMessage}
-        getNewData={getNewData}
-        updateUser={updateUser}
-      />
+      {" "}
+      <Suspense
+        fallback={
+          <div className="spinner-border text-primary" role="status">
+            <span className="sr-only">Loading...</span>
+          </div>
+        }
+      >
+        <UserProfilePrsintation
+          user={user}
+          userDetails={userDetails}
+          darkMode={darkMode}
+          isImgFormOpen={isImgFormOpen}
+          isUpdateFormOpen={isUpdateFormOpen}
+          closeUpdateForm={closeUpdateForm}
+          handleImageChange={handleImageChange}
+          updatePhoto={updatePhoto}
+          handaleUpdateFormOpen={handaleUpdateFormOpen}
+          handaleImageFormOpen={handaleImageFormOpen}
+          errorList={errorList}
+          apiError={apiError}
+          closeImgForm={closeImgForm}
+          apiErrorMessage={apiErrorMessage}
+          getNewData={getNewData}
+          updateUser={updateUser}
+        />{" "}
+      </Suspense>
     </>
   );
 }

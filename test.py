@@ -74,6 +74,7 @@ if pred == 1:
 
 # Get perc. '%' accuracy of the predict result
 accuracy_perc = accuracy * 100
+pred_accuracy = accuracy_score(y_test, pred)
 
-print(f"new_pred: {pred}, so it's {cond} with {accuracy_perc}% accuracy.")
+print(f"new_pred: {pred}, so it's {cond} with {pred_accuracy} accuracy.")
 #

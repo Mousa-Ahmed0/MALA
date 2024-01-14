@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import axios from "axios";
-import MessageContainer from "./MessagesContainer";
+import { MessageContainer } from "../../../../componentsLoader/ComponentsLoader";
 export default function UsersMessageInterface({
   user,
   darkMode,
@@ -52,7 +52,7 @@ export default function UsersMessageInterface({
   //////////////////
   //get all messages
   useEffect(() => {
-    console.log("hello user");
+    //console.log("hello user");
   }, []);
   //get all messages
 
@@ -71,13 +71,22 @@ export default function UsersMessageInterface({
             darkMode ? " spic-dark-mode" : ""
           }`}
         >
-          <MessageContainer
-            user={user}
-            formatDate={formatDate}
-            scrollToBottom={scrollToBottom}
-            isSent={isSent}
-            setIsSent={setIsSent}
-          />
+          {" "}
+          <Suspense
+            fallback={
+              <div className="spinner-border text-primary" role="status">
+                <span className="sr-only">Loading...</span>
+              </div>
+            }
+          >
+            <MessageContainer
+              user={user}
+              formatDate={formatDate}
+              scrollToBottom={scrollToBottom}
+              isSent={isSent}
+              setIsSent={setIsSent}
+            />
+          </Suspense>
           <hr />
           <div className="col-12">
             <div className="row">

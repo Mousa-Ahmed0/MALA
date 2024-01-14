@@ -13,17 +13,17 @@ export default function MessagesContainer({
   //get All Message In Conversation
   const [allMessages, setAllMessages] = useState();
   const [noResults, setNoResults] = useState(false);
-  const [apiError, setApiError] = useState(false);
-  let apiErrorMessage = (
-    <div className="w-100 h-100 d-flex flex-column align-items-center">
-      <div className="alert alert-danger my-4 mid-bold w-100 d-flex justify-content-center">
-        Error!!!
-      </div>
-      <div className="my-4 mid-bold">
-        Theres a proplem! Please wait for us to solve the proplem.
-      </div>
-    </div>
-  );
+  //const [apiError, setApiError] = useState(false);
+  // let apiErrorMessage = (
+  //   <div className="w-100 h-100 d-flex flex-column align-items-center">
+  //     <div className="alert alert-danger my-4 mid-bold w-100 d-flex justify-content-center">
+  //       Error!!!
+  //     </div>
+  //     <div className="my-4 mid-bold">
+  //       Theres a proplem! Please wait for us to solve the proplem.
+  //     </div>
+  //   </div>
+  // );
   const [mouseOnMsgIndex, setMouseOnMsgIndex] = useState(null);
 
   async function getStaffMessages() {
@@ -34,7 +34,7 @@ export default function MessagesContainer({
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         }
       );
-      console.log("getStaffMessages", response);
+      //console.log("getStaffMessages", response);
 
       setIsSent(false);
       setAllMessages(response.data);
@@ -50,7 +50,7 @@ export default function MessagesContainer({
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         }
       );
-      console.log("getMessages", response);
+      //console.log("getMessages", response);
       if (response.data.length > 0) {
         setIsSent(false);
         setAllMessages(response.data[0]);
@@ -98,7 +98,7 @@ export default function MessagesContainer({
   }
   //get all messages
   useEffect(() => {
-    console.log(`hello ${user.usertype}`);
+    //console.log(`hello ${user.usertype}`);
     // Fetch messages initially
     if (user.usertype === "Admin" || user.usertype === "Staff") {
       getStaffMessages();
@@ -124,7 +124,7 @@ export default function MessagesContainer({
   }, [allMessages]);
   //
   useEffect(() => {
-    console.log(isSent);
+    //console.log(isSent);
     if (isSent) {
       if (user.usertype === "Admin" || user.usertype === "Staff")
         getStaffMessages();
