@@ -14,7 +14,6 @@ export default function UserProfilePrsintation({
   closeUpdateForm,
   handaleUpdateFormOpen,
   handaleImageFormOpen,
-  errorList,
   apiErrorMessage,
   apiError,
   getNewData,
