@@ -1,10 +1,10 @@
-import AnlysisPresintation from "./AnlysisPresintation";
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { Suspense, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useDarkMode } from "../../context/DarkModeContext";
 import { getAllAnalysis } from "../../apis/ApisHandale";
+import { AnlysisPresintation } from "../../componentsLoader/ComponentsLoader";
+
 export default function AnlysisContainer() {
   const { darkMode } = useDarkMode();
   let [allAnlysis, setAllAnlysis] = useState([]);
@@ -94,7 +94,6 @@ export default function AnlysisContainer() {
     setVal(value);
   }
   async function searchForAnlyze() {
-    console.log(val);
     if (val.trim() === "") {
       return;
     }
@@ -118,13 +117,24 @@ export default function AnlysisContainer() {
     searchForAnlyze();
   }, [val]);
   return (
-    <AnlysisPresintation
-      handaleSearchVlue={handaleSearchVlue}
-      visibleAnlysis={visibleAnlysis}
-      displayAnlysis={displayAnlysis}
-      apiError={apiError}
-      apiErrorMessage={apiErrorMessage}
-      noResults={noResults}
-    />
+    <Suspense
+      fallback={
+        <div className="center-container">
+          <div className="spinner-border text-primary" role="status">
+            <span className="sr-only">Loading...</span>
+          </div>
+        </div>
+      }
+    >
+      {" "}
+      <AnlysisPresintation
+        handaleSearchVlue={handaleSearchVlue}
+        visibleAnlysis={visibleAnlysis}
+        displayAnlysis={displayAnlysis}
+        apiError={apiError}
+        apiErrorMessage={apiErrorMessage}
+        noResults={noResults}
+      />
+    </Suspense>
   );
 }

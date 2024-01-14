@@ -1,4 +1,4 @@
-import react, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { formatDateWithouHour } from "../../../methods/FormateDate";
@@ -8,11 +8,11 @@ export default function AdsSection({ darkMode }) {
   let [apiError, setApiError] = useState(false);
   let [noResults, setNoResults] = useState(false);
   let apiErrorMessage = (
-    <div class="w-100 h-100 d-flex flex-column align-items-center">
-      <div class="alert alert-danger my-4 mid-bold w-100 d-flex justify-content-center">
+    <div className="w-100 h-100 d-flex flex-column align-items-center">
+      <div className="alert alert-danger my-4 mid-bold w-100 d-flex justify-content-center">
         Error!!!
       </div>
-      <div class="my-4 mid-bold">
+      <div className="my-4 mid-bold">
         Theres a proplem! Please wait for us to solve the proplem.
       </div>
     </div>
@@ -47,7 +47,7 @@ export default function AdsSection({ darkMode }) {
 
   function renderAds() {
     return allAds.map((ad, index) => (
-      <div className="row detailes-size d-flex align-items-center">
+      <div key={index} className="row detailes-size d-flex align-items-center">
         <div className="col-3 d-flex align-items-center text-truncate">
           {ad.title}
         </div>
@@ -81,7 +81,7 @@ export default function AdsSection({ darkMode }) {
       >
         <h1 className="h5">
           <span>
-            <i class="fa-solid fa-bullhorn"></i>
+            <i className="fa-solid fa-bullhorn"></i>
           </span>{" "}
           Notice Board:
         </h1>

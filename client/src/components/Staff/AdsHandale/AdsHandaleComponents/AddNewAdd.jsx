@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { useDarkMode } from "../../../../context/DarkModeContext";
 
@@ -29,26 +29,7 @@ export default function AddNewAdd({ setIsFormOpen }) {
   async function onFormSubmit(e) {
     e.preventDefault();
 
-    /* const forms = images.map((image) => {
-      const formData = new FormData();
-      formData.append("image", image);
-      return formData;
-    });*/
-
-    /* const formData = new FormData();
-    formData.append("title", ad.title);
-    formData.append("addText", ad.addText);
-    formData.append("creDate", ad.creDate);
-    formData.append("expDate", ad.expDate);
-
-    images.map((image, index) => {
-      formData.append(`image ${index + 1}`, image);
-    });
-    // Append array of FormData objects to the main FormData
-    /* forms.forEach((form) => {
-      formData.append("images", form);
-    });*/
-    console.log("ad: ", ad);
+    //console.log("ad: ", ad);
 
     try {
       setIsLoading(true);
@@ -61,7 +42,7 @@ export default function AddNewAdd({ setIsFormOpen }) {
       formDataToSend.append("creDate", ad.creDate);
       formDataToSend.append("expDate", ad.expDate);
 
-      console.log("formDataToSend: ", formDataToSend);
+      //console.log("formDataToSend: ", formDataToSend);
 
       let response = await axios.post(
         "http://localhost:5000/api/advertisements/addAdvert",
@@ -97,26 +78,10 @@ export default function AddNewAdd({ setIsFormOpen }) {
   //image changes
   function handleImageChange(e) {
     const files = e.target.files;
-    console.log("Selected Files: ", files);
+    //console.log("Selected Files: ", files);
     setAd((prevAd) => ({ ...prevAd, images: [...prevAd.images, ...files] }));
   }
-
-  /*// move on the array of files to convert each one to FormData and push it to array
-    selectedImages.forEach((imageFile, index) => {
-      const fileFormData = new FormData();
-      console.log("imageFile before FormData", imageFile);
-      fileFormData.append(`image${index}`, imageFile);
-      console.log("fileFormData", fileFormData);
-
-      newFiles.push(fileFormData);
-    });
-
-    console.log("newFiles:", newFiles);
-    setImages(newFiles); // Set the array of file objects to the images state*/
-  //////////////
-  /*useEffect(() => {
-    console.log("New Ad: ", ad);
-  }, [ad]);*/
+  ///////////////
   return (
     <div className="ST-section my-1">
       <div className="Reg-Pat my-4">

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-import PaymentsPreviewPresintation from "./PaymentsPreviewPresintation";
-import { useDarkMode } from "../../../../../context/DarkModeContext";
+import React, { useState, useEffect, Suspense } from "react";
 import { Link } from "react-router-dom";
 
+import { PaymentsPreviewPresintation } from "../../../../../componentsLoader/ComponentsLoader";
+import { useDarkMode } from "../../../../../context/DarkModeContext";
 import {
   getAllPayments,
   getPaymentsFiltered,
@@ -10,6 +10,7 @@ import {
 } from "../../../../../apis/ApisHandale";
 import { formatDateYYMMDD } from "../../../../../methods/FormateDate";
 import PaymentToPDF from "../../../../PaymentToPDF";
+
 export default function PaymentsPreviewContainer({ setIsPdfLoading }) {
   const { darkMode } = useDarkMode();
   const [isCustomeDate, setIsCustomeDate] = useState(false);
@@ -51,7 +52,7 @@ export default function PaymentsPreviewContainer({ setIsPdfLoading }) {
   async function getPayments() {
     try {
       let response = await getAllPayments();
-      console.log("response from gg", response);
+      //  console.log("response from gg", response);
       setAllPayments(response.data.paumentArray);
       setVisiblePayments(response.data.paumentArray);
       setUsersCount(response.data.countPage);
@@ -152,7 +153,7 @@ export default function PaymentsPreviewContainer({ setIsPdfLoading }) {
   async function filterByDataRange() {
     try {
       let response = await getPaymentsFromTo(dateRange, pageNo);
-      console.log("response from payment to: ", response);
+      //console.log("response from payment to: ", response);
       if (response.data.paumentArray) {
         setfillterdResults(response.data.paumentArray);
         setVisiblePayments(response.data.paumentArray);
@@ -206,7 +207,7 @@ export default function PaymentsPreviewContainer({ setIsPdfLoading }) {
             },
             pageNo
           );
-          console.log("Last Week", response);
+          // console.log("Last Week", response);
           if (response.data.paumentArray) {
             setfillterdResults(response.data.paumentArray);
             setVisiblePayments(response.data.paumentArray);
@@ -230,7 +231,7 @@ export default function PaymentsPreviewContainer({ setIsPdfLoading }) {
             },
             pageNo
           );
-          console.log("Last Month", response);
+          //console.log("Last Month", response);
           if (response.data.paumentArray) {
             setfillterdResults(response.data.paumentArray);
             setVisiblePayments(response.data.paumentArray);
@@ -507,9 +508,9 @@ export default function PaymentsPreviewContainer({ setIsPdfLoading }) {
   useEffect(() => {
     filterByDataRange();
   }, [dateRange]);
-  useEffect(() => {
-    console.log(visiblePayments);
-  }, [visiblePayments]);
+  // useEffect(() => {
+  //   console.log(visiblePayments);
+  // }, [visiblePayments]);
   useEffect(() => {
     if (isCustomeDate) {
       setDateRange({
@@ -522,27 +523,37 @@ export default function PaymentsPreviewContainer({ setIsPdfLoading }) {
   }, [isCustomeDate]);
 
   return (
-    <PaymentsPreviewPresintation
-      darkMode={darkMode}
-      visiblePayments={visiblePayments}
-      displayUsers={displayUsers}
-      noResults={noResults}
-      apiError={apiError}
-      apiErrorMessage={apiErrorMessage}
-      isCustomeDate={isCustomeDate}
-      hadaleDateFilters={hadaleDateFilters}
-      handaleDataRangeChange={handaleDataRangeChange}
-      filterOptions={filterOptions}
-      handaleFilterOption={handaleFilterOption}
-      srchFilterOptions={srchFilterOptions}
-      searchFilterOption={searchFilterOption}
-      val={val}
-      handaleSearchVlue={handaleSearchVlue}
-      srchFilterOption={srchFilterOption}
-      dateRange={dateRange}
-      setPageNo={setPageNo}
-      pageNo={pageNo}
-      usersCount={usersCount}
-    />
+    <Suspense
+      fallback={
+        <div className="center-container">
+          <div className="spinner-border text-primary" role="status">
+            <span className="sr-only">Loading...</span>
+          </div>
+        </div>
+      }
+    >
+      <PaymentsPreviewPresintation
+        darkMode={darkMode}
+        visiblePayments={visiblePayments}
+        displayUsers={displayUsers}
+        noResults={noResults}
+        apiError={apiError}
+        apiErrorMessage={apiErrorMessage}
+        isCustomeDate={isCustomeDate}
+        hadaleDateFilters={hadaleDateFilters}
+        handaleDataRangeChange={handaleDataRangeChange}
+        filterOptions={filterOptions}
+        handaleFilterOption={handaleFilterOption}
+        srchFilterOptions={srchFilterOptions}
+        searchFilterOption={searchFilterOption}
+        val={val}
+        handaleSearchVlue={handaleSearchVlue}
+        srchFilterOption={srchFilterOption}
+        dateRange={dateRange}
+        setPageNo={setPageNo}
+        pageNo={pageNo}
+        usersCount={usersCount}
+      />
+    </Suspense>
   );
 }

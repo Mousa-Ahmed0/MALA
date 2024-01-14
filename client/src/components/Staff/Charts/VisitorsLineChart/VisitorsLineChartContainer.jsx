@@ -1,11 +1,7 @@
 import axios from "axios";
-import {
-  getAllPayments,
-  getPaymentsFiltered,
-} from "../../../../apis/ApisHandale";
 import UserFilter from "../../../UserFilter/UserFilter";
-import VisitorsLineChart from "./VisitorsLineChartComponents/VisitorsLineChart";
-import React, { useState, useEffect } from "react";
+import { VisitorsLineChart } from "../../../../componentsLoader/ComponentsLoader";
+import React, { useState, useEffect, Suspense } from "react";
 
 export default function VisitorsLineChartContainer({ darkMode }) {
   const [lineChartPropreties, setLineChartProperties] = useState({
@@ -314,7 +310,7 @@ export default function VisitorsLineChartContainer({ darkMode }) {
       <div className="row align-items-center">
         <div className="col-12 d-flex gap-2">
           <span className=" h5 m-0 colorMain">
-            <i class="fa-solid fa-file-invoice-dollar"></i>
+            <i className="fa-solid fa-file-invoice-dollar"></i>
           </span>
           <h1 className=" h5 m-0">Lab Visitors - {filterOption}:</h1>
         </div>
@@ -338,12 +334,23 @@ export default function VisitorsLineChartContainer({ darkMode }) {
       </div>
       {lineChartPropreties.lineData.length > 0 &&
       lineChartPropreties.lineLabels.length > 0 ? (
-        <VisitorsLineChart
-          darkMode={darkMode}
-          lineLabels={lineChartPropreties.lineLabels}
-          lineData={lineChartPropreties.lineData}
-          filterOption={filterOption}
-        />
+        <Suspense
+          fallback={
+            <div className="center-container">
+              <div className="spinner-border text-primary" role="status">
+                <span className="sr-only">Loading...</span>
+              </div>
+            </div>
+          }
+        >
+          {" "}
+          <VisitorsLineChart
+            darkMode={darkMode}
+            lineLabels={lineChartPropreties.lineLabels}
+            lineData={lineChartPropreties.lineData}
+            filterOption={filterOption}
+          />
+        </Suspense>
       ) : lineChartPropreties.lineData.length === 0 &&
         lineChartPropreties.lineLabels.length === 0 ? (
         <div>No Results Found.</div>

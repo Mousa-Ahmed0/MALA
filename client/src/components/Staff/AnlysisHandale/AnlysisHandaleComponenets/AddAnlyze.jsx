@@ -40,7 +40,7 @@ export default function AddAnlyze() {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         }
       );
-      console.log(response);
+      //console.log(response);
       if (response.data.length > 0) setAvilableCategories(response.data);
     } catch (error) {
       console.error("Error From getCategories: ", error);
@@ -64,7 +64,7 @@ export default function AddAnlyze() {
         }
       );
       setApiError(false);
-      console.log("Analyze with components submitted successfully");
+      //  console.log("Analyze with components submitted successfully");
     } catch (error) {
       setApiError(true);
       console.error("Error submitting analyze with components:", error);
@@ -214,10 +214,10 @@ export default function AddAnlyze() {
   useEffect(() => {
     getCategories();
   }, []);
-  useEffect(() => {
-    console.log(anlyze);
-    console.log(components);
-  }, [components, anlyze]);
+  // useEffect(() => {
+  //   console.log(anlyze);
+  //   console.log(components);
+  // }, [components, anlyze]);
   return (
     <div className="ST-section my-1">
       <div className="Reg-Pat my-4">

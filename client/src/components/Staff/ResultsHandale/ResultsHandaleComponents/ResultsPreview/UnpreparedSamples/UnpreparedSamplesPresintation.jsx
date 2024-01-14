@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import SearchBar from "../../../../../SearchBar/SearchBar";
 import UserFilter from "../../../../../UserFilter/UserFilter";
+import PaginationNav from "../../../../../PaginationNav";
 
 export default function UnpreparedSamplesPresintation({
   darkMode,
@@ -14,6 +15,9 @@ export default function UnpreparedSamplesPresintation({
   handaleFilterOption,
   visibleResults,
   displayResults,
+  usersCount,
+  pageNo,
+  setPageNo,
 }) {
   return (
     <div className="ST-section my-2 p-0">
@@ -30,6 +34,12 @@ export default function UnpreparedSamplesPresintation({
           </div>
         </div>
         <section className="px-4">
+          <PaginationNav
+            counts={usersCount}
+            pageNo={pageNo}
+            setPageNo={setPageNo}
+            countPerPage={10}
+          />
           <div className="row my-0 d-none d-md-block">
             <div className="col-lg-12">
               <div className="card border-0 bg-transparent">
@@ -97,6 +107,12 @@ export default function UnpreparedSamplesPresintation({
               </div>
             )}
           </div>
+          <PaginationNav
+            counts={usersCount}
+            pageNo={pageNo}
+            setPageNo={setPageNo}
+            countPerPage={10}
+          />
         </section>
       </div>
     </div>

@@ -1,10 +1,12 @@
 import React, { Suspense } from "react";
+import { useParams } from "react-router";
+
 import {
   LabMessageInterface,
   UsersMessageInterface,
 } from "../../../componentsLoader/ComponentsLoader";
 import BackBtn from "../../BackBtn";
-import { useParams } from "react-router";
+
 export default function MessageInterface({ user, darkMode }) {
   const { id } = useParams();
   //formate Date
@@ -42,7 +44,7 @@ export default function MessageInterface({ user, darkMode }) {
 
   return (
     <>
-      <div className="ST-section">
+      <div className="ST-section my-5">
         <BackBtn />
         <div className="Reg-Pat my-5">
           <div className={`page-form ${darkMode ? " border-white" : ""}`}>

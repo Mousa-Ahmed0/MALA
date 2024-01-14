@@ -1,11 +1,16 @@
-import React, { useState, useEffect, useRef } from "react";
-import DashboardWelcome from "../DashboardWelcome";
+import React, { useState, useEffect, Suspense } from "react";
+import { Link } from "react-router-dom";
+
+import {
+  DashboardWelcome,
+  AdsSection,
+} from "../../componentsLoader/ComponentsLoader";
+
 import { formatDateWithouHour } from "../../methods/FormateDate";
 import { useDarkMode } from "../../context/DarkModeContext";
-import { Link } from "react-router-dom";
 import { getPateinrPayments, getPateinrResults } from "../../apis/ApisHandale";
-import AdsSection from "../UserComponenet/Ads/AdsSection";
 import PaymentToPDF from "../PaymentToPDF";
+
 export default function PatientHome({ user, setIsPdfLoading }) {
   const { darkMode } = useDarkMode();
   const [allResults, setAllResults] = useState([]);
@@ -23,7 +28,6 @@ export default function PatientHome({ user, setIsPdfLoading }) {
     </div>
   );
   const [noPayments, setNoPayments] = useState(false);
-  const [noResults, setNoResults] = useState(false);
 
   //get patient results
   async function getResults() {
@@ -75,7 +79,7 @@ export default function PatientHome({ user, setIsPdfLoading }) {
   async function getPayments() {
     try {
       let response = await getPateinrPayments({ identPatient: user.ident });
-      console.log("Payments", response);
+      //console.log("Payments", response);
       if (response.data.paumentArray.length > 0)
         setAllPayments(response.data.paumentArray);
       else setNoPayments(true);
@@ -120,7 +124,17 @@ export default function PatientHome({ user, setIsPdfLoading }) {
   return (
     <>
       <div className="ST-section">
-        <DashboardWelcome user={user} />
+        <Suspense
+          fallback={
+            <div className="center-container">
+              <div className="spinner-border text-primary" role="status">
+                <span className="sr-only">Loading...</span>
+              </div>
+            </div>
+          }
+        >
+          <DashboardWelcome user={user} />
+        </Suspense>
         <hr />
         <div className="row">
           <div
@@ -212,7 +226,17 @@ export default function PatientHome({ user, setIsPdfLoading }) {
         </div>
         <hr />
         <div className="row ">
-          <AdsSection darkMode={darkMode} />
+          <Suspense
+            fallback={
+              <div className="center-container">
+                <div className="spinner-border text-primary" role="status">
+                  <span className="sr-only">Loading...</span>
+                </div>
+              </div>
+            }
+          >
+            <AdsSection darkMode={darkMode} />
+          </Suspense>
         </div>
       </div>
     </>

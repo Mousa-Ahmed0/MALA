@@ -1,10 +1,13 @@
-import AddResultPresintation from "./AddResultPresintation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import axios from "axios";
-import { useDarkMode } from "../../../../../context/DarkModeContext";
-import { addResult, getAllDoctor } from "../../../../../apis/ApisHandale";
 
-import AnalyzeResult from "./AddResultComponents/AnalyzeResult";
+import { useDarkMode } from "../../../../../context/DarkModeContext";
+import { getAllDoctor } from "../../../../../apis/ApisHandale";
+import {
+  AddResultPresintation,
+  AnalyzeResult,
+} from "../../../../../componentsLoader/ComponentsLoader";
+
 export default function AddResult() {
   const { darkMode } = useDarkMode();
   const [isDone, setIsDone] = useState(false);
@@ -60,13 +63,9 @@ export default function AddResult() {
   async function onSubmitForm(e) {
     e.preventDefault();
     let newResult = { ...result, resultSet: resultSet };
-    /*setResult((prevResult) => ({
-      ...prevResult,
-      resultSet: resultSet,
-    }));*/
 
     try {
-      console.log("newResult", newResult);
+      //console.log("newResult", newResult);
       let response = await axios.post(
         "http://localhost:5000/api/result/addResults",
         newResult,
@@ -76,11 +75,11 @@ export default function AddResult() {
           },
         }
       );
-      console.log(response);
+      //console.log(response);
       setApiError(false);
       setApiMessage(response.data.message);
       setIsDone(true);
-      console.log("Result with components submitted successfully");
+      //console.log("Result with components submitted successfully");
       setResult({
         isDone: true,
         isPaied: false,
@@ -131,17 +130,27 @@ export default function AddResult() {
           </div>
           <div className="row d-flex my-4 flex-column flex-md-row">
             <div className="col-12">
-              <AnalyzeResult
-                darkMode={darkMode}
-                isDone={isDone}
-                setIsDone={setIsDone}
-                resultSet={resultSet}
-                setResultSet={setResultSet}
-                isSelectActive={isSelectActive}
-                setisSelectActive={setisSelectActive}
-                setApiMessage={setApiMessage}
-                date={result ? result.date : new Date()}
-              />
+              <Suspense
+                fallback={
+                  <div className="center-container">
+                    <div className="spinner-border text-primary" role="status">
+                      <span className="sr-only">Loading...</span>
+                    </div>
+                  </div>
+                }
+              >
+                <AnalyzeResult
+                  darkMode={darkMode}
+                  isDone={isDone}
+                  setIsDone={setIsDone}
+                  resultSet={resultSet}
+                  setResultSet={setResultSet}
+                  isSelectActive={isSelectActive}
+                  setisSelectActive={setisSelectActive}
+                  setApiMessage={setApiMessage}
+                  date={result ? result.date : new Date()}
+                />
+              </Suspense>
             </div>
             <br />
           </div>
@@ -157,26 +166,36 @@ export default function AddResult() {
   useEffect(() => {
     getAllDoctors();
   }, []);
-  useEffect(() => {
-    console.log("Result: ", result);
-  }, [result]);
-  useEffect(() => {
-    console.log("resultSet: ", resultSet);
-  }, [resultSet]);
+  // useEffect(() => {
+  //   console.log("Result: ", result);
+  // }, [result]);
+  // useEffect(() => {
+  //   console.log("resultSet: ", resultSet);
+  // }, [resultSet]);
   ///////////////////
 
   return (
     <>
-      <AddResultPresintation
-        darkMode={darkMode}
-        result={result}
-        setResult={setResult}
-        getResultData={getResultData}
-        onSubmitForm={onSubmitForm}
-        renderDoctorsOption={renderDoctorsOption}
-        apiMessage={apiMessage}
-        renderResultSet={renderResultSet}
-      />
+      <Suspense
+        fallback={
+          <div className="center-container">
+            <div className="spinner-border text-primary" role="status">
+              <span className="sr-only">Loading...</span>
+            </div>
+          </div>
+        }
+      >
+        <AddResultPresintation
+          darkMode={darkMode}
+          result={result}
+          setResult={setResult}
+          getResultData={getResultData}
+          onSubmitForm={onSubmitForm}
+          renderDoctorsOption={renderDoctorsOption}
+          apiMessage={apiMessage}
+          renderResultSet={renderResultSet}
+        />
+      </Suspense>
     </>
   );
 }

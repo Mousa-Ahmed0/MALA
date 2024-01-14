@@ -21,6 +21,12 @@
   transition: 0 !important;
   -webkit-tap-highlight-color: transparent !important;
 }
+.center-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Adjust as needed */
+}
 html {
   scroll-behavior: smooth;
 }

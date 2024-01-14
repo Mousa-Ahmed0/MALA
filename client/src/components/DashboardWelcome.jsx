@@ -16,7 +16,7 @@ export default function DashboardWelcome({ user }) {
   let date = `${day}/${month}/${year}`;
   return (
     <>
-      <div className="w-100 d-flex justify-content-between align-items-center">
+      <div className="w-100 d-flex justify-content-between align-items-center my-4">
         <div className="h2 d-flex flex-column">
           <span className="h5 mid-bold m-0">Welcome</span>
           <span className="high-bold colorMain">

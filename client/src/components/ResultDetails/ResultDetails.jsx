@@ -1,9 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { useDarkMode } from "../../context/DarkModeContext";
 import BackBtn from "../BackBtn";
-import DetailsInformation from "./ResultDetailsComponents/DetailsInformation";
-import ReportsHeader from "../ReportsHeader";
-import ResultsTable from "./ResultDetailsComponents/ResultsTable";
+import {
+  DetailsInformation,
+  ReportsHeader,
+  ResultsTable,
+} from "../../componentsLoader/ComponentsLoader.js";
 import { getDetailsResult } from "../../apis/ApisHandale.jsx";
 
 import { useParams } from "react-router-dom";
@@ -29,28 +31,59 @@ export default function ResultDetails({ user }) {
     return (
       <div className="print-section">
         <div className="print-result Report-header mb-1">
-          <ReportsHeader darkMode={darkMode} />
-          <DetailsInformation
-            darkMode={darkMode}
-            doctorInformation={
-              resultDetails.usersDoctor
-                ? resultDetails.usersDoctor.firstname
-                  ? resultDetails.usersDoctor.firstname +
-                    " " +
-                    resultDetails.usersDoctor.lastname
-                  : resultDetails.usersDoctor
-                : "Not Found"
+          <Suspense
+            fallback={
+              <div className="center-container">
+                <div className="spinner-border text-primary" role="status">
+                  <span className="sr-only">Loading...</span>
+                </div>
+              </div>
             }
-            patintInformation={resultDetails.usersPatint}
-            staffInformation={resultDetails.usersStaff}
-            date={resultDetails.resultDate}
-          />
+          >
+            {" "}
+            <ReportsHeader darkMode={darkMode} />
+          </Suspense>
+          <Suspense
+            fallback={
+              <div className="center-container">
+                <div className="spinner-border text-primary" role="status">
+                  <span className="sr-only">Loading...</span>
+                </div>
+              </div>
+            }
+          >
+            <DetailsInformation
+              darkMode={darkMode}
+              doctorInformation={
+                resultDetails.usersDoctor
+                  ? resultDetails.usersDoctor.firstname
+                    ? resultDetails.usersDoctor.firstname +
+                      " " +
+                      resultDetails.usersDoctor.lastname
+                    : resultDetails.usersDoctor
+                  : "Not Found"
+              }
+              patintInformation={resultDetails.usersPatint}
+              staffInformation={resultDetails.usersStaff}
+              date={resultDetails.resultDate}
+            />
+          </Suspense>
         </div>
-        <ResultsTable
-          user={user}
-          darkMode={darkMode}
-          resultDetails={resultDetails}
-        />
+        <Suspense
+          fallback={
+            <div className="center-container">
+              <div className="spinner-border text-primary" role="status">
+                <span className="sr-only">Loading...</span>
+              </div>
+            </div>
+          }
+        >
+          <ResultsTable
+            user={user}
+            darkMode={darkMode}
+            resultDetails={resultDetails}
+          />
+        </Suspense>
       </div>
     );
   }

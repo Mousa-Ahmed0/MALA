@@ -28,7 +28,7 @@ export default function Footer() {
           </a>
         </li>
         <li>
-          <a a href="https://www.facebook.com/" target="_blank">
+          <a href="https://www.facebook.com/" target="_blank">
             <i className="fa-brands fa-twitter " />
           </a>
         </li>

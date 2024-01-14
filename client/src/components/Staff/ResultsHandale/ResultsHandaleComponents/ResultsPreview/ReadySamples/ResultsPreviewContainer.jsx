@@ -1,10 +1,9 @@
-import ResultsPreviewPresintation from "./ResultsPreviewPresintation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { Link } from "react-router-dom";
 
+import { ResultsPreviewPresintation } from "../../../../../../componentsLoader/ComponentsLoader";
 import { useDarkMode } from "../../../../../../context/DarkModeContext";
 import {
-  getAllResults,
   getResultsFiltered,
   getResultsFromTo,
   getSamples,
@@ -13,7 +12,6 @@ import { formatDateYYMMDD } from "../../../../../../methods/FormateDate";
 
 export default function ResultsPreviewContainer({}) {
   const { darkMode } = useDarkMode();
-
   const [allResults, setAllResults] = useState([]);
   const [visibleResults, setVisibleResults] = useState([]);
   //search & filter variables
@@ -52,7 +50,7 @@ export default function ResultsPreviewContainer({}) {
   async function getResults() {
     try {
       let response = await getSamples(true, pageNo);
-      console.log("response from gg", response);
+      //console.log("response from gg", response);
       setAllResults(response.data.usersArray);
       setVisibleResults(response.data.usersArray);
       setUsersCount(response.data.count);
@@ -606,30 +604,40 @@ export default function ResultsPreviewContainer({}) {
 
   return (
     <>
-      <ResultsPreviewPresintation
-        darkMode={darkMode}
-        visibleResults={visibleResults}
-        displayResults={displayResults}
-        apiMessage={apiMessage}
-        apiError={apiError}
-        noResults={noResults}
-        apiErrorMessage={apiErrorMessage}
-        isCustomeDate={isCustomeDate}
-        hadaleDateFilters={hadaleDateFilters}
-        handaleDataRangeChange={handaleDataRangeChange}
-        filterOptions={filterOptions}
-        handaleFilterOption={handaleFilterOption}
-        srchFilterOptions={srchFilterOptions}
-        searchFilterOption={searchFilterOption}
-        val={val}
-        handaleSearchVlue={handaleSearchVlue}
-        srchFilterOption={srchFilterOption}
-        dateRange={dateRange}
-        deleteUser={deleteUser}
-        setPageNo={setPageNo}
-        pageNo={pageNo}
-        usersCount={usersCount}
-      />
+      <Suspense
+        fallback={
+          <div className="center-container">
+            <div className="spinner-border text-primary" role="status">
+              <span className="sr-only">Loading...</span>
+            </div>
+          </div>
+        }
+      >
+        <ResultsPreviewPresintation
+          darkMode={darkMode}
+          visibleResults={visibleResults}
+          displayResults={displayResults}
+          apiMessage={apiMessage}
+          apiError={apiError}
+          noResults={noResults}
+          apiErrorMessage={apiErrorMessage}
+          isCustomeDate={isCustomeDate}
+          hadaleDateFilters={hadaleDateFilters}
+          handaleDataRangeChange={handaleDataRangeChange}
+          filterOptions={filterOptions}
+          handaleFilterOption={handaleFilterOption}
+          srchFilterOptions={srchFilterOptions}
+          searchFilterOption={searchFilterOption}
+          val={val}
+          handaleSearchVlue={handaleSearchVlue}
+          srchFilterOption={srchFilterOption}
+          dateRange={dateRange}
+          deleteUser={deleteUser}
+          setPageNo={setPageNo}
+          pageNo={pageNo}
+          usersCount={usersCount}
+        />
+      </Suspense>
     </>
   );
 }

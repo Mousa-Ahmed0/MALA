@@ -1,14 +1,13 @@
-import NotPaidResultsPresintation from "./NotPaidResultsPresintation";
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { Link } from "react-router-dom";
 
 import { useDarkMode } from "../../../../../context/DarkModeContext";
 import { getUnPaidSamples } from "../../../../../apis/ApisHandale";
+import { NotPaidResultsPresintation } from "../../../../../componentsLoader/ComponentsLoader";
 
 export default function NotPaidResultsContainer({}) {
   const { darkMode } = useDarkMode();
 
-  const [isUpdateFormOpen, setIsUpdateFormOpen] = useState(false);
   const [allResults, setAllResults] = useState([]);
   const [visibleResults, setVisibleResults] = useState([]);
   //search & filter variables
@@ -36,7 +35,7 @@ export default function NotPaidResultsContainer({}) {
   async function getResults() {
     try {
       let response = await getUnPaidSamples();
-      console.log(response);
+      //console.log(response);
       setAllResults(response.data.usersArray);
       setVisibleResults(response.data.usersArray);
     } catch (error) {
@@ -169,31 +168,40 @@ export default function NotPaidResultsContainer({}) {
     // Search for users when the search value changes
     searchForAResult();
   }, [val]);
-  useEffect(() => {
-    // Search for users when the search value changes
-    console.log("allResults", allResults);
-  }, [allResults]);
+  // useEffect(() => {
+  //   console.log("allResults", allResults);
+  // }, [allResults]);
 
   return (
     <>
-      <NotPaidResultsPresintation
-        darkMode={darkMode}
-        apiMessage={apiMessage}
-        apiError={apiError}
-        noResults={noResults}
-        apiErrorMessage={apiErrorMessage}
-        val={val}
-        setVal={setVal}
-        setFilterOption={setFilterOption}
-        filterOptions={filterOptions}
-        clearResults={clearResults}
-        handaleFilterOption={handaleFilterOption}
-        handaleSearchVlue={handaleSearchVlue}
-        searchForAResult={searchForAResult}
-        deleteUser={deleteUser}
-        displayResults={displayResults}
-        visibleResults={visibleResults}
-      />
+      <Suspense
+        fallback={
+          <div className="center-container">
+            <div className="spinner-border text-primary" role="status">
+              <span className="sr-only">Loading...</span>
+            </div>
+          </div>
+        }
+      >
+        <NotPaidResultsPresintation
+          darkMode={darkMode}
+          apiMessage={apiMessage}
+          apiError={apiError}
+          noResults={noResults}
+          apiErrorMessage={apiErrorMessage}
+          val={val}
+          setVal={setVal}
+          setFilterOption={setFilterOption}
+          filterOptions={filterOptions}
+          clearResults={clearResults}
+          handaleFilterOption={handaleFilterOption}
+          handaleSearchVlue={handaleSearchVlue}
+          searchForAResult={searchForAResult}
+          deleteUser={deleteUser}
+          displayResults={displayResults}
+          visibleResults={visibleResults}
+        />
+      </Suspense>
     </>
   );
 }

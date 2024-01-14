@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import axios from "axios";
-import SendEmail from "../MessageComponents/SendEmail";
+
+import { SendEmail } from "../../../../componentsLoader/ComponentsLoader";
 import { formatDate } from "../../../../methods/FormateDate";
+
 export default function GuestsMessages({ darkMode, setIsFormOpen }) {
   const [allMessages, setAllMessages] = useState([]);
   const [isSendFormOpen, setIsSendFormOpen] = useState(false);
   const [toUser, setToUser] = useState();
   //Errors variables
   let [apiError, setApiError] = useState(false);
-  let [noResults, setNoResults] = useState(false);
   let apiErrorMessage = (
     <div className="w-100 h-100 d-flex flex-column align-items-center">
       <div className="alert alert-danger my-4 mid-bold w-100 d-flex justify-content-center">
@@ -28,7 +29,7 @@ export default function GuestsMessages({ darkMode, setIsFormOpen }) {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         }
       );
-      console.log(response);
+      // console.log(response);
       setAllMessages(response.data.allMeass);
     } catch (error) {
       console.error("error from getGuestMessages:", error);
@@ -155,12 +156,23 @@ export default function GuestsMessages({ darkMode, setIsFormOpen }) {
             darkMode ? " spic-dark-mode border-0" : "bg-white"
           } justify-content-center align-items-center h-100 w-100 z-200`}
         >
-          <SendEmail
-            darkMode={darkMode}
-            closeForm={closeForm}
-            setApiError={setApiError}
-            toUser={toUser}
-          />
+          {" "}
+          <Suspense
+            fallback={
+              <div className="center-container">
+                <div className="spinner-border text-primary" role="status">
+                  <span className="sr-only">Loading...</span>
+                </div>
+              </div>
+            }
+          >
+            <SendEmail
+              darkMode={darkMode}
+              closeForm={closeForm}
+              setApiError={setApiError}
+              toUser={toUser}
+            />
+          </Suspense>
         </div>
         <section className="px-4">
           <div className="row ">

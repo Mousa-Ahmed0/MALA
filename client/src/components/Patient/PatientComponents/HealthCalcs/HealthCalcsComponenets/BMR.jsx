@@ -3,6 +3,7 @@ import Joi from "joi";
 import { useDarkMode } from "../../../../../context/DarkModeContext";
 import BackBtn from "../../../../BackBtn";
 import { bmrCalc } from "../../../../../methods/HealthyCalculator";
+
 export default function BMR() {
   const { darkMode } = useDarkMode();
   let [errorList, setErrorList] = useState([]);

@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 
 import BackBtn from "../BackBtn";
-
 import { getOneAnalyze } from "../../apis/ApisHandale";
 
 export default function AnlyiseDetails() {
@@ -26,7 +24,6 @@ export default function AnlyiseDetails() {
     try {
       const response = await getOneAnalyze(code);
       setApiError(false);
-      console.log(response);
       if (response.data.length === 0) {
         setNoResults(true);
       } else {
@@ -39,9 +36,6 @@ export default function AnlyiseDetails() {
   useEffect(() => {
     getAnalyzeDetails();
   }, []);
-  useEffect(() => {
-    console.log(Analyze);
-  }, [Analyze]);
 
   return (
     <>

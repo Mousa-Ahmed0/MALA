@@ -1,6 +1,6 @@
-import PreviewAnlysisPresintation from "./PreviewAnlysisPresintation";
+import { PreviewAnlysisPresintation } from "../../../../../componentsLoader/ComponentsLoader";
 
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
@@ -19,14 +19,6 @@ export default function PreviewAnlysisContainer() {
   //Category
   const [avilableCategories, setAvilableCategories] = useState([]);
   const [categoryOption, setCategoryOption] = useState("noValue");
-  let [Anlyze, setAnlyze] = useState({
-    name: "",
-    code: "",
-    cost: 0,
-    description: "",
-    isAvailable: true,
-    compnents: [],
-  });
   //search variables
   let [val, setVal] = useState(""); //search value
   let apiErrorMessage = (
@@ -39,7 +31,6 @@ export default function PreviewAnlysisContainer() {
       </div>
     </div>
   );
-  const [isUpdateFormOpen, setIsUpdateFormOpen] = useState(false);
 
   /* *************** Handale Pop Forms *************** */
   //update form open
@@ -243,17 +234,28 @@ export default function PreviewAnlysisContainer() {
     console.log("visibleAnlysis", visibleAnlysis);
   }, [visibleAnlysis]);
   return (
-    <PreviewAnlysisPresintation
-      handaleSearchVlue={handaleSearchVlue}
-      darkMode={darkMode}
-      visibleAnlysis={visibleAnlysis}
-      displayAnlysis={displayAnlysis}
-      apiError={apiError}
-      apiErrorMessage={apiErrorMessage}
-      noResults={noResults}
-      renderCategoriesArray={renderCategoriesArray}
-      handaleCategory={handaleCategory}
-      avilableCategories={avilableCategories}
-    />
+    <Suspense
+      fallback={
+        <div className="center-container">
+          <div className="spinner-border text-primary" role="status">
+            <span className="sr-only">Loading...</span>
+          </div>
+        </div>
+      }
+    >
+      {" "}
+      <PreviewAnlysisPresintation
+        handaleSearchVlue={handaleSearchVlue}
+        darkMode={darkMode}
+        visibleAnlysis={visibleAnlysis}
+        displayAnlysis={displayAnlysis}
+        apiError={apiError}
+        apiErrorMessage={apiErrorMessage}
+        noResults={noResults}
+        renderCategoriesArray={renderCategoriesArray}
+        handaleCategory={handaleCategory}
+        avilableCategories={avilableCategories}
+      />
+    </Suspense>
   );
 }

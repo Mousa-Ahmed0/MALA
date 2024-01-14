@@ -1,10 +1,14 @@
-import React, { useState, useEffect, useRef } from "react";
-import DashboardWelcome from "../DashboardWelcome";
+import React, { useState, useEffect, Suspense } from "react";
+import { Link } from "react-router-dom";
+import axios from "axios";
+
 import { formatDateWithouHour } from "../../methods/FormateDate";
 import { useDarkMode } from "../../context/DarkModeContext";
-import { Link } from "react-router-dom";
-import AdsSection from "../UserComponenet/Ads/AdsSection";
-import axios from "axios";
+import {
+  DashboardWelcome,
+  AdsSection,
+} from "../../componentsLoader/ComponentsLoader";
+
 export default function DoctorHome({ user }) {
   const { darkMode } = useDarkMode();
   const [allResults, setAllResults] = useState([]);
@@ -29,7 +33,7 @@ export default function DoctorHome({ user }) {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         }
       );
-      console.log("Results", response);
+      //  console.log("Results", response);
       setAllResults(response.data.usersArray.reverse());
       setResultError(false);
     } catch (error) {
@@ -76,7 +80,17 @@ export default function DoctorHome({ user }) {
   return (
     <>
       <div className="ST-section">
-        <DashboardWelcome user={user} />
+        <Suspense
+          fallback={
+            <div className="center-container">
+              <div className="spinner-border text-primary" role="status">
+                <span className="sr-only">Loading...</span>
+              </div>
+            </div>
+          }
+        >
+          <DashboardWelcome user={user} />
+        </Suspense>{" "}
         <hr />
         <div className="row">
           <div
@@ -124,7 +138,17 @@ export default function DoctorHome({ user }) {
         </div>
         <hr />
         <div className="row ">
-          <AdsSection darkMode={darkMode} />
+          <Suspense
+            fallback={
+              <div className="center-container">
+                <div className="spinner-border text-primary" role="status">
+                  <span className="sr-only">Loading...</span>
+                </div>
+              </div>
+            }
+          >
+            <AdsSection darkMode={darkMode} />
+          </Suspense>
         </div>
       </div>
     </>

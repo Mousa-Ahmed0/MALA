@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 //
 import { useDarkMode } from "../../context/DarkModeContext";
 //
-import DashboardWelcome from "../DashboardWelcome";
-import AdsSection from "../UserComponenet/Ads/AdsSection";
-import MessageBox from "./MessagesHandale/MessageBox/MessageBox";
-import PaymentLineChartContainer from "./Charts/PaymentLineChart/PaymentLineChartContainer";
-import VisitorsLineChartContainer from "./Charts/VisitorsLineChart/VisitorsLineChartContainer";
-import { getUnPaidSamples } from "../../apis/ApisHandale";
-import { Link } from "react-router-dom";
+import {
+  AdsSection,
+  MessageBox,
+  PaymentLineChartContainer,
+  VisitorsLineChartContainer,
+  DashboardWelcome,
+} from "../../componentsLoader/ComponentsLoader";
+
 export default function DashboardHome({ user }) {
   const { darkMode } = useDarkMode();
   const width = "-webkit-fill-available";
@@ -43,7 +45,7 @@ export default function DashboardHome({ user }) {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         }
       );
-      console.log(response);
+      // console.log(response);
       setunPaymentResults(response.data.Number_of_false);
     } catch (error) {
       console.error("Error from getNonReadMessagesCount:", error);
@@ -58,7 +60,7 @@ export default function DashboardHome({ user }) {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         }
       );
-      console.log("from non read", response);
+      // console.log("from non read", response);
       setNonReadNo(response.data.No);
     } catch (error) {
       console.error("Error from getNonReadMessagesCount:", error);
@@ -118,7 +120,17 @@ export default function DashboardHome({ user }) {
   }, []);
   return (
     <div className="ST-section ST-Dashboard">
-      <DashboardWelcome user={user} />
+      <Suspense
+        fallback={
+          <div className="center-container">
+            <div className="spinner-border text-primary" role="status">
+              <span className="sr-only">Loading...</span>
+            </div>
+          </div>
+        }
+      >
+        <DashboardWelcome user={user} />
+      </Suspense>
       <hr className="my-4" />
       <div className="d-flex flex-column flex-md-row justify-content-between align-items-center gap-4 my-4">
         <div
@@ -126,7 +138,7 @@ export default function DashboardHome({ user }) {
         >
           <div className="home-size d-flex flex-column justify-content-center align-items-center gap-1">
             <div className="d-flex gap-4 align-items-center">
-              <i class="h3 colorMain fa-solid fa-globe"></i>
+              <i className="h3 colorMain fa-solid fa-globe"></i>
               <span className="h5 colorMain m-0">Users</span>
             </div>
             <span className="h5 mid-bold">
@@ -148,7 +160,7 @@ export default function DashboardHome({ user }) {
         >
           <div className="home-size d-flex flex-column justify-content-center align-items-center gap-1">
             <div className="d-flex gap-4 align-items-center">
-              <i class="h3 colorMain fa-solid fa-user"></i>
+              <i className="h3 colorMain fa-solid fa-user"></i>
               <span className="h5 colorMain m-0">Staff</span>
             </div>
             <span className="h5 mid-bold">{staffCount}</span>
@@ -177,7 +189,7 @@ export default function DashboardHome({ user }) {
         >
           <div className="home-size d-flex flex-column justify-content-center align-items-center gap-1">
             <div className="d-flex gap-4 align-items-center">
-              <i class="h3 colorMain fa-solid fa-hospital-user"></i>
+              <i className="h3 colorMain fa-solid fa-hospital-user"></i>
               <span className="h5 colorMain m-0">Patients</span>
             </div>
             <span className="h5 mid-bold">{patientCount}</span>
@@ -206,7 +218,7 @@ export default function DashboardHome({ user }) {
         >
           <div className="home-size d-flex flex-column justify-content-center align-items-center gap-1">
             <div className="d-flex gap-4 align-items-center">
-              <i class="h3 colorMain fa-solid fa-user-doctor"></i>
+              <i className="h3 colorMain fa-solid fa-user-doctor"></i>
               <span className="h5 colorMain m-0">Doctors</span>
             </div>
             <span className="h5 mid-bold">{doctorsCount}</span>
@@ -238,7 +250,17 @@ export default function DashboardHome({ user }) {
             darkMode ? " spic-dark-mode" : " bg-white"
           }`}
         >
-          <PaymentLineChartContainer darkMode={darkMode} />
+          <Suspense
+            fallback={
+              <div className="center-container">
+                <div className="spinner-border text-primary" role="status">
+                  <span className="sr-only">Loading...</span>
+                </div>
+              </div>
+            }
+          >
+            <PaymentLineChartContainer darkMode={darkMode} />
+          </Suspense>
         </div>
         <div className="col-1"></div>
         <div
@@ -249,13 +271,13 @@ export default function DashboardHome({ user }) {
           <div className="row align-items-center">
             <div className="col-8 d-flex gap-2">
               <span className=" h5 m-0 colorMain">
-                <i class="fa-solid fa-inbox"></i>
+                <i className="fa-solid fa-inbox"></i>
               </span>
               <h1 className=" h5 m-0">Recent Messages:</h1>
             </div>
             <div className="col-4 d-flex justify-content-end colorMain">
               <h1 className="h6  m-0">
-                {nonReadNo === 0 ? (
+                {nonReadNo === 0 || !nonReadNo ? (
                   "All Message Readed!"
                 ) : (
                   <div className=" mid-bold">+{nonReadNo} </div>
@@ -263,7 +285,17 @@ export default function DashboardHome({ user }) {
               </h1>
             </div>
           </div>
-          <MessageBox darkMode={darkMode} />
+          <Suspense
+            fallback={
+              <div className="center-container">
+                <div className="spinner-border text-primary" role="status">
+                  <span className="sr-only">Loading...</span>
+                </div>
+              </div>
+            }
+          >
+            <MessageBox darkMode={darkMode} />
+          </Suspense>
         </div>
       </div>
       <hr className="my-4" />
@@ -273,7 +305,18 @@ export default function DashboardHome({ user }) {
             darkMode ? " spic-dark-mode" : " bg-white"
           }`}
         >
-          <VisitorsLineChartContainer darkMode={darkMode} />
+          <Suspense
+            fallback={
+              <div className="center-container">
+                <div className="spinner-border text-primary" role="status">
+                  <span className="sr-only">Loading...</span>
+                </div>
+              </div>
+            }
+          >
+            {" "}
+            <VisitorsLineChartContainer darkMode={darkMode} />
+          </Suspense>
         </div>
         <div className="col-1"></div>
         <div
@@ -284,7 +327,7 @@ export default function DashboardHome({ user }) {
           <div className="row align-items-center">
             <div className="col-12 d-flex gap-2">
               <span className=" h5 m-0 colorMain">
-                <i class="fa-solid fa-inbox"></i>
+                <i className="fa-solid fa-inbox"></i>
               </span>
               <h1 className=" h5 m-0">Important Notes:</h1>
             </div>
@@ -310,7 +353,7 @@ export default function DashboardHome({ user }) {
                     to={"/Staff/ResultsController/UnpreparedSamples"}
                     className="btn m-0 nav-link position-relative"
                   >
-                    <i class="fa-solid fa-eye"></i>
+                    <i className="fa-solid fa-eye"></i>
                   </Link>
                 </div>
               </div>
@@ -331,7 +374,7 @@ export default function DashboardHome({ user }) {
                     to={"/Staff/PaymentsController/NotPaidPayments"}
                     className="btn m-0 nav-link position-relative"
                   >
-                    <i class="fa-solid fa-eye"></i>
+                    <i className="fa-solid fa-eye"></i>
                   </Link>
                 </div>
               </div>
@@ -342,7 +385,17 @@ export default function DashboardHome({ user }) {
         </div>
       </div>
       <hr className="my-4" />
-      <AdsSection darkMode={darkMode} />
+      <Suspense
+        fallback={
+          <div className="center-container">
+            <div className="spinner-border text-primary" role="status">
+              <span className="sr-only">Loading...</span>
+            </div>
+          </div>
+        }
+      >
+        <AdsSection darkMode={darkMode} />
+      </Suspense>
     </div>
   );
 }

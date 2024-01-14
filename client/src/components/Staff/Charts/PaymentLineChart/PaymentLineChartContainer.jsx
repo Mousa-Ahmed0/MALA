@@ -1,10 +1,7 @@
-import {
-  getAllPayments,
-  getPaymentsFiltered,
-} from "../../../../apis/ApisHandale";
+import { getPaymentsFiltered } from "../../../../apis/ApisHandale";
 import UserFilter from "../../../UserFilter/UserFilter";
-import PayLineChart from "./PaymentLineChartComponents/PayLineChart";
-import React, { useState, useEffect } from "react";
+import { PayLineChart } from "../../../../componentsLoader/ComponentsLoader";
+import React, { Suspense, useState, useEffect } from "react";
 
 export default function PaymentLineChartContainer({ darkMode }) {
   const [lineChartPropreties, setLineChartProperties] = useState({
@@ -302,7 +299,7 @@ export default function PaymentLineChartContainer({ darkMode }) {
       <div className="row align-items-center">
         <div className="col-12 d-flex gap-2">
           <span className=" h5 m-0 colorMain">
-            <i class="fa-solid fa-file-invoice-dollar"></i>
+            <i className="fa-solid fa-file-invoice-dollar"></i>
           </span>
           <h1 className=" h5 m-0">Our Payments - {filterOption}:</h1>
         </div>
@@ -326,12 +323,23 @@ export default function PaymentLineChartContainer({ darkMode }) {
       </div>
       {lineChartPropreties.lineData.length > 0 &&
       lineChartPropreties.lineLabels.length > 0 ? (
-        <PayLineChart
-          darkMode={darkMode}
-          lineLabels={lineChartPropreties.lineLabels}
-          lineData={lineChartPropreties.lineData}
-          filterOption={filterOption}
-        />
+        <Suspense
+          fallback={
+            <div className="center-container">
+              <div className="spinner-border text-primary" role="status">
+                <span className="sr-only">Loading...</span>
+              </div>
+            </div>
+          }
+        >
+          {" "}
+          <PayLineChart
+            darkMode={darkMode}
+            lineLabels={lineChartPropreties.lineLabels}
+            lineData={lineChartPropreties.lineData}
+            filterOption={filterOption}
+          />
+        </Suspense>
       ) : lineChartPropreties.lineData.length === 0 ||
         lineChartPropreties.lineLabels.length === 0 ? (
         <div>No Payments Found</div>

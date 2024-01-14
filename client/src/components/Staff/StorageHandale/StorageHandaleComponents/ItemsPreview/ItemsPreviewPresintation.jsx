@@ -1,7 +1,7 @@
-import React from "react";
+import React, { Suspense } from "react";
 
 import SearchBar from "../../../../SearchBar/SearchBar";
-import UpdateItem from "./ItemPreviewComponents/UpdateItem";
+import { UpdateItem } from "../../../../../componentsLoader/ComponentsLoader";
 import PaginationNav from "../../../../PaginationNav";
 
 export default function ItemsPreviewPresintation({
@@ -31,15 +31,25 @@ export default function ItemsPreviewPresintation({
           darkMode ? " spic-dark-mode border-0" : "bg-white"
         } justify-content-center align-items-center h-100 w-100 z-200`}
       >
-        <UpdateItem
-          item={item}
-          setItem={setItem}
-          isUpdateFormOpen={isUpdateFormOpen}
-          darkMode={darkMode}
-          closeUpdateForm={closeUpdateForm}
-          getAllItems={getAllItems}
-          setApiError={setApiError}
-        />
+        <Suspense
+          fallback={
+            <div className="center-container">
+              <div className="spinner-border text-primary" role="status">
+                <span className="sr-only">Loading...</span>
+              </div>
+            </div>
+          }
+        >
+          <UpdateItem
+            item={item}
+            setItem={setItem}
+            isUpdateFormOpen={isUpdateFormOpen}
+            darkMode={darkMode}
+            closeUpdateForm={closeUpdateForm}
+            getAllItems={getAllItems}
+            setApiError={setApiError}
+          />
+        </Suspense>
       </div>
       <div className="row my-5">
         <div className="row">

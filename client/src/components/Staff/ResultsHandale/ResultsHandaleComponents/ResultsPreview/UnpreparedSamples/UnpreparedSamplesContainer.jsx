@@ -1,14 +1,13 @@
-import UnpreparedSamplesPresintation from "./UnpreparedSamplesPresintation";
-import React, { useEffect, useState } from "react";
+import { UnpreparedSamplesPresintation } from "../../../../../../componentsLoader/ComponentsLoader";
+import React, { useEffect, useState, Suspense } from "react";
 import { Link } from "react-router-dom";
 
 import { useDarkMode } from "../../../../../../context/DarkModeContext";
-import { getAllResults, getSamples } from "../../../../../../apis/ApisHandale";
+import { getSamples } from "../../../../../../apis/ApisHandale";
 
 export default function ResultsPreviewContainer({}) {
   const { darkMode } = useDarkMode();
 
-  const [isUpdateFormOpen, setIsUpdateFormOpen] = useState(false);
   const [allResults, setAllResults] = useState([]);
   const [visibleResults, setVisibleResults] = useState([]);
   //search & filter variables
@@ -30,15 +29,17 @@ export default function ResultsPreviewContainer({}) {
       </div>
     </div>
   );
+  const [pageNo, setPageNo] = useState(1);
+  const [usersCount, setUsersCount] = useState();
 
-  /* *************** Handale Pop Forms *************** */
   //get all results
   async function getResults() {
     try {
-      let response = await getSamples(false);
-      console.log(response);
+      let response = await getSamples(false, pageNo);
+      //console.log(response);
       setAllResults(response.data.usersArray);
       setVisibleResults(response.data.usersArray);
+      setUsersCount(response.data.count);
       if (!response) {
         setNoResults(true);
       }
@@ -157,12 +158,12 @@ export default function ResultsPreviewContainer({}) {
   }
   /** ====================== Delete Section ====================== **/
   async function deleteUser(id) {}
+
   //initial rendring
   useEffect(() => {
     // Fetch Results when the component mounts
     getResults();
   }, []);
-
   useEffect(() => {
     // Filter and display users when the filter option or data changes
     handaleFilterOption(filterOption);
@@ -172,31 +173,44 @@ export default function ResultsPreviewContainer({}) {
     // Search for users when the search value changes
     searchForAResult();
   }, [val]);
-  useEffect(() => {
-    // Search for users when the search value changes
-    console.log("allResults", allResults);
-  }, [allResults]);
+  // useEffect(() => {
+  //   console.log("allResults", allResults);
+  // }, [allResults]);
 
   return (
     <>
-      <UnpreparedSamplesPresintation
-        darkMode={darkMode}
-        apiMessage={apiMessage}
-        apiError={apiError}
-        noResults={noResults}
-        apiErrorMessage={apiErrorMessage}
-        val={val}
-        setVal={setVal}
-        setFilterOption={setFilterOption}
-        filterOptions={filterOptions}
-        clearResults={clearResults}
-        handaleFilterOption={handaleFilterOption}
-        handaleSearchVlue={handaleSearchVlue}
-        searchForAResult={searchForAResult}
-        deleteUser={deleteUser}
-        displayResults={displayResults}
-        visibleResults={visibleResults}
-      />
+      {" "}
+      <Suspense
+        fallback={
+          <div className="center-container">
+            <div className="spinner-border text-primary" role="status">
+              <span className="sr-only">Loading...</span>
+            </div>
+          </div>
+        }
+      >
+        <UnpreparedSamplesPresintation
+          darkMode={darkMode}
+          apiMessage={apiMessage}
+          apiError={apiError}
+          noResults={noResults}
+          apiErrorMessage={apiErrorMessage}
+          val={val}
+          setVal={setVal}
+          setFilterOption={setFilterOption}
+          filterOptions={filterOptions}
+          clearResults={clearResults}
+          handaleFilterOption={handaleFilterOption}
+          handaleSearchVlue={handaleSearchVlue}
+          searchForAResult={searchForAResult}
+          deleteUser={deleteUser}
+          displayResults={displayResults}
+          visibleResults={visibleResults}
+          setPageNo={setPageNo}
+          pageNo={pageNo}
+          usersCount={usersCount}
+        />{" "}
+      </Suspense>
     </>
   );
 }

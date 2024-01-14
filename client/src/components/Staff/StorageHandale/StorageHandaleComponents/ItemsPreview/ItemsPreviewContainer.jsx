@@ -1,10 +1,8 @@
-import ItemsPreviewPresintation from "./ItemsPreviewPresintation";
-
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 
 import { useDarkMode } from "../../../../../context/DarkModeContext";
-import { getItems } from "../../../../../apis/ApisHandale";
-import { deleteAnItem } from "../../../../../apis/ApisHandale";
+import { getItems, deleteAnItem } from "../../../../../apis/ApisHandale";
+import { ItemsPreviewPresintation } from "../../../../../componentsLoader/ComponentsLoader";
 
 export default function ItemsPreviewContainer({ setIsFormOpen }) {
   const { darkMode } = useDarkMode();
@@ -138,7 +136,7 @@ export default function ItemsPreviewContainer({ setIsFormOpen }) {
   async function deleteItem(id) {
     try {
       const response = await deleteAnItem(id);
-      console.log(response);
+      // console.log(response);
       getAllItems();
     } catch (error) {
       console.log("Error", error);
@@ -155,7 +153,7 @@ export default function ItemsPreviewContainer({ setIsFormOpen }) {
     setVal(value);
   }
   async function searchForItem() {
-    console.log(val);
+    //console.log(val);
     if (val.trim() === "") {
       return;
     }
@@ -169,7 +167,7 @@ export default function ItemsPreviewContainer({ setIsFormOpen }) {
       setVisibleItems(srchResultsArray);
     }
   }
-
+  ///////////////
   // initial use Effect
   useEffect(() => {
     getAllItems();
@@ -179,27 +177,37 @@ export default function ItemsPreviewContainer({ setIsFormOpen }) {
     searchForItem();
   }, [val]);
   //use Effect
-  useEffect(() => {
-    console.log(item);
-  }, [item]);
+  // useEffect(() => {
+  //   console.log(item);
+  // }, [item]);
   return (
-    <ItemsPreviewPresintation
-      handaleSearchVlue={handaleSearchVlue}
-      darkMode={darkMode}
-      visibleItems={visibleItems}
-      displayItems={displayItems}
-      apiError={apiError}
-      apiErrorMessage={apiErrorMessage}
-      noResults={noResults}
-      closeUpdateForm={closeUpdateForm}
-      isUpdateFormOpen={isUpdateFormOpen}
-      item={item}
-      setItem={setItem}
-      getAllItems={getAllItems}
-      setApiError={setApiError}
-      setPageNo={setPageNo}
-      pageNo={pageNo}
-      usersCount={usersCount}
-    />
+    <Suspense
+      fallback={
+        <div className="center-container">
+          <div className="spinner-border text-primary" role="status">
+            <span className="sr-only">Loading...</span>
+          </div>
+        </div>
+      }
+    >
+      <ItemsPreviewPresintation
+        handaleSearchVlue={handaleSearchVlue}
+        darkMode={darkMode}
+        visibleItems={visibleItems}
+        displayItems={displayItems}
+        apiError={apiError}
+        apiErrorMessage={apiErrorMessage}
+        noResults={noResults}
+        closeUpdateForm={closeUpdateForm}
+        isUpdateFormOpen={isUpdateFormOpen}
+        item={item}
+        setItem={setItem}
+        getAllItems={getAllItems}
+        setApiError={setApiError}
+        setPageNo={setPageNo}
+        pageNo={pageNo}
+        usersCount={usersCount}
+      />{" "}
+    </Suspense>
   );
 }

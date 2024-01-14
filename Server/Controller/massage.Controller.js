@@ -16,7 +16,7 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
 
     if (req.user.usertype === "Patient" || req.user.usertype === "Doctor")
       objectIdString = process.env.ADMIN_ID;
-    else objectIdString = req.body.secondUser;    //admin _id - 659928039f6a2dee27595dcc
+    else objectIdString = req.body.secondUser; //admin _id - 659928039f6a2dee27595dcc
     // Validate if objectIdString is a valid ObjectId
     // if (!mongoose.Types.ObjectId.isValid(objectIdString)) {
     //   console.log(objectIdString);
@@ -28,7 +28,7 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
       let mesError = [];
       error.details.map((index) => {
         mesError.push(index.message);
-      })
+      });
       return res.status(400).json({ message: mesError });
     }
     let massRecord = await Massage.findOne({
@@ -100,7 +100,7 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
     }
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
 /**--------------------------------
@@ -127,7 +127,7 @@ module.exports.getAllMass = asyncHandler(async (req, res) => {
     } else return res.status(400).json({ massage: "Massage dose not exist" });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
 
@@ -147,7 +147,7 @@ module.exports.getMass = asyncHandler(async (req, res) => {
     else return res.status(400).json({ massage: "Massage dose not exist" });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
 /**--------------------------------
@@ -174,7 +174,7 @@ module.exports.getUserMass = asyncHandler(async (req, res) => {
     } else return res.status(400).json({ massage: "Massage dose not exist" });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
 
@@ -191,7 +191,7 @@ module.exports.deleteMass = asyncHandler(async (req, res) => {
     else return res.status(200).json({ message: "Massage is delete..." });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
 
@@ -211,12 +211,12 @@ module.exports.countIfRead = asyncHandler(async (req, res) => {
     }).count();
     if (!newMass)
       return res
-        .status(404)
+        .status(200)
         .json({ message: "All masage is ready", count: newMass });
     else return res.status(200).json({ No: newMass });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
 /**--------------------------------
@@ -241,6 +241,6 @@ module.exports.editIfReady = asyncHandler(async (req, res) => {
     }
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });

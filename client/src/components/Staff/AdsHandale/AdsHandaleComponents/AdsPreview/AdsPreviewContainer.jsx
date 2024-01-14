@@ -1,7 +1,6 @@
-import AdsPreviewPresintation from "./AdsPreviewPresintation";
+import { AdsPreviewPresintation } from "../../../../../componentsLoader/ComponentsLoader";
 
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState, Suspense } from "react";
 import { Link } from "react-router-dom";
 
 import { useDarkMode } from "../../../../../context/DarkModeContext";
@@ -10,7 +9,6 @@ import { formatDateWithouHour } from "../../../../../methods/FormateDate";
 
 export default function AdsPreviewContainer() {
   const { darkMode } = useDarkMode();
-  const navigate = useNavigate();
   let [allAds, setAllAds] = useState([]);
   let [visibleAds, setVisibleAds] = useState([]);
 
@@ -178,14 +176,24 @@ export default function AdsPreviewContainer() {
     searchForAd();
   }, [val]);
   return (
-    <AdsPreviewPresintation
-      darkMode={darkMode}
-      visibleAds={visibleAds}
-      displayAds={displayAds}
-      handaleSearchVlue={handaleSearchVlue}
-      apiError={apiError}
-      apiErrorMessage={apiErrorMessage}
-      noResults={noResults}
-    />
+    <Suspense
+      fallback={
+        <div className="center-container">
+          <div className="spinner-border text-primary" role="status">
+            <span className="sr-only">Loading...</span>
+          </div>
+        </div>
+      }
+    >
+      <AdsPreviewPresintation
+        darkMode={darkMode}
+        visibleAds={visibleAds}
+        displayAds={displayAds}
+        handaleSearchVlue={handaleSearchVlue}
+        apiError={apiError}
+        apiErrorMessage={apiErrorMessage}
+        noResults={noResults}
+      />
+    </Suspense>
   );
 }

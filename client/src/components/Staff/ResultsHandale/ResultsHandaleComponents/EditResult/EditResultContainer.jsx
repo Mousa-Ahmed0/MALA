@@ -1,10 +1,11 @@
-import EditResultPresintation from "./EditResultPresintation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import axios from "axios";
+import { useNavigate, useParams } from "react-router";
+
 import { useDarkMode } from "../../../../../context/DarkModeContext";
 import { getResultByID } from "../../../../../apis/ApisHandale";
+import { EditResultPresintation } from "../../../../../componentsLoader/ComponentsLoader";
 
-import { useNavigate, useParams } from "react-router";
 export default function EditResultContainer() {
   const navigate = useNavigate();
   const { darkMode } = useDarkMode();
@@ -181,15 +182,25 @@ export default function EditResultContainer() {
 
   return (
     <>
-      <EditResultPresintation
-        darkMode={darkMode}
-        result={result}
-        setResult={setResult}
-        getResultData={getResultData}
-        onSubmitForm={onSubmitForm}
-        apiMessage={apiMessage}
-        renderResultSet={renderResultSet}
-      />
+      <Suspense
+        fallback={
+          <div className="center-container">
+            <div className="spinner-border text-primary" role="status">
+              <span className="sr-only">Loading...</span>
+            </div>
+          </div>
+        }
+      >
+        <EditResultPresintation
+          darkMode={darkMode}
+          result={result}
+          setResult={setResult}
+          getResultData={getResultData}
+          onSubmitForm={onSubmitForm}
+          apiMessage={apiMessage}
+          renderResultSet={renderResultSet}
+        />
+      </Suspense>
     </>
   );
 }

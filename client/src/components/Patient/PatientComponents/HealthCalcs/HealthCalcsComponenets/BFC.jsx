@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { useDarkMode } from "../../../../../context/DarkModeContext";
 import BackBtn from "../../../../BackBtn";
 export default function BMR() {
