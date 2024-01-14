@@ -1,5 +1,5 @@
 const asyncHandler = require("express-async-handler");
-const { analyzeResult } = require("../models/patienResults");
+const { analyzeResult, vaildationResults } = require("../models/patienResults");
 const { user } = require("../models/user");
 const { analyze } = require("../models/Analyze");
 const { PythonShell } = require("python-shell");
@@ -13,6 +13,15 @@ const { PythonShell } = require("python-shell");
 module.exports.addResults = asyncHandler(async (req, res) => {
   //vaildatin fronend
   try {
+    const { error } = vaildationResults(req.body);
+    // validation
+    if (error) {
+      let mesError = [];
+      error.details.map((index) => {
+        mesError.push(index.message);
+      })
+      return res.status(400).json({ message: mesError });
+    }
     const newResult = new analyzeResult({
       staffIdent: req.body.staffIdent,
       patientIdent: req.body.patientIdent,
@@ -28,8 +37,7 @@ module.exports.addResults = asyncHandler(async (req, res) => {
     res.status(201).json({ newResult, message: "done..........." });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ errorMess: "Internal Server Error",error });
   }
 });
 function calAge(birthday) {
@@ -108,8 +116,7 @@ module.exports.pythonResults = asyncHandler(async (req, res) => {
     } else res.status(404).json({ message: "User not found" });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ errorMess: "Internal Server Error",error });
   }
 });
 /**--------------------------------
@@ -137,8 +144,7 @@ module.exports.editResult = asyncHandler(async (req, res) => {
     res.status(200).json({ editRes, message: "Update successful" });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ errorMess: "Internal Server Error",error });
   }
 });
 
@@ -195,8 +201,7 @@ module.exports.getResults = asyncHandler(async (req, res) => {
     });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ errorMess: "Internal Server Error",error });
   }
 });
 /**--------------------------------
@@ -260,8 +265,7 @@ module.exports.getResultsById = asyncHandler(async (req, res) => {
     });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ errorMess: "Internal Server Error",error });
   }
 });
 
@@ -351,8 +355,7 @@ module.exports.getAllResultsById = asyncHandler(async (req, res) => {
     } else res.status(400).json({ message: "ID not found" });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ errorMess: "Internal Server Error",error });
   }
 });
 
@@ -408,8 +411,7 @@ module.exports.getResultsByIdStaff = asyncHandler(async (req, res) => {
     });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ errorMess: "Internal Server Error",error });
   }
 });
 
@@ -465,8 +467,7 @@ module.exports.getResultsPatient = asyncHandler(async (req, res) => {
     } else res.status(404).json({ message: "User not found" });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ errorMess: "Internal Server Error",error });
   }
 });
 
@@ -525,8 +526,7 @@ module.exports.getResultsDoctor = asyncHandler(async (req, res) => {
     }
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ errorMess: "Internal Server Error",error });
   }
 });
 /**--------------------------------
@@ -549,8 +549,7 @@ module.exports.getResultsStaff = asyncHandler(async (req, res) => {
     } else res.status(404).json({ message: "User not found" });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ errorMess: "Internal Server Error",error });
   }
 });
 /**--------------------------------
@@ -721,8 +720,7 @@ module.exports.resultDate = asyncHandler(async (req, res) => {
     }
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ errorMess: "Internal Server Error",error });
   }
 });
 
@@ -804,8 +802,7 @@ module.exports.resultDateFromTo = asyncHandler(async (req, res) => {
     }
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ errorMess: "Internal Server Error",error });
   }
 });
 
@@ -880,8 +877,7 @@ module.exports.dayResult = asyncHandler(async (req, res) => {
     }
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ errorMess: "Internal Server Error",error });
   }
 });
 
@@ -941,8 +937,7 @@ module.exports.isDone = asyncHandler(async (req, res) => {
     else res.status(404).json({ message: "Not repot " });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ errorMess: "Internal Server Error",error });
   }
 });
 /**--------------------------------
@@ -963,8 +958,7 @@ module.exports.isDoneCount = asyncHandler(async (req, res) => {
     } else res.status(404).json({ message: "Not repot " });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ errorMess: "Internal Server Error",error });
   }
 });
 /**--------------------------------
@@ -985,8 +979,7 @@ module.exports.isPaiedCount = asyncHandler(async (req, res) => {
     } else res.status(404).json({ message: "Not repot " });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ errorMess: "Internal Server Error",error });
   }
 });
 /**--------------------------------
@@ -1009,8 +1002,7 @@ module.exports.isDoneEdit = asyncHandler(async (req, res) => {
     } else res.status(404).json({ message: "Does not exist " });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ errorMess: "Internal Server Error",error });
   }
 });
 
@@ -1064,8 +1056,7 @@ module.exports.isPaied = asyncHandler(async (req, res) => {
     } else res.status(404).json({ message: "Not repot " });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ errorMess: "Internal Server Error",error });
   }
 });
 
@@ -1089,7 +1080,6 @@ module.exports.isPaiedEdit = asyncHandler(async (req, res) => {
     } else res.status(404).json({ message: "Does not exist " });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ errorMess: "Internal Server Error",error });
   }
 });

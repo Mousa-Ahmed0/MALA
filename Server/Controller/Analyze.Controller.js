@@ -9,7 +9,15 @@ const { analyze, validateAnalyze } = require("../models/Analyze");
  * ------------------------------------------ */
 module.exports.addAnalyze = asyncHandler(async (req, res) => {
   try {
-
+    const { error } = validateAnalyze(req.body);
+    // validation
+    if (error) {
+      let mesError = [];
+      error.details.map((index) => {
+        mesError.push(index.message);
+      })
+      return res.status(400).json({ message: mesError });
+    }
     //if anzlyze already exist
     const oldZ = await analyze.findOne({ code: req.body.code });
     if (oldZ) return res.status(400).json({ message: "Analyze eixst" });
@@ -30,8 +38,7 @@ module.exports.addAnalyze = asyncHandler(async (req, res) => {
     res.status(200).json({ message: "Done.........." });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ errorMess: "Internal Server Error",error });
   }
 });
 
@@ -69,8 +76,7 @@ module.exports.updateAnalyze = asyncHandler(async (req, res) => {
     }
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ errorMess: "Internal Server Error",error });
   }
 });
 
@@ -88,8 +94,7 @@ module.exports.getAllAnalze = asyncHandler(async (req, res) => {
     res.status(200).json(allAn);
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ errorMess: "Internal Server Error",error });
   }
 });
 /**--------------------------------
@@ -107,8 +112,7 @@ module.exports.getAnalze = asyncHandler(async (req, res) => {
     res.status(200).json(oneAnalyze);
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ errorMess: "Internal Server Error",error });
   }
 });
 
@@ -126,8 +130,7 @@ module.exports.getAnalyzeCount = asyncHandler(async (req, res) => {
     res.status(200).json(count);
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ errorMess: "Internal Server Error",error });
   }
 })
 
@@ -151,7 +154,6 @@ module.exports.getCategoryCount = asyncHandler(async (req, res) => {
       res.status(400).json({ message: "does not exist" }, arrayCat);
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ errorMess: "Internal Server Error",error });
   }
 })

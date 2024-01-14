@@ -11,9 +11,14 @@ module.exports.addItem = asyncHandler(async (req, res) => {
   //validation
   try {
 
-    const { error } = vaildationStorage(req.body);
-    if (error) return res.status(400).json({ message: error.details[0].message });
-
+    // validation
+    if (error) {
+      let mesError = [];
+      error.details.map((index) => {
+        mesError.push(index.message);
+      })
+      return res.status(400).json({ message: mesError });
+    }
     //if item is exists
     let newItem = await Storage.findOne({ itemName: req.body.itemName });
     if (newItem) return res.status(400).json({ message: "Item already exist" });
@@ -30,8 +35,7 @@ module.exports.addItem = asyncHandler(async (req, res) => {
     res.status(201).json({ message: "Done.", newItem });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ errorMess: "Internal Server Error",error });
   }
 });
 
@@ -58,8 +62,7 @@ module.exports.getAllItem = asyncHandler(async (req, res) => {
     }
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ errorMess: "Internal Server Error",error });
   }
 });
 
@@ -90,8 +93,7 @@ module.exports.updateItem = asyncHandler(async (req, res) => {
     }
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ errorMess: "Internal Server Error",error });
   }
 });
 
@@ -112,7 +114,6 @@ module.exports.deleteItem = asyncHandler(async (req, res) => {
     }
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ errorMess: "Internal Server Error",error });
   }
 });

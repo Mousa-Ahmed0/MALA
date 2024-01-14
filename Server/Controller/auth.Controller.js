@@ -17,10 +17,14 @@ const nodemailer = require("nodemailer");
  * ------------------------------------------ */
 module.exports.registerUser = asyncHandler(async (req, res) => {
   try {
-    // validation
     const { error } = validateRegisterUser(req.body);
+    // validation
     if (error) {
-      return res.status(400).json({ message: error.details[0].message });
+      let mesError = [];
+      error.details.map((index) => {
+        mesError.push(index.message);
+      })
+      return res.status(400).json({ message: mesError });
     }
     //is user already exists
     let newUser = await user.findOne({ ident: req.body.ident });
@@ -51,7 +55,6 @@ module.exports.registerUser = asyncHandler(async (req, res) => {
       .json({ message: "You registered successfully, please log In" });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
@@ -65,12 +68,16 @@ module.exports.registerUser = asyncHandler(async (req, res) => {
 
 module.exports.loginUser = asyncHandler(async (req, res) => {
   //validation
-  console.log("Req: ", req);
   try {
     const { error } = validateLoginUser(req.body);
-    if (error)
-      return res.status(400).json({ message: error.details[0].message });
-
+    // validation
+    if (error) {
+      let mesError = [];
+      error.details.map((index) => {
+        mesError.push(index.message);
+      })
+      return res.status(400).json({ message: mesError });
+    }
     //is user already exists
     const newUser = await user.findOne({ phone: req.body.phone });
     if (!newUser)
@@ -88,8 +95,7 @@ module.exports.loginUser = asyncHandler(async (req, res) => {
     });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ errorMass: "Internal Server Error",error });
   }
 });
 
@@ -115,8 +121,7 @@ module.exports.sendLinkForgotPassword = asyncHandler(async (req, res) => {
     res.status(200).json({ message: "click on link", reset: link });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Internal Server Error", error });
+    res.status(500).json({ errorMass: "Internal Server Error",error, error });
   }
 });
 
@@ -145,7 +150,6 @@ module.exports.restPassword = asyncHandler(async (req, res) => {
     res.status(201).json({ message: "password is change" });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error :", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ errorMass: "Internal Server Error",error });
   }
 });

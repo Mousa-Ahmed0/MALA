@@ -34,7 +34,7 @@ function vaildationStorage(obj) {
     theNumber: Joi.number().required(),
     cost: Joi.number().required(),
   });
-  return Schema.validate(obj);
+  return Schema.validate(obj,{abortEarly:false});
 }
 module.exports = {
   Storage,
