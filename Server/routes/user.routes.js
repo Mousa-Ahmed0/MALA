@@ -52,16 +52,3 @@ router
   .post(verifyToken, photoUpload.single("image"), profilePhotoUpload);
 
   module.exports = router;
-
-// // /api/users/count
-// router.get("/count",ifAdmin,getUsersCount);
-
-// // /api/users/profile:id
-// router.route("/profile/:id")
-//       .get(validateId,getUser)
-//       .put(validateId,verifyTokenOnlyUser,updateUserProfile)
-//       .delete(validateId,verifyTokenOnlyUserOrAdmin,deleteUserAccount);
-// //api/users/profile /profile-photo-upload
-// router.route("/profile/profile-photo-upload")
-//       .post(verifyToken,photoUpload.single("image"),profilePhotoUpload);
-

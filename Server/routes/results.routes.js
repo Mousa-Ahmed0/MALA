@@ -32,7 +32,7 @@ const {
 } = require("../Controller/results.Controller");
 
 // results
-router.post("/addResults", ifAdminOrStaff, addResults);
+router.post("/editResults", ifAdminOrStaff, addResults);
 router.put("/editResults/:id", ifAdminOrStaff, editResult);
 router.get("/getResult", ifAdminOrStaff, getResults);
 router.get("/getResults/staffIdent", ifAdminOrStaff, getResultsByIdStaff);

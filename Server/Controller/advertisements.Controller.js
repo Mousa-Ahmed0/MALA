@@ -5,7 +5,7 @@ const {
 } = require("../utils/cloudinary");
 const path = require("path");
 const fs = require("fs");
-const { Advertisement } = require("../models/advertisements");
+const { Advertisement, vaildationAdvertisement } = require("../models/advertisements");
 
 /**--------------------------------
  * @desc     upload advertisements
@@ -16,7 +16,15 @@ const { Advertisement } = require("../models/advertisements");
 module.exports.addAdvert = asyncHandler(async (req, res) => {
   //chack
   try {
-
+    const { error } = vaildationAdvertisement(req.body);
+    // validation
+    if (error) {
+      let mesError = [];
+      error.details.map((index) => {
+        mesError.push(index.message);
+      })
+      return res.status(400).json({ message: mesError });
+    }
 
     let newadv = await Advertisement.findOne({ title: req.body.title });
     if (newadv) {
@@ -61,19 +69,14 @@ module.exports.addAdvert = asyncHandler(async (req, res) => {
       })
       .catch((error) => {
         if (res.data.message === 'Unexpected field') {
-          console.log("-------------------Error---------------------------");
-          console.log("body: ", req.body);
-          console.log("images: ", req.body.images);
-          console.log("files[0]: ", req.files[0]);
+
           res.status(400).json({ message: "Unexpected" });
         }
-        console.error("Error uploading images:", error);
         res.status(500).json({ message: "Internal server error" });
       });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ errorMass: "Internal Server Error",error });
   }
 });
 
@@ -91,8 +94,7 @@ module.exports.getAdvert = asyncHandler(async (req, res) => {
     else return res.status(400).json({ message: "dose not exist" });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ errorMass: "Internal Server Error",error });
   }
 });
 
@@ -110,8 +112,7 @@ module.exports.getAdvertId = asyncHandler(async (req, res) => {
     else return res.status(400).json({ message: "dose not exist" });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ errorMass: "Internal Server Error",error });
   }
 });
 
@@ -167,8 +168,7 @@ module.exports.updateAdverti = asyncHandler(async (req, res) => {
     res.status(200).json({ message: "Advertisement updated successfully", test });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ errorMass: "Internal Server Error",error });
   }
 });
 
@@ -198,7 +198,6 @@ module.exports.deleteAdvert = asyncHandler(async (req, res) => {
     return res.status(200).json({ message: "Advertisement is delete..." });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ errorMass: "Internal Server Error",error });
   }
 });

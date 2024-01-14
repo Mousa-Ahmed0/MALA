@@ -21,8 +21,7 @@ module.exports.addGuestMessage = asyncHandler(async (req, res) => {
         res.status(201).json({ newGuest, message: "done..........." });
     } catch (error) {
         // Handle the error here, you can log it or send a specific error response to the client
-        console.error("Error sending email:", error);
-        res.status(500).json({ error: "Internal Server Error" });
+        res.status(500).json({ errorMess: "Internal Server Error",error });
     }
 });
 
@@ -48,8 +47,7 @@ module.exports.getGuestMeassage = asyncHandler(async (req, res) => {
             res.status(404).json({ message: "User not found" });
     } catch (error) {
         // Handle the error here, you can log it or send a specific error response to the client
-        console.error("Error sending email:", error);
-        res.status(500).json({ error: "Internal Server Error" });
+        res.status(500).json({ errorMess: "Internal Server Error",error });
     }
 })
 
@@ -69,8 +67,7 @@ module.exports.deleeteGuestMeassage = asyncHandler(async (req, res) => {
             res.status(404).json({ message: "User not found" });
     } catch (error) {
         // Handle the error here, you can log it or send a specific error response to the client
-        console.error("Error sending email:", error);
-        res.status(500).json({ error: "Internal Server Error" });
+        res.status(500).json({ errorMess: "Internal Server Error",error });
     }
 });
 /**--------------------------------
@@ -89,8 +86,7 @@ module.exports.countIfRead = asyncHandler(async (req, res) => {
             res.status(404).json({ message: "All of massge is reade", Meass });
     } catch (error) {
         // Handle the error here, you can log it or send a specific error response to the client
-        console.error("Error sending email:", error);
-        res.status(500).json({ error: "Internal Server Error" });
+        res.status(500).json({ errorMess: "Internal Server Error",error });
     }
 });
 
@@ -113,7 +109,6 @@ module.exports.sendEmail = asyncHandler(async (req, res) => {
         res.status(200).json({ message: "Send massage" });
     } catch (error) {
         // Handle the error here, you can log it or send a specific error response to the client
-        console.error("Error sending email:", error);
-        res.status(500).json({ error: "Internal Server Error" });
+        res.status(500).json({ errorMess: "Internal Server Error",error });
     }
 });

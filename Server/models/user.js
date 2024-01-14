@@ -117,7 +117,7 @@ function validateRegisterUser(obj) {
     usertype: Joi.string().trim().required(),
     password: Joi.string().trim().min(8).required(),
   });
-  return Schema.validate(obj);
+  return Schema.validate(obj,{abortEarly:false});
 }
 
 //validate Login user
@@ -126,7 +126,7 @@ function validateLoginUser(obj) {
     phone: Joi.string().trim().min(2).max(15).required(),
     password: Joi.string().trim().min(8).required(),
   });
-  return Schema.validate(obj);
+  return Schema.validate(obj,{abortEarly:false});
 }
 
 //validate Register user
@@ -138,7 +138,7 @@ function validateUpdateUser(obj) {
     phone: Joi.string().trim().min(2).max(13).required(),
     city: Joi.string().required(),
   });
-  return Schema.validate(obj);
+  return Schema.validate(obj,{abortEarly:false});
 }
 module.exports = {
   user,

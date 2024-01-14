@@ -56,22 +56,25 @@ const analyzeSchema = new mongoose.Schema(
 
 const analyze = mongoose.model("Analyze", analyzeSchema);
 
-// Validate component array
-const validateCompnets = Joi.object({
-  nameC: Joi.string().trim().required(),
-  unit: Joi.string().trim().required(),
-  healthyValue: Joi.string().trim().required(),
-});
+
 //validate  analyze
 function validateAnalyze(obj) {
   const Schema = Joi.object({
-    name: Joi.string().trim().required(),
-    code: Joi.string().trim().required(),
-    cost: Joi.number().required(),
-    description: Joi.string().trim().required(),
-    compnents: Joi.array().allow().items(validateCompnets),
+    name: Joi.string(),
+  code: Joi.string().required().trim(),
+  cost: Joi.number().required(),
+  description: Joi.string().required(),
+  isAvailable: Joi.boolean().default(true),
+  analyzeCategory: Joi.string().required(),
+  compnents: Joi.array().items(
+    Joi.object({
+      nameC: Joi.string().required().trim(),
+      unit: Joi.string().required(),
+      healthyValue: Joi.string().required(),
+    })
+  ),
   });
-  return Schema.validate(obj);
+  return Schema.validate(obj,{abortEarly:false});
 }
 
 module.exports = {

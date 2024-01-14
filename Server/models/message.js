@@ -34,7 +34,7 @@ const massSchema = new mongoose.Schema(
       }
 
     ],
-  
+
   },
   {
     timestamps: true,
@@ -44,6 +44,24 @@ const massSchema = new mongoose.Schema(
 );
 const Massage = mongoose.model("Massage", massSchema);
 
+//validate Message Model
+function vaildationMessage(obj) {
+  const Schema = Joi.object({
+    firstUser: Joi.string().pattern(new RegExp("^[0-9a-fA-F]{24}$")).required(),
+    secondUser: Joi.string().pattern(new RegExp("^[0-9a-fA-F]{24}$")).required(),
+    ifReadyFirstUser: Joi.boolean().default(false),
+    ifReadySecondUser: Joi.boolean().default(false),
+    massage: Joi.array().items(
+      Joi.object({
+        senderId: Joi.string().pattern(new RegExp("^[0-9a-fA-F]{24}$")).required(),
+        mass: Joi.string().required(),
+        date: Joi.date().default(new Date()),
+      })
+    ),
+  });
+  return Schema.validate(obj, { abortEarly: false });
+}
 module.exports = {
-  Massage
+  Massage,
+  vaildationMessage
 };

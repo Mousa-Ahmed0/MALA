@@ -1,5 +1,5 @@
 const asyncHandler = require("express-async-handler");
-const { payments } = require("../models/payments");
+const { payments, vaildationPayment } = require("../models/payments");
 const { user } = require("../models/user");
 const { analyzeResult } = require("../models/patienResults");
 
@@ -13,7 +13,16 @@ const { analyzeResult } = require("../models/patienResults");
  * -----------------------------------*/
 module.exports.addPayment = asyncHandler(async (req, res) => {
   try {
-    //vaildition @front end
+    const { error } = vaildationPayment(req.body);
+    // validation
+    if (error) {
+      let mesError = [];
+      error.details.map((index) => {
+        mesError.push(index.message);
+      })
+      return res.status(400).json({ message: mesError });
+    }
+    //add to database
     const newPayment = new payments({
       resultId: req.body.resultId,
       identPatient: req.body.identPatient,
@@ -25,15 +34,14 @@ module.exports.addPayment = asyncHandler(async (req, res) => {
       resultCostDetils: req.body.resultCostDetils,
       totalValue: req.body.totalValue,
     });
-
+    //save to database
     await newPayment.save();
     res
       .status(201)
       .json({ newPayment, message: "Reports generated successfully." });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ errorMess: "Internal Server Error",error });
   }
 });
 /**-----------------------------------
@@ -101,8 +109,7 @@ module.exports.getPayment = asyncHandler(async (req, res) => {
     } else res.status(400).json({ message: "Can't find repoet" });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ errorMess: "Internal Server Error",error });
   }
 });
 
@@ -125,8 +132,7 @@ module.exports.countPayment = asyncHandler(async (req, res) => {
     else res.status(400).json({ message: "Can't find repoet" });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ errorMess: "Internal Server Error",error });
   }
 });
 
@@ -187,8 +193,7 @@ module.exports.getPaymentIdentPatient = asyncHandler(async (req, res) => {
     } else res.status(400).json({ message: "Can't find repoet" });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ errorMess: "Internal Server Error",error });
   }
 });
 
@@ -240,8 +245,7 @@ module.exports.getPaymentId = asyncHandler(async (req, res) => {
     } else res.status(400).json({ message: "Can't find repoet" });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ errorMess: "Internal Server Error",error });
   }
 });
 /**-----------------------------------
@@ -309,8 +313,7 @@ module.exports.getByDate = asyncHandler(async (req, res) => {
     } else res.status(400).json({ message: "Can't find repoet" });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ errorMess: "Internal Server Error",error });
   }
 });
 
@@ -544,7 +547,6 @@ module.exports.test = asyncHandler(async (req, res) => {
     }
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ errorMess: "Internal Server Error",error });
   }
 });
