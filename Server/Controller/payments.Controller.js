@@ -235,8 +235,14 @@ module.exports.getPaymentIdentPatient = asyncHandler(async (req, res) => {
       let count = 0;
       for (let i = 0; i < getPayment.length; i++) {
         const resultInfo = await analyzeResult.findById(getPayment[i].resultId);
+        if (!resultInfo) {
+          // Handle the case where resultInfo is null (document not found)
+          // console.error('ResultInfo not found for ID:', getAllPayment[i].resultId);
+          continue;  // Move to the next iteration of the loop
+        }
         const identPat = resultInfo.patientIdent;
         if (identPat == req.query.identPatient) {
+          
           const userinfo = await user
             .findOne({ ident: identPat })
             .select("-password");

@@ -464,7 +464,7 @@ module.exports.getResultsPatient = asyncHandler(async (req, res) => {
         usersArray,
         message: "done...........",
       });
-    } else res.status(404).json({ message: "User not found" });
+    } else res.status(400).json({ message: "User not found" });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
     res.status(500).json({ errorMess: "Internal Server Error",error });
