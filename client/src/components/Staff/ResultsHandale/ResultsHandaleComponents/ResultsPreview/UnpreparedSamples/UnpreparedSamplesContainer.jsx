@@ -12,9 +12,8 @@ export default function ResultsPreviewContainer({}) {
   const [visibleResults, setVisibleResults] = useState([]);
   //search & filter variables
   let [val, setVal] = useState(""); //search value
-  let [filterOption, setFilterOption] = useState("noValue");
-  let [searchResults, setSearchResults] = useState([]);
-  const filterOptions = ["noValue", "Staff", "Patient", "Doctor"];
+  let [filterOption, setFilterOption] = useState("Patient");
+  const filterOptions = ["Patient", "Doctor"];
   //Errors variables
   let [apiError, setApiError] = useState(false);
   let [apiMessage, setApiMessage] = useState("");
@@ -140,9 +139,15 @@ export default function ResultsPreviewContainer({}) {
   }
 
   /** ====================== filter Section ====================== **/
-  function clearResults() {}
+  function clearResults() {
+    setVisibleResults(allResults);
+    setVal("");
+  }
 
-  function handaleFilterOption(option) {}
+  function handaleFilterOption(option) {
+    clearResults();
+    setFilterOption(option);
+  }
 
   /** ====================== Search Section ====================== **/
   function handaleSearchVlue(value) {
@@ -153,7 +158,56 @@ export default function ResultsPreviewContainer({}) {
   }
   async function searchForAResult() {
     if (val.trim() === "") {
+      console.log("search out");
       return;
+    } else {
+      console.log("search in");
+      if (
+        filterOption === "noValue" ||
+        filterOption === "Patient" // patient search filter
+      ) {
+        let srchResultsArray = [];
+        allResults.map((res, index) => {
+          console.log(res);
+          if (
+            (
+              res.usersPatient?.firstname?.toLowerCase() +
+              " " +
+              res.usersPatient?.lastname?.toLowerCase()
+            ).includes(val)
+          ) {
+            srchResultsArray.push(res);
+          }
+        });
+        if (srchResultsArray.length === 0) {
+          setNoResults(true);
+          setVisibleResults([]);
+        } else {
+          setVisibleResults(srchResultsArray);
+        }
+      } else if (filterOption === "Doctor") {
+        let srchResultsArray = [];
+
+        for (const res of allResults) {
+          console.log(res);
+
+          const fullName = res.usersDoctor?.firstname
+            ? res.usersDoctor?.firstname?.toLowerCase() +
+              " " +
+              res.usersDoctor?.lastname?.toLowerCase()
+            : res.usersDoctor?.toLowerCase();
+          const matches = fullName && fullName.includes(val);
+          if (matches) {
+            srchResultsArray.push(res);
+          }
+        }
+        if (srchResultsArray.length === 0) {
+          setNoResults(true);
+          setVisibleResults([]);
+        } else {
+          setVisibleResults(srchResultsArray);
+        }
+      }
     }
   }
   /** ====================== Delete Section ====================== **/
@@ -164,10 +218,6 @@ export default function ResultsPreviewContainer({}) {
     // Fetch Results when the component mounts
     getResults();
   }, []);
-  useEffect(() => {
-    // Filter and display users when the filter option or data changes
-    handaleFilterOption(filterOption);
-  }, [filterOption, searchResults]);
 
   useEffect(() => {
     // Search for users when the search value changes
@@ -199,6 +249,7 @@ export default function ResultsPreviewContainer({}) {
           setVal={setVal}
           setFilterOption={setFilterOption}
           filterOptions={filterOptions}
+          filterOption={filterOption}
           clearResults={clearResults}
           handaleFilterOption={handaleFilterOption}
           handaleSearchVlue={handaleSearchVlue}

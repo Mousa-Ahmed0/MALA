@@ -10,7 +10,9 @@ export default function UnpreparedSamplesPresintation({
   apiError,
   noResults,
   apiErrorMessage,
+  val,
   handaleSearchVlue,
+  filterOption,
   filterOptions,
   handaleFilterOption,
   visibleResults,
@@ -23,13 +25,20 @@ export default function UnpreparedSamplesPresintation({
     <div className="ST-section my-2 p-0">
       <div className="container">
         <div className="row searchSection mb-5">
-          <div className="col-sm-12 col-md-8 d-flex align-items-center p-0">
-            <SearchBar handaleSearchVlue={handaleSearchVlue} />
-          </div>
-          <div className="col-sm-12 col-md-4 d-flex justify-content-md-end align-items-center p-0">
+          <div className="col-sm-12 col-md-8 d-flex gap-4 align-items-center p-0">
             <UserFilter
+              filterLabel={"Search for:"}
               filterOptions={filterOptions}
               handaleFilterOption={handaleFilterOption}
+            />
+            <SearchBar
+              handaleSearchVlue={handaleSearchVlue}
+              val={val}
+              placeHolder={
+                filterOption === "Patient"
+                  ? "Enter Patient Name ..."
+                  : "Enter Doctor Name ..."
+              }
             />
           </div>
         </div>
@@ -98,7 +107,7 @@ export default function UnpreparedSamplesPresintation({
             ) : apiError ? (
               apiErrorMessage
             ) : noResults ? (
-              <div className="my-4 mid-bold">All Samples Done!</div>
+              <div className="my-4 mid-bold">No Samples Found.</div>
             ) : (
               <div className="d-flex justify-content-center align-items-center my-4">
                 <div className="spinner-border text-primary" role="status">
