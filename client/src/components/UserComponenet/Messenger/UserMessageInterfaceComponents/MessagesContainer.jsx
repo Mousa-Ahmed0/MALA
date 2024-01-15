@@ -64,6 +64,7 @@ export default function MessagesContainer({
       return allMessages.massage.map((message, index) => {
         return (
           <div
+            key={index}
             className={`row position-relative ${
               message.senderId === user.id
                 ? "justify-content-start"

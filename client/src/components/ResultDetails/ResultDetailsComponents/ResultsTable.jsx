@@ -40,7 +40,7 @@ export default function ResultsTable({ user, darkMode, resultDetails }) {
                   darkMode ? " table-dark border-white" : ""
                 }`}
               >
-                <thead class="thead-light">
+                <thead className="thead-light">
                   <tr>
                     <th className="comp-name"></th>
                     {renderResultsNo(anlyze)}

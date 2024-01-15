@@ -18,11 +18,11 @@ export default function UserProfileContainer({
   const [errorList, setErrorList] = useState([]);
   const [apiError, setApiError] = useState(false);
   let apiErrorMessage = (
-    <div class="w-100 h-100 d-flex flex-column align-items-center">
-      <div class="alert alert-danger my-4 mid-bold w-100 d-flex justify-content-center">
+    <div className="w-100 h-100 d-flex flex-column align-items-center">
+      <div className="alert alert-danger my-4 mid-bold w-100 d-flex justify-content-center">
         Error!!!
       </div>
-      <div class="my-4 mid-bold">
+      <div className="my-4 mid-bold">
         Theres a proplem! Please wait for us to solve the proplem.
       </div>
     </div>

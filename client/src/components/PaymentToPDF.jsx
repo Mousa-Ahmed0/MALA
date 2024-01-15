@@ -90,7 +90,7 @@ export default function PaymentToPDF({
             : () => downloadPDF(payment)
         }
       >
-        <i class="fa-solid fa-download"></i>
+        <i className="fa-solid fa-download"></i>
       </button>
       {/* Hidden div to render components */}
       <div className={`pdf-pay-section ${darkMode ? "dark-theme" : ""}`}>

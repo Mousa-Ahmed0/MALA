@@ -18,11 +18,11 @@ export default function PatientHome({ user, setIsPdfLoading }) {
   const [allPayments, setAllPayments] = useState([]);
   const [paymentError, setPaymentError] = useState(false);
   let apiErrorMessage = (
-    <div class="w-100 h-100 d-flex flex-column align-items-center">
-      <div class="alert alert-danger my-4 mid-bold w-100 d-flex justify-content-center">
+    <div className="w-100 h-100 d-flex flex-column align-items-center">
+      <div className="alert alert-danger my-4 mid-bold w-100 d-flex justify-content-center">
         Error!!!
       </div>
-      <div class="my-4 mid-bold">
+      <div className="my-4 mid-bold">
         Theres a proplem! Please wait for us to solve the proplem.
       </div>
     </div>
@@ -66,7 +66,7 @@ export default function PatientHome({ user, setIsPdfLoading }) {
                 to={`/ResultDetails/${result.detailsAnalyze.id}`}
                 className="btn m-0 nav-link position-relative"
               >
-                <i class="fa-solid fa-eye"></i>
+                <i className="fa-solid fa-eye"></i>
               </Link>
             </div>
           </div>
@@ -144,7 +144,7 @@ export default function PatientHome({ user, setIsPdfLoading }) {
           >
             <h1 className="h5">
               <span>
-                <i class="fa-solid fa-droplet"></i>
+                <i className="fa-solid fa-droplet"></i>
               </span>{" "}
               Last Results:
             </h1>
@@ -187,7 +187,7 @@ export default function PatientHome({ user, setIsPdfLoading }) {
           >
             <h1 className="h5">
               <span>
-                <i class="fa-solid fa-file-invoice-dollar"></i>
+                <i className="fa-solid fa-file-invoice-dollar"></i>
               </span>{" "}
               Last Payments:
             </h1>

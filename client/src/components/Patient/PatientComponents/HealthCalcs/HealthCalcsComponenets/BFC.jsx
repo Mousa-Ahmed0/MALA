@@ -166,7 +166,7 @@ export default function BMR() {
                   darkMode ? " table-dark border-white" : ""
                 }`}
               >
-                <thead class="thead-light">
+                <thead className="thead-light">
                   <tr>
                     <th className="w-75">Activity Level</th>
                     <th className="w-10">Calories</th>

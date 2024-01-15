@@ -58,7 +58,7 @@ export default function UserProfilePrsintation({
                   </div>
                 </div>
                 <div className=" mx-4 mb-4">
-                  <label for="formFileLg" class="form-label">
+                  <label for="formFileLg" className="form-label">
                     Choose a New Profile Photo:
                   </label>
                   <input

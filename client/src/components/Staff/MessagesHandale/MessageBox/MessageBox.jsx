@@ -21,7 +21,7 @@ export default function MessageBox({ darkMode }) {
   async function getRecentMessages() {
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/massage/getAllMassage?pageNumber=1",
+        "https://localhost:5000/api/massage/getAllMassage?pageNumber=1",
         {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         }

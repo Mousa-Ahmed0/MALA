@@ -3,7 +3,7 @@ import React from "react";
 export default function Error() {
   return (
     <div className="container">
-      <div class="w-100 h-100 row my-4">
+      <div className="w-100 h-100 row my-4">
         <div className="col-12 alert alert-danger h1 m-0 my-4 colorMain d-flex justify-content-center align-items-center">
           404!
         </div>
