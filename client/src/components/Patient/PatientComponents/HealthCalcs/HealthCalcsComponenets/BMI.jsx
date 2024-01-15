@@ -1,15 +1,66 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import Joi from "joi";
+import { bmiCalc } from "../../../../../methods/HealthyCalculator";
 import { useDarkMode } from "../../../../../context/DarkModeContext";
 import BackBtn from "../../../../BackBtn";
 export default function BMR() {
   const { darkMode } = useDarkMode();
-
+  let [errorList, setErrorList] = useState([]);
+  const [details, setDetails] = useState({
+    age: 0,
+    sex: "Female",
+    height: 0,
+    weight: 0,
+  });
+  const [bmiResult, setBmiResult] = useState();
+  const [resultDone, setResultDone] = useState(false);
   //
-  function onFormSubmit(e) {
+  function getData(e) {
+    setErrorList([]);
+    setBmiResult(0);
+
+    console.log("Input changed:", e.target.name, e.target.value);
+    setDetails((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  }
+  //
+  async function onFormSubmit(e) {
     e.preventDefault();
+    // Call Validation Function
+    let validateResult = await validateForm();
+    if (validateResult.error) {
+      setErrorList(validateResult.error.details);
+    }
+    if (!validateResult.error) {
+      const result = await bmiCalc(
+        details.age,
+        details.sex,
+        details.height,
+        details.weight
+      );
+      console.log("result:", result);
+      setBmiResult(result);
+    }
+  }
+  /* Validation Function */
+  function validateForm() {
+    const schema = Joi.object({
+      age: Joi.number().min(15).max(80).required(),
+      height: Joi.required(),
+      weight: Joi.required(),
+      sex: Joi.required(),
+    });
+    return schema.validate(details, { abortEarly: false });
   }
   /////
+  useEffect(() => {
+    setResultDone(bmiResult && bmiResult > 0);
+  }, [bmiResult]);
+  useEffect(() => {
+    console.log("details", details);
+  }, [details]);
   return (
     <div className="Reg-Pat">
       <BackBtn />
@@ -36,6 +87,7 @@ export default function BMR() {
                       <input
                         type="number"
                         name="age"
+                        onChange={(e) => getData(e)}
                         className="form-control"
                       />
                     </div>
@@ -54,7 +106,9 @@ export default function BMR() {
                     <input
                       type="radio"
                       className="btn-check"
-                      name="btnradio"
+                      onClick={(e) => getData(e)}
+                      name="sex"
+                      value={"Male"}
                       id="btnradio1"
                       autoComplete="off"
                       defaultChecked
@@ -68,7 +122,9 @@ export default function BMR() {
                     <input
                       type="radio"
                       className="btn-check"
-                      name="btnradio"
+                      onClick={(e) => getData(e)}
+                      name="sex"
+                      value={"Female"}
                       id="btnradio2"
                       autoComplete="off"
                     />
@@ -91,6 +147,7 @@ export default function BMR() {
                       <input
                         type="number"
                         name="height"
+                        onChange={(e) => getData(e)}
                         className="form-control"
                       />
                     </div>
@@ -108,6 +165,7 @@ export default function BMR() {
                       <input
                         type="number"
                         name="weight"
+                        onChange={(e) => getData(e)}
                         className="form-control"
                       />
                     </div>
@@ -135,46 +193,83 @@ export default function BMR() {
               >
                 <thead className="thead-light">
                   <tr>
-                    <th className="w-75">Activity Level</th>
-                    <th className="w-10">Calories</th>
+                    <th className="w-75"></th>
+                    <th className="w-10"></th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td className="text-start">
-                      <p className="m-0 p-1">
-                        Sedentary: little or no exercise
-                      </p>
+                      <p className="m-0 p-1">Healthy BMI Range:</p>
                     </td>
-                    <td></td>
+                    <td>18.5 - 25.00 </td>
                   </tr>
                   <tr>
                     <td className="text-start">
                       {" "}
-                      <p className="m-0 p-1">Exercise 1-3 times/week</p>
+                      <p className="m-0 p-1">Your BMI:</p>
                     </td>
-                    <td></td>
+                    <td className="mid-bold colorMain">
+                      {resultDone ? bmiResult : "NaN"}
+                    </td>
                   </tr>
                   <tr>
                     <td className="text-start">
                       {" "}
-                      <p className="m-0 p-1">Exercise 4-5 times/week</p>
+                      <p className="m-0 p-1">Your BMI Condition:</p>
                     </td>
-                    <td></td>
+                    <td
+                      className={`mid-bold ${
+                        resultDone
+                          ? bmiResult < 18.5
+                            ? "text-danger"
+                            : bmiResult > 24.9
+                            ? "text-danger"
+                            : "text-success"
+                          : "colorMain"
+                      }`}
+                    >
+                      {resultDone
+                        ? bmiResult < 18.5
+                          ? "Underweight"
+                          : bmiResult > 24.9
+                          ? "Overweight"
+                          : "Normal"
+                        : "NaN"}
+                    </td>
                   </tr>
                   <tr>
                     <td className="text-start">
-                      <p className="m-0 p-1">Intense exercise 6-7 times/week</p>
-                    </td>
-                    <td></td>
-                  </tr>
-                  <tr>
-                    <td className="text-start">
+                      {" "}
                       <p className="m-0 p-1">
-                        Very intense exercise daily, or physical job
+                        Lower Healthy Weight For The Height:
                       </p>
                     </td>
-                    <td></td>
+                    <td className="mid-bold colorMain">
+                      {Math.ceil(
+                        (details.height / 100.0) *
+                          (details.height / 100.0) *
+                          18.5
+                      )}
+                      kg
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="text-start">
+                      {" "}
+                      <p className="m-0 p-1">
+                        Higher Healthy Weight For The Height:
+                      </p>
+                    </td>
+                    <td className="mid-bold colorMain">
+                      {" "}
+                      {Math.ceil(
+                        (details.height / 100.0) *
+                          (details.height / 100.0) *
+                          24.9
+                      )}
+                      kg
+                    </td>
                   </tr>
                 </tbody>
               </table>

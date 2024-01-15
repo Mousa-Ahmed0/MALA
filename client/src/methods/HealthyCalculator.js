@@ -7,3 +7,7 @@ export const bmrCalc = (age, sex, height, weight) => {
   }
   return Math.ceil(result);
 };
+export const bmiCalc = (age, sex, height, weight) => {
+  let result = weight / ((height / 100.0) * (height / 100.0));
+  return result.toFixed(2);
+};
