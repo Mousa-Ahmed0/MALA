@@ -9,6 +9,7 @@ const {
   test,
   getPaymentId,
   getAllPayments,
+  detailsPayment,
 } = require("../Controller/payments.Controller");
 const validateObjectId = require("../middlewares/validateObjectId");
 const { verifyToken, ifAdminOrStaff } = require("../middlewares/verifyToken");
@@ -19,6 +20,7 @@ router.get("/countPayment", ifAdminOrStaff, countPayment);
 router.get("/getPaymentIdentPatient", getPaymentIdentPatient);
 router.get("/getByDate", ifAdminOrStaff, getByDate);
 router.get("/week", test); //test
+router.get("/detailsPayment", detailsPayment); //test
 router.get("/getFromToDate", getFromToDate);
 router.get("/getPaymentId/:id", validateObjectId, ifAdminOrStaff, getPaymentId);
 module.exports = router;

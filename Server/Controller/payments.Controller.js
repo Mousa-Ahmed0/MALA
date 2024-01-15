@@ -477,8 +477,8 @@ module.exports.getFromToDate = asyncHandler(async (req, res) => {
 });
 
 /**-----------------------------------
- * @desc get payments  by identPatient
- * @router /api/payment/getByDate
+ * @desc get payments week ............ 
+ * @router /api/payment/week
  * @method GET
  * year/month/day
  * 2023/09/05
@@ -577,6 +577,162 @@ module.exports.test = asyncHandler(async (req, res) => {
         })
         .skip((pageNumber - 1) * USER_PER_PAGE)
         .limit(USER_PER_PAGE);
+
+      if (getAllPayment.length) {
+        const conutPage = await payments
+          .find({
+            payDate: { $gte: startDate, $lte: currentDate },
+          })
+          .count();
+        let count = 0;
+        for (let i = 0; i < getAllPayment.length; i++) {
+          const dayOfWeek = getAllPayment[i].payDate.getDay(); //find day
+          const dayName = daysOfWeek[dayOfWeek]; //find name of day
+
+          const resultInfo = await analyzeResult.findById(
+            getAllPayment[i].resultId
+          );
+          if (!resultInfo) {
+            // Handle the case where resultInfo is null (document not found)
+            // console.error('ResultInfo not found for ID:', getAllPayment[i].resultId);
+            continue;  // Move to the next iteration of the loop
+          }
+          const userinfo = await user
+            .findOne({
+              ident: resultInfo.patientIdent,
+            })
+            .select("-password");
+
+          const pymentDetails = {
+            day: dayName,
+            date: getAllPayment[i].payDate,
+            result: resultInfo,
+            value: getAllPayment[i].value,
+            payment: getAllPayment[i],
+            info: userinfo,
+          };
+          paumentArray.push(pymentDetails);
+          count += getAllPayment[i].totalValue;
+        }
+        if (!responseSent) {
+          responseSent = true; // Set the flag to true to indicate response has been sent
+          res.status(201).json({
+            conutPage,
+            count,
+            paumentArray,
+            message: "Reports generated successfully.",
+          });
+        }
+      } else {
+        // Send the response if there are no results
+        if (!responseSent) {
+          responseSent = true; // Set the flag to true to indicate response has been sent
+          res.status(400).json({ message: "Can't find report" });
+        }
+      }
+    }
+    if (!responseSent) {
+      //error input
+      responseSent = true; // Set the flag to true to indicate response has been sent
+      res.status(400).json({ message: "Number must between 0 -  12" });
+    }
+  } catch (error) {
+    // Handle the error here, you can log it or send a specific error response to the client
+    console.log(error);
+    res.status(500).json({ errorMess: "Internal Server Error",error });
+  }
+});
+/**-----------------------------------
+ * @desc get payments week ............ without page
+ * @router /api/payment/detailsPayment
+ * @method GET
+ * year/month/day
+ * 2023/09/05
+ * @access private (staff or admin )
+ * -----------------------------------*/
+module.exports.detailsPayment = asyncHandler(async (req, res) => {
+  //vaildition @front end
+  try {
+    const daysOfWeek = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+    let responseSent = false; // Variable to track whether response has been sent
+    const number = req.query.number;
+    const currentDate = new Date(req.query.payDate);
+    const startDate = new Date(currentDate);
+    let paumentArray = [];
+
+    if (number == 0) {
+      //week
+      startDate.setDate(currentDate.getDate() - 7);
+      const getAllPayment = await payments
+        .find({
+          payDate: { $gte: startDate, $lte: currentDate },
+        });
+      if (getAllPayment.length) {
+        const conutPage = await payments
+          .find({
+            payDate: { $gte: startDate, $lte: currentDate },
+          })
+          .count();
+        let count = 0;
+        for (let i = 0; i < getAllPayment.length; i++) {
+          const dayOfWeek = getAllPayment[i].payDate.getDay(); //find day
+          const dayName = daysOfWeek[dayOfWeek]; //find name of day
+
+          const resultInfo = await analyzeResult.findById(
+            getAllPayment[i].resultId
+          );
+          if (!resultInfo) {
+            // Handle the case where resultInfo is null (document not found)
+            // console.error('ResultInfo not found for ID:', getAllPayment[i].resultId);
+            continue;  // Move to the next iteration of the loop
+          }
+          const userinfo = await user
+            .findOne({
+              ident: resultInfo.patientIdent,
+            })
+            .select("-password");
+          const pymentDetails = {
+            day: dayName,
+            date: getAllPayment[i].payDate,
+            result: resultInfo,
+            value: getAllPayment[i].value,
+            payment: getAllPayment[i],
+            info: userinfo,
+          };
+          paumentArray.push(pymentDetails);
+          count += getAllPayment[i].totalValue;
+        }
+        if (!responseSent) {
+          res.status(201).json({
+            conutPage,
+            count,
+            paumentArray,
+            message: "Reports generated successfully.",
+          });
+          responseSent = true; // Set the flag to true to indicate response has been sent
+        }
+      } else {
+        // Send the response if there are no results
+        if (!responseSent) {
+          responseSent = true; // Set the flag to true to indicate response has been sent
+          res.status(400).json({ message: "Can't find report" });
+        }
+      }
+    } else if (number >= 1 && number <= 12) {
+      //number of month
+      startDate.setMonth(currentDate.getMonth() - number);
+      const getAllPayment = await payments
+        .find({
+          payDate: { $gte: startDate, $lte: currentDate },
+        });
 
       if (getAllPayment.length) {
         const conutPage = await payments
