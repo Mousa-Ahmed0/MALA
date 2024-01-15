@@ -25,7 +25,7 @@ const router = require("express").Router();
 // /api/user/
 router.get("/get-users", ifAdminOrStaff, getAllUsers);
 //count user
-router.get("/getCount", ifAdmin, getUsersCount);
+router.get("/getCount", ifAdminOrStaff, getUsersCount);
 router.get("/countStaff", verifyToken, getUsersCountStaff);
 router.get("/countPatient", verifyToken, getUsersCountPatient);
 router.get("/countDoctor", verifyToken, getUsersCountDoctor);
