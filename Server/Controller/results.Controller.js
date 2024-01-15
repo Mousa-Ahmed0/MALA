@@ -930,10 +930,10 @@ module.exports.isDone = asyncHandler(async (req, res) => {
         // Push the object to the array
         usersArray.push(userDetails);
       }
+      //
       res.status(200).json({ count, usersArray });
     }
 
-    if (isDone.length) res.status(200).json({ isDone });
     else res.status(404).json({ message: "Not repot " });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client

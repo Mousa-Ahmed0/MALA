@@ -73,7 +73,7 @@ module.exports.getPayment = asyncHandler(async (req, res) => {
       .limit(USER_PER_PAGE);
     let paumentArray = [];
     if (getPayment.length) {
-      const countPay = await payments.find({}).count();
+      const countPay = await payments.find({}).count(); 
 
       let count = 0;
       for (let i = 0; i < getPayment.length; i++) {
@@ -81,8 +81,11 @@ module.exports.getPayment = asyncHandler(async (req, res) => {
         const dayName = daysOfWeek[dayOfWeek]; //find name of day
 
         const resultInfo = await analyzeResult.findById(getPayment[i].resultId);
-        console.log(resultInfo);
-        console.log(getPayment[i].resultId);
+        if (!resultInfo) {
+          // Handle the case where resultInfo is null (document not found)
+          // console.error('ResultInfo not found for ID:', getAllPayment[i].resultId);
+          continue;  // Move to the next iteration of the loop
+        }
         const userinfo = await user
           .findOne({
             ident: resultInfo.patientIdent,
@@ -109,10 +112,78 @@ module.exports.getPayment = asyncHandler(async (req, res) => {
     } else res.status(400).json({ message: "Can't find repoet" });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
+    console.log(error)
     res.status(500).json({ errorMess: "Internal Server Error",error });
   }
 });
+/**-----------------------------------
+ * @desc get all  payments without pages
+ * @router /api/payment/getAllPayments
+ * @method GET
+ * @access private (staff or admin )
+ *  year/month/day
+ * 2023/09/05
+ * -----------------------------------*/
+module.exports.getAllPayments = asyncHandler(async (req, res) => {
+  //vaildition @front end
+  // const getAllPayment = await payments.find().select("value -_id ");
+  try {
+    const daysOfWeek = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
 
+    const getPayment = await payments.find();
+    let paumentArray = [];
+    if (getPayment.length) {
+      const countPay = await payments.find({}).count(); 
+
+      let count = 0;
+      for (let i = 0; i < getPayment.length; i++) {
+        const dayOfWeek = getPayment[i].payDate.getDay(); //find day
+        const dayName = daysOfWeek[dayOfWeek]; //find name of day
+
+        const resultInfo = await analyzeResult.findById(getPayment[i].resultId);
+        if (!resultInfo) {
+          // Handle the case where resultInfo is null (document not found)
+          // console.error('ResultInfo not found for ID:', getAllPayment[i].resultId);
+          continue;  // Move to the next iteration of the loop
+        }
+        const userinfo = await user
+          .findOne({
+            ident: resultInfo.patientIdent,
+          })
+          .select("-password");
+        getPayment[i].resultId;
+        const pymentDetails = {
+          day: dayName,
+          date: getPayment[i].payDate,
+          result: resultInfo,
+          value: getPayment[i].value,
+          payment: getPayment[i],
+          info: userinfo,
+        };
+        paumentArray.push(pymentDetails);
+        count += getPayment[i].totalValue;
+      }
+      res.status(201).json({
+        countPage: countPay,
+        count,
+        paumentArray,
+        message: "Reports generated successfully.",
+      });
+    } else res.status(400).json({ message: "Can't find repoet" });
+  } catch (error) {
+    // Handle the error here, you can log it or send a specific error response to the client
+    console.log(error)
+    res.status(500).json({ errorMess: "Internal Server Error",error });
+  }
+});
 /**-----------------------------------
  * @desc get count payments
  * @router /api/payment/countPayment
@@ -288,6 +359,11 @@ module.exports.getByDate = asyncHandler(async (req, res) => {
         const resultInfo = await analyzeResult
           .findById(getPayment[i].resultId)
           .select("-password");
+          if (!resultInfo) {
+            // Handle the case where resultInfo is null (document not found)
+            // console.error('ResultInfo not found for ID:', getAllPayment[i].resultId);
+            continue;  // Move to the next iteration of the loop
+          }
         const userinfo = await user
           .findOne({
             ident: resultInfo.patientIdent,
@@ -364,6 +440,11 @@ module.exports.getFromToDate = asyncHandler(async (req, res) => {
         const resultInfo = await analyzeResult.findById(
           getAllPayment[i].resultId
         );
+        if (!resultInfo) {
+          // Handle the case where resultInfo is null (document not found)
+          // console.error('ResultInfo not found for ID:', getAllPayment[i].resultId);
+          continue;  // Move to the next iteration of the loop
+        }
         const userinfo = await user
           .findOne({
             ident: resultInfo.patientIdent,
@@ -447,6 +528,11 @@ module.exports.test = asyncHandler(async (req, res) => {
           const resultInfo = await analyzeResult.findById(
             getAllPayment[i].resultId
           );
+          if (!resultInfo) {
+            // Handle the case where resultInfo is null (document not found)
+            // console.error('ResultInfo not found for ID:', getAllPayment[i].resultId);
+            continue;  // Move to the next iteration of the loop
+          }
           const userinfo = await user
             .findOne({
               ident: resultInfo.patientIdent,
@@ -506,6 +592,11 @@ module.exports.test = asyncHandler(async (req, res) => {
           const resultInfo = await analyzeResult.findById(
             getAllPayment[i].resultId
           );
+          if (!resultInfo) {
+            // Handle the case where resultInfo is null (document not found)
+            // console.error('ResultInfo not found for ID:', getAllPayment[i].resultId);
+            continue;  // Move to the next iteration of the loop
+          }
           const userinfo = await user
             .findOne({
               ident: resultInfo.patientIdent,
@@ -547,6 +638,7 @@ module.exports.test = asyncHandler(async (req, res) => {
     }
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
+    console.log(error);
     res.status(500).json({ errorMess: "Internal Server Error",error });
   }
 });

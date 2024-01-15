@@ -122,12 +122,12 @@ module.exports.getAllMass = asyncHandler(async (req, res) => {
     //.populate('secondUser', ['-password'])
     if (newMass) {
       const count = await Massage.find({}).count();
-
+      console.log("getAllMassage",newMass)
       return res.status(200).json({ newMass, count });
     } else return res.status(400).json({ massage: "Massage dose not exist" });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error", error });
+    res.status(500).json({ errorMess: "Internal Server Error", error }); 
   }
 });
 
