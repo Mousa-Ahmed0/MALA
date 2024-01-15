@@ -75,9 +75,7 @@ export default function MessagesContainer({
               onMouseEnter={() => setMouseOnMsgIndex(index)}
               onMouseLeave={() => setMouseOnMsgIndex(null)}
               className={`col-6 alert  text-break ${
-                message.senderId === user.id
-                  ? "alert-primary"
-                  : "alert-secondry"
+                message.senderId === user.id ? "alert-primary" : "alert-dark"
               }`}
             >
               {message.mass}{" "}
