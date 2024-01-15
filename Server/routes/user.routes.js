@@ -51,4 +51,4 @@ router
   .route("/profile-photo-upload")
   .post(verifyToken, photoUpload.single("image"), profilePhotoUpload);
 
-  module.exports = router;
+module.exports = router;

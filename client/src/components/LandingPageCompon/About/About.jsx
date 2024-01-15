@@ -1,34 +1,84 @@
 import React, { useEffect, useState } from "react";
 import { useDarkMode } from "../../../context/DarkModeContext";
+import axios from "axios";
+import { Link } from "react-router-dom";
 
 export default function About() {
   const { darkMode } = useDarkMode();
 
-  let [Anlyser, setAnlyser] = useState({
-    image: "./images/avatar-03.png",
-    Name: "Full Name",
-    Spec: "University Specialization",
-    Univr: "University Name",
-    Years: 5,
-    Email: "SomeExample@exampl.com",
-    face: "https://www.facebook.com/",
-    twit: "https://www.facebook.com/",
-    inst: "https://www.facebook.com/",
-    PhoneNo: "0569346999",
-  });
-
-  let [Anlysers, setAnlysers] = useState([]);
+  let [Staff, setStaff] = useState();
+  let [apiError, setApiError] = useState(false);
+  let apiErrorMessage = (
+    <div class="w-100 h-100 d-flex flex-column align-items-center">
+      <div class="alert alert-danger my-4 mid-bold w-100 d-flex justify-content-center">
+        Error!!!
+      </div>
+      <div class="my-4 mid-bold">
+        Theres a proplem! Please wait for us to solve the proplem.
+      </div>
+    </div>
+  );
 
   //Get API Function ...
-  function getAnlysers() {
-    for (let i = 0; i < 3; i++) {
-      let tempAnlysesr = { ...Anlyser };
-      setAnlysers([...Anlysers, tempAnlysesr]);
+  async function getAnlysers() {
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/api/user/getAllStuffAdmin"
+      );
+      console.log(response);
+      if (
+        response.data &&
+        Array.isArray(response.data) &&
+        response.data.length > 0
+      ) {
+        setStaff(response.data);
+      }
+      setApiError(false);
+    } catch (error) {
+      setApiError(true);
+      console.error("Error from getStaff: ", error);
     }
   }
   //Test
-  function showAnlysers() {
-    console.log(Anlysers);
+  function renderStaff() {
+    return Staff.map((st, index) => (
+      <div key={index} className="col-lg-4 col-md-6 col-sm-12 col-xsm-12 mb-3">
+        <div
+          className={`card border-0 position-relative m-1 m-xl-3 mt-0 ${
+            darkMode ? " spic-dark-mode border-0" : ""
+          }`}
+        >
+          <div className="card-body">
+            <div className="row card-Top justify-content-center my-3 pb-3">
+              <div className="col-12 col-md-4 card-Top-Image">
+                <img
+                  className="img-fluid"
+                  src={st.profilePhoto.url}
+                  alt="Card image cap"
+                />
+              </div>
+              <div className="my-2 card-Top-Details col-12 col-md-6 d-flex justify-content-center flex-column align-items-center mid-bold colorMain">
+                <h1 className="h5 m-0 text-truncate">
+                  {st.firstname + " " + st.lastname}
+                </h1>
+              </div>
+            </div>
+
+            <div className="card-Mid  my-3 pb-3">
+              <p className="m-0">{st.email}</p>
+            </div>
+            <div className="card-Bottom py-2 d-flex justify-content-between align-items-center m-0">
+              <div className="position-relative p-2 btn  btn-outline-info">
+                <Link className="nav-link">View Profile</Link>
+              </div>
+              <p className="m-0">
+                <i className=" btn colorMain fa-solid fa-phone"></i>- {st.phone}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    ));
   }
 
   useEffect(() => {
@@ -38,63 +88,13 @@ export default function About() {
   return (
     <div className="LP-section LP-About">
       <div className="row">
-        {Anlysers.map((Anlyser, index) => (
-          <div
-            key={index}
-            className="col-lg-4 col-md-6 col-sm-12 col-xsm-12 mb-3"
-          >
-            <div
-              className={`card border-0 position-relative m-1 m-xl-3 mt-0 ${
-                darkMode ? " spic-dark-mode border-0" : ""
-              }`}
-            >
-              <div className="card-body">
-                <div className="card-Top d-flex gap-3 justify-content-around align-items-center pt-0 pb-3">
-                  <img
-                    className="card-Top-Image"
-                    src={Anlyser.image}
-                    alt="Card image cap"
-                  />
-                  <div className="card-Top-Details d-flex gap-1 justify-content-around flex-column">
-                    <h4 className="">{Anlyser.Name}</h4>
-                    <p className="">{Anlyser.Spec}.</p>
-                    <p className="">{Anlyser.Univr}.</p>
-                    <p className="">{Anlyser.Years} Years Exp.</p>
-                  </div>
-                </div>
-                <div className="card-Mid py-3">
-                  <p className="m-0">{Anlyser.Email}</p>
-                </div>
-                <div className="card-Bottom py-2 d-flex justify-content-between align-items-center m-0">
-                  <ul className="d-flex justify-content-around align-items-center m-0 p-0 fs-4">
-                    <li>
-                      {" "}
-                      <a href="https://www.facebook.com/" target="_blank">
-                        <i className="fa-brands fa-facebook" />
-                      </a>
-                    </li>
-                    <li>
-                      {" "}
-                      <a href="https://www.facebook.com/" target="_blank">
-                        <i className="fa-brands fa-instagram" />
-                      </a>
-                    </li>
-                    <li>
-                      {" "}
-                      <a href="https://www.facebook.com/" target="_blank">
-                        <i className="fa-brands fa-twitter " />
-                      </a>
-                    </li>
-                  </ul>
-                  <p className="m-0">
-                    <i className=" btn colorMain fa-solid fa-phone"></i>-{" "}
-                    {Anlyser.PhoneNo}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
+        {Staff && Array.isArray(Staff) && Staff.length > 0 ? (
+          renderStaff()
+        ) : apiError ? (
+          apiErrorMessage
+        ) : (
+          <div>No Results Found</div>
+        )}
       </div>
     </div>
   );

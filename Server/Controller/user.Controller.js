@@ -15,7 +15,6 @@ const jwt = require("jsonwebtoken");
  * ------------------------------------------ */
 module.exports.getAllUsers = asyncHandler(async (req, res) => {
   try {
-
     const USER_PER_PAGE = 1;
     const userNumber = req.query.userNumber;
     const users = await user
@@ -26,7 +25,7 @@ module.exports.getAllUsers = asyncHandler(async (req, res) => {
     res.status(200).json(users);
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
 /**--------------------------------
@@ -37,12 +36,11 @@ module.exports.getAllUsers = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.getUsersCount = asyncHandler(async (req, res) => {
   try {
-
     const count = await user.count();
     res.status(200).json(count);
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
 /**--------------------------------
@@ -53,12 +51,11 @@ module.exports.getUsersCount = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.getUsersCountStaff = asyncHandler(async (req, res) => {
   try {
-
     const count = await user.count({ usertype: "Staff" });
     res.status(200).json(count);
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
 /**--------------------------------
@@ -69,12 +66,11 @@ module.exports.getUsersCountStaff = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.getUsersCountPatient = asyncHandler(async (req, res) => {
   try {
-
     const count = await user.count({ usertype: "Patient" });
     res.status(200).json(count);
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
 /**--------------------------------
@@ -85,12 +81,11 @@ module.exports.getUsersCountPatient = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.getUsersCountDoctor = asyncHandler(async (req, res) => {
   try {
-
     const count = await user.count({ usertype: "Doctor" });
     res.status(200).json(count);
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
 
@@ -102,7 +97,6 @@ module.exports.getUsersCountDoctor = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.getAllDoctorPatient = asyncHandler(async (req, res) => {
   try {
-
     const users = await user
       .find({ usertype: { $in: ["Patient", "Doctor"] } })
       .select("-password")
@@ -114,7 +108,7 @@ module.exports.getAllDoctorPatient = asyncHandler(async (req, res) => {
     }
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
 /**--------------------------------
@@ -125,7 +119,6 @@ module.exports.getAllDoctorPatient = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.getAllDoctor = asyncHandler(async (req, res) => {
   try {
-
     const users = await user
       .find({ usertype: "Doctor" })
       .select("-password")
@@ -137,7 +130,7 @@ module.exports.getAllDoctor = asyncHandler(async (req, res) => {
     }
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
 
@@ -149,11 +142,9 @@ module.exports.getAllDoctor = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.getAllStuffAdmin = asyncHandler(async (req, res) => {
   try {
-
     const users = await user
       .find({ usertype: { $in: ["Admin", "Staff"] } })
-      .select("-password")
-      .sort({ createdAt: -1 });
+      .select("-password");
     if (users) {
       res.status(200).json(users);
     } else {
@@ -161,7 +152,7 @@ module.exports.getAllStuffAdmin = asyncHandler(async (req, res) => {
     }
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
 /**--------------------------------
@@ -172,7 +163,6 @@ module.exports.getAllStuffAdmin = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.deleteUser = asyncHandler(async (req, res) => {
   try {
-
     const deleteU = await user.findByIdAndDelete(req.params.id);
     if (deleteU) {
       res.status(200).json({ message: "User is Deleted" });
@@ -181,7 +171,7 @@ module.exports.deleteUser = asyncHandler(async (req, res) => {
     }
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
 
@@ -193,7 +183,6 @@ module.exports.deleteUser = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.getProfile = asyncHandler(async (req, res) => {
   try {
-
     const profile = await user.findById(req.params.id).select("-password");
     if (profile) {
       res.status(200).json({ message: "User profile", profile });
@@ -202,7 +191,7 @@ module.exports.getProfile = asyncHandler(async (req, res) => {
     }
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
 /**--------------------------------
@@ -216,7 +205,6 @@ module.exports.updateUser = asyncHandler(async (req, res) => {
   //@TO-Do
   //save to database
   try {
-
     const updateU = await user.findByIdAndUpdate(
       req.params.id,
       {
@@ -254,7 +242,7 @@ module.exports.updateUser = asyncHandler(async (req, res) => {
     }
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
 
@@ -267,7 +255,6 @@ module.exports.updateUser = asyncHandler(async (req, res) => {
 module.exports.profilePhotoUpload = asyncHandler(async (req, res) => {
   //1- validation
   try {
-
     if (!req.file) return res.status(400).json({ message: "No file provided" });
 
     //2- get the  path to the image
@@ -302,6 +289,6 @@ module.exports.profilePhotoUpload = asyncHandler(async (req, res) => {
     fs.unlinkSync(imagePath);
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });

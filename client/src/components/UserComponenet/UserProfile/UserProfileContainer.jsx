@@ -53,7 +53,9 @@ export default function UserProfileContainer({
     try {
       const response = await updateAUser(id, user);
       console.log(response);
-      localStorage.setItem("token", response.data.token);
+      if (userDetails.id === response.data.updateU.id) {
+        localStorage.setItem("token", response.data.token);
+      }
     } catch (error) {
       setApiError(true);
       console.error("Error:", error);

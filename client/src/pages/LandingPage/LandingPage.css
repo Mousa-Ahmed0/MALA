@@ -148,9 +148,14 @@
 .LP-section.LP-About .card-Top .card-Top-Image {
   position: relative;
   overflow: hidden;
-  border-radius: 30px;
-  min-width: 40%;
-  max-width: 40%;
+  width: 145px;
+  height: 130px;
+}
+.LP-section.LP-About .card-Top .card-Top-Image img {
+  min-width: 100% !important;
+  height: 100%;
+  object-fit: cover !important;
+  border-radius: 7px;
 }
 .LP-section.LP-About .card-Top .card-Top-Details p,
 .LP-section.LP-About .card-Top .card-Top-Details h4 {

@@ -41,6 +41,9 @@ export default function App() {
       setUserData();
     }
   }, []);
+  useEffect(() => {
+    console.log("userDetails", userDetails);
+  }, [userDetails]);
 
   return (
     <>
