@@ -3,7 +3,9 @@ const { analyzeResult, vaildationResults } = require("../models/patienResults");
 const { user } = require("../models/user");
 const { analyze } = require("../models/Analyze");
 const { PythonShell } = require("python-shell");
-
+const {cloudinaryUploadImage,cloudinaryRemoveImage,} = require("../utils/cloudinary");
+const path = require("path");
+const fs = require("fs");
 /**--------------------------------
  * @desc add result
  * @router /api/result/addResults
