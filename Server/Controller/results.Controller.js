@@ -3,7 +3,7 @@ const { analyzeResult, vaildationResults } = require("../models/patienResults");
 const { user } = require("../models/user");
 const { analyze } = require("../models/Analyze");
 const { PythonShell } = require("python-shell");
-const {cloudinaryUploadImage,cloudinaryRemoveImage,} = require("../utils/cloudinary");
+const { cloudinaryUploadImage, cloudinaryRemoveImage, } = require("../utils/cloudinary");
 const path = require("path");
 const fs = require("fs");
 /**--------------------------------
@@ -39,7 +39,7 @@ module.exports.addResults = asyncHandler(async (req, res) => {
     res.status(201).json({ newResult, message: "done..........." });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
 function calAge(birthday) {
@@ -108,17 +108,29 @@ module.exports.pythonResults = asyncHandler(async (req, res) => {
       }
       let options = {
         args: [years, sex, results],
-        scriptPath: "../Server/utils/python",
+        scriptPath: "../Server/utils/python",  
       };
-      PythonShell.run("AnlayzeResultPredict.py", options).then((result) => {
+      PythonShell.run("AnlayzeResultPredict.py", options).then(async(result) => {
         // results is an array consisting of result collected during execution
+
+        //2- get the  path to the image
+        const imagePath = path.join(__dirname, `../images/chart.jpg`);
+        if (!imagePath) return res.status(400).json({ message: "No file provided" });
+
+        //3- upload to cloudinary
+        const resultImag = await cloudinaryUploadImage(imagePath);
+            //8- remove image from the server
+        const urlRes=resultImag.secure_url;
+        console.log(urlRes);
+        fs.unlinkSync(imagePath);
+
         console.log(result);
-        res.status(200).json({ messag: "done...........", result });
+        res.status(200).json({ messag: "done...........", result,urlRes });
       });
     } else res.status(404).json({ message: "User not found" });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
 /**--------------------------------
@@ -146,7 +158,7 @@ module.exports.editResult = asyncHandler(async (req, res) => {
     res.status(200).json({ editRes, message: "Update successful" });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
 
@@ -203,7 +215,7 @@ module.exports.getResults = asyncHandler(async (req, res) => {
     });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
 /**--------------------------------
@@ -267,7 +279,7 @@ module.exports.getResultsById = asyncHandler(async (req, res) => {
     });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
 
@@ -357,7 +369,7 @@ module.exports.getAllResultsById = asyncHandler(async (req, res) => {
     } else res.status(400).json({ message: "ID not found" });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
 
@@ -413,7 +425,7 @@ module.exports.getResultsByIdStaff = asyncHandler(async (req, res) => {
     });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
 
@@ -469,7 +481,7 @@ module.exports.getResultsPatient = asyncHandler(async (req, res) => {
     } else res.status(400).json({ message: "User not found" });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
 
@@ -528,7 +540,7 @@ module.exports.getResultsDoctor = asyncHandler(async (req, res) => {
     }
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
 /**--------------------------------
@@ -551,7 +563,7 @@ module.exports.getResultsStaff = asyncHandler(async (req, res) => {
     } else res.status(404).json({ message: "User not found" });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
 /**--------------------------------
@@ -722,7 +734,7 @@ module.exports.resultDate = asyncHandler(async (req, res) => {
     }
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
 
@@ -804,7 +816,7 @@ module.exports.resultDateFromTo = asyncHandler(async (req, res) => {
     }
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
 
@@ -879,7 +891,7 @@ module.exports.dayResult = asyncHandler(async (req, res) => {
     }
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
 
@@ -939,7 +951,7 @@ module.exports.isDone = asyncHandler(async (req, res) => {
     else res.status(404).json({ message: "Not repot " });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
 /**--------------------------------
@@ -960,7 +972,7 @@ module.exports.isDoneCount = asyncHandler(async (req, res) => {
     } else res.status(404).json({ message: "Not repot " });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
 /**--------------------------------
@@ -981,7 +993,7 @@ module.exports.isPaiedCount = asyncHandler(async (req, res) => {
     } else res.status(404).json({ message: "Not repot " });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
 /**--------------------------------
@@ -1004,7 +1016,7 @@ module.exports.isDoneEdit = asyncHandler(async (req, res) => {
     } else res.status(404).json({ message: "Does not exist " });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
 
@@ -1058,7 +1070,7 @@ module.exports.isPaied = asyncHandler(async (req, res) => {
     } else res.status(404).json({ message: "Not repot " });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
 
@@ -1082,6 +1094,6 @@ module.exports.isPaiedEdit = asyncHandler(async (req, res) => {
     } else res.status(404).json({ message: "Does not exist " });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });

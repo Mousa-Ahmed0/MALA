@@ -60,7 +60,7 @@ plt.bar(X.columns, new_record_importances)
 plt.xlabel('Features')
 plt.ylabel('Importance')
 plt.title('Feature Importances for the New Record')
-plt.savefig('./images/chart.png')
+plt.savefig('./images/chart.jpg')
 
 
 # Print the predicted class for the new data
