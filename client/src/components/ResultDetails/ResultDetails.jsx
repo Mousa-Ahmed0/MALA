@@ -135,7 +135,7 @@ export default function ResultDetails({ user }) {
             </div>
           </div>
         )}
-        <div className="d-flex align-items-center justify-content-center gap-4 print-button mt-4">
+        <div className="d-flex align-items-center justify-content-center gap-4 print-button my-4">
           <button
             className="btn btn-info text-white p-2"
             onClick={() => window.print()}

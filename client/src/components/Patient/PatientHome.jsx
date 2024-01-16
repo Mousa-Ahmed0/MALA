@@ -28,6 +28,7 @@ export default function PatientHome({ user, setIsPdfLoading }) {
     </div>
   );
   const [noPayments, setNoPayments] = useState(false);
+  const [noResults, setNoResults] = useState(false);
 
   //get patient results
   async function getResults() {
@@ -37,8 +38,13 @@ export default function PatientHome({ user, setIsPdfLoading }) {
       //console.log("Results", response);
       setResultError(false);
     } catch (error) {
-      setResultError(true);
-      console.error("Error From getResults - patienthome: ", error);
+      if (error.response.status === 400) {
+        console.log("res");
+        setNoResults(true);
+      } else {
+        setResultError(true);
+        console.error("Error From getResults - patienthome: ", error);
+      }
     }
   }
 
@@ -161,6 +167,8 @@ export default function PatientHome({ user, setIsPdfLoading }) {
                 displayResults()
               ) : resultError ? (
                 apiErrorMessage
+              ) : noResults ? (
+                <div>No Payments Found.</div>
               ) : (
                 <div className="d-flex justify-content-center align-items-center">
                   <div className="spinner-border text-primary" role="status">

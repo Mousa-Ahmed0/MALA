@@ -3,7 +3,10 @@ const { analyzeResult, vaildationResults } = require("../models/patienResults");
 const { user } = require("../models/user");
 const { analyze } = require("../models/Analyze");
 const { PythonShell } = require("python-shell");
-const { cloudinaryUploadImage, cloudinaryRemoveImage, } = require("../utils/cloudinary");
+const {
+  cloudinaryUploadImage,
+  cloudinaryRemoveImage,
+} = require("../utils/cloudinary");
 const path = require("path");
 const fs = require("fs");
 /**--------------------------------
@@ -21,7 +24,7 @@ module.exports.addResults = asyncHandler(async (req, res) => {
       let mesError = [];
       error.details.map((index) => {
         mesError.push(index.message);
-      })
+      });
       return res.status(400).json({ message: mesError });
     }
     const newResult = new analyzeResult({
@@ -964,9 +967,7 @@ module.exports.isDone = asyncHandler(async (req, res) => {
       }
       //
       res.status(200).json({ count, usersArray });
-    }
-
-    else res.status(404).json({ message: "Not repot " });
+    } else res.status(404).json({ message: "Not repot " });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
     res.status(500).json({ errorMess: "Internal Server Error", error });
