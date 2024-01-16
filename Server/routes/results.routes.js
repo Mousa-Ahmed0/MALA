@@ -29,6 +29,7 @@ const {
   isDoneCount,
   isPaiedCount,
   pythonResults,
+  imageDeletResutl,
 } = require("../Controller/results.Controller");
 
 // results
@@ -41,12 +42,13 @@ router.get("/getResults/resultDateFromTo", ifAdminOrStaff, resultDateFromTo);
 router.get("/getResults/dayResult", ifAdminOrStaff, dayResult);
 router.get("/getResults/ifDoneCount", ifAdminOrStaff, isDoneCount);
 router.get("/getResults/ifPaiedCount", ifAdminOrStaff, isPaiedCount);
+router.post("/getResults/imageDeletResutl", ifDoctor, imageDeletResutl);
 router.get(
   "/getResults/pythonResults/:id",
   validateId,
   ifDoctor,
   pythonResults
-);
+  );
 
 router.get("/getResults/:id", validateId, getResultsById);
 router.get("/getAllResults/:id", validateId, getAllResultsById);

@@ -108,26 +108,44 @@ module.exports.pythonResults = asyncHandler(async (req, res) => {
       }
       let options = {
         args: [years, sex, results],
-        scriptPath: "../Server/utils/python",  
+        scriptPath: "../Server/utils/python",
       };
-      PythonShell.run("AnlayzeResultPredict.py", options).then(async(result) => {
+      PythonShell.run("AnlayzeResultPredict.py", options).then(async (result) => {
         // results is an array consisting of result collected during execution
 
-        //2- get the  path to the image
+        //1- get the  path to the image
         const imagePath = path.join(__dirname, `../images/chart.jpg`);
         if (!imagePath) return res.status(400).json({ message: "No file provided" });
 
-        //3- upload to cloudinary
+        //2- upload to cloudinary
         const resultImag = await cloudinaryUploadImage(imagePath);
-            //8- remove image from the server
-        const urlRes=resultImag.secure_url;
-        console.log(urlRes);
+        //3- remove image from the server
         fs.unlinkSync(imagePath);
-
-        console.log(result);
-        res.status(200).json({ messag: "done...........", result,urlRes });
+        const urlRes = resultImag.secure_url;
+        const publicId = resultImag.public_id;
+        res.status(200).json({ messag: "done...........", result, urlRes, publicId });
       });
     } else res.status(404).json({ message: "User not found" });
+  } catch (error) {
+    // Handle the error here, you can log it or send a specific error response to the client
+    res.status(500).json({ errorMess: "Internal Server Error", error });
+  }
+});
+/**--------------------------------
+ * @desc delet image resutl
+ * @router /api/result/imageResutl
+ * @method POST
+ * @access  (staff or admin)
+ * ------------------------------------------ */
+module.exports.imageDeletResutl = asyncHandler(async (req, res) => {
+  try {
+    const publicId = req.body.publicId;
+    if (publicId) {
+      await cloudinaryRemoveImage(publicId);
+
+      res.status(200).json({ message: "Delete images" });
+    } else
+      res.status(400).json({ message: "publicId Not found" });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
     res.status(500).json({ errorMess: "Internal Server Error", error });
