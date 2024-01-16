@@ -6,6 +6,8 @@ const { PythonShell } = require("python-shell");
 const {
   cloudinaryUploadImage,
   cloudinaryRemoveImage,
+  isValidCloudinaryPublicId,
+  doesPublicIdExist,
 } = require("../utils/cloudinary");
 const path = require("path");
 const fs = require("fs");
@@ -61,7 +63,7 @@ function calAge(birthday) {
  * @desc pyhton code
  * @router /api/result/getResults/pythonResults
  * @method post
- * @access  (staff or admin)
+ * @access  (Doctor)
  * ------------------------------------------ */
 module.exports.pythonResults = asyncHandler(async (req, res) => {
   try {
@@ -138,12 +140,20 @@ module.exports.pythonResults = asyncHandler(async (req, res) => {
  * @desc delet image resutl
  * @router /api/result/imageResutl
  * @method POST
- * @access  (staff or admin)
+ * @access  (Doctor)
  * ------------------------------------------ */
 module.exports.imageDeletResutl = asyncHandler(async (req, res) => {
   try {
-    const publicId = req.body.publicId;
+    const publicId = (req.body.publicId).toString();
+    
+    // Check if the Cloudinary public ID exists
+    const exists = await doesPublicIdExist(publicId);
+    console.log(exists);
+    // console.log(isValidCloudinaryPublicId(publicId))
+    // Validate the Cloudinary public ID
     if (publicId) {
+      console.log(publicId);
+
       await cloudinaryRemoveImage(publicId);
 
       res.status(200).json({ message: "Delete images" });
