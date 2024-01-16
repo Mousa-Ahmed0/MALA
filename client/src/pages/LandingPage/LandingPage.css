@@ -192,13 +192,19 @@
   animation: slideLeft 1s ease forwards;
   animation-delay: calc(0.1s * var(--i));
 }
-.trendRow .trendRow-details .brd {
+.trendRow .trendRow-details .brd-top {
   height: 1px;
   background-color: var(--main-bg);
+  width: 10% !important;
+}
+.trendRow .trendRow-details .brd-bottom {
+  height: 1px;
+  background-color: var(--main-bg);
+  width: 50% !important;
 }
 .trendRow .trend-Box {
-  max-width: 250px;
-  min-width: 250px;
+  min-height: 150px;
+  max-height: 150px;
   margin-bottom: 2.5rem;
   position: relative;
   text-align: center;

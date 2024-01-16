@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Joi from "joi";
-import { bmiCalc } from "../../../../../methods/HealthyCalculator";
+import { bfcCalc, bmiCalc } from "../../../../../methods/HealthyCalculator";
 import { useDarkMode } from "../../../../../context/DarkModeContext";
 import BackBtn from "../../../../BackBtn";
 export default function BMR() {
@@ -8,11 +8,12 @@ export default function BMR() {
   let [errorList, setErrorList] = useState([]);
   const [details, setDetails] = useState({
     age: 0,
-    sex: "Female",
+    sex: "Male",
     height: 0,
     weight: 0,
   });
   const [bmiResult, setBmiResult] = useState();
+  const [bfcResult, setBfcResult] = useState();
   const [resultDone, setResultDone] = useState(false);
   //
   function getData(e) {
@@ -42,12 +43,14 @@ export default function BMR() {
       );
       console.log("result:", result);
       setBmiResult(result);
+      const bfc = await bfcCalc(details.age, details.sex, result);
+      setBfcResult(bfc);
     }
   }
   /* Validation Function */
   function validateForm() {
     const schema = Joi.object({
-      age: Joi.number().min(15).max(80).required(),
+      age: Joi.number().min(3).max(120).required(),
       height: Joi.required(),
       weight: Joi.required(),
       sex: Joi.required(),
@@ -269,6 +272,70 @@ export default function BMR() {
                           24.9
                       )}
                       kg
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="text-start">
+                      {" "}
+                      <p className="m-0 p-1">Body Fat:</p>
+                    </td>
+                    <td className="mid-bold colorMain">
+                      {" "}
+                      {bfcResult ? bfcResult : "NaN"}%
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="text-start">
+                      {" "}
+                      <p className="m-0 p-1">Body Fat Category:</p>
+                    </td>
+                    <td
+                      className={`mid-bold colorMain ${
+                        bfcResult
+                          ? details.sex === "Male"
+                            ? bfcResult > 2.0 && bfcResult < 5.0
+                              ? "text-danger"
+                              : bfcResult > 6.0 && bfcResult < 13.0
+                              ? "text-primary"
+                              : bfcResult > 14.0 && bfcResult < 17.0
+                              ? "text-primary"
+                              : bfcResult > 18.0 && bfcResult < 24.0
+                              ? "text-success"
+                              : "text-danger"
+                            : bfcResult > 10.0 && bfcResult < 13.0
+                            ? "text-danger"
+                            : bfcResult > 14.0 && bfcResult < 20.0
+                            ? "text-primary"
+                            : bfcResult > 21.0 && bfcResult < 24.0
+                            ? "text-primary"
+                            : bfcResult > 25.0 && bfcResult < 31.0
+                            ? "text-success"
+                            : "text-danger"
+                          : ""
+                      }`}
+                    >
+                      {" "}
+                      {bfcResult
+                        ? details.sex === "Male"
+                          ? bfcResult > 2.0 && bfcResult < 5.0
+                            ? "Essential Fat"
+                            : bfcResult > 6.0 && bfcResult < 13.0
+                            ? "Athletes"
+                            : bfcResult > 14.0 && bfcResult < 17.0
+                            ? "Fitness"
+                            : bfcResult > 18.0 && bfcResult < 24.0
+                            ? "Average"
+                            : "Obese"
+                          : bfcResult > 10.0 && bfcResult < 13.0
+                          ? "Essential Fat"
+                          : bfcResult > 14.0 && bfcResult < 20.0
+                          ? "Athletes"
+                          : bfcResult > 21.0 && bfcResult < 24.0
+                          ? "Fitness"
+                          : bfcResult > 25.0 && bfcResult < 31.0
+                          ? "Average"
+                          : "Obese"
+                        : "NaN"}
                     </td>
                   </tr>
                 </tbody>

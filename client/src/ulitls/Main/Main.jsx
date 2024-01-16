@@ -42,7 +42,6 @@ import {
   HealthCalculators,
   BMR,
   BMI,
-  BFC,
   PatResultsPreviewContainer,
   PatPaymentsPreviewContainer,
   Error,
@@ -1070,25 +1069,6 @@ export default function Main({
                   }
                 >
                   <BMI />{" "}
-                </Suspense>
-              }
-            />
-            <Route
-              path="/Patient/HealthCalculators/BFC"
-              element={
-                <Suspense
-                  fallback={
-                    <div className="center-container">
-                      <div
-                        className="spinner-border text-primary"
-                        role="status"
-                      >
-                        <span className="sr-only">Loading...</span>
-                      </div>
-                    </div>
-                  }
-                >
-                  <BFC />{" "}
                 </Suspense>
               }
             />

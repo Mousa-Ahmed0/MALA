@@ -69,7 +69,9 @@ export default function About() {
             </div>
             <div className="card-Bottom py-2 d-flex justify-content-between align-items-center m-0">
               <div className="position-relative p-2 btn  btn-outline-info">
-                <Link className="nav-link">View Profile</Link>
+                <Link to={`/Profile/${st.id}`} className="nav-link">
+                  View Profile
+                </Link>
               </div>
               <p className="m-0">
                 <i className=" btn colorMain fa-solid fa-phone"></i>- {st.phone}

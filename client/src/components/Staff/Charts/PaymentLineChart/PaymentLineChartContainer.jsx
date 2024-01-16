@@ -1,4 +1,4 @@
-import { getPaymentsFiltered } from "../../../../apis/ApisHandale";
+import { getPaymentsForCharts } from "../../../../apis/ApisHandale";
 import UserFilter from "../../../UserFilter/UserFilter";
 import { PayLineChart } from "../../../../componentsLoader/ComponentsLoader";
 import React, { Suspense, useState, useEffect } from "react";
@@ -87,7 +87,7 @@ export default function PaymentLineChartContainer({ darkMode }) {
       case "Last Week":
         try {
           //get data from api
-          let response = await getPaymentsFiltered({
+          let response = await getPaymentsForCharts({
             payDate: formatDate(new Date()),
             number: 0,
           });
@@ -137,7 +137,7 @@ export default function PaymentLineChartContainer({ darkMode }) {
       case "Last 3 Months":
         try {
           //get data from api
-          let response = await getPaymentsFiltered({
+          let response = await getPaymentsForCharts({
             payDate: formatDate(new Date()),
             number: 3,
           });
@@ -186,7 +186,7 @@ export default function PaymentLineChartContainer({ darkMode }) {
       case "Last 6 Months":
         try {
           //get data from api
-          let response = await getPaymentsFiltered({
+          let response = await getPaymentsForCharts({
             payDate: formatDate(new Date()),
             number: 6,
           });
@@ -233,7 +233,7 @@ export default function PaymentLineChartContainer({ darkMode }) {
       case "Last Year":
         try {
           //get data from api
-          let response = await getPaymentsFiltered({
+          let response = await getPaymentsForCharts({
             payDate: formatDate(new Date()),
             number: 12,
           });

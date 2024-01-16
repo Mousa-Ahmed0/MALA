@@ -9,7 +9,7 @@ export default function BMR() {
   let [errorList, setErrorList] = useState([]);
   const [details, setDetails] = useState({
     age: 0,
-    sex: "Female",
+    sex: "Male",
     height: 0,
     weight: 0,
   });

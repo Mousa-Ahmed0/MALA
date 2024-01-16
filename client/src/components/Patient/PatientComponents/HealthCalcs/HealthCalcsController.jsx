@@ -13,11 +13,6 @@ export default function HealthCalcsController() {
       text: "BMI",
       path: "/Patient/HealthCalculators/BMI",
     },
-    {
-      id: 3,
-      text: "Body Fat",
-      path: "/Patient/HealthCalculators/BFC",
-    },
   ];
   ///////
 

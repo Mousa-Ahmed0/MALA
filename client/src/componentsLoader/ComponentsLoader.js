@@ -270,11 +270,7 @@ export const BMI = lazy(() =>
     "../components/Patient/PatientComponents/HealthCalcs/HealthCalcsComponenets/BMI.jsx"
   )
 );
-export const BFC = lazy(() =>
-  import(
-    "../components/Patient/PatientComponents/HealthCalcs/HealthCalcsComponenets/BFC.jsx"
-  )
-);
+
 export const PatResultsPreviewContainer = lazy(() =>
   import(
     "../components/Patient/PatientComponents/PatResultsPreview/PatResultsPreviewContainer.jsx"

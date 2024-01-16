@@ -243,6 +243,17 @@ export const getPaymentsFiltered = async (date, pageNo) => {
     }
   );
 };
+export const getPaymentsForCharts = async (date) => {
+  // console.log(" custome date: ", date);
+  return await axios.get(
+    `http://localhost:5000/api/payment/detailsPayment?payDate=${date.payDate}&number=${date.number}`,
+    {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    }
+  );
+};
 export const getPateinrPayments = async (ident) => {
   return await axios.get(
     `http://localhost:5000/api/payment/getPaymentIdentPatient`,

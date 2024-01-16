@@ -52,11 +52,16 @@ export default function Ganlyses() {
       //const anlyseID = trendAnlysess[i].id;
 
       renderAnlysis.push(
-        <div className="trend-Box d-flex justify-content-center flex-column">
-          <h3 className="h5 text-center my-3">{trendAnlysis[i].name}</h3>
-          <button onClick={() => goToAnlysess()} className="det-btn mt-3">
-            Details
-          </button>
+        <div className="col-12 col-sm-6 col-md-4 col-lg-2 ">
+          <div className="trend-Box d-flex justify-content-center flex-column">
+            <div>
+              {" "}
+              <h3 className="h5 text-center my-3">{trendAnlysis[i].name}</h3>
+            </div>
+            <button onClick={() => goToAnlysess()} className="det-btn mt-3">
+              Details
+            </button>
+          </div>
         </div>
       );
     }
@@ -79,14 +84,18 @@ export default function Ganlyses() {
     <div className="LP-section LP-trindingAnlysis">
       {apiError ? (
         apiErrorMessage
+      ) : noResults ? (
+        <div>No Results Found.</div>
       ) : (
-        <div className="trendRow d-flex flex-wrap">
-          <div className="trendRow-details d-flex justify-content-center flex-column text-left w-25">
-            <div className="brd w-25 mb-3"></div>
+        <div className="trendRow row justify-content-center">
+          <div className="col-12 trendRow-details d-flex justify-content-center align-items-center flex-column w-100">
+            <div className="brd-top  mb-3"></div>
             <h2>The Most Frequently Used Tests</h2>
-            <div className="brd w-100 mt-3"></div>
+            <div className="brd-bottom  mt-3"></div>
           </div>
-          {renderAnlysis()}
+          <div className="col-12">
+            <div className="row">{renderAnlysis()}</div>
+          </div>
           <div className="more-Anlysis w-25 d-flex align-items-center flex-column">
             <a
               onClick={goToAnlysess}

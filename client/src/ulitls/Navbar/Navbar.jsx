@@ -18,7 +18,7 @@ export default function Navbar({ values, userDetails, logout }) {
   }
   function handaleLogoutActive() {
     logout();
-    setActiveId(7);
+    //setActiveId(7);
   }
   /////
   useEffect(() => {

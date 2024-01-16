@@ -12,7 +12,7 @@ export default function AnlysisPresintation({
   noResults,
 }) {
   return (
-    <div className="ST-section">
+    <div className="ST-section my-4">
       <BackBtn />
       <div className="row my-5">
         <div className="row">

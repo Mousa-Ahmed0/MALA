@@ -32,7 +32,7 @@ export default function App() {
   /* goTo page */
   function goToPage() {
     navigate({
-      pathname: `/profile/${userDetails.id}`,
+      pathname: `/`,
     });
   }
   ///////////////

@@ -11,3 +11,12 @@ export const bmiCalc = (age, sex, height, weight) => {
   let result = weight / ((height / 100.0) * (height / 100.0));
   return result.toFixed(2);
 };
+export const bfcCalc = (age, sex, bmi) => {
+  let result;
+  if (sex === "Male") {
+    result = 1.2 * bmi + 0.23 * age - 16.2;
+  } else {
+    result = 1.2 * bmi + 0.23 * age - 5.4;
+  }
+  return result.toFixed(2);
+};
