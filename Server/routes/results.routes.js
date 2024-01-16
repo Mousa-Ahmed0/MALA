@@ -41,7 +41,12 @@ router.get("/getResults/resultDateFromTo", ifAdminOrStaff, resultDateFromTo);
 router.get("/getResults/dayResult", ifAdminOrStaff, dayResult);
 router.get("/getResults/ifDoneCount", ifAdminOrStaff, isDoneCount);
 router.get("/getResults/ifPaiedCount", ifAdminOrStaff, isPaiedCount);
-router.get("/getResults/pythonResults/:id",validateId, ifDoctor, pythonResults);
+router.get(
+  "/getResults/pythonResults/:id",
+  validateId,
+  ifDoctor,
+  pythonResults
+);
 
 router.get("/getResults/:id", validateId, getResultsById);
 router.get("/getAllResults/:id", validateId, getAllResultsById);
