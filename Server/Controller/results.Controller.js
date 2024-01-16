@@ -3,7 +3,10 @@ const { analyzeResult, vaildationResults } = require("../models/patienResults");
 const { user } = require("../models/user");
 const { analyze } = require("../models/Analyze");
 const { PythonShell } = require("python-shell");
-const { cloudinaryUploadImage, cloudinaryRemoveImage, } = require("../utils/cloudinary");
+const {
+  cloudinaryUploadImage,
+  cloudinaryRemoveImage,
+} = require("../utils/cloudinary");
 const path = require("path");
 const fs = require("fs");
 /**--------------------------------
@@ -21,7 +24,7 @@ module.exports.addResults = asyncHandler(async (req, res) => {
       let mesError = [];
       error.details.map((index) => {
         mesError.push(index.message);
-      })
+      });
       return res.status(400).json({ message: mesError });
     }
     const newResult = new analyzeResult({
@@ -108,25 +111,28 @@ module.exports.pythonResults = asyncHandler(async (req, res) => {
       }
       let options = {
         args: [years, sex, results],
-        scriptPath: "../Server/utils/python",  
+        scriptPath: "../Server/utils/python",
       };
-      PythonShell.run("AnlayzeResultPredict.py", options).then(async(result) => {
-        // results is an array consisting of result collected during execution
+      PythonShell.run("AnlayzeResultPredict.py", options).then(
+        async (result) => {
+          // results is an array consisting of result collected during execution
 
-        //2- get the  path to the image
-        const imagePath = path.join(__dirname, `../images/chart.jpg`);
-        if (!imagePath) return res.status(400).json({ message: "No file provided" });
+          //2- get the  path to the image
+          const imagePath = path.join(__dirname, `../images/chart.jpg`);
+          if (!imagePath)
+            return res.status(400).json({ message: "No file provided" });
 
-        //3- upload to cloudinary
-        const resultImag = await cloudinaryUploadImage(imagePath);
-            //8- remove image from the server
-        const urlRes=resultImag.secure_url;
-        console.log(urlRes);
-        fs.unlinkSync(imagePath);
+          //3- upload to cloudinary
+          const resultImag = await cloudinaryUploadImage(imagePath);
+          //8- remove image from the server
+          const urlRes = resultImag.secure_url;
+          console.log(urlRes);
+          fs.unlinkSync(imagePath);
 
-        console.log(result);
-        res.status(200).json({ messag: "done...........", result,urlRes });
-      });
+          console.log(result);
+          res.status(200).json({ messag: "done...........", result, urlRes });
+        }
+      );
     } else res.status(404).json({ message: "User not found" });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
@@ -946,9 +952,7 @@ module.exports.isDone = asyncHandler(async (req, res) => {
       }
       //
       res.status(200).json({ count, usersArray });
-    }
-
-    else res.status(404).json({ message: "Not repot " });
+    } else res.status(404).json({ message: "Not repot " });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
     res.status(500).json({ errorMess: "Internal Server Error", error });

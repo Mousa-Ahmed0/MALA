@@ -65,5 +65,5 @@ plt.savefig('./images/chart.jpg')
 
 # Print the predicted class for the new data
 condition = "Healthy" if new_pred == 0 else "Unhealthy - Anemia"
-print(f"Predicted Condition: {condition}")
+print(condition)
 

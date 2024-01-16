@@ -13,7 +13,8 @@ export default function ResultsTable({ user, darkMode, resultDetails }) {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         }
       );
-      setAiResult(response.data.result);
+      console.log("response", response);
+      setAiResult(response.data);
     } catch (error) {
       console.error("Error from getAiResult: ", error);
     }
@@ -70,36 +71,42 @@ export default function ResultsTable({ user, darkMode, resultDetails }) {
                   Using Ai - Predict the issue.
                 </button>
                 <div className="collapse" id="collapseExample">
-                  <div className="card card-body d-flex flex-row gap-2 bg-transparent">
-                    {aiResult.length > 0 ? (
-                      <>
-                        {" "}
-                        Using{" "}
-                        <span className="colorMain h5 m-0 mid-bold">
-                          Ai
-                        </span>{" "}
-                        Owner of this{" "}
-                        <span className="colorMain h5 m-0 mid-bold">CBC</span>{" "}
-                        Result Can be have:{" "}
-                        <span className="colorMain h5 m-0 mid-bold">
-                          {aiResult[0]}
-                        </span>
-                        with
-                        <span className="colorMain h5 m-0 mid-bold">
-                          {Math.ceil(aiResult[1])}%
-                        </span>{" "}
-                        accuracy.
-                      </>
-                    ) : (
-                      <div className="d-flex justify-content-center align-items-center my-4">
-                        <div
-                          className="spinner-border text-primary"
-                          role="status"
-                        >
-                          <span className="sr-only">Loading...</span>
+                  <div className="row">
+                    <div className="col-12 card card-body d-flex flex-row gap-2 bg-transparent">
+                      {aiResult.result?.length > 0 ? (
+                        <>
+                          {" "}
+                          Using{" "}
+                          <span className="colorMain h5 m-0 mid-bold">
+                            Ai
+                          </span>{" "}
+                          Owner of this{" "}
+                          <span className="colorMain h5 m-0 mid-bold">CBC</span>{" "}
+                          Result Can be have:{" "}
+                          <span className="colorMain h5 m-0 mid-bold">
+                            {aiResult.result[0]} .
+                          </span>
+                        </>
+                      ) : (
+                        <div className="d-flex justify-content-center align-items-center my-4">
+                          <div
+                            className="spinner-border text-primary"
+                            role="status"
+                          >
+                            <span className="sr-only">Loading...</span>
+                          </div>
                         </div>
+                      )}
+                    </div>
+                    <div className="col-12 card card-body d-flex flex-row justify-content-center gap-2 bg-transparent">
+                      <div>
+                        <img
+                          className="img-fluid"
+                          alt="ai-predictation-image"
+                          src={aiResult.urlRes}
+                        />
                       </div>
-                    )}
+                    </div>
                   </div>
                 </div>
               </div>
