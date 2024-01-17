@@ -21,8 +21,8 @@ export default function PaymentToPDF({
     payment.InsuranceCompName.length > 0 ? payment.InsuranceCompName : "NaN";
 
   const downloadPDF = (payment) => {
-    const doc = new jsPDF();
-    doc.setFontSize(16);
+    const doc = new jsPDF("p", "px", "a4");
+    doc.setFontSize(12);
     // Calculate the middle of the page
     const pageWidth = doc.internal.pageSize.getWidth();
     const textWidth =
@@ -33,7 +33,7 @@ export default function PaymentToPDF({
 
     // Add the custom header to the middle of the page
     const capture = document.querySelector(".pdf-pay-section");
-    capture.style.padding = "1rem 2.5rem"; // Padding
+    capture.style.padding = "40px 65px"; // Padding
     capture.style.position = "relative"; // Padding
     capture.style.left = "0"; // Padding
 
@@ -42,10 +42,17 @@ export default function PaymentToPDF({
     html2canvas(capture).then((canvas) => {
       const imgData = canvas.toDataURL("image/png");
 
-      doc.addImage(imgData, "PNG", 0, 0, doc.internal.pageSize.getWidth(), 60);
+      doc.addImage(
+        imgData,
+        "PNG",
+        0,
+        0,
+        doc.internal.pageSize.getWidth(),
+        doc.internal.pageSize.getHeight() * 0.3
+      );
 
       doc.autoTable({
-        startY: 60,
+        startY: 185,
         headStyles: { fillColor: [41, 128, 185], textColor: 255 },
         bodyStyles: { textColor: 0 },
         theme: "striped",
