@@ -109,7 +109,7 @@ export const updateAnAd = async (id, ad) => {
   console.log("id: ", id);
   console.log("item: ", ad);
   return await axios.put(
-    `http://localhost:5000/api/advertisements/updateAdverti/${id}`,
+    `http://localhost:5000/api/advertisements/updateAdverti/${ad._id}`,
     ad,
     {
       headers: { Authorization: "Bearer " + localStorage.getItem("token") },
@@ -169,6 +169,17 @@ export const getPateinrResults = async (ident) => {
     {
       params: ident, // Use 'params' to send data as query parameters
     },
+    {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    }
+  );
+};
+export const getDoctorResults = async (ident) => {
+  return await axios.get(
+    `http://localhost:5000/api/result/getDoctorAnzlyze?doctorIdent=${ident}`,
+
     {
       headers: {
         Authorization: "Bearer " + localStorage.getItem("token"),

@@ -52,6 +52,7 @@ import {
   MessageInterface,
   AdDetails,
   AddAPayment,
+  AllDoctorResults,
 } from "../../componentsLoader/ComponentsLoader.js";
 
 export default function Main({
@@ -73,7 +74,6 @@ export default function Main({
           isFormOpen ? "d-block " : "d-none"
         } position-absolute bg-black low-opasity z-150  w-100`}
       ></div>
-
       <Routes>
         {/* Components With Start Path '{Domain}/' */}
         <Route
@@ -421,6 +421,22 @@ export default function Main({
                 }
               >
                 <DoctorHome user={userDetails} />{" "}
+              </Suspense>
+            }
+          />
+          <Route
+            path="/Doctor/AllDoctorResults/:ident"
+            element={
+              <Suspense
+                fallback={
+                  <div className="center-container">
+                    <div className="spinner-border text-primary" role="status">
+                      <span className="sr-only">Loading...</span>
+                    </div>
+                  </div>
+                }
+              >
+                <AllDoctorResults user={userDetails} />{" "}
               </Suspense>
             }
           />

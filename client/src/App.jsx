@@ -58,6 +58,7 @@ export default function App() {
               <span className="sr-only">Loading...</span>
             </div>
           </div>
+
           {/* Header */}
           <Suspense
             fallback={
@@ -100,12 +101,6 @@ export default function App() {
               setIsPdfLoading={setIsPdfLoading}
               goToPage={goToPage}
               logout={logout}
-              setIsFormOpen={setIsFormOpen}
-              userDetails={userDetails}
-              setUserData={setUserData}
-              isPdfLoading={isPdfLoading}
-              setIsPdfLoading={setIsPdfLoading}
-              goToPage={goToPage}
               darkMode={darkMode}
             />
           </Suspense>

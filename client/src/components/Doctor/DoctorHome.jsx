@@ -128,7 +128,7 @@ export default function DoctorHome({ user }) {
             <hr className="my-4" />
             <div className="d-flex justify-content-end mt-4">
               <Link
-                to={`/Patient/ResultsPreview/${user.ident}`}
+                to={`/Doctor/AllDoctorResults/${user.ident}`}
                 className="btn btn-primary"
               >
                 All Results

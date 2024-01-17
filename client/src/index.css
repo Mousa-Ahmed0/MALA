@@ -60,8 +60,10 @@ body {
 }
 
 .low-opasity {
-  height: calc(100vh + 100%) !important;
+  height: calc(100vh + 20%) !important;
   opacity: 75% !important;
+  top: 0;
+  left: 0;
 }
 .high-opasity {
   height: calc(100vh) !important;

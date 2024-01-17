@@ -27,7 +27,6 @@ export default function AdsPreviewContainer({ setIsFormOpen }) {
   );
   const [isUpdateFormOpen, setIsUpdateFormOpen] = useState(false);
   const [ad, setAd] = useState({
-    images: [],
     title: "",
     addText: "",
     creDate: new Date(),

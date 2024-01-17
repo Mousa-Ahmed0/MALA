@@ -290,6 +290,9 @@ export const PatPaymentsPreviewContainer = lazy(() =>
 export const DoctorHome = lazy(() =>
   import("../components/Doctor/DoctorHome.jsx")
 );
+export const AllDoctorResults = lazy(() =>
+  import("../components/Doctor/DoctorComponenets/AllDoctorResults.jsx")
+);
 
 /*==========================================  Internal Imports ===========*/
 // Profile

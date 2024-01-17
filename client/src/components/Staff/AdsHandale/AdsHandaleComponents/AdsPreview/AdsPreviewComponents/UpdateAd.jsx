@@ -18,6 +18,7 @@ export default function UpdateAd({
     e.preventDefault();
     try {
       setIsLoading(true);
+      console.log("ad before send", ad);
       const formDataToSend = new FormData();
       formDataToSend.append("title", ad.title);
       formDataToSend.append("addText", ad.addText);
