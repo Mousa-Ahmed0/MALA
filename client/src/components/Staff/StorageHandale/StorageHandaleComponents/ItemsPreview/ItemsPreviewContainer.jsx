@@ -43,7 +43,7 @@ export default function ItemsPreviewContainer({ setIsFormOpen }) {
     setIsFormOpen(false);
     setIsUpdateFormOpen(false);
   }
-  //get All Anlysis
+  //get All Items
   async function getAllItems() {
     try {
       const response = await getItems(pageNo);

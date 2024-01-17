@@ -7,11 +7,10 @@ import { useDarkMode } from "../../../../../context/DarkModeContext";
 import axios from "axios";
 import { formatDateWithouHour } from "../../../../../methods/FormateDate";
 
-export default function AdsPreviewContainer() {
+export default function AdsPreviewContainer({ setIsFormOpen }) {
   const { darkMode } = useDarkMode();
   let [allAds, setAllAds] = useState([]);
   let [visibleAds, setVisibleAds] = useState([]);
-
   let [apiError, setApiError] = useState(false);
   let [noResults, setNoResults] = useState(false);
   //search variables
@@ -27,9 +26,26 @@ export default function AdsPreviewContainer() {
     </div>
   );
   const [isUpdateFormOpen, setIsUpdateFormOpen] = useState(false);
+  const [ad, setAd] = useState({
+    images: [],
+    title: "",
+    addText: "",
+    creDate: new Date(),
+    expDate: new Date(),
+  });
 
   /* *************** Handale Pop Forms *************** */
-  //get All Ads
+  //update form open
+  function handaleUpdateFormOpen(a) {
+    setIsFormOpen(true);
+    setIsUpdateFormOpen(true);
+    setAd(a);
+  }
+
+  function closeUpdateForm() {
+    setIsFormOpen(false);
+    setIsUpdateFormOpen(false);
+  } //get All Ads
   async function getAllAds() {
     try {
       const response = await axios.get(
@@ -96,7 +112,7 @@ export default function AdsPreviewContainer() {
                       </div>
                       <div className="col-6 col-md-3 d-flex justify-content-end align-items-center">
                         <button
-                          onClick={() => {}}
+                          onClick={() => handaleUpdateFormOpen(Ad)}
                           className="normal-btn btn d-flex justify-content-center align-items-center"
                         >
                           {" "}
@@ -193,6 +209,12 @@ export default function AdsPreviewContainer() {
         apiError={apiError}
         apiErrorMessage={apiErrorMessage}
         noResults={noResults}
+        ad={ad}
+        setAd={setAd}
+        closeUpdateForm={closeUpdateForm}
+        isUpdateFormOpen={isUpdateFormOpen}
+        getAllAds={getAllAds}
+        setApiError={setApiError}
       />
     </Suspense>
   );

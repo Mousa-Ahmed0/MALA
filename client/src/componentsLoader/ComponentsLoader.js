@@ -251,6 +251,11 @@ export const AdsPreviewPresintation = lazy(() =>
     "../components/Staff/AdsHandale/AdsHandaleComponents/AdsPreview/AdsPreviewPresintation.jsx"
   )
 );
+export const UpdateAd = lazy(() =>
+  import(
+    "../components/Staff/AdsHandale/AdsHandaleComponents/AdsPreview/AdsPreviewComponents/UpdateAd.jsx"
+  )
+);
 /*==========================================  PatientPage components ===========*/
 export const PatientHome = lazy(() =>
   import("../components/Patient/PatientHome.jsx")

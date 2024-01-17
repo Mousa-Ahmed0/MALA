@@ -105,6 +105,17 @@ export const updateAnItem = async (id, item) => {
     }
   );
 };
+export const updateAnAd = async (id, ad) => {
+  console.log("id: ", id);
+  console.log("item: ", ad);
+  return await axios.put(
+    `http://localhost:5000/api/advertisements/updateAdverti/${id}`,
+    ad,
+    {
+      headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+    }
+  );
+};
 /* Results API`s */
 export const addResult = async (newResult) => {
   return await axios.post(

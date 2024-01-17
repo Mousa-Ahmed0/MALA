@@ -1,5 +1,6 @@
-import React from "react";
+import React, { Suspense } from "react";
 import SearchBar from "../../../../SearchBar/SearchBar";
+import { UpdateAd } from "../../../../../componentsLoader/ComponentsLoader";
 
 export default function AdsPreviewPresintation({
   handaleSearchVlue,
@@ -9,9 +10,44 @@ export default function AdsPreviewPresintation({
   apiError,
   apiErrorMessage,
   noResults,
+  isUpdateFormOpen,
+  closeUpdateForm,
+  ad,
+  setAd,
+  getAllAds,
+  setApiError,
 }) {
   return (
     <>
+      <div
+        className={`position-relative my-4 ${
+          isUpdateFormOpen ? "d-flex" : "d-none"
+        } ${
+          darkMode ? " spic-dark-mode border-0" : "bg-white"
+        } justify-content-center align-items-center h-100 w-100 z-200`}
+      >
+        <Suspense
+          fallback={
+            <div className="center-container">
+              <div className="spinner-border text-primary" role="status">
+                <span className="sr-only">Loading...</span>
+              </div>
+            </div>
+          }
+        >
+          <UpdateAd
+            ad={ad}
+            setAd={setAd}
+            isUpdateFormOpen={isUpdateFormOpen}
+            darkMode={darkMode}
+            closeUpdateForm={closeUpdateForm}
+            getAllAds={getAllAds}
+            setApiError={setApiError}
+            apiError={apiError}
+            apiErrorMessage={apiErrorMessage}
+          />
+        </Suspense>
+      </div>
       <div className="row my-5">
         <div className="row">
           <div className="col-12 col-lg-7">

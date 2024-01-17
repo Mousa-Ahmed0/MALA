@@ -897,7 +897,7 @@ export default function Main({
                     </div>
                   }
                 >
-                  <AdsPreviewContainer />{" "}
+                  <AdsPreviewContainer setIsFormOpen={setIsFormOpen} />{" "}
                 </Suspense>
               }
             />
