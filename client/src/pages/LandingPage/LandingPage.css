@@ -276,15 +276,6 @@
 .LP-section.LP-Contact .LP-Contact-Box .LP-Cont-Details h4 {
   position: relative;
 }
-.LP-section.LP-Contact .LP-Contact-Box .LP-Cont-Details h4::after {
-  content: "";
-  position: absolute;
-  bottom: -5px;
-  left: 0;
-  width: 50%;
-  height: 1px;
-  background-color: var(--main-bg);
-}
 
 .LP-section.LP-Contact .LP-Contact-Box .LP-Cont-Details p {
   transition: 0.5s ease !important;

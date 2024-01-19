@@ -63,18 +63,18 @@ export default function Contact() {
   function validateForm() {
     const schema = Joi.object({
       email: Joi.string()
+        .trim()
+        .min(5)
+        .max(100)
         .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
         .required(),
-      fullName: Joi.string().min(4).max(12).required(),
-      message: Joi.string().min(4).required(),
+      fullName: Joi.string().trim().min(2).max(100).required(),
+      message: Joi.string().trim().required(),
     });
 
     return schema.validate(guestMessage, { abortEarly: false });
   }
-  /////////////
-  useEffect(() => {
-    console.log("New guestMessage: ", guestMessage);
-  }, [guestMessage]);
+
   return (
     <div className="LP-section LP-Contact Con-Pat">
       <div
@@ -160,30 +160,59 @@ export default function Contact() {
             }`}
           >
             <div className="row">
-              <h4
-                className={`col-12 my-2 colorMain ${
-                  darkMode ? " spic-dark-mode" : ""
-                }`}
-              >
-                More Information:
-              </h4>
+              <div className="col-12">
+                <h4
+                  className={` colorMain m-0 ${
+                    darkMode ? " spic-dark-mode" : ""
+                  }`}
+                >
+                  More Information:
+                </h4>
+              </div>
+              <div className="col-12 m-0">
+                <hr />
+              </div>
               <p className="my-2 col-12 detailes-size">
-                <i className="fa-solid fa-map-location-dot colorMain"></i>{" "}
-                Sufyan Street, Nablus - PS
+                <div className="row">
+                  <div className="col-1">
+                    {" "}
+                    <i className="fa-solid fa-map-location-dot colorMain"></i>{" "}
+                  </div>
+                  <div className="col-11">Sufyan Street, Nablus - PS</div>
+                </div>
               </p>
               <p className="mb-3 col-12 detailes-size">
-                <i className="fa-solid fa-envelope colorMain"></i>{" "}
-                someExample@exg.com
+                <div className="row">
+                  <div className="col-1">
+                    {" "}
+                    <i className="fa-solid fa-envelope colorMain"></i>{" "}
+                  </div>
+                  <div className="col-11">someExample@exg.com</div>
+                </div>
               </p>
               <p className="mb-3 col-12 detailes-size">
-                <i className="fa-solid fa-mobile colorMain"></i> +970569156547{" "}
-                <span className="font-weight-bold">|</span>{" "}
-                <i className="font-weight-bold"></i> +2907058
+                <div className="row">
+                  <div className="col-1">
+                    {" "}
+                    <i className="fa-solid fa-mobile colorMain"></i>
+                  </div>
+                  <div className="col-11">
+                    +(970) 56-9156-547{" "}
+                    <span className="font-weight-bold">|</span> +(29) 07058
+                  </div>
+                </div>
               </p>
               <p className="mb-3 col-12 detailes-size">
-                <i className="fa-solid fa-calendar-days colorMain"></i> Tuesday
-                - Thursday <span className="font-weight-bold">|</span> 8:00Am -
-                4:00Pm
+                <div className="row">
+                  <div className="col-1">
+                    {" "}
+                    <i className="fa-solid fa-calendar-days colorMain"></i>{" "}
+                  </div>
+                  <div className="col-11">
+                    Tuesday - Thursday{" "}
+                    <span className="font-weight-bold">|</span> 8:00Am - 4:00Pm
+                  </div>
+                </div>
               </p>
               <a
                 className="btn bgMain col-4"

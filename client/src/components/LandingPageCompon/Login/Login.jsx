@@ -13,8 +13,8 @@ export default function Login({ setUserData, goToPage, userDetails }) {
     password: "",
   });
   let [errorList, setErrorList] = useState([]);
-  let [apiMessage, setApiMessage] = useState("");
   let [apiError, setApiError] = useState(false);
+  let [notFoundMessage, setNotFoundMessage] = useState(false);
 
   /* Submite Function */
   async function onFormSubmit(e) {
@@ -41,9 +41,13 @@ export default function Login({ setUserData, goToPage, userDetails }) {
         .catch((error) => {
           // Handle errors
           if (error.response) {
-            console.log("Error data:", error.response.data);
             setApiError(true);
-            setApiMessage(error.response.data.message);
+            if (
+              error.response.status === 400 &&
+              error.response.data.message === "invaild Phone or Password"
+            ) {
+              setNotFoundMessage(true);
+            }
           }
           console.error("Axios error:", error);
         });
@@ -55,6 +59,7 @@ export default function Login({ setUserData, goToPage, userDetails }) {
   /* Get New Data Function */
   function getData(e) {
     setErrorList([]);
+    setNotFoundMessage(false);
     let newUser = { ...user };
     newUser[e.target.name] = e.target.value;
     setUser(newUser);
@@ -69,8 +74,8 @@ export default function Login({ setUserData, goToPage, userDetails }) {
   /* Validation Function */
   function validateForm() {
     const schema = Joi.object({
-      phone: Joi.string().max(12).required(),
-      password: Joi.string().min(8).required(),
+      phone: Joi.string().trim().min(2).max(15).required(),
+      password: Joi.string().trim().min(8).required(),
     });
 
     return schema.validate(user, { abortEarly: false });
@@ -86,19 +91,15 @@ export default function Login({ setUserData, goToPage, userDetails }) {
               <div className="col-12 d-flex justify-content-center my-2">
                 <h1 className="h3 m-0 colorMain mid-bold">Log In:</h1>
               </div>
-              {apiMessage ? (
+              {notFoundMessage ? (
                 <div className="col-12">
-                  <div
-                    className={
-                      apiError ? "alert alert-danger" : "alert alert-primary"
-                    }
-                  >
-                    {apiMessage}
+                  <div className="alert alert-danger">
+                    "invaild Phone or Password"
                   </div>
                 </div>
               ) : (
                 ""
-              )}{" "}
+              )}
               {errorList.map((error, index) => (
                 <div className="col-12">
                   <div key={index} className="alert alert-danger">
