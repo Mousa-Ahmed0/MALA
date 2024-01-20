@@ -67,6 +67,7 @@ export default function UserProfilePrsintation({
                     type="file"
                     accept="image/*"
                     onChange={(e) => handleImageChange(e)}
+                    disabled={loader}
                   />
                 </div>
                 <div className="mx-4 my-2 d-flex justify-content-center">

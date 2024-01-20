@@ -47,20 +47,38 @@ export default function MessageBox({ darkMode }) {
         >
           <div className="col-1">{index + 1}</div>
           <div className="col-9">
-            <div className="d-flex align-items-center gap-2">
-              <img
-                src={message.firstUser.profilePhoto.url}
-                data-lazy-placeholder="https://placehold.it/1321x583?text=Loading"
-                loading="lazy"
-                className={`img-fluid lazy nav-profile-img mx-2 img-fluid border ${
-                  darkMode ? "border-white" : "border-black"
-                } border-rounded`}
-                alt="nav-profile-img"
-                style={{ objectFit: "cover" }}
-              />
-              <p className="h6 m-0 text-truncate">
-                {message.firstUser.firstname + " " + message.firstUser.lastname}
-              </p>
+            <div className="row align-items-center">
+              <div className="col-3">
+                {" "}
+                <img
+                  src={message.firstUser.profilePhoto.url}
+                  data-lazy-placeholder="https://placehold.it/1321x583?text=Loading"
+                  loading="lazy"
+                  className={` img-fluid lazy nav-profile-img mx-2  border ${
+                    darkMode ? "border-white" : "border-black"
+                  } border-rounded`}
+                  alt="nav-profile-img"
+                />
+              </div>
+              <div className="col-9">
+                {" "}
+                <div
+                  className="position-relative"
+                  style={{ width: "fit-content" }}
+                >
+                  {" "}
+                  <Link
+                    to={`/Profile/${message.firstUser.id}`}
+                    className={`nav-item nav-link h6 m-0 text-truncate ${
+                      !message.ifReadySecondUser ? "mid-bold" : ""
+                    }`}
+                  >
+                    {message.firstUser.firstname +
+                      " " +
+                      message.firstUser.lastname}
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
           <Link

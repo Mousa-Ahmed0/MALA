@@ -295,9 +295,6 @@ th {
   .general-nav.navbar .navbar-brand {
     width: 100% !important;
   }
-  .nav-xsmall-screens {
-    justify-content: space-between !important;
-  }
 }
 @media (max-width: 742px) {
   .general-nav.navbar {
@@ -314,8 +311,10 @@ th {
 .general-nav.navbar .accDet .nav-profile-img,
 .nav-profile-img {
   height: 2.6875rem !important;
+  min-width: 2.6875rem !important;
   max-width: 2.6875rem !important;
   border-radius: 50%;
+  object-fit: cover;
 }
 /* Footer */
 Footer {
@@ -522,6 +521,8 @@ select option {
 .message {
   max-width: 100% !important;
 }
+
+/*/****************/
 
 /*** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~_~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Animations ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~_~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ***/
 /* Typing */

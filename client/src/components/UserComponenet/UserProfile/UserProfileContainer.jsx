@@ -30,6 +30,7 @@ export default function UserProfileContainer({
   const [isUpdateFormOpen, setIsUpdateFormOpen] = useState(false);
   const [imageFile, setImageFile] = useState(null);
   const [isImgFormOpen, setIsImgFormOpen] = useState(false);
+  const [loader, setLoader] = useState(false);
 
   /* use Effects */
   useEffect(() => {
@@ -51,6 +52,7 @@ export default function UserProfileContainer({
   async function updateUser(e) {
     e.preventDefault();
     try {
+      setLoader(true);
       const response = await updateAUser(id, user);
       console.log(response);
       if (userDetails.id === response.data.updateU.id) {
@@ -61,7 +63,7 @@ export default function UserProfileContainer({
       console.error("Error:", error);
       console.error("Error Response:", error.response); // Log the error response
     }
-
+    setLoader(false);
     getUser();
   }
   // get new userDetails
@@ -72,6 +74,7 @@ export default function UserProfileContainer({
   }
   // update Profile Photo
   async function updatePhoto() {
+    setLoader(true);
     const formData = new FormData();
     formData.append("image", imageFile);
     try {
@@ -81,6 +84,7 @@ export default function UserProfileContainer({
       setApiError(true);
       console.error("Error:", error);
     }
+    setLoader(false);
   }
   //handleImageChange
   function handleImageChange(e) {
@@ -138,6 +142,7 @@ export default function UserProfileContainer({
           apiErrorMessage={apiErrorMessage}
           getNewData={getNewData}
           updateUser={updateUser}
+          loader={loader}
         />{" "}
       </Suspense>
     </>

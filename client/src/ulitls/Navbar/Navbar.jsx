@@ -40,7 +40,7 @@ export default function Navbar({ values, userDetails, logout }) {
       } bg-white general-nav navbar navbar-expand-lg`}
       id="nav"
     >
-      <div className="container nav-xsmall-screens">
+      <div className="container nav-xsmall-screens justify-content-center  justify-content-md-between">
         <div>
           <Link
             className={`navbar-brand ${
@@ -119,16 +119,21 @@ export default function Navbar({ values, userDetails, logout }) {
               style={{ cursor: "pointer" }}
               className="position-relative"
             >
-              <div className="nav-item accDet d-flex justify-content-center align-items-center mx-2">
-                <img
-                  className="nav-profile-img mx-2"
-                  src={userDetails.profilePhoto.url}
-                  alt="nav-profile-img"
-                  style={{ objectFit: "cover" }}
-                />
-                <p className="pt-1 nav-item nav-link position-relative m-0 mid-bold text-truncate">
-                  {userDetails.firstname} {userDetails.lastname}
-                </p>
+              <div className="nav-item accDet row justify-content-center align-items-center">
+                <div className="col-3 d-flex justify-content-center  rounded-circle">
+                  {" "}
+                  <img
+                    className="nav-profile-img mx-2 "
+                    src={userDetails.profilePhoto.url}
+                    alt="nav-profile-img"
+                  />
+                </div>
+                <div className="col-9">
+                  {" "}
+                  <p className="pt-1 nav-item nav-link position-relative m-0 mid-bold text-truncate">
+                    {userDetails.firstname} {userDetails.lastname}
+                  </p>
+                </div>
               </div>
               <div
                 className={`${
