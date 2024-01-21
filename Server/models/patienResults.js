@@ -67,18 +67,22 @@ function vaildationResults(obj) {
     patientIdent: Joi.number().required(),
     date: Joi.date().required(),
     doctorIdent: Joi.number(),
-    doctorName: Joi.string(),
+    doctorName: Joi.string().allow(""),
     isDone: Joi.boolean().default(false).required(),
     isPaied: Joi.boolean().default(false).required(),
     resultSet: Joi.array().items(
       Joi.object({
-        anlyzeId: Joi.string().pattern(new RegExp("^[0-9a-fA-F]{24}$")).required(),
-        result: Joi.array().items(
-          Joi.object({
-            name: Joi.string().required(),
-            value: Joi.string().required(),
-          })
-        ).required(),
+        anlyzeId: Joi.string()
+          .pattern(new RegExp("^[0-9a-fA-F]{24}$"))
+          .required(),
+        result: Joi.array()
+          .items(
+            Joi.object({
+              name: Joi.string().required(),
+              value: Joi.string().required(),
+            })
+          )
+          .required(),
       })
     ),
   });
@@ -87,5 +91,5 @@ function vaildationResults(obj) {
 const analyzeResult = mongoose.model("Result", analyzeResultSchema);
 module.exports = {
   analyzeResult,
-  vaildationResults
+  vaildationResults,
 };

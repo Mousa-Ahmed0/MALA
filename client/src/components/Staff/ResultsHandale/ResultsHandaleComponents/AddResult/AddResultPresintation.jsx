@@ -8,6 +8,7 @@ export default function AddResultPresintation({
   renderDoctorsOption,
   renderResultSet,
   apiMessage,
+  errorList,
 }) {
   return (
     <>
@@ -22,6 +23,12 @@ export default function AddResultPresintation({
               >
                 New Result:
               </h1>
+              {errorList.map((error, index) => (
+                <div key={index} className="alert alert-danger">
+                  {" "}
+                  {error.message}{" "}
+                </div>
+              ))}
               {apiMessage ? (
                 <div className="alert alert-info d-flex justify-content-center">
                   {apiMessage}

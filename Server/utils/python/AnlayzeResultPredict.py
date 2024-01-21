@@ -51,7 +51,7 @@ newResult = new_df[['Age', 'Sex', 'RBC', 'PCV', 'MCV', 'MCH', 'MCHC', 'RDW', 'TL
 # Make predictions on the new data
 new_pred = clf.predict(newResult)
 
-# Print feature importances for the new record
+# Feature importances for the new record
 new_record_importances = clf.feature_importances_
 
 # Visualize feature importances for the new record

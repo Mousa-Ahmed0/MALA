@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Joi from "joi";
-import axios from "axios";
 import { useDarkMode } from "../../../../../context/DarkModeContext";
 import { newUser } from "../../../../../apis/ApisHandale";
 
@@ -20,7 +19,6 @@ export default function Register({ usertype }) {
     usertype: "",
   });
   let [errorList, setErrorList] = useState([]);
-  let [apiMessage, setApiMessage] = useState("");
   let [apiError, setApiError] = useState(false);
 
   function handaleType(e) {
@@ -43,41 +41,39 @@ export default function Register({ usertype }) {
     let validateResult = validateForm();
     if (validateResult.error) {
       setErrorList(validateResult.error.details);
-    }
+    } else {
+      try {
+        await newUser(User)
+          .then((response) => {
+            // Handle the response data
+            console.log("Axios response:", response.data);
+            setApiError(false);
+          })
+          .catch((error) => {
+            // Handle errors
+            if (error.response) {
+              console.log("Error data:", error.response.data);
+              setApiError(true);
+            }
+            console.error("Axios error:", error);
+          });
+      } catch (error) {
+        console.error(error);
+      }
 
-    try {
-      await newUser(User)
-        .then((response) => {
-          // Handle the response data
-          console.log("Axios response:", response.data);
-          setApiError(false);
-          setApiMessage(response.data.message);
-        })
-        .catch((error) => {
-          // Handle errors
-          if (error.response) {
-            console.log("Error data:", error.response.data);
-            setApiError(true);
-            setApiMessage(error.response.data.message);
-          }
-          console.error("Axios error:", error);
-        });
-    } catch (error) {
-      console.error(error);
+      setUser({
+        ident: "",
+        firstname: "",
+        lastname: "",
+        sex: "",
+        email: "",
+        phone: "",
+        birthday: new Date(),
+        city: "",
+        password: "",
+        usertype: "",
+      });
     }
-
-    setUser({
-      ident: "",
-      firstname: "",
-      lastname: "",
-      sex: "",
-      email: "",
-      phone: "",
-      birthday: new Date(),
-      city: "",
-      password: "",
-      usertype: "",
-    });
   }
 
   /* Get New Data Function */
@@ -102,22 +98,24 @@ export default function Register({ usertype }) {
   */
   /* Validation Function */
   function validateForm() {
-    const schema = Joi.object({
+    const Schema = Joi.object({
+      ident: Joi.number().required(),
+      firstname: Joi.string().trim().min(2).max(100).required(),
+      lastname: Joi.string().trim().min(2).max(15).required(),
+      sex: Joi.string().required(),
+      phone: Joi.string().trim().min(2).max(13).required(),
       email: Joi.string()
+        .trim()
+        .min(5)
+        .max(100)
         .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
         .required(),
-      firstname: Joi.string().max(20).required(),
-      lastname: Joi.string().max(20).required(),
-      password: Joi.string().min(8).required(),
-      phone: Joi.string().trim().min(10).max(10).required(),
       birthday: Joi.date().required(),
       city: Joi.string().trim().min(2).max(100).required(),
       usertype: Joi.string().trim().required(),
-      sex: Joi.string(),
-      ident: Joi.number().required(),
+      password: Joi.string().trim().min(8).required(),
     });
-
-    return schema.validate(User, { abortEarly: false });
+    return Schema.validate(User, { abortEarly: false });
   }
   return (
     <div className="ST-section my-1">
@@ -136,17 +134,7 @@ export default function Register({ usertype }) {
               {error.message}{" "}
             </div>
           ))}
-          {apiMessage ? (
-            <div
-              className={
-                apiError ? "alert alert-danger" : "alert alert-primary"
-              }
-            >
-              {apiMessage}
-            </div>
-          ) : (
-            ""
-          )}
+
           <form className="mx-5" onSubmit={onFormSubmit}>
             <div className="d-flex gap-4">
               <div className="mb-3 w-100">
@@ -214,7 +202,6 @@ export default function Register({ usertype }) {
                   name="email"
                   className="form-control"
                   id="u_email"
-                  aria-describedby="emailHelp"
                   value={User.email}
                 />
               </div>

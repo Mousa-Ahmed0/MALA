@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { updateAnItem } from "../../../../../../apis/ApisHandale";
+import Joi from "joi";
 
 export default function UpdateItem({
   closeUpdateForm,
@@ -10,27 +11,46 @@ export default function UpdateItem({
   setApiError,
 }) {
   const [apiMessage, setApiMessage] = useState("");
+  let [errorList, setErrorList] = useState([]);
+
   //update User Details
   async function setNewItem(e) {
     e.preventDefault();
-    try {
-      const response = await updateAnItem(item.id, item);
-      setApiMessage("Done!");
-    } catch (error) {
-      setApiError(true);
-      console.error("Error:", error);
-      console.error("Error Response:", error.response); // Log the error response
-    }
+    // Call Validation Function
+    let validateResult = vaildationStorage();
+    if (validateResult.error) {
+      setErrorList(validateResult.error.details);
+    } else {
+      try {
+        const response = await updateAnItem(item.id, item);
+        setApiMessage("Done!");
+      } catch (error) {
+        setApiError(true);
+        console.error("Error:", error);
+        console.error("Error Response:", error.response); // Log the error response
+      }
 
-    getAllItems();
+      getAllItems();
+    }
   }
   // get new userDetails
   function getNewData(e) {
+    setErrorList([]);
     let newItem = { ...item };
     newItem[e.target.name] = e.target.value;
     setItem(newItem);
   }
 
+  //validate storage Model
+  function vaildationStorage() {
+    const Schema = Joi.object({
+      itemName: Joi.string().trim().required(),
+      theNumber: Joi.number().required(),
+      cost: Joi.number().required(),
+    });
+    return Schema.validate(item, { abortEarly: false });
+  }
+  /////////////////////
   useEffect(() => {
     console.log(item);
   }, [item]);

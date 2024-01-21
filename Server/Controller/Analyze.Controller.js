@@ -15,7 +15,8 @@ module.exports.addAnalyze = asyncHandler(async (req, res) => {
       let mesError = [];
       error.details.map((index) => {
         mesError.push(index.message);
-      })
+      });
+      console.log(index);
       return res.status(400).json({ message: mesError });
     }
     //if anzlyze already exist
@@ -38,7 +39,7 @@ module.exports.addAnalyze = asyncHandler(async (req, res) => {
     res.status(200).json({ message: "Done.........." });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
 
@@ -51,7 +52,6 @@ module.exports.addAnalyze = asyncHandler(async (req, res) => {
 module.exports.updateAnalyze = asyncHandler(async (req, res) => {
   //vaildation front end
   try {
-
     const updateA = await analyze.findOneAndUpdate(
       { code: req.body.code },
       {
@@ -76,7 +76,7 @@ module.exports.updateAnalyze = asyncHandler(async (req, res) => {
     }
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
 
@@ -88,13 +88,12 @@ module.exports.updateAnalyze = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.getAllAnalze = asyncHandler(async (req, res) => {
   try {
-
     const allAn = await analyze.find();
     if (!allAn) return res.status(404).json({ message: "Analyze not found" });
     res.status(200).json(allAn);
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
 /**--------------------------------
@@ -105,17 +104,15 @@ module.exports.getAllAnalze = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.getAnalze = asyncHandler(async (req, res) => {
   try {
-
     const oneAnalyze = await analyze.findOne({ code: req.params.code });
     if (!oneAnalyze)
       return res.status(404).json({ message: "Analyze not found" });
     res.status(200).json(oneAnalyze);
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
-
 
 /**--------------------------------
  * @desc Get  Analyze Count
@@ -125,14 +122,13 @@ module.exports.getAnalze = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.getAnalyzeCount = asyncHandler(async (req, res) => {
   try {
-
     const count = await analyze.count();
     res.status(200).json(count);
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
-})
+});
 
 /**--------------------------------
  * @desc Get  Analyze Category
@@ -142,18 +138,20 @@ module.exports.getAnalyzeCount = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.getCategoryCount = asyncHandler(async (req, res) => {
   try {
-
     let arrayCat = [];
-    const analyzeCategory = await analyze.find({}, { analyzeCategory: 1, _id: 0 });
+    const analyzeCategory = await analyze.find(
+      {},
+      { analyzeCategory: 1, _id: 0 }
+    );
     if (analyzeCategory) {
-      const uniqueCategories = new Set(analyzeCategory.map(item => item.analyzeCategory));
+      const uniqueCategories = new Set(
+        analyzeCategory.map((item) => item.analyzeCategory)
+      );
       arrayCat = [...uniqueCategories];
       res.status(200).json(arrayCat);
-    }
-    else
-      res.status(400).json({ message: "does not exist" }, arrayCat);
+    } else res.status(400).json({ message: "does not exist" }, arrayCat);
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
-})
+});

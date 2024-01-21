@@ -33,7 +33,7 @@ const {
 } = require("../Controller/results.Controller");
 
 // results
-router.post("/editResults", ifAdminOrStaff, addResults);
+router.post("/addResults", ifAdminOrStaff, addResults);
 router.put("/editResults/:id", ifAdminOrStaff, editResult);
 router.get("/getResult", ifAdminOrStaff, getResults);
 router.get("/getResults/staffIdent", ifAdminOrStaff, getResultsByIdStaff);
@@ -48,7 +48,7 @@ router.get(
   validateId,
   ifDoctor,
   pythonResults
-  );
+);
 
 router.get("/getResults/:id", validateId, getResultsById);
 router.get("/getAllResults/:id", validateId, getAllResultsById);

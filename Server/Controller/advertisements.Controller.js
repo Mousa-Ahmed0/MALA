@@ -5,7 +5,10 @@ const {
 } = require("../utils/cloudinary");
 const path = require("path");
 const fs = require("fs");
-const { Advertisement, vaildationAdvertisement } = require("../models/advertisements");
+const {
+  Advertisement,
+  vaildationAdvertisement,
+} = require("../models/advertisements");
 
 /**--------------------------------
  * @desc     upload advertisements
@@ -14,6 +17,9 @@ const { Advertisement, vaildationAdvertisement } = require("../models/advertisem
  * @access private (only logged in admin)
  * ------------------------------------------ */
 module.exports.addAdvert = asyncHandler(async (req, res) => {
+  console.log("-------------------");
+  console.log(req.body);
+  console.log("Start");
   //chack
   try {
     const { error } = vaildationAdvertisement(req.body);
@@ -22,14 +28,17 @@ module.exports.addAdvert = asyncHandler(async (req, res) => {
       let mesError = [];
       error.details.map((index) => {
         mesError.push(index.message);
-      })
+      });
       return res.status(400).json({ message: mesError });
     }
+    console.log("Step 1");
 
     let newadv = await Advertisement.findOne({ title: req.body.title });
     if (newadv) {
       return res.status(400).json({ message: "Advertisement already exist" });
     }
+    console.log("Step 2");
+
     let arrayImg = [];
     if (!req.files || req.files.length === 0)
       return res.status(400).json({ message: "No file provided" });
@@ -51,6 +60,7 @@ module.exports.addAdvert = asyncHandler(async (req, res) => {
       };
       arrayImg.push(imageInfo);
     });
+    console.log("Step 3");
 
     // Wait for all uploads to complete before responding
     Promise.all(uploadPromises)
@@ -62,21 +72,23 @@ module.exports.addAdvert = asyncHandler(async (req, res) => {
           addText: req.body.addText,
           advert: arrayImg,
         });
+        console.log("Step 4");
+
         await newAdver.save();
+        console.log("Step 5");
         res
           .status(200)
           .json({ message: "Images uploaded successfully", newAdver });
       })
       .catch((error) => {
-        if (res.data.message === 'Unexpected field') {
-
+        if (res.data.message === "Unexpected field") {
           res.status(400).json({ message: "Unexpected" });
         }
         res.status(500).json({ message: "Internal server error" });
       });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMass: "Internal Server Error",error });
+    res.status(500).json({ errorMass: "Internal Server Error", error });
   }
 });
 
@@ -88,13 +100,12 @@ module.exports.addAdvert = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.getAdvert = asyncHandler(async (req, res) => {
   try {
-
     let allAdv = await Advertisement.find({});
     if (allAdv) res.status(201).json({ message: "done.........", allAdv });
     else return res.status(400).json({ message: "dose not exist" });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMass: "Internal Server Error",error });
+    res.status(500).json({ errorMass: "Internal Server Error", error });
   }
 });
 
@@ -106,16 +117,14 @@ module.exports.getAdvert = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.getAdvertId = asyncHandler(async (req, res) => {
   try {
-
     let allAdv = await Advertisement.findById(req.params.id);
     if (allAdv) res.status(201).json({ message: "done.........", allAdv });
     else return res.status(400).json({ message: "dose not exist" });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMass: "Internal Server Error",error });
+    res.status(500).json({ errorMass: "Internal Server Error", error });
   }
 });
-
 
 /**--------------------------------
  * @desc     update advertisements
@@ -125,7 +134,6 @@ module.exports.getAdvertId = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.updateAdverti = asyncHandler(async (req, res) => {
   try {
-
     let test = await Advertisement.findById(req.params.id);
 
     //if Advertisement exsit
@@ -165,10 +173,12 @@ module.exports.updateAdverti = asyncHandler(async (req, res) => {
     //save to database
     await test.save();
 
-    res.status(200).json({ message: "Advertisement updated successfully", test });
+    res
+      .status(200)
+      .json({ message: "Advertisement updated successfully", test });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMass: "Internal Server Error",error });
+    res.status(500).json({ errorMass: "Internal Server Error", error });
   }
 });
 
@@ -180,11 +190,11 @@ module.exports.updateAdverti = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.deleteAdvert = asyncHandler(async (req, res) => {
   try {
-
     let del = await Advertisement.findById(req.params.id);
 
     //if Advertisement exsit
-    if (!del) return res.status(404).json({ message: "Advertisement not found" });
+    if (!del)
+      return res.status(404).json({ message: "Advertisement not found" });
 
     let oldImag = del.advert;
 
@@ -198,6 +208,6 @@ module.exports.deleteAdvert = asyncHandler(async (req, res) => {
     return res.status(200).json({ message: "Advertisement is delete..." });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMass: "Internal Server Error",error });
+    res.status(500).json({ errorMass: "Internal Server Error", error });
   }
 });

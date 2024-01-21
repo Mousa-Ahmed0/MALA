@@ -29,7 +29,7 @@ export default function GuestsMessages({ darkMode, setIsFormOpen }) {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         }
       );
-      // console.log(response);
+      console.log(response);
       setAllMessages(response.data.allMeass);
     } catch (error) {
       console.error("error from getGuestMessages:", error);
@@ -78,7 +78,10 @@ export default function GuestsMessages({ darkMode, setIsFormOpen }) {
                     </div>
                   </div>
                 </div>
-                <div style={{ overflowY: "auto" }} className="card-body p-0">
+                <div
+                  style={{ overflowY: "auto" }}
+                  className="card-body p-0 mx-3"
+                >
                   <div
                     style={{
                       maxHeight: "75px",

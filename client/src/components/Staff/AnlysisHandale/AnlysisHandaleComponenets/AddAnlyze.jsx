@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useDarkMode } from "../../../../context/DarkModeContext";
+import Joi from "joi";
 
 export default function AddAnlyze() {
   const { darkMode } = useDarkMode();
@@ -14,6 +15,7 @@ export default function AddAnlyze() {
     compnents: [],
   });
   let [No, setNo] = useState(1);
+  let [errorList, setErrorList] = useState([]);
   let [components, setComponents] = useState([]);
   let [component, setComponent] = useState({
     nameC: "",
@@ -53,26 +55,51 @@ export default function AddAnlyze() {
       ...anlyze,
       compnents: components.map((component) => component.newComponent),
     };
-    try {
-      await axios.post(
-        "http://localhost:5000/api/Analyze/Add-Analyze",
-        newAnlyze,
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
-        }
-      );
-      setApiError(false);
-      //  console.log("Analyze with components submitted successfully");
-    } catch (error) {
-      setApiError(true);
-      console.error("Error submitting analyze with components:", error);
+    // Call Validation Function
+    let validateResult = validateAnalyze();
+    if (validateResult.error) {
+      setErrorList(validateResult.error.details);
+    } else {
+      setErrorList([]);
+      try {
+        await axios.post(
+          "http://localhost:5000/api/Analyze/Add-Analyze",
+          newAnlyze,
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+          }
+        );
+        setApiError(false);
+        setApiMessage("Done!");
+        setAnlyze({
+          name: "",
+          code: "",
+          cost: 0,
+          description: "",
+          isAvailable: true,
+          analyzeCategory: "",
+          compnents: [],
+        });
+        setNo(1);
+        setComponent({
+          nameC: "",
+          unit: "",
+          healthyValue: "",
+        });
+        //  console.log("Analyze with components submitted successfully");
+      } catch (error) {
+        setApiError(true);
+        console.error("Error submitting analyze with components:", error);
+      }
     }
   }
 
   /* Get New AnlyzeData Function */
   function getNewAnlyzeData(e) {
+    setErrorList([]);
+    setApiMessage();
     if (e.target.name === "no") {
       setNo(parseInt(e.target.value));
     } else {
@@ -83,12 +110,18 @@ export default function AddAnlyze() {
   }
   //handale avilabillty
   function handaleAvailablity(e) {
+    setErrorList([]);
+    setApiMessage();
+
     let newAnlyze = { ...anlyze };
     newAnlyze.isAvailable = e.target.value;
     setAnlyze(newAnlyze);
   }
   /* Get New ComponenetsData Function */
   async function getNewComponentData(e, i) {
+    setErrorList([]);
+    setApiMessage();
+
     e.preventDefault();
     await setComponents((prevComponents) => {
       const updatedComponents = [...prevComponents];
@@ -138,6 +171,7 @@ export default function AddAnlyze() {
                     onChange={(e) => getNewComponentData(e, i)}
                     type="text"
                     name="nameC"
+                    value={component.nameC}
                     className="form-control"
                     id="nameC"
                   />
@@ -155,6 +189,7 @@ export default function AddAnlyze() {
                     onChange={(e) => getNewComponentData(e, i)}
                     type="text"
                     name="unit"
+                    value={component.unit}
                     className="form-control"
                     id="unit"
                   />
@@ -172,6 +207,7 @@ export default function AddAnlyze() {
                     onChange={(e) => getNewComponentData(e, i)}
                     type="text"
                     name="healthyValue"
+                    value={component.healthyValue}
                     className="form-control"
                     id="healthyValue"
                   />
@@ -201,6 +237,8 @@ export default function AddAnlyze() {
   }
   /* handale category changes */
   function handaleCategory(e) {
+    setErrorList([]);
+
     setisCategoryChoosen(true);
     if (e.target.value === "") {
       setisCategoryChoosen(false);
@@ -209,15 +247,33 @@ export default function AddAnlyze() {
     newAnlyze.analyzeCategory = e.target.value;
     setAnlyze(newAnlyze);
   }
-
+  //validate  analyze
+  function validateAnalyze() {
+    const Schema = Joi.object({
+      name: Joi.string(),
+      code: Joi.string().required().trim(),
+      cost: Joi.number().required(),
+      description: Joi.string().required(),
+      isAvailable: Joi.boolean().default(true),
+      analyzeCategory: Joi.string().required(),
+      compnents: Joi.array().items(
+        Joi.object({
+          nameC: Joi.string().required().trim(),
+          unit: Joi.string().required(),
+          healthyValue: Joi.string().required(),
+        })
+      ),
+    });
+    return Schema.validate(anlyze, { abortEarly: false });
+  }
   ////////////////
   useEffect(() => {
     getCategories();
   }, []);
-  // useEffect(() => {
-  //   console.log(anlyze);
-  //   console.log(components);
-  // }, [components, anlyze]);
+  useEffect(() => {
+    console.log("errorList", errorList);
+    //   console.log(components);
+  }, [errorList]);
   return (
     <div className="ST-section my-1">
       <div className="Reg-Pat my-4">
@@ -232,6 +288,17 @@ export default function AddAnlyze() {
             >
               Add a New Anlyze:
             </h1>
+            {errorList.map((error, index) => (
+              <div key={index} className="alert alert-danger">
+                {" "}
+                {error.message}{" "}
+              </div>
+            ))}
+            {apiMessage ? (
+              <div className="alert alert-info"> {apiMessage} </div>
+            ) : (
+              ""
+            )}
             <div className="row">
               <div className="col-12">
                 <label
@@ -246,6 +313,7 @@ export default function AddAnlyze() {
                   onChange={getNewAnlyzeData}
                   type="text"
                   name="name"
+                  value={anlyze.name}
                   className="form-control"
                   id="a_name"
                 />
@@ -266,6 +334,7 @@ export default function AddAnlyze() {
                   onChange={getNewAnlyzeData}
                   type="text"
                   name="code"
+                  value={anlyze.code}
                   className="form-control"
                   id="a_code"
                 />
@@ -290,6 +359,7 @@ export default function AddAnlyze() {
                   onChange={getNewAnlyzeData}
                   type="number"
                   name="cost"
+                  value={anlyze.cost}
                   className="form-control"
                   id="a_cost"
                 />
@@ -314,6 +384,7 @@ export default function AddAnlyze() {
                   onChange={getNewAnlyzeData}
                   type="number"
                   name="no"
+                  value={No}
                   className="form-control"
                   id="a_code"
                 />
@@ -403,6 +474,7 @@ export default function AddAnlyze() {
                 <textarea
                   onChange={getNewAnlyzeData}
                   name="description"
+                  value={anlyze.description}
                   className="form-control w-100"
                   id="a_description"
                   rows="5"

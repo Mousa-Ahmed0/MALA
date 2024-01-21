@@ -22,33 +22,38 @@ export default function Contact() {
     let validateResult = validateForm();
     if (validateResult.error) {
       setErrorList(validateResult.error.details);
+    } else {
+      setErrorList([]);
+      try {
+        await axios
+          .post(
+            "http://localhost:5000/api/guest/addGuestMeassage",
+            guestMessage
+          )
+          .then((response) => {
+            // Handle the response data
+            console.log("Axios response:", response);
+            setApiError(false);
+            setApiMessage(response.data.message);
+          })
+          .catch((error) => {
+            // Handle errors
+            if (error.response) {
+              console.log("Error data:", error.response.data);
+              setApiError(true);
+              setApiMessage(error.response.data.message);
+            }
+            console.error("Axios error:", error);
+          });
+      } catch (error) {
+        console.error(error);
+      }
+      setguestMessage({
+        fullName: "",
+        email: "",
+        message: "",
+      });
     }
-    try {
-      await axios
-        .post("http://localhost:5000/api/guest/addGuestMeassage", guestMessage)
-        .then((response) => {
-          // Handle the response data
-          console.log("Axios response:", response);
-          setApiError(false);
-          setApiMessage(response.data.message);
-        })
-        .catch((error) => {
-          // Handle errors
-          if (error.response) {
-            console.log("Error data:", error.response.data);
-            setApiError(true);
-            setApiMessage(error.response.data.message);
-          }
-          console.error("Axios error:", error);
-        });
-    } catch (error) {
-      console.error(error);
-    }
-    setguestMessage({
-      fullName: "",
-      email: "",
-      message: "",
-    });
   }
 
   /* Get Changes */

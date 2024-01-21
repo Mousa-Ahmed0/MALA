@@ -1,5 +1,6 @@
 import React, { useEffect, useState, Suspense } from "react";
 import axios from "axios";
+import Joi from "joi";
 
 import { useDarkMode } from "../../../../../context/DarkModeContext";
 import { getAllDoctor } from "../../../../../apis/ApisHandale";
@@ -46,7 +47,7 @@ export default function AddResult() {
   function getResultData(e) {
     setApiMessage("");
     setIsDone(false);
-
+    setErrorList([]);
     if (e.target.name === "a_no") {
       setAnlysisNo(e.target.value);
     } else {
@@ -63,37 +64,43 @@ export default function AddResult() {
   async function onSubmitForm(e) {
     e.preventDefault();
     let newResult = { ...result, resultSet: resultSet };
-
-    try {
-      //console.log("newResult", newResult);
-      let response = await axios.post(
-        "http://localhost:5000/api/result/addResults",
-        newResult,
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
-        }
-      );
-      //console.log(response);
-      setApiError(false);
-      setApiMessage(response.data.message);
-      setIsDone(true);
-      //console.log("Result with components submitted successfully");
-      setResult({
-        isDone: true,
-        isPaied: false,
-        staffIdent: 0,
-        patientIdent: 0,
-        doctorIdent: 0,
-        doctorName: "",
-        date: new Date(),
-        resultSet: [],
-      });
-      setResultSet([]);
-    } catch (error) {
-      setApiError(true);
-      console.error("Error submitting Result with components:", error);
+    // Call Validation Function
+    let validateResult = vaildationResults(newResult);
+    if (validateResult.error) {
+      setErrorList(validateResult.error.details);
+    } else {
+      setErrorList([]);
+      try {
+        //console.log("newResult", newResult);
+        let response = await axios.post(
+          "http://localhost:5000/api/result/addResults",
+          newResult,
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+          }
+        );
+        //console.log(response);
+        setApiError(false);
+        setApiMessage(response.data.message);
+        setIsDone(true);
+        //console.log("Result with components submitted successfully");
+        setResult({
+          isDone: true,
+          isPaied: false,
+          staffIdent: 0,
+          patientIdent: 0,
+          doctorIdent: 0,
+          doctorName: "",
+          date: new Date(),
+          resultSet: [],
+        });
+        setResultSet([]);
+      } catch (error) {
+        setApiError(true);
+        console.error("Error submitting Result with components:", error);
+      }
     }
   }
   // display the doctors options in our community
@@ -161,7 +168,34 @@ export default function AddResult() {
     }
     return rows;
   }
-
+  //validation
+  function vaildationResults(obj) {
+    const Schema = Joi.object({
+      staffIdent: Joi.number().required(),
+      patientIdent: Joi.number().required(),
+      date: Joi.date().required(),
+      doctorIdent: Joi.number(),
+      doctorName: Joi.string().allow(""),
+      isDone: Joi.boolean().default(false).required(),
+      isPaied: Joi.boolean().default(false).required(),
+      resultSet: Joi.array().items(
+        Joi.object({
+          anlyzeId: Joi.string()
+            .pattern(new RegExp("^[0-9a-fA-F]{24}$"))
+            .required(),
+          result: Joi.array()
+            .items(
+              Joi.object({
+                name: Joi.string().required(),
+                value: Joi.string().required(),
+              })
+            )
+            .required(),
+        })
+      ),
+    });
+    return Schema.validate(obj, { abortEarly: false });
+  }
   ///////////////////
   useEffect(() => {
     getAllDoctors();
@@ -194,6 +228,7 @@ export default function AddResult() {
           renderDoctorsOption={renderDoctorsOption}
           apiMessage={apiMessage}
           renderResultSet={renderResultSet}
+          errorList={errorList}
         />
       </Suspense>
     </>

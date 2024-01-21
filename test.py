@@ -4,7 +4,6 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
 import matplotlib.pyplot as plt
 
-
 ###########################################
 print("---Start of Program---")
 
@@ -24,7 +23,7 @@ y = df['disease']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)  # 20% of the data for testing, and 80% for training.
 
 # Initialize the RandomForestClassifier
-clf = RandomForestClassifier(random_state=42, n_estimators=20)  # RandomForestClassifier algorithm
+clf = RandomForestClassifier(random_state=42, n_estimators=100)  # RandomForestClassifier algorithm
 
 # Train the model
 clf.fit(X_train, y_train)
@@ -52,8 +51,8 @@ plt.title('Feature Importances for the Entire Dataset')
 plt.show()
 
 # New data for prediction
-new_data = {'Age': [38], 'Sex': [0], 'RBC': [3.47], 'PCV': [35.02], 'MCV': [88.78], 'MCH': [29.65], 'MCHC': [29.45],
-            'RDW': [14.54], 'TLC': [8.55], 'PLT /mm3': [225.44], 'HGB': [6.55]}
+new_data = {'Age': [38], 'Sex': [0], 'RBC': [3.47], 'PCV': [30.02], 'MCV': [88.78], 'MCH': [29.65], 'MCHC': [29.45],
+            'RDW': [14.54], 'TLC': [8.55], 'PLT /mm3': [225.44], 'HGB': [2.55]}
 
 # Create a DataFrame for the new data
 new_df = pd.DataFrame(new_data)
@@ -83,5 +82,5 @@ print("--- New Data Prediction: ---")
 condition = "Healthy" if new_pred == 0 else "Unhealthy - Anemia"
 print(f"Predicted Condition: {condition}")
 
-# Evaluate the model on the new data
+# Evaluate the model on the new data (Note: You may not have true labels for the new data to evaluate accuracy)
 print("________________________________________________")

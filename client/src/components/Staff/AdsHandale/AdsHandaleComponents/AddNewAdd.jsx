@@ -42,7 +42,7 @@ export default function AddNewAdd({ setIsFormOpen }) {
       formDataToSend.append("creDate", ad.creDate);
       formDataToSend.append("expDate", ad.expDate);
 
-      //console.log("formDataToSend: ", formDataToSend);
+      console.log("formDataToSend: ", formDataToSend);
 
       let response = await axios.post(
         "http://localhost:5000/api/advertisements/addAdvert",

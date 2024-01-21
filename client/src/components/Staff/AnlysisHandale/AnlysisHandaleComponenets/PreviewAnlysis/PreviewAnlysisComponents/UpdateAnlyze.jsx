@@ -9,7 +9,8 @@ export default function UpdateAnlyze() {
   const { darkMode } = useDarkMode();
   let [tempAnlyze, setTempAnlyze] = useState({});
   let [tempComponents, setTempComponents] = useState([]);
-  let [apiMessage, setApiMessage] = useState("");
+  let [apiMessage, setApiMessage] = useState();
+  let [btnLoader, setBtnLoader] = useState(false);
 
   const { code } = useParams();
 
@@ -31,6 +32,7 @@ export default function UpdateAnlyze() {
   }
   //update Analyze Details
   async function updateAnlyze(e) {
+    setBtnLoader(true);
     e.preventDefault();
     let newAnlyze = {
       ...tempAnlyze,
@@ -48,28 +50,29 @@ export default function UpdateAnlyze() {
         }
       );
       console.log(response);
-      setApiMessage(response.data.message);
+      setApiMessage("Done");
     } catch (error) {
       console.error("Error from Updating Anlyze: ", error);
     }
+    setBtnLoader(false);
   }
   // get new anlyzeDetails
   function getNewData(e) {
-    if (apiMessage.length > 0) setApiMessage("");
+    setApiMessage();
     let newAnlyze = { ...tempAnlyze };
     newAnlyze[e.target.name] = e.target.value;
     setTempAnlyze(newAnlyze);
   }
   //handale avilabillty of anlyze
   function handaleAvailablity(e) {
-    if (apiMessage.length > 0) setApiMessage("");
+    setApiMessage();
     let newAnlyze = { ...tempAnlyze };
     newAnlyze.isAvailable = e.target.value;
     setTempAnlyze(newAnlyze);
   }
   /* Get New ComponenetsData Function */
   async function getNewComponentData(e, index) {
-    if (apiMessage.length > 0) setApiMessage("");
+    setApiMessage();
     console.log("Index is: ", index, " and e: ", e);
     await setTempComponents((prevComponents) => {
       const updatedComponents = [...prevComponents];
@@ -179,7 +182,7 @@ export default function UpdateAnlyze() {
                 >
                   Edit Anlyze:
                 </h1>
-                {apiMessage.length > 0 ? (
+                {apiMessage ? (
                   <div className="alert alert-info">{apiMessage}</div>
                 ) : (
                   ""
@@ -290,7 +293,7 @@ export default function UpdateAnlyze() {
                 {renderAnlyzeComponents()}
                 <div className="mb-3 d-flex justify-content-end">
                   <button className="btn btn-primary d-flex justify-content-center BTN-Bold">
-                    Update
+                    {btnLoader ? "Loading..." : "Update"}
                   </button>
                 </div>
               </form>

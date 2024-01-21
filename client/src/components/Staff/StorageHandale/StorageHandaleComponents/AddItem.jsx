@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { addItem } from "../../../../apis/ApisHandale";
 import { useDarkMode } from "../../../../context/DarkModeContext";
+import Joi from "joi";
 
 export default function AddItem() {
   const { darkMode } = useDarkMode();
@@ -15,41 +16,61 @@ export default function AddItem() {
 
   function getNewItem(e) {
     setApiMessage("");
+    setErrorList([]);
     let newItem = { ...item };
     newItem[e.target.name] = e.target.value;
     setItem(newItem);
   }
   async function onFormSubmit(e) {
     e.preventDefault();
-    try {
-      await addItem(item)
-        .then((response) => {
-          // Handle the response data
-          console.log("Axios response:", response.data);
-          setApiError(false);
-          setApiMessage(response.data.message);
-        })
-        .catch((error) => {
-          // Handle errors
-          if (error.response) {
-            console.log("Error data:", error.response.data);
-            setApiError(true);
-            setApiMessage(error.response.data.message);
-          }
-          console.error("Axios error:", error);
-        });
-    } catch (error) {
-      console.error(error);
+    // Call Validation Function
+    let validateResult = vaildationStorage();
+    if (validateResult.error) {
+      setErrorList(validateResult.error.details);
+    } else {
+      try {
+        await addItem(item)
+          .then((response) => {
+            // Handle the response data
+            console.log("Axios response:", response.data);
+            setApiError(false);
+            setApiMessage(response.data.message);
+          })
+          .catch((error) => {
+            // Handle errors
+            if (error.response) {
+              console.log("Error data:", error.response.data);
+              setApiError(true);
+              setApiMessage(error.response.data.message);
+            }
+            console.error("Axios error:", error);
+          });
+      } catch (error) {
+        console.error(error);
+      }
+      setItem({
+        itemName: "",
+        theNumber: 0,
+        cost: 0,
+      });
     }
-    setItem({
-      itemName: "",
-      theNumber: 0,
-      cost: 0,
-    });
   }
+  //validate storage Model
+  function vaildationStorage() {
+    const Schema = Joi.object({
+      itemName: Joi.string().trim().required(),
+      theNumber: Joi.number().required(),
+      cost: Joi.number().required(),
+    });
+    return Schema.validate(item, { abortEarly: false });
+  }
+  ////////////////////////
   useEffect(() => {
     console.log(item);
   }, [item]);
+  useEffect(() => {
+    console.log("errorList", errorList);
+  }, [errorList]);
   return (
     <>
       <div className="ST-section my-1">
@@ -62,6 +83,12 @@ export default function AddItem() {
             >
               Add an Item:
             </h1>
+            {errorList.map((error, index) => (
+              <div key={index} className="alert alert-danger">
+                {" "}
+                {error.message}{" "}
+              </div>
+            ))}
             <form className="mx-5" onSubmit={onFormSubmit}>
               <div
                 className={`my-3 d-flex  ${darkMode ? " spic-dark-mode" : ""}`}
