@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Joi = require("joi");
 
 const advertisementSchema = new mongoose.Schema({
 
@@ -47,7 +48,7 @@ function vaildationAdvertisement(obj) {
     expDate: Joi.date().min(Joi.ref('creDate')).required(),
     advert: Joi.array().items(
       Joi.object({
-        url: Joi.string().uri().default("https://adwixy.com/images/avatar-03.png"),
+        url: Joi.string().default("https://adwixy.com/images/avatar-03.png"),
         publicId: Joi.string().allow(null),
       })
     ).default([

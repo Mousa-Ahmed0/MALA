@@ -17,13 +17,9 @@ const {
  * @access private (only logged in admin)
  * ------------------------------------------ */
 module.exports.addAdvert = asyncHandler(async (req, res) => {
-  console.log("-------------------");
-  console.log(req.body);
-  console.log("Start");
-  //chack
   try {
+    //chack validation
     const { error } = vaildationAdvertisement(req.body);
-    // validation
     if (error) {
       let mesError = [];
       error.details.map((index) => {
@@ -31,13 +27,10 @@ module.exports.addAdvert = asyncHandler(async (req, res) => {
       });
       return res.status(400).json({ message: mesError });
     }
-    console.log("Step 1");
-
     let newadv = await Advertisement.findOne({ title: req.body.title });
     if (newadv) {
       return res.status(400).json({ message: "Advertisement already exist" });
     }
-    console.log("Step 2");
 
     let arrayImg = [];
     if (!req.files || req.files.length === 0)
@@ -60,7 +53,6 @@ module.exports.addAdvert = asyncHandler(async (req, res) => {
       };
       arrayImg.push(imageInfo);
     });
-    console.log("Step 3");
 
     // Wait for all uploads to complete before responding
     Promise.all(uploadPromises)
@@ -72,10 +64,8 @@ module.exports.addAdvert = asyncHandler(async (req, res) => {
           addText: req.body.addText,
           advert: arrayImg,
         });
-        console.log("Step 4");
 
         await newAdver.save();
-        console.log("Step 5");
         res
           .status(200)
           .json({ message: "Images uploaded successfully", newAdver });
@@ -87,6 +77,7 @@ module.exports.addAdvert = asyncHandler(async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
       });
   } catch (error) {
+    console.log(error);
     // Handle the error here, you can log it or send a specific error response to the client
     res.status(500).json({ errorMass: "Internal Server Error", error });
   }

@@ -10,6 +10,7 @@ const { Storage, vaildationStorage } = require("../models/Storage");
 module.exports.addItem = asyncHandler(async (req, res) => {
   //validation
   try {
+    const { error } = vaildationStorage(req.body);
 
     // validation
     if (error) {
