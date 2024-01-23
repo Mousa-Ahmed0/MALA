@@ -8,7 +8,6 @@ export default function PaymentsPreviewPresintation({
   darkMode,
   visiblePayments,
   displayUsers,
-  noResults,
   apiError,
   apiErrorMessage,
   isCustomeDate,
@@ -25,6 +24,7 @@ export default function PaymentsPreviewPresintation({
   usersCount,
   pageNo,
   setPageNo,
+  loader,
 }) {
   return (
     <div className="ST-section my-2 p-0">
@@ -202,7 +202,13 @@ export default function PaymentsPreviewPresintation({
           </div>
         </div>
         <div className="row ">
-          {Array.isArray(visiblePayments) && visiblePayments.length > 0 ? (
+          {loader ? (
+            <div className="d-flex justify-content-center align-items-center my-4">
+              <div className="spinner-border text-primary" role="status">
+                <span className="sr-only">Loading...</span>
+              </div>
+            </div>
+          ) : Array.isArray(visiblePayments) && visiblePayments.length > 0 ? (
             <>
               {displayUsers()}
               <PaginationNav

@@ -211,7 +211,9 @@ export default function UsersMessages({ user }) {
     // Search for users when the search value changes
     searchForAUser();
   }, [val]);
-
+  useEffect(() => {
+    getUsers();
+  }, [pageNo]);
   return (
     <div className="ST-section my-2 p-0">
       <div className="container">

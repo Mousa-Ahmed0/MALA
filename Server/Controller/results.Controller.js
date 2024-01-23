@@ -115,21 +115,26 @@ module.exports.pythonResults = asyncHandler(async (req, res) => {
         args: [years, sex, results],
         scriptPath: "../Server/utils/python",
       };
-      PythonShell.run("AnlayzeResultPredict.py", options).then(async (result) => {
-        // results is an array consisting of result collected during execution
+      PythonShell.run("AnlayzeResultPredict.py", options).then(
+        async (result) => {
+          // results is an array consisting of result collected during execution
 
-        //1- get the  path to the image
-        const imagePath = path.join(__dirname, `../images/chart.jpg`);
-        if (!imagePath) return res.status(400).json({ message: "No file provided" });
+          //1- get the  path to the image
+          const imagePath = path.join(__dirname, `../images/chart.jpg`);
+          if (!imagePath)
+            return res.status(400).json({ message: "No file provided" });
 
-        //2- upload to cloudinary
-        const resultImag = await cloudinaryUploadImage(imagePath);
-        //3- remove image from the server
-        fs.unlinkSync(imagePath);
-        const urlRes = resultImag.secure_url;
-        const publicId = resultImag.public_id;
-        res.status(200).json({ messag: "done...........", result, urlRes, publicId });
-      });
+          //2- upload to cloudinary
+          const resultImag = await cloudinaryUploadImage(imagePath);
+          //3- remove image from the server
+          fs.unlinkSync(imagePath);
+          const urlRes = resultImag.secure_url;
+          const publicId = resultImag.public_id;
+          res
+            .status(200)
+            .json({ messag: "done...........", result, urlRes, publicId });
+        }
+      );
     } else res.status(404).json({ message: "User not found" });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
@@ -144,8 +149,8 @@ module.exports.pythonResults = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.imageDeletResutl = asyncHandler(async (req, res) => {
   try {
-    const publicId = (req.body.publicId).toString();
-    
+    const publicId = req.body.publicId.toString();
+
     // Check if the Cloudinary public ID exists
     const exists = await doesPublicIdExist(publicId);
     console.log(exists);
@@ -157,8 +162,7 @@ module.exports.imageDeletResutl = asyncHandler(async (req, res) => {
       await cloudinaryRemoveImage(publicId);
 
       res.status(200).json({ message: "Delete images" });
-    } else
-      res.status(400).json({ message: "publicId Not found" });
+    } else res.status(400).json({ message: "publicId Not found" });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
     res.status(500).json({ errorMess: "Internal Server Error", error });

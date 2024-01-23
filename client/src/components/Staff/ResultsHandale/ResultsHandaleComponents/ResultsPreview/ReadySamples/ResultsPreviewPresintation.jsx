@@ -25,6 +25,7 @@ export default function ResultsPreviewPresintation({
   usersCount,
   pageNo,
   setPageNo,
+  loader,
 }) {
   return (
     <div className="ST-section my-2 p-0">
@@ -180,7 +181,13 @@ export default function ResultsPreviewPresintation({
             </div>
           </div>
           <div className="row ">
-            {Array.isArray(visibleResults) && visibleResults.length > 0 ? (
+            {loader ? (
+              <div className="d-flex justify-content-center align-items-center my-4">
+                <div className="spinner-border text-primary" role="status">
+                  <span className="sr-only">Loading...</span>
+                </div>
+              </div>
+            ) : Array.isArray(visibleResults) && visibleResults.length > 0 ? (
               displayResults()
             ) : apiError ? (
               apiErrorMessage

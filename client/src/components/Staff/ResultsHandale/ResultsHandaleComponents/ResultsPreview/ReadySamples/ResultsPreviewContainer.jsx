@@ -45,9 +45,11 @@ export default function ResultsPreviewContainer({}) {
   );
   const [pageNo, setPageNo] = useState(1);
   const [usersCount, setUsersCount] = useState();
+  const [loader, setLoader] = useState(false);
 
   //get all results
   async function getResults() {
+    setLoader(true);
     try {
       let response = await getSamples(true, pageNo);
       //console.log("response from gg", response);
@@ -57,6 +59,7 @@ export default function ResultsPreviewContainer({}) {
     } catch (error) {
       console.error("Error From getResults: ", error);
     }
+    setLoader(false);
   }
 
   //display visible Results
@@ -167,9 +170,11 @@ export default function ResultsPreviewContainer({}) {
 
   //filter based on data range
   async function filterByDataRange() {
+    setLoader(true);
     try {
+      // console.log("dateRange", dateRange);
       let response = await getResultsFromTo(dateRange, pageNo);
-      console.log("response from range", response);
+      // console.log("response from range", response);
       if (response.data.usersArray) {
         setfillterdResults(response.data.usersArray);
         setVisibleResults(response.data.usersArray);
@@ -177,9 +182,15 @@ export default function ResultsPreviewContainer({}) {
         setNoResults(true);
         setfillterdResults([]);
       }
+      setUsersCount(response.data.count);
     } catch (error) {
-      console.error("error", error);
+      if (error.response.status === 400) {
+        console.error("error", error);
+        setNoResults(true);
+        setfillterdResults([]);
+      } else console.error("error", error);
     }
+    setLoader(false);
   }
 
   //reset filter option, "reset Visible & filtered payments array"
@@ -204,6 +215,35 @@ export default function ResultsPreviewContainer({}) {
     setSrchFilterOption(option);
   }
 
+  async function handaleGetResultsFiltered(no) {
+    setLoader(true);
+    try {
+      let response = await getResultsFiltered(
+        {
+          payDate: formatDateYYMMDD(new Date()),
+          number: no,
+        },
+        pageNo
+      );
+      // console.log("Response from week filter", response);
+      if (response.data.usersArray) {
+        setfillterdResults(response.data.usersArray);
+        setVisibleResults(response.data.usersArray);
+        setUsersCount(response.data.count);
+      } else {
+        setNoResults(true);
+        setfillterdResults([]);
+      }
+    } catch (error) {
+      if (error.response.status === 400) {
+        setNoResults(true);
+        setfillterdResults([]);
+      } else
+        console.error(`error from filterd results by number: ${no}`, error);
+    }
+    setLoader(false);
+  }
+
   // handale the select filter option
   async function handaleFilterOption(option) {
     setVal("");
@@ -216,112 +256,28 @@ export default function ResultsPreviewContainer({}) {
 
       case "Last Week":
         try {
-          let response = await getResultsFiltered(
-            {
-              payDate: formatDateYYMMDD(new Date()),
-              number: 0,
-            },
-            pageNo
-          );
-          console.log("Response from week filter", response);
-          if (response.data.usersArray) {
-            setfillterdResults(response.data.usersArray);
-            setVisibleResults(response.data.usersArray);
-            setUsersCount(response.data.count);
-          } else {
-            setNoResults(true);
-            setfillterdResults([]);
-          }
-        } catch (error) {
-          console.error("error", error);
-        }
+          await handaleGetResultsFiltered(0);
+        } catch (error) {}
         break;
       case "Last Month":
         try {
-          let response = await getResultsFiltered(
-            {
-              payDate: formatDateYYMMDD(new Date()),
-              number: 1,
-            },
-            pageNo
-          );
-          console.log(response);
-          if (response.data.usersArray) {
-            setfillterdResults(response.data.usersArray);
-            setVisibleResults(response.data.usersArray);
-            setUsersCount(response.data.count);
-          } else {
-            setNoResults(true);
-            setfillterdResults([]);
-          }
-        } catch (error) {
-          console.error("error", error);
-        }
+          await handaleGetResultsFiltered(1);
+        } catch (error) {}
         break;
       case "Last 3 Months":
         try {
-          let response = await getResultsFiltered(
-            {
-              payDate: formatDateYYMMDD(new Date()),
-              number: 3,
-            },
-            pageNo
-          );
-
-          console.log("Last 3 Months", response);
-          if (response.data.usersArray) {
-            setfillterdResults(response.data.usersArray);
-            setVisibleResults(response.data.usersArray);
-            setUsersCount(response.data.count);
-          } else {
-            setNoResults(true);
-            setfillterdResults([]);
-          }
-        } catch (error) {
-          console.error("error", error);
-        }
+          await handaleGetResultsFiltered(3);
+        } catch (error) {}
         break;
       case "Last 6 Months":
         try {
-          let response = await getResultsFiltered(
-            {
-              payDate: formatDateYYMMDD(new Date()),
-              number: 6,
-            },
-            pageNo
-          );
-          if (response.data.usersArray) {
-            setfillterdResults(response.data.usersArray);
-            setVisibleResults(response.data.usersArray);
-            setUsersCount(response.data.count);
-          } else {
-            setNoResults(true);
-            setfillterdResults([]);
-          }
-        } catch (error) {
-          console.error("error", error);
-        }
+          await handaleGetResultsFiltered(6);
+        } catch (error) {}
         break;
       case "Last Year":
         try {
-          let response = await getResultsFiltered(
-            {
-              payDate: formatDateYYMMDD(new Date()),
-              number: 12,
-            },
-            pageNo
-          );
-          if (response.data.usersArray) {
-            setfillterdResults(response.data.usersArray);
-            setVisibleResults(response.data.usersArray);
-            setUsersCount(response.data.count);
-          } else {
-            setNoResults(true);
-            setfillterdResults([]);
-          }
-        } catch (error) {
-          console.error("error", error);
-        }
+          await handaleGetResultsFiltered(12);
+        } catch (error) {}
         break;
 
       default:
@@ -337,8 +293,8 @@ export default function ResultsPreviewContainer({}) {
     setfillterdResults([]);
     setVal("");
     setDateRange({
-      firstDate: "",
-      secondtDate: "",
+      firstDate: formatDateYYMMDD(startDate),
+      secondtDate: formatDateYYMMDD(endDate),
     });
   }
 
@@ -355,10 +311,10 @@ export default function ResultsPreviewContainer({}) {
   //search for an payments
   async function searchForAResult() {
     if (val.trim() === "") {
-      console.log("search out");
+      //console.log("search out");
       return;
     } else {
-      console.log("search in");
+      // console.log("search in");
       //custome date range
       if (isCustomeDate) {
         //no filter yet
@@ -371,12 +327,12 @@ export default function ResultsPreviewContainer({}) {
           ) {
             let srchResultsArray = [];
             allResults.map((res, index) => {
-              console.log(res);
+              // console.log(res);
               if (
                 (
-                  res.usersPatient.firstname?.toLowerCase() +
+                  res.usersPatient?.firstname?.toLowerCase() +
                   " " +
-                  res.usersPatient.lastname?.toLowerCase()
+                  res.usersPatient?.lastname?.toLowerCase()
                 ).includes(val)
               ) {
                 srchResultsArray.push(res);
@@ -393,7 +349,7 @@ export default function ResultsPreviewContainer({}) {
           else if (srchFilterOption === "Doctor") {
             let srchResultsArray = [];
             for (const res of allResults) {
-              console.log(res);
+              // console.log(res);
               const fullName = res.usersDoctor.firstname
                 ? res.usersDoctor.firstname?.toLowerCase() +
                   " " +
@@ -415,12 +371,12 @@ export default function ResultsPreviewContainer({}) {
           ) {
             let srchResultsArray = [];
             allResults.map((res, index) => {
-              console.log(res);
+              //   console.log(res);
               if (
                 (
-                  res.usersPatient.firstname?.toLowerCase() +
+                  res.usersPatient?.firstname?.toLowerCase() +
                   " " +
-                  res.usersPatient.lastname?.toLowerCase()
+                  res.usersPatient?.lastname?.toLowerCase()
                 ).includes(val)
               ) {
                 srchResultsArray.push(res);
@@ -437,7 +393,7 @@ export default function ResultsPreviewContainer({}) {
             let srchResultsArray = [];
 
             for (const res of allResults) {
-              console.log(res);
+              //      console.log(res);
 
               const fullName = res.usersDoctor.firstname
                 ? res.usersDoctor.firstname?.toLowerCase() +
@@ -472,12 +428,12 @@ export default function ResultsPreviewContainer({}) {
           ) {
             let srchResultsArray = [];
             allResults.map((res, index) => {
-              console.log(res);
+              // console.log(res);
               if (
                 (
-                  res.usersPatient.firstname?.toLowerCase() +
+                  res.usersPatient?.firstname?.toLowerCase() +
                   " " +
-                  res.usersPatient.lastname?.toLowerCase()
+                  res.usersPatient?.lastname?.toLowerCase()
                 ).includes(val)
               ) {
                 srchResultsArray.push(res);
@@ -493,7 +449,7 @@ export default function ResultsPreviewContainer({}) {
             let srchResultsArray = [];
 
             for (const res of allResults) {
-              console.log(res);
+              //      console.log(res);
 
               const fullName = res.usersDoctor.firstname
                 ? res.usersDoctor.firstname?.toLowerCase() +
@@ -520,12 +476,12 @@ export default function ResultsPreviewContainer({}) {
           ) {
             let srchResultsArray = [];
             fillterdResults.map((res, index) => {
-              console.log(res);
+              //   console.log(res);
               if (
                 (
-                  res.usersPatient.firstname?.toLowerCase() +
+                  res.usersPatient?.firstname?.toLowerCase() +
                   " " +
-                  res.usersPatient.lastname?.toLowerCase()
+                  res.usersPatient?.lastname?.toLowerCase()
                 ).includes(val)
               ) {
                 srchResultsArray.push(res);
@@ -542,7 +498,7 @@ export default function ResultsPreviewContainer({}) {
             let srchResultsArray = [];
 
             for (const res of fillterdResults) {
-              console.log(res);
+              //  console.log(res);
 
               const fullName = res.usersDoctor.firstname
                 ? res.usersDoctor.firstname?.toLowerCase() +
@@ -577,12 +533,12 @@ export default function ResultsPreviewContainer({}) {
   useEffect(() => {
     // Filter and display users when the filter option or data changes
     handaleFilterOption(filterOption);
-    console.log("useEffect 2");
+    // console.log("useEffect 2");
   }, [filterOption]);
 
   useEffect(() => {
     // Search for users when the search value changes
-    console.log("useEffect 3");
+    ///   console.log("useEffect 3");
 
     searchForAResult();
   }, [val, fillterdResults]);
@@ -591,7 +547,7 @@ export default function ResultsPreviewContainer({}) {
     filterByDataRange();
   }, [dateRange]);
   useEffect(() => {
-    console.log("useEffect 4");
+    //console.log("useEffect 4");
     if (isCustomeDate) {
       setDateRange({
         firstDate: formatDateYYMMDD(startDate),
@@ -601,7 +557,43 @@ export default function ResultsPreviewContainer({}) {
       handaleFilterOption(filterOption);
     }
   }, [isCustomeDate]);
+  useEffect(() => {
+    if (filterOption === "noValue" && !isCustomeDate) getResults();
+    else if (isCustomeDate) {
+      filterByDataRange();
+    } else {
+      switch (filterOption) {
+        case "Last Week":
+          try {
+            handaleGetResultsFiltered(0);
+          } catch (error) {}
+          break;
+        case "Last Month":
+          try {
+            handaleGetResultsFiltered(1);
+          } catch (error) {}
+          break;
+        case "Last 3 Months":
+          try {
+            handaleGetResultsFiltered(3);
+          } catch (error) {}
+          break;
+        case "Last 6 Months":
+          try {
+            handaleGetResultsFiltered(6);
+          } catch (error) {}
+          break;
+        case "Last Year":
+          try {
+            handaleGetResultsFiltered(12);
+          } catch (error) {}
+          break;
 
+        default:
+          console.log("Error in Option");
+      }
+    }
+  }, [pageNo]);
   return (
     <>
       <Suspense
@@ -636,6 +628,7 @@ export default function ResultsPreviewContainer({}) {
           setPageNo={setPageNo}
           pageNo={pageNo}
           usersCount={usersCount}
+          loader={loader}
         />
       </Suspense>
     </>

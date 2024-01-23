@@ -9,7 +9,6 @@ export default function ItemsPreviewContainer({ setIsFormOpen }) {
   let [allItems, setAllItems] = useState([]);
   let [visibleItems, setVisibleItems] = useState([]);
   let [apiError, setApiError] = useState(false);
-  let [noResults, setNoResults] = useState(false);
   let [item, setItem] = useState({
     itemName: "",
     theNumber: 0,
@@ -30,6 +29,7 @@ export default function ItemsPreviewContainer({ setIsFormOpen }) {
   const [isUpdateFormOpen, setIsUpdateFormOpen] = useState(false);
   const [pageNo, setPageNo] = useState(1);
   const [usersCount, setUsersCount] = useState();
+  const [loader, setLoader] = useState(false);
 
   /* *************** Handale Pop Forms *************** */
   //update form open
@@ -45,18 +45,20 @@ export default function ItemsPreviewContainer({ setIsFormOpen }) {
   }
   //get All Items
   async function getAllItems() {
+    setLoader(true);
     try {
       const response = await getItems(pageNo);
-
+      console.log(response);
       setApiError(false);
 
-      if (response.data.length === 0) {
-        setNoResults(true);
-      } else {
+      if (response.data.allItem.length > 0) {
         setAllItems(response.data.allItem);
         setVisibleItems(response.data.allItem);
-        setUsersCount(response.data.count);
+      } else {
+        setAllItems([]);
+        setVisibleItems([]);
       }
+      setUsersCount(response.data.count);
     } catch (error) {
       console.error(error);
       setApiError(true);
@@ -65,6 +67,7 @@ export default function ItemsPreviewContainer({ setIsFormOpen }) {
         console.log("Error data:", error.response.data);
       }
     }
+    setLoader(false);
   }
 
   //display visible Anlysis
@@ -162,7 +165,6 @@ export default function ItemsPreviewContainer({ setIsFormOpen }) {
     );
     if (srchResultsArray.length === 0) {
       setVisibleItems([]);
-      setNoResults(true);
     } else {
       setVisibleItems(srchResultsArray);
     }
@@ -176,6 +178,11 @@ export default function ItemsPreviewContainer({ setIsFormOpen }) {
   useEffect(() => {
     searchForItem();
   }, [val]);
+  ///
+
+  useEffect(() => {
+    getAllItems();
+  }, [pageNo]);
   //use Effect
   // useEffect(() => {
   //   console.log(item);
@@ -197,7 +204,6 @@ export default function ItemsPreviewContainer({ setIsFormOpen }) {
         displayItems={displayItems}
         apiError={apiError}
         apiErrorMessage={apiErrorMessage}
-        noResults={noResults}
         closeUpdateForm={closeUpdateForm}
         isUpdateFormOpen={isUpdateFormOpen}
         item={item}
@@ -207,6 +213,7 @@ export default function ItemsPreviewContainer({ setIsFormOpen }) {
         setPageNo={setPageNo}
         pageNo={pageNo}
         usersCount={usersCount}
+        loader={loader}
       />{" "}
     </Suspense>
   );

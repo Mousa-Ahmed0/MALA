@@ -11,7 +11,6 @@ export default function ItemsPreviewPresintation({
   displayItems,
   apiError,
   apiErrorMessage,
-  noResults,
   isUpdateFormOpen,
   closeUpdateForm,
   item,
@@ -21,6 +20,7 @@ export default function ItemsPreviewPresintation({
   usersCount,
   pageNo,
   setPageNo,
+  loader,
 }) {
   return (
     <>
@@ -111,18 +111,20 @@ export default function ItemsPreviewPresintation({
             </div>
           </div>{" "}
           <div className="row">
-            {Array.isArray(visibleItems) && visibleItems.length > 0 ? (
+            {loader ? (
+              <div className="d-flex justify-content-center align-items-center my-4">
+                <div className="spinner-border text-primary" role="status">
+                  <span className="sr-only">Loading...</span>
+                </div>
+              </div>
+            ) : Array.isArray(visibleItems) && visibleItems.length > 0 ? (
               displayItems()
             ) : apiError ? (
               apiErrorMessage
             ) : visibleItems.length === 0 ? (
               <div className="my-4 mid-bold">No results Found.</div>
             ) : (
-              <div className="d-flex justify-content-center align-items-center my-4">
-                <div className="spinner-border text-primary" role="status">
-                  <span className="sr-only">Loading...</span>
-                </div>
-              </div>
+              ""
             )}
           </div>
           <PaginationNav

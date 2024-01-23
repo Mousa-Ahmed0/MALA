@@ -17,7 +17,7 @@ module.exports.addItem = asyncHandler(async (req, res) => {
       let mesError = [];
       error.details.map((index) => {
         mesError.push(index.message);
-      })
+      });
       return res.status(400).json({ message: mesError });
     }
     //if item is exists
@@ -36,7 +36,7 @@ module.exports.addItem = asyncHandler(async (req, res) => {
     res.status(201).json({ message: "Done.", newItem });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
 
@@ -48,7 +48,6 @@ module.exports.addItem = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.getAllItem = asyncHandler(async (req, res) => {
   try {
-
     const USER_PER_PAGE = 10;
     const pageNumber = req.query.pageNumber;
     const allItem = await Storage.find()
@@ -63,7 +62,7 @@ module.exports.getAllItem = asyncHandler(async (req, res) => {
     }
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
 
@@ -75,7 +74,6 @@ module.exports.getAllItem = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.updateItem = asyncHandler(async (req, res) => {
   try {
-
     const updateItem = await Storage.findByIdAndUpdate(
       req.params.id,
       {
@@ -94,7 +92,7 @@ module.exports.updateItem = asyncHandler(async (req, res) => {
     }
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
 
@@ -106,7 +104,6 @@ module.exports.updateItem = asyncHandler(async (req, res) => {
  * ------------------------------------------ */
 module.exports.deleteItem = asyncHandler(async (req, res) => {
   try {
-
     const delitem = await Storage.findByIdAndDelete(req.params.id);
     if (delitem) {
       res.status(200).json({ message: "Item is Deleted" });
@@ -115,6 +112,6 @@ module.exports.deleteItem = asyncHandler(async (req, res) => {
     }
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error",error });
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });

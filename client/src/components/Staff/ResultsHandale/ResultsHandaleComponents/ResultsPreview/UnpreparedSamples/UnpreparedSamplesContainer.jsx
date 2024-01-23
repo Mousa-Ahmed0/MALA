@@ -30,12 +30,14 @@ export default function ResultsPreviewContainer({}) {
   );
   const [pageNo, setPageNo] = useState(1);
   const [usersCount, setUsersCount] = useState();
+  const [loader, setLoader] = useState(false);
 
   //get all results
   async function getResults() {
+    setLoader(true);
     try {
       let response = await getSamples(false, pageNo);
-      //console.log(response);
+      //  console.log(response);
       setAllResults(response.data.usersArray);
       setVisibleResults(response.data.usersArray);
       setUsersCount(response.data.count);
@@ -47,6 +49,7 @@ export default function ResultsPreviewContainer({}) {
       //setApiError(true);
       setNoResults(true);
     }
+    setLoader(false);
   }
 
   //display visible Results
@@ -158,17 +161,17 @@ export default function ResultsPreviewContainer({}) {
   }
   async function searchForAResult() {
     if (val.trim() === "") {
-      console.log("search out");
+      //  console.log("search out");
       return;
     } else {
-      console.log("search in");
+      //   console.log("search in");
       if (
         filterOption === "noValue" ||
         filterOption === "Patient" // patient search filter
       ) {
         let srchResultsArray = [];
         allResults.map((res, index) => {
-          console.log(res);
+          //     console.log(res);
           if (
             (
               res.usersPatient?.firstname?.toLowerCase() +
@@ -189,7 +192,7 @@ export default function ResultsPreviewContainer({}) {
         let srchResultsArray = [];
 
         for (const res of allResults) {
-          console.log(res);
+          // console.log(res);
 
           const fullName = res.usersDoctor?.firstname
             ? res.usersDoctor?.firstname?.toLowerCase() +
@@ -223,6 +226,9 @@ export default function ResultsPreviewContainer({}) {
     // Search for users when the search value changes
     searchForAResult();
   }, [val]);
+  useEffect(() => {
+    getResults();
+  }, [pageNo]);
   // useEffect(() => {
   //   console.log("allResults", allResults);
   // }, [allResults]);
@@ -260,6 +266,7 @@ export default function ResultsPreviewContainer({}) {
           setPageNo={setPageNo}
           pageNo={pageNo}
           usersCount={usersCount}
+          loader={loader}
         />{" "}
       </Suspense>
     </>
