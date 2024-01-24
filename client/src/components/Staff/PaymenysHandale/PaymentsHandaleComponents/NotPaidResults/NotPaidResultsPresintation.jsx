@@ -13,18 +13,25 @@ export default function NotPaidResultsPresintation({
   handaleFilterOption,
   visibleResults,
   displayResults,
+  filterOption,
+  loader,
 }) {
   return (
     <div className="ST-section my-2 p-0">
       <div className="container">
-        <div className="row searchSection mb-5">
-          <div className="col-sm-12 col-md-8 d-flex align-items-center p-0">
-            <SearchBar handaleSearchVlue={handaleSearchVlue} />
-          </div>
-          <div className="col-sm-12 col-md-4 d-flex justify-content-md-end align-items-center p-0">
+        <div className="row searchSection my-5">
+          <div className="col-12 d-flex gap-3 flex-column flex-md-row align-items-start align-items-md-center p-0">
             <UserFilter
               filterOptions={filterOptions}
               handaleFilterOption={handaleFilterOption}
+            />
+            <SearchBar
+              handaleSearchVlue={handaleSearchVlue}
+              placeHolder={
+                filterOption === "Doctor"
+                  ? "Search for a Doctor"
+                  : "Search for a Patient"
+              }
             />
           </div>
         </div>
@@ -82,11 +89,17 @@ export default function NotPaidResultsPresintation({
             </div>
           </div>
           <div className="row ">
-            {Array.isArray(visibleResults) && visibleResults.length > 0 ? (
+            {loader ? (
+              <div className="d-flex justify-content-center align-items-center my-4">
+                <div className="spinner-border text-primary" role="status">
+                  <span className="sr-only">Loading...</span>
+                </div>
+              </div>
+            ) : Array.isArray(visibleResults) && visibleResults.length > 0 ? (
               displayResults()
             ) : apiError ? (
               apiErrorMessage
-            ) : noResults ? (
+            ) : noResults || visibleResults.length === 0 ? (
               <div className="my-4 mid-bold">No results Found.</div>
             ) : (
               <div className="d-flex justify-content-center align-items-center my-4">

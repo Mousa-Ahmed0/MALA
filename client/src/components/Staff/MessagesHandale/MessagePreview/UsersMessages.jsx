@@ -16,7 +16,7 @@ export default function UsersMessages({ user }) {
   let [val, setVal] = useState(""); //search value
   let [filterOption, setFilterOption] = useState("noValue");
   let [searchResults, setSearchResults] = useState([]);
-  const filterOptions = ["noValue", "Staff", "Patient", "Doctor"];
+  const filterOptions = ["noValue", "Patient", "Doctor"];
   //Errors variables
   let [apiError, setApiError] = useState(false);
   let [noResults, setNoResults] = useState(false);
@@ -32,9 +32,11 @@ export default function UsersMessages({ user }) {
   );
   const [pageNo, setPageNo] = useState(1);
   const [usersCount, setUsersCount] = useState();
+  const [loader, setLoader] = useState(false);
 
   // Get all Users from API
   async function getUsers() {
+    setLoader(true);
     try {
       const response = await axios.get(
         `http://localhost:5000/api/massage/getAllMassage?pageNumber=${pageNo}`,
@@ -60,6 +62,7 @@ export default function UsersMessages({ user }) {
         console.log("Error data:", error.response.data);
       }
     }
+    setLoader(false);
   }
   //Display the VisibleUsers
   function displayUsers() {
@@ -143,7 +146,7 @@ export default function UsersMessages({ user }) {
 
   function handaleFilterOption(option) {
     setFilterOption(option);
-    const roleOptions = ["Staff", "Patient", "Doctor"];
+    const roleOptions = ["Patient", "Doctor"];
     //console.log("filter Function: ", searchResults);
     // No Search has been done
     if (searchResults.length === 0 || !searchResults || val === "") {
@@ -281,7 +284,13 @@ export default function UsersMessages({ user }) {
             </div>
           </div>
           <div className="row ">
-            {Array.isArray(visibleUsers) && visibleUsers.length > 0 ? (
+            {loader ? (
+              <div className="d-flex justify-content-center align-items-center my-4">
+                <div className="spinner-border text-primary" role="status">
+                  <span className="sr-only">Loading...</span>
+                </div>
+              </div>
+            ) : Array.isArray(visibleUsers) && visibleUsers.length > 0 ? (
               displayUsers()
             ) : apiError ? (
               apiErrorMessage

@@ -13,7 +13,6 @@ export default function NotPaidResultsContainer({}) {
   //search & filter variables
   let [val, setVal] = useState(""); //search value
   let [filterOption, setFilterOption] = useState("noValue");
-  let [searchResults, setSearchResults] = useState([]);
   const filterOptions = ["noValue", "Patient", "Doctor"];
   //Errors variables
   let [apiError, setApiError] = useState(false);
@@ -29,13 +28,14 @@ export default function NotPaidResultsContainer({}) {
       </div>
     </div>
   );
+  const [loader, setLoader] = useState(false);
 
-  /* *************** Handale Pop Forms *************** */
   //get all results
   async function getResults() {
+    setLoader(true);
     try {
       let response = await getUnPaidSamples();
-      //console.log(response);
+      console.log(response);
       setAllResults(response.data.usersArray);
       setVisibleResults(response.data.usersArray);
     } catch (error) {
@@ -43,6 +43,7 @@ export default function NotPaidResultsContainer({}) {
       //setApiError(error.data.message);
       setNoResults(true);
     }
+    setLoader(false);
   }
 
   //display visible Results
@@ -135,9 +136,14 @@ export default function NotPaidResultsContainer({}) {
   }
 
   /** ====================== filter Section ====================== **/
-  function clearResults() {}
+  function clearResults() {
+    setVisibleResults(allResults);
+  }
 
-  function handaleFilterOption(option) {}
+  function handaleFilterOption(option) {
+    setFilterOption(option);
+    clearResults();
+  }
 
   /** ====================== Search Section ====================== **/
   function handaleSearchVlue(value) {
@@ -149,6 +155,39 @@ export default function NotPaidResultsContainer({}) {
   async function searchForAResult() {
     if (val.trim() === "") {
       return;
+    } else {
+      if (filterOption === "Doctor") {
+        let srchResultsArray = [];
+
+        for (const res of allResults) {
+          //      console.log(res);
+
+          const fullName = res.usersDoctor
+            ? res.usersDoctor.firstname
+              ? res.usersDoctor?.firstname?.toLowerCase() +
+                " " +
+                res.usersDoctor?.lastname?.toLowerCase()
+              : res.usersDoctor?.toLowerCase()
+            : false;
+          const matches = fullName && fullName.includes(val);
+          if (matches) {
+            srchResultsArray.push(res);
+          }
+        }
+        setVisibleResults(srchResultsArray);
+      } else {
+        let srchResultsArray = allResults.filter((r) =>
+          r.usersPatient
+            ? (
+                r.usersPatient?.firstname?.toLowerCase() +
+                " " +
+                r.usersPatient?.lastname?.toLowerCase()
+              ).includes(val)
+            : false
+        );
+
+        setVisibleResults(srchResultsArray);
+      }
     }
   }
   /** ====================== Delete Section ====================== **/
@@ -162,12 +201,12 @@ export default function NotPaidResultsContainer({}) {
   useEffect(() => {
     // Filter and display users when the filter option or data changes
     handaleFilterOption(filterOption);
-  }, [filterOption, searchResults]);
+  }, [filterOption]);
 
   useEffect(() => {
     // Search for users when the search value changes
     searchForAResult();
-  }, [val]);
+  }, [val, filterOption]);
   // useEffect(() => {
   //   console.log("allResults", allResults);
   // }, [allResults]);
@@ -200,6 +239,8 @@ export default function NotPaidResultsContainer({}) {
           deleteUser={deleteUser}
           displayResults={displayResults}
           visibleResults={visibleResults}
+          filterOption={filterOption}
+          loader={loader}
         />
       </Suspense>
     </>
