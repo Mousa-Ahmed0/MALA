@@ -5,7 +5,6 @@ import UserFilter from "../../../../UserFilter/UserFilter";
 
 export default function NotPaidResultsPresintation({
   darkMode,
-  apiMessage,
   apiError,
   noResults,
   apiErrorMessage,

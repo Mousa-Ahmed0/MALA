@@ -14,7 +14,7 @@ export default function NotPaidResultsContainer({}) {
   let [val, setVal] = useState(""); //search value
   let [filterOption, setFilterOption] = useState("noValue");
   let [searchResults, setSearchResults] = useState([]);
-  const filterOptions = ["noValue", "Staff", "Patient", "Doctor"];
+  const filterOptions = ["noValue", "Patient", "Doctor"];
   //Errors variables
   let [apiError, setApiError] = useState(false);
   let [apiMessage, setApiMessage] = useState("");

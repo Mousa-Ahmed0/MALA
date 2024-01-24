@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 
 import ReportsHeader from "./ReportsHeader";
 import DetailsHeader from "./PaymentsReport/PaymentsToPdfComponents/PatientDetailsHeader";
+import AnalysisCostDetails from "./PaymentsReport/PaymentsToPdfComponents/AnalysisCostDetails";
 
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { formatDateWithouHour } from "../methods/FormateDate";
-import AnalysisCostDetails from "./PaymentsReport/PaymentsToPdfComponents/AnalysisCostDetails";
 
 export default function PaymentToPDF({
   darkMode,
@@ -33,7 +33,8 @@ export default function PaymentToPDF({
 
     // Add the custom header to the middle of the page
     const capture = document.querySelector(".pdf-pay-section");
-    capture.style.padding = "40px 65px"; // Padding
+    capture.style.padding = "20px 65px"; // Padding
+    capture.style.margin = "100px 0px 0px 0px"; // Padding
     capture.style.position = "relative"; // Padding
     capture.style.left = "0"; // Padding
 
@@ -48,11 +49,11 @@ export default function PaymentToPDF({
         0,
         0,
         doc.internal.pageSize.getWidth(),
-        doc.internal.pageSize.getHeight() * 0.3
+        doc.internal.pageSize.getHeight() * 0.2
       );
 
       doc.autoTable({
-        startY: 185,
+        startY: 125,
         headStyles: { fillColor: [41, 128, 185], textColor: 255 },
         bodyStyles: { textColor: 0 },
         theme: "striped",
@@ -74,8 +75,9 @@ export default function PaymentToPDF({
       setLoader(false);
       setIsPdfLoading(false);
 
-      capture.style.position = "absolute"; // Padding
-      capture.style.left = "-999999px"; // Padding
+      //reset
+      capture.style.position = "absolute";
+      capture.style.left = "-999999px";
       setTimeout(() => {
         doc.save("receipt.pdf");
       }, 100);
@@ -108,6 +110,7 @@ export default function PaymentToPDF({
           date={formatedDate}
           darkMode={darkMode}
         />
+
         <hr className="my-4" />
       </div>
     </>

@@ -21,7 +21,7 @@ export default function ReportsHeader({ darkMode }) {
                 <img
                   className="img-fluid rounded "
                   alt="Logo Img"
-                  src="../images/logo.png"
+                  src="../../images/logo.png"
                 />
               </div>
             </div>
