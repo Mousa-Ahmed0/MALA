@@ -6,9 +6,9 @@ import { getPateinrPayments } from "../../../../apis/ApisHandale";
 import BackBtn from "../../../BackBtn";
 
 import { formatDate } from "../../../../methods/FormateDate";
-import PaymentToPDF from "../../../PaymentToPDF";
+import { Link } from "react-router-dom";
 
-export default function PatPaymentsPreviewContainer({ setIsPdfLoading }) {
+export default function PatPaymentsPreviewContainer({}) {
   const patientIdent = useParams("ident").ident;
   const { darkMode } = useDarkMode();
   const [allPayments, setallPayments] = useState([]);
@@ -74,11 +74,14 @@ export default function PatPaymentsPreviewContainer({ setIsPdfLoading }) {
                   <div className="col-6 col-md-12 ">
                     <div className="row">
                       <div className="col-12 d-flex justify-content-center align-items-center">
-                        <PaymentToPDF
-                          paymentDetails={p}
-                          darkMode={darkMode}
-                          setIsPdfLoading={setIsPdfLoading}
-                        />
+                        {" "}
+                        <Link
+                          style={{ cursor: "pointer" }}
+                          className="position-relative nav-link mb-0 text-truncate"
+                          to={`/PaymentPreview/${p.payment.id}`}
+                        >
+                          <i class="fa-solid fa-angles-right"></i>
+                        </Link>
                       </div>
                     </div>
                   </div>

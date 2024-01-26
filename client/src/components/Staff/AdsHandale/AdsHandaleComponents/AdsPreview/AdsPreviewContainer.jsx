@@ -106,7 +106,7 @@ export default function AdsPreviewContainer({ setIsFormOpen }) {
                           className="position-relative nav-link mb-0 text-truncate"
                           to={`/AdDetails/${Ad._id}`}
                         >
-                          Ad Details
+                          More
                         </Link>
                       </div>
                       <div className="col-6 col-md-3 d-flex justify-content-end align-items-center">

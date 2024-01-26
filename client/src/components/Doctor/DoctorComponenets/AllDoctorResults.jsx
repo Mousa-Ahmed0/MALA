@@ -12,9 +12,10 @@ export default function AllDoctorResults() {
   const { darkMode } = useDarkMode();
   const [allResults, setAllResults] = useState([]);
   const [visibleResults, setVisibleResults] = useState([]);
+  const [loader, setLoader] = useState(false);
+
   //Search
   let [val, setVal] = useState(""); //search value
-  let [searchResults, setSearchResults] = useState([]);
   //...
   const [noResults, setNoResults] = useState(false);
   const [resultError, setResultError] = useState(false);
@@ -30,6 +31,8 @@ export default function AllDoctorResults() {
   );
   //get patient results
   async function getResults() {
+    setLoader(true);
+
     try {
       let response = await getDoctorResults(ident);
       console.log(response);
@@ -39,9 +42,17 @@ export default function AllDoctorResults() {
         setNoResults(true);
       }
     } catch (error) {
-      setResultError(true);
-      console.error("Error From getResults - patienthome: ", error);
+      if (error.response.status === 404) {
+        setAllResults([]);
+      } else {
+        console.error(
+          "Error From getResults - view all doctor patients results: ",
+          error
+        );
+        setResultError(true);
+      }
     }
+    setLoader(false);
   }
   //displayResults
   function displayResults() {
@@ -202,18 +213,20 @@ export default function AllDoctorResults() {
               </div>
             </div>
             <div className="row ">
-              {Array.isArray(visibleResults) && visibleResults.length > 0 ? (
+              {loader ? (
+                <div className="d-flex justify-content-center align-items-center">
+                  <div className="spinner-border text-primary" role="status">
+                    <span className="sr-only">Loading...</span>
+                  </div>
+                </div>
+              ) : Array.isArray(visibleResults) && visibleResults.length > 0 ? (
                 displayResults()
               ) : resultError ? (
                 apiErrorMessage
               ) : noResults ? (
                 <div className="my-4 mid-bold">No results Found.</div>
               ) : (
-                <div className="d-flex justify-content-center align-items-center my-4">
-                  <div className="spinner-border text-primary" role="status">
-                    <span className="sr-only">Loading...</span>
-                  </div>
-                </div>
+                <div>No Results Found.</div>
               )}
             </div>
           </section>

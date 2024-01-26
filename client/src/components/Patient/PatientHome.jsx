@@ -9,7 +9,6 @@ import {
 import { formatDateWithouHour } from "../../methods/FormateDate";
 import { useDarkMode } from "../../context/DarkModeContext";
 import { getPateinrPayments, getPateinrResults } from "../../apis/ApisHandale";
-import PaymentToPDF from "../PaymentToPDF";
 
 export default function PatientHome({ user, setIsPdfLoading }) {
   const { darkMode } = useDarkMode();
@@ -110,11 +109,14 @@ export default function PatientHome({ user, setIsPdfLoading }) {
               <span style={{ fontSize: "0.758rem" }}>NIS</span>
             </div>
             <div className="col-4 d-flex justify-content-center align-items-center gap-4">
-              <PaymentToPDF
-                paymentDetails={p}
-                darkMode={darkMode}
-                setIsPdfLoading={setIsPdfLoading}
-              />
+              {" "}
+              <Link
+                style={{ cursor: "pointer" }}
+                className="position-relative nav-link mb-0 text-truncate"
+                to={`/PaymentPreview/${p.payment.id}`}
+              >
+                <i class="fa-solid fa-angles-right"></i>
+              </Link>
             </div>
           </div>
         </>

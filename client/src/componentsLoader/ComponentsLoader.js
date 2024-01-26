@@ -233,6 +233,11 @@ export const NotPaidResultsPresintation = lazy(() =>
     "../components/Staff/PaymenysHandale/PaymentsHandaleComponents/NotPaidResults/NotPaidResultsPresintation.jsx"
   )
 );
+export const PaymentPreview = lazy(() =>
+  import(
+    "../components/PaymentsReport/PaymentsToPdfComponents/PaymentPreview.jsx"
+  )
+);
 //---
 // Ads Handale
 export const AdsController = lazy(() =>

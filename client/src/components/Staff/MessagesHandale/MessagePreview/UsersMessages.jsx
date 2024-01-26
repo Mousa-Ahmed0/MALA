@@ -98,37 +98,38 @@ export default function UsersMessages({ user }) {
                 <div className="col-sm-12 col-md-1 d-md-flex d-none align-items-center p-0">
                   <p className="mb-0 text-truncate">{user.firstUser.sex}</p>
                 </div>
-                <div className="col-2 col-md-3 d-flex justify-content-center justify-content-md-start  align-items-center p-0">
+                <div className="col-2 col-md-4 d-flex justify-content-center justify-content-md-start  align-items-center p-0">
                   <p className="mb-0 text-truncate">
                     {user.firstUser.usertype}
                   </p>
                 </div>
-                <div className="col-5 col-md-3 d-flex flex-row-reverse flex-md-row align-items-center">
-                  <div className="col-6 col-md-12 ">
-                    <div className="row">
-                      <div className="col-6 col-md-7 d-flex align-items-center">
-                        <Link
-                          style={{ cursor: "pointer" }}
-                          to={`/profile/${user.firstUser.id}`}
-                          className="position-relative nav-link mb-0 text-truncate"
-                        >
-                          View Profile
-                        </Link>
-                      </div>
-                      <div className="col-6 col-md-5 d-flex align-items-center">
-                        <Link
-                          to={`/Patient/contactLab/${user._id}`}
-                          className="normal-btn btn d-flex justify-content-center align-items-center"
-                        >
-                          {" "}
-                          <i
-                            className={`fa-solid  fa-envelope mb-0 text-truncate ${
-                              darkMode ? " dark-theme" : ""
-                            }`}
-                          ></i>
-                        </Link>
-                      </div>
-                    </div>
+                <div className="col-5 col-md-2 d-flex flex-row-reverse flex-md-row align-items-center">
+                  <div className="d-flex align-items-center">
+                    <Link
+                      style={{ cursor: "pointer" }}
+                      to={`/profile/${user.id}`}
+                      className="normal-btn btn d-flex justify-content-center align-items-center"
+                    >
+                      <i
+                        class={`h5 m-0 fa-solid fa-address-card ${
+                          darkMode ? " dark-theme" : ""
+                        }`}
+                      ></i>
+                    </Link>
+                  </div>
+                  <div className="d-flex align-items-center">
+                    <Link
+                      style={{ cursor: "pointer" }}
+                      to={`/profile/${user.id}`}
+                      className="normal-btn btn d-flex justify-content-center align-items-center"
+                    >
+                      {" "}
+                      <i
+                        className={`h5 m-0 fa-solid  fa-envelope mb-0 text-truncate ${
+                          darkMode ? " dark-theme" : ""
+                        }`}
+                      ></i>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -265,14 +266,14 @@ export default function UsersMessages({ user }) {
                       Gender:
                     </div>
                     <div
-                      className={`col-md-3 text-truncate text-muted p-0 ${
+                      className={`col-md-4 text-truncate text-muted p-0 ${
                         darkMode ? " dark-theme" : ""
                       }`}
                     >
                       Role:
                     </div>
                     <div
-                      className={`col-md-3 text-truncate text-muted p-0 ${
+                      className={`col-md-2 text-truncate text-muted p-0 ${
                         darkMode ? " dark-theme" : ""
                       }`}
                     >

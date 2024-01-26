@@ -92,7 +92,7 @@ export default function PreviewAnlysisContainer() {
                           className="position-relative nav-link mb-0 text-truncate"
                           to={`/AnlyiseDetails/${Analyze.code}`}
                         >
-                          Analyze Details
+                          More
                         </Link>
                       </div>
                       <div className="col-6 col-md-5 d-flex align-items-center">

@@ -76,7 +76,7 @@ export default function LabMessageInterface({
   //////////////////
   //get all messages
   useEffect(() => {
-    // console.log("hello staff");
+    console.log("hello staff");
     getStaffMessages();
   }, []);
 

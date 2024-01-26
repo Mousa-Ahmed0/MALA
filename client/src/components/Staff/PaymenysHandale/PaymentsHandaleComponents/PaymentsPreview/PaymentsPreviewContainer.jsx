@@ -9,9 +9,8 @@ import {
   getPaymentsFromTo,
 } from "../../../../../apis/ApisHandale";
 import { formatDateYYMMDD } from "../../../../../methods/FormateDate";
-import PaymentToPDF from "../../../../PaymentToPDF";
 
-export default function PaymentsPreviewContainer({ setIsPdfLoading }) {
+export default function PaymentsPreviewContainer({}) {
   const { darkMode } = useDarkMode();
   const [isCustomeDate, setIsCustomeDate] = useState(false);
 
@@ -118,11 +117,13 @@ export default function PaymentsPreviewContainer({ setIsPdfLoading }) {
                   </p>
                 </div>
                 <div className="col-5 col-md-1 d-flex  align-items-center gap-4">
-                  <PaymentToPDF
-                    paymentDetails={p}
-                    darkMode={darkMode}
-                    setIsPdfLoading={setIsPdfLoading}
-                  />
+                  <Link
+                    style={{ cursor: "pointer" }}
+                    className="position-relative nav-link mb-0 text-truncate"
+                    to={`/PaymentPreview/${p.payment.id}`}
+                  >
+                    <i class="fa-solid fa-angles-right"></i>
+                  </Link>
                 </div>
               </div>
             </div>

@@ -32,6 +32,7 @@ import {
   PaymentsController,
   PaymentsPreviewContainer,
   NotPaidResultsContainer,
+  PaymentPreview,
   AdsController,
   AddNewAdd,
   AdsPreviewContainer,
@@ -301,6 +302,28 @@ export default function Main({
                 }
               >
                 <ResultDetails user={userDetails} />{" "}
+              </Suspense>
+            }
+          />
+          <Route
+            path="/PaymentPreview/:id"
+            element={
+              <Suspense
+                fallback={
+                  <div className="center-container">
+                    <div
+                      className="spinner-border text-primary d-flex justify-content-center align-items-center"
+                      role="status"
+                    >
+                      <span className="sr-only">Loading...</span>
+                    </div>
+                  </div>
+                }
+              >
+                <PaymentPreview
+                  setIsPdfLoading={setIsPdfLoading}
+                  darkMode={darkMode}
+                />{" "}
               </Suspense>
             }
           />

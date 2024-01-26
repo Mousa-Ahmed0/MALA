@@ -52,7 +52,7 @@ export default function UsersMessageInterface({
   //////////////////
   //get all messages
   useEffect(() => {
-    //console.log("hello user");
+    console.log("hello user");
   }, []);
   //get all messages
 

@@ -22,5 +22,5 @@ router.get("/getByDate", ifAdminOrStaff, getByDate);
 router.get("/week", test); //test
 router.get("/detailsPayment", detailsPayment); //test
 router.get("/getFromToDate", getFromToDate);
-router.get("/getPaymentId/:id", validateObjectId, ifAdminOrStaff, getPaymentId);
+router.get("/getPaymentId/:id", validateObjectId, getPaymentId);
 module.exports = router;

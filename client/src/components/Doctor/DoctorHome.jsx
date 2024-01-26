@@ -12,13 +12,14 @@ import {
 export default function DoctorHome({ user }) {
   const { darkMode } = useDarkMode();
   const [allResults, setAllResults] = useState([]);
+  const [loader, setLoader] = useState(false);
   const [resultError, setResultError] = useState(false);
   let apiErrorMessage = (
-    <div class="w-100 h-100 d-flex flex-column align-items-center">
-      <div class="alert alert-danger my-4 mid-bold w-100 d-flex justify-content-center">
+    <div className="w-100 h-100 d-flex flex-column align-items-center">
+      <div className="alert alert-danger my-4 mid-bold w-100 d-flex justify-content-center">
         Error!!!
       </div>
-      <div class="my-4 mid-bold">
+      <div className="my-4 mid-bold">
         Theres a proplem! Please wait for us to solve the proplem.
       </div>
     </div>
@@ -26,6 +27,7 @@ export default function DoctorHome({ user }) {
 
   //get patient results
   async function getResults() {
+    setLoader(true);
     try {
       let response = await axios.get(
         `http://localhost:5000/api/result/getDoctorAnzlyze?doctorIdent=${user.ident}`,
@@ -37,9 +39,14 @@ export default function DoctorHome({ user }) {
       setAllResults(response.data.usersArray.reverse());
       setResultError(false);
     } catch (error) {
-      console.error("Error From getResults - patienthome: ", error);
-      setResultError(true);
+      if (error.response.status === 404) {
+        setAllResults([]);
+      } else {
+        console.error("Error From getResults - doctor Home: ", error);
+        setResultError(true);
+      }
     }
+    setLoader(false);
   }
 
   //display patient results
@@ -64,7 +71,7 @@ export default function DoctorHome({ user }) {
                 to={`/ResultDetails/${result.detailsAnalyze.id}`}
                 className="btn m-0 nav-link position-relative"
               >
-                <i class="fa-solid fa-eye"></i>
+                <i className="fa-solid fa-eye"></i>
               </Link>
             </div>
           </div>
@@ -100,7 +107,7 @@ export default function DoctorHome({ user }) {
           >
             <h1 className="h5">
               <span>
-                <i class="fa-solid fa-droplet"></i>
+                <i className="fa-solid fa-droplet"></i>
               </span>{" "}
               Last Results:
             </h1>
@@ -113,16 +120,18 @@ export default function DoctorHome({ user }) {
               </div>
             </div>
             <div className=" overflow-yAxis  maxHeight-part">
-              {allResults.length !== 0 ? (
-                displayResults()
-              ) : resultError ? (
-                apiErrorMessage
-              ) : (
+              {loader ? (
                 <div className="d-flex justify-content-center align-items-center">
                   <div className="spinner-border text-primary" role="status">
                     <span className="sr-only">Loading...</span>
                   </div>
                 </div>
+              ) : allResults.length !== 0 ? (
+                displayResults()
+              ) : resultError ? (
+                apiErrorMessage
+              ) : (
+                <div>No Results Found.</div>
               )}
             </div>
             <hr className="my-4" />

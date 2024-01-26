@@ -69,7 +69,7 @@ export default function Login({ setUserData, goToPage, userDetails }) {
     if (Object.keys(userDetails).length > 0) {
       goToPage();
     }
-  }, [userDetails, goToPage]);
+  }, [userDetails]);
 
   /* Validation Function */
   function validateForm() {
