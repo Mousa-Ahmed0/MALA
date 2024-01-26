@@ -16,10 +16,13 @@ module.exports.sendEmail = async (option) => {
       to: option.email, // list of receivers
       subject: option.subject, // Subject line
       html: `
-          <div style="font-size:2.5rem;color:#113f67 !important; display:flex;justify-content:center;">MALM</div>
-          <div style="font-size:1.275rem;color:#000000 !important;line-height:1.25;">
-              <p style="font-size:1.275rem;color:#000000 !important;line-height:1.25">${option.massage}</p>
+        <div style="width: calc(100% - 2rem); height: 100%; background-color: #202d36 !important; padding: 1rem !important; margin: 0 autot !important;">
+          <h1 style="font-size:2.575rem !important;font-bold:800 !important;color:#0566a8 !important; margin: 0 auto !important;">MALM:</h1>
+          <hr style="color: #FFFF !important; margin: 1rem 0 !important;" />
+          <div style="font-size:1.275rem !important;color:#FFFF !important;line-height:1.25 !important;">
+              <p style="font-size:1.275rem !important;color:#FFFF !important;line-height:1.25 !important;">${option.massage}</p>
           </div>
+        </div>
           `, // html body
     },
     (err, info) => {
@@ -46,7 +49,9 @@ module.exports.sendEmailForRestPassword = async (optionRest) => {
       to: optionRest.email, // list of receivers
       subject: "Reset of password", // Subject line
       html: `
-          <div style="font-size:2.5rem;color:#113f67 !important; display:flex;justify-content:center;">MALM</div>
+      <div style="width: calc(100% - 2rem); height: 100%; background-color: #202d36 !important; padding: 1rem !important; margin: 0 autot !important;">
+          <h1 style="font-size:2.575rem !important;font-bold:800 !important;color:#0566a8 !important; margin: 0 auto !important;">MALM:</h1>
+          <hr style="color: #FFFF !important; margin: 1rem 0 !important;" />
           <div style="font-size:1.275rem;color:#000000 !important;line-height:1.25;">
               <p style="font-size:1.275rem;color:#000000 !important;line-height:1.25">
                 <a style="background-color: #226597; color: white; padding: 14px 25px; text-align: center; text-decoration: none; display: inline-block;"
@@ -55,6 +60,7 @@ module.exports.sendEmailForRestPassword = async (optionRest) => {
                 </a>
               </p>
           </div>
+          </div
           `, // html body
     },
     (err, info) => {
