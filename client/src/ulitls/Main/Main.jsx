@@ -67,6 +67,7 @@ export default function Main({
   goToPage,
   logout,
   darkMode,
+  setActiveId,
 }) {
   return (
     <main className={`${isFormOpen ? "" : ""}`}>
@@ -111,16 +112,16 @@ export default function Main({
                   }
                 >
                   {" "}
-                  <DashboardHome user={userDetails} />
+                  <DashboardHome user={userDetails} setActiveId={setActiveId} />
                 </Suspense>
               ) : userDetails.usertype === "Patient" ? (
                 <PatientHome
                   user={userDetails}
-                  isPdfLoading={isPdfLoading}
                   setIsPdfLoading={setIsPdfLoading}
+                  setActiveId={setActiveId}
                 />
               ) : userDetails.usertype === "Doctor" ? (
-                <DoctorHome user={userDetails} />
+                <DoctorHome user={userDetails} setActiveId={setActiveId} />
               ) : (
                 <Suspense
                   fallback={
@@ -135,7 +136,7 @@ export default function Main({
                   }
                 >
                   {" "}
-                  <Home />
+                  <Home setActiveId={setActiveId} />
                 </Suspense>
               )
             }
@@ -152,7 +153,7 @@ export default function Main({
                   </div>
                 }
               >
-                <Home />
+                <Home setActiveId={setActiveId} />
               </Suspense>
             }
           />
@@ -168,7 +169,7 @@ export default function Main({
                   </div>
                 }
               >
-                <About />
+                <About setActiveId={setActiveId} darkMode={darkMode} />
               </Suspense>
             }
           />
@@ -184,7 +185,7 @@ export default function Main({
                   </div>
                 }
               >
-                <GuestAnlyses />{" "}
+                <GuestAnlyses setActiveId={setActiveId} darkMode={darkMode} />{" "}
               </Suspense>
             }
           />
@@ -222,7 +223,7 @@ export default function Main({
                   </div>
                 }
               >
-                <Anlysis />
+                <Anlysis setActiveId={setActiveId} />
               </Suspense>
             }
           />
@@ -238,7 +239,7 @@ export default function Main({
                   </div>
                 }
               >
-                <Contact />{" "}
+                <Contact setActiveId={setActiveId} />{" "}
               </Suspense>
             }
           />{" "}
@@ -258,6 +259,7 @@ export default function Main({
                   setUserData={setUserData}
                   userDetails={userDetails}
                   goToPage={goToPage}
+                  setActiveId={setActiveId}
                 />
               </Suspense>
             }
@@ -443,7 +445,7 @@ export default function Main({
                   </div>
                 }
               >
-                <DoctorHome user={userDetails} />{" "}
+                <DoctorHome user={userDetails} setActiveId={setActiveId} />{" "}
               </Suspense>
             }
           />
@@ -475,7 +477,11 @@ export default function Main({
                   </div>
                 }
               >
-                <MessageInterface user={userDetails} darkMode={darkMode} />
+                <MessageInterface
+                  user={userDetails}
+                  darkMode={darkMode}
+                  setActiveId={setActiveId}
+                />
               </Suspense>
             }
           />
@@ -529,7 +535,7 @@ export default function Main({
                 }
               >
                 {" "}
-                <DashboardHome user={userDetails} />
+                <DashboardHome user={userDetails} setActiveId={setActiveId} />
               </Suspense>
             }
           />
@@ -546,7 +552,7 @@ export default function Main({
                 }
               >
                 {" "}
-                <DashboardHome user={userDetails} />
+                <DashboardHome user={userDetails} setActiveId={setActiveId} />
               </Suspense>
             }
           />
@@ -563,7 +569,7 @@ export default function Main({
                 }
               >
                 {" "}
-                <UsersController />
+                <UsersController setActiveId={setActiveId} />
               </Suspense>
             }
           >
@@ -618,7 +624,7 @@ export default function Main({
                   </div>
                 }
               >
-                <AnlysisController />
+                <AnlysisController setActiveId={setActiveId} />
               </Suspense>
             }
           >
@@ -692,7 +698,7 @@ export default function Main({
                   </div>
                 }
               >
-                <StorageController />{" "}
+                <StorageController setActiveId={setActiveId} />{" "}
               </Suspense>
             }
           >
@@ -747,7 +753,7 @@ export default function Main({
                   </div>
                 }
               >
-                <ResultsController />{" "}
+                <ResultsController setActiveId={setActiveId} />{" "}
               </Suspense>
             }
           >
@@ -840,7 +846,7 @@ export default function Main({
                   </div>
                 }
               >
-                <PaymentsController />{" "}
+                <PaymentsController setActiveId={setActiveId} />{" "}
               </Suspense>
             }
           >
@@ -898,7 +904,7 @@ export default function Main({
                   </div>
                 }
               >
-                <AdsController />{" "}
+                <AdsController setActiveId={setActiveId} />{" "}
               </Suspense>
             }
           >
@@ -953,7 +959,10 @@ export default function Main({
                   </div>
                 }
               >
-                <MessageController darkMode={darkMode} />{" "}
+                <MessageController
+                  darkMode={darkMode}
+                  setActiveId={setActiveId}
+                />{" "}
               </Suspense>
             }
           >
@@ -1053,6 +1062,7 @@ export default function Main({
                 <PatientHome
                   user={userDetails}
                   setIsPdfLoading={setIsPdfLoading}
+                  setActiveId={setActiveId}
                 />
               </Suspense>
             }
@@ -1069,7 +1079,7 @@ export default function Main({
                   </div>
                 }
               >
-                <HealthCalculators />{" "}
+                <HealthCalculators setActiveId={setActiveId} />{" "}
               </Suspense>
             }
           >
@@ -1160,7 +1170,11 @@ export default function Main({
                 }
               >
                 {" "}
-                <MessageInterface user={userDetails} darkMode={darkMode} />{" "}
+                <MessageInterface
+                  user={userDetails}
+                  darkMode={darkMode}
+                  setActiveId={setActiveId}
+                />{" "}
               </Suspense>
             }
           />
@@ -1179,7 +1193,7 @@ export default function Main({
                   </div>
                 }
               >
-                <Anlysis />
+                <Anlysis setActiveId={setActiveId} />
               </Suspense>
             }
           />

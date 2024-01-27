@@ -3,10 +3,15 @@ import { Link } from "react-router-dom";
 import { useDarkMode } from "../../context/DarkModeContext";
 import DarkModeBtn from "../../components/DarkModeBtn";
 
-export default function Navbar({ values, userDetails, logout }) {
+export default function Navbar({
+  values,
+  userDetails,
+  logout,
+  activeId,
+  setActiveId,
+}) {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const { darkMode, toggleDarkMode } = useDarkMode();
-  let [activeId, setActiveId] = useState();
   let [clickOnProfile, setClickOnProfile] = useState(false);
 
   function handaleProfileClick() {
@@ -18,7 +23,7 @@ export default function Navbar({ values, userDetails, logout }) {
   }
   function handaleLogoutActive() {
     logout();
-    //setActiveId(7);
+    setActiveId(7);
   }
   /////
   useEffect(() => {
@@ -120,7 +125,7 @@ export default function Navbar({ values, userDetails, logout }) {
               className="position-relative"
             >
               <div className="nav-item accDet row justify-content-center align-items-center">
-                <div className="col-3 d-flex justify-content-center  rounded-circle">
+                <div className="col-3 d-flex rounded-circle">
                   {" "}
                   <img
                     className="nav-profile-img mx-2 "
@@ -128,9 +133,11 @@ export default function Navbar({ values, userDetails, logout }) {
                     alt="nav-profile-img"
                   />
                 </div>
-                <div className="col-9">
+                <div className="col-9 text-center">
                   {" "}
-                  <p className="pt-1 nav-item nav-link position-relative m-0 mid-bold text-truncate">
+                  <p
+                    className={`pt-1 nav-item nav-link position-relative m-0 mid-bold text-truncate`}
+                  >
                     {userDetails.firstname} {userDetails.lastname}
                   </p>
                 </div>
@@ -145,7 +152,7 @@ export default function Navbar({ values, userDetails, logout }) {
                 <Link
                   onClick={() => setActiveId(0)}
                   style={{ cursor: "pointer" }}
-                  className={`position-relative nav-item nav-link mt-1 text-truncate ${
+                  className={`position-relative nav-item nav-link mt-1 text-truncate  ${
                     darkMode ? " spic-dark-mode" : ""
                   }`}
                   to={`/Profile/${userDetails.id}`}

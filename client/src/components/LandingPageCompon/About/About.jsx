@@ -3,7 +3,7 @@ import { useDarkMode } from "../../../context/DarkModeContext";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
-export default function About() {
+export default function About({ setActiveId }) {
   const { darkMode } = useDarkMode();
 
   let [Staff, setStaff] = useState();
@@ -68,8 +68,11 @@ export default function About() {
               <p className="m-0">{st.email}</p>
             </div>
             <div className="card-Bottom py-2 d-flex justify-content-between align-items-center m-0">
-              <div className="position-relative p-2 btn  btn-outline-info">
-                <Link to={`/Profile/${st.id}`} className="nav-link">
+              <div className=" position-relative p-2 d-flex align-items-center">
+                <Link
+                  to={`/Profile/${st.id}`}
+                  className="btn btn-primary BTN-Bold"
+                >
                   View Profile
                 </Link>
               </div>
@@ -84,7 +87,7 @@ export default function About() {
   }
 
   useEffect(() => {
-    // Code (similar to componentDidMount)
+    setActiveId(2);
     getAnlysers();
   }, []);
   return (

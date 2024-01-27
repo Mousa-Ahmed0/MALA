@@ -8,6 +8,7 @@ export default function App() {
   let [isFormOpen, setIsFormOpen] = useState(false);
   let [isPdfLoading, setIsPdfLoading] = useState(false);
   const { darkMode } = useDarkMode();
+  let [activeId, setActiveId] = useState();
 
   const navigate = useNavigate();
 
@@ -31,6 +32,7 @@ export default function App() {
 
   /* goTo page */
   function goToPage() {
+    setActiveId(1);
     navigate({
       pathname: `/`,
     });
@@ -42,7 +44,7 @@ export default function App() {
     }
   }, []);
   useEffect(() => {
-    console.log("userDetails", userDetails);
+    //console.log("userDetails", userDetails);
   }, [userDetails]);
 
   return (
@@ -76,6 +78,8 @@ export default function App() {
               darkMode={darkMode}
               userDetails={userDetails}
               logout={logout}
+              activeId={activeId}
+              setActiveId={setActiveId}
             />
           </Suspense>
           {/* Main */}
@@ -102,6 +106,7 @@ export default function App() {
               goToPage={goToPage}
               logout={logout}
               darkMode={darkMode}
+              setActiveId={setActiveId}
             />
           </Suspense>
           {/* Footer */}

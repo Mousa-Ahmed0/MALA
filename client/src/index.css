@@ -257,7 +257,6 @@ th {
   height: 1px;
   position: absolute;
   width: 0%;
-  transition: var(--main-transition);
   bottom: 0;
   left: 0;
   background-color: var(--color);

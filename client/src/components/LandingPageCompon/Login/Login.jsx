@@ -5,7 +5,12 @@ import axios from "axios";
 
 import { useDarkMode } from "../../../context/DarkModeContext";
 
-export default function Login({ setUserData, goToPage, userDetails }) {
+export default function Login({
+  setUserData,
+  goToPage,
+  userDetails,
+  setActiveId,
+}) {
   const { darkMode } = useDarkMode();
 
   let [user, setUser] = useState({
@@ -80,6 +85,10 @@ export default function Login({ setUserData, goToPage, userDetails }) {
 
     return schema.validate(user, { abortEarly: false });
   }
+  /////////////////
+  useEffect(() => {
+    setActiveId(7);
+  }, []);
   return (
     <div className="LP-section d-flex justify-content-center">
       <div

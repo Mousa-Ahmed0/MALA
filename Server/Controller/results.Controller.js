@@ -543,7 +543,7 @@ module.exports.getResultsDoctor = asyncHandler(async (req, res) => {
         //user patient
         const usersPatint = await user
           .findOne({ ident: detailsAnalyze[i].patientIdent })
-          .select("firstname lastname sex birthday -_id ");
+          .select("firstname lastname sex birthday _id ");
         //user doctor
         let usersDoctor = null;
         if (detailsAnalyze[i].doctorIdent != "")

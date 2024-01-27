@@ -10,7 +10,7 @@ import { formatDateWithouHour } from "../../methods/FormateDate";
 import { useDarkMode } from "../../context/DarkModeContext";
 import { getPateinrPayments, getPateinrResults } from "../../apis/ApisHandale";
 
-export default function PatientHome({ user, setIsPdfLoading }) {
+export default function PatientHome({ user, setActiveId, setIsPdfLoading }) {
   const { darkMode } = useDarkMode();
   const [allResults, setAllResults] = useState([]);
   const [resultError, setResultError] = useState(false);
@@ -126,6 +126,7 @@ export default function PatientHome({ user, setIsPdfLoading }) {
 
   /////////
   useEffect(() => {
+    setActiveId(1);
     getResults();
     getPayments();
   }, []);

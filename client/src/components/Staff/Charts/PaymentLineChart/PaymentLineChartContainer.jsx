@@ -130,7 +130,9 @@ export default function PaymentLineChartContainer({ darkMode }) {
           }
         } catch (error) {
           //Api Error?
-          console.error("error", error);
+          if (error.response.status === 400) {
+            setNoResults(true);
+          } else console.error("error", error);
         }
         break;
 
@@ -179,7 +181,10 @@ export default function PaymentLineChartContainer({ darkMode }) {
             setNoResults(true);
           }
         } catch (error) {
-          console.error("error", error);
+          //Api Error?
+          if (error.response.status === 400) {
+            setNoResults(true);
+          } else console.error("error", error);
         }
         break;
 
@@ -227,7 +232,10 @@ export default function PaymentLineChartContainer({ darkMode }) {
             setNoResults(true);
           }
         } catch (error) {
-          console.error("error", error);
+          //Api Error?
+          if (error.response.status === 400) {
+            setNoResults(true);
+          } else console.error("error", error);
         }
         break;
       case "Last Year":
@@ -275,7 +283,10 @@ export default function PaymentLineChartContainer({ darkMode }) {
             setNoResults(true);
           }
         } catch (error) {
-          console.error("error", error);
+          //Api Error?
+          if (error.response.status === 400) {
+            setNoResults(true);
+          } else console.error("error", error);
         }
         break;
 
@@ -299,7 +310,11 @@ export default function PaymentLineChartContainer({ darkMode }) {
       <div className="row align-items-center">
         <div className="col-12 d-flex gap-2">
           <span className=" h5 m-0 colorMain">
-            <i className="fa-solid fa-file-invoice-dollar"></i>
+            <i
+              className={`fa-solid fa-file-invoice-dollar ${
+                darkMode ? "text-white" : ""
+              }`}
+            ></i>
           </span>
           <h1 className=" h5 m-0">Our Payments - {filterOption}:</h1>
         </div>

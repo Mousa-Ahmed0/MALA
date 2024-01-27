@@ -1,8 +1,8 @@
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { UserDashbordNav } from "../../../componentsLoader/ComponentsLoader";
 
-export default function StorageController() {
+export default function StorageController({ setActiveId }) {
   const userDashNavbarValues = [
     {
       id: 1,
@@ -15,6 +15,11 @@ export default function StorageController() {
       path: "/Staff/StorageController/AddItem",
     },
   ];
+
+  ////
+  useEffect(() => {
+    setActiveId(8);
+  }, []);
   return (
     <>
       <div className="d-flex justify-content-center">

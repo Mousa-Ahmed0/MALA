@@ -1,7 +1,7 @@
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 import { Outlet } from "react-router";
 import { UserDashbordNav } from "../../../../componentsLoader/ComponentsLoader";
-export default function HealthCalcsController() {
+export default function HealthCalcsController({ setActiveId }) {
   const userDashNavbarValues = [
     {
       id: 1,
@@ -15,7 +15,9 @@ export default function HealthCalcsController() {
     },
   ];
   ///////
-
+  useEffect(() => {
+    setActiveId(2);
+  }, []);
   return (
     <>
       <div className="d-flex justify-content-center">

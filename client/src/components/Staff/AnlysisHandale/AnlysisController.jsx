@@ -1,8 +1,8 @@
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { UserDashbordNav } from "../../../componentsLoader/ComponentsLoader";
 
-export default function AnlysisController() {
+export default function AnlysisController({ setActiveId }) {
   const userDashNavbarValues = [
     {
       id: 1,
@@ -15,6 +15,11 @@ export default function AnlysisController() {
       path: "/Staff/AnlysisController/AddAnlyze",
     },
   ];
+
+  ////
+  useEffect(() => {
+    setActiveId(3);
+  }, []);
   return (
     <>
       <div className="d-flex justify-content-center">

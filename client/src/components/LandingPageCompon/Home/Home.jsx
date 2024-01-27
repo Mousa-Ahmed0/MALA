@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDarkMode } from "../../../context/DarkModeContext";
 
-export default function Home() {
+export default function Home({ setActiveId }) {
   const { darkMode } = useDarkMode();
-
+  /////////////////
+  useEffect(() => {
+    setActiveId(1);
+  }, []);
   return (
     <div className="LP-section LP-Home">
       <div className="LP-Home-Details">

@@ -1,7 +1,13 @@
 import React from "react";
 import { Navbar } from "../../componentsLoader/ComponentsLoader";
 
-export default function Header({ userDetails, darkMode, logout }) {
+export default function Header({
+  userDetails,
+  darkMode,
+  logout,
+  activeId,
+  setActiveId,
+}) {
   //NavBars
   const guestNavBarValues = [
     { id: 1, text: "Home", path: "/Home" },
@@ -37,7 +43,7 @@ export default function Header({ userDetails, darkMode, logout }) {
     { id: 2, text: "Healthy Calculators", path: "/Patient/HealthCalculators" },
     { id: 3, text: "Anlysis", path: "/Patient/Anlysis" },
     {
-      id: 4,
+      id: 10,
       text: "Contact Us",
       path: `/Patient/contactLab/${userDetails.id}`,
     },
@@ -46,7 +52,7 @@ export default function Header({ userDetails, darkMode, logout }) {
   const DoctorNavBarValues = [
     { id: 1, text: "Home", path: "/Doctor/Home" },
     {
-      id: 2,
+      id: 10,
       text: "Contact Us",
       path: `/Doctor/contactLab/${userDetails.id}`,
     },
@@ -73,6 +79,8 @@ export default function Header({ userDetails, darkMode, logout }) {
           }
           userDetails={userDetails}
           logout={logout}
+          activeId={activeId}
+          setActiveId={setActiveId}
         />
       </header>
     </>

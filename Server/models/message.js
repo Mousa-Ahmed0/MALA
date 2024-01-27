@@ -12,11 +12,11 @@ const massSchema = new mongoose.Schema(
     },
     ifReadyFirstUser: {
       type: Boolean,
-      default: false
+      default: false,
     },
     ifReadySecondUser: {
       type: Boolean,
-      default: false
+      default: false,
     },
     massage: [
       {
@@ -31,11 +31,9 @@ const massSchema = new mongoose.Schema(
         date: {
           type: Date,
           default: new Date(),
-        }
-      }
-
+        },
+      },
     ],
-
   },
   {
     timestamps: true,
@@ -49,12 +47,16 @@ const Massage = mongoose.model("Massage", massSchema);
 function vaildationMessage(obj) {
   const Schema = Joi.object({
     firstUser: Joi.string().pattern(new RegExp("^[0-9a-fA-F]{24}$")).required(),
-    secondUser: Joi.string().pattern(new RegExp("^[0-9a-fA-F]{24}$")).required(),
+    secondUser: Joi.string()
+      .pattern(new RegExp("^[0-9a-fA-F]{24}$"))
+      .required(),
     ifReadyFirstUser: Joi.boolean().default(false),
     ifReadySecondUser: Joi.boolean().default(false),
     massage: Joi.array().items(
       Joi.object({
-        senderId: Joi.string().pattern(new RegExp("^[0-9a-fA-F]{24}$")).required(),
+        senderId: Joi.string()
+          .pattern(new RegExp("^[0-9a-fA-F]{24}$"))
+          .required(),
         mass: Joi.string().required(),
         date: Joi.date().default(new Date()),
       })
@@ -64,5 +66,5 @@ function vaildationMessage(obj) {
 }
 module.exports = {
   Massage,
-  vaildationMessage
+  vaildationMessage,
 };

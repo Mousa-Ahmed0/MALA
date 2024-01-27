@@ -12,7 +12,7 @@ import {
   DashboardWelcome,
 } from "../../componentsLoader/ComponentsLoader";
 
-export default function DashboardHome({ user }) {
+export default function DashboardHome({ user, setActiveId }) {
   const { darkMode } = useDarkMode();
   const width = "-webkit-fill-available";
   const [staffCount, setStaffCount] = useState(0);
@@ -110,6 +110,7 @@ export default function DashboardHome({ user }) {
   }
   ///////////////////////////////
   useEffect(() => {
+    setActiveId(1);
     //initial
     getPatientCount();
     getStaffCount();
@@ -138,8 +139,16 @@ export default function DashboardHome({ user }) {
         >
           <div className="home-size d-flex flex-column justify-content-center align-items-center gap-1">
             <div className="d-flex gap-4 align-items-center">
-              <i className="h3 colorMain fa-solid fa-globe"></i>
-              <span className="h5 colorMain m-0">Users</span>
+              <i
+                className={`h3  fa-solid fa-globe ${
+                  darkMode ? "text-white" : "colorMain"
+                }`}
+              ></i>
+              <span
+                className={`h5  m-0 ${darkMode ? "text-white" : "colorMain"}`}
+              >
+                Users
+              </span>
             </div>
             <span className="h5 mid-bold">
               {patientCount + doctorsCount + staffCount}
@@ -160,8 +169,16 @@ export default function DashboardHome({ user }) {
         >
           <div className="home-size d-flex flex-column justify-content-center align-items-center gap-1">
             <div className="d-flex gap-4 align-items-center">
-              <i className="h3 colorMain fa-solid fa-user"></i>
-              <span className="h5 colorMain m-0">Staff</span>
+              <i
+                className={`h3 fa-solid fa-user ${
+                  darkMode ? "text-white" : "colorMain"
+                }`}
+              ></i>
+              <span
+                className={`h5  m-0 ${darkMode ? "text-white" : "colorMain"}`}
+              >
+                Staff
+              </span>
             </div>
             <span className="h5 mid-bold">{staffCount}</span>
             <div style={{ width }} className="progress">
@@ -189,8 +206,16 @@ export default function DashboardHome({ user }) {
         >
           <div className="home-size d-flex flex-column justify-content-center align-items-center gap-1">
             <div className="d-flex gap-4 align-items-center">
-              <i className="h3 colorMain fa-solid fa-hospital-user"></i>
-              <span className="h5 colorMain m-0">Patients</span>
+              <i
+                className={`h3 fa-solid fa-hospital-user ${
+                  darkMode ? "text-white" : "colorMain"
+                }`}
+              ></i>
+              <span
+                className={`h5 m-0 ${darkMode ? "text-white" : "colorMain"}`}
+              >
+                Patients
+              </span>
             </div>
             <span className="h5 mid-bold">{patientCount}</span>
             <div style={{ width }} className="progress">
@@ -218,8 +243,16 @@ export default function DashboardHome({ user }) {
         >
           <div className="home-size d-flex flex-column justify-content-center align-items-center gap-1">
             <div className="d-flex gap-4 align-items-center">
-              <i className="h3 colorMain fa-solid fa-user-doctor"></i>
-              <span className="h5 colorMain m-0">Doctors</span>
+              <i
+                className={`h3 fa-solid fa-user-doctor ${
+                  darkMode ? "text-white" : "colorMain"
+                }`}
+              ></i>
+              <span
+                className={`h5  m-0 ${darkMode ? "text-white" : "colorMain"}`}
+              >
+                Doctors
+              </span>
             </div>
             <span className="h5 mid-bold">{doctorsCount}</span>
             <div style={{ width }} className="progress">
@@ -271,12 +304,16 @@ export default function DashboardHome({ user }) {
           <div className="row align-items-center">
             <div className="col-8 d-flex gap-2">
               <span className=" h5 m-0 colorMain">
-                <i className="fa-solid fa-inbox"></i>
+                <i
+                  className={`fa-solid fa-envelope ${
+                    darkMode ? "text-white" : ""
+                  }`}
+                ></i>
               </span>
               <h1 className=" h5 m-0">Recent Messages:</h1>
             </div>
             <div className="col-4 d-flex justify-content-end colorMain">
-              <h1 className="h6  m-0">
+              <h1 className={`h6  m-0 ${darkMode ? "text-white" : ""}`}>
                 {nonReadNo === 0 || !nonReadNo ? (
                   "All Message Readed!"
                 ) : (
@@ -327,7 +364,11 @@ export default function DashboardHome({ user }) {
           <div className="row align-items-center">
             <div className="col-12 d-flex gap-2">
               <span className=" h5 m-0 colorMain">
-                <i className="fa-solid fa-inbox"></i>
+                <i
+                  className={`fa-solid fa-note-sticky ${
+                    darkMode ? "text-white" : ""
+                  }`}
+                ></i>{" "}
               </span>
               <h1 className=" h5 m-0">Important Notes:</h1>
             </div>

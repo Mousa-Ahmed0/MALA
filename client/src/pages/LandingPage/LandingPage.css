@@ -236,17 +236,19 @@
 .LP-section.LP-trindingAnlysis .more-Anlysis {
   height: fit-content !important;
 }
+.BTN-Bold,
 .LP-section.LP-trindingAnlysis .more-Anlysis .BTN-Bold {
   font-weight: bold;
   transition: 0.5s ease !important;
-  margin-top: 25%;
   animation: slideTop 1s ease forwards;
   animation-delay: calc(0.1s * var(--i));
 }
+.BTN-Bold:hover,
 .LP-section.LP-trindingAnlysis .more-Anlysis .BTN-Bold:hover {
   background-color: #fff;
   color: var(--main-bg);
 }
+
 /*** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~_~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Contact ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~_~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ***/
 
 .LP-section.LP-Contact .BTN-Bold {

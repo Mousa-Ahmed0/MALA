@@ -4,7 +4,7 @@ import Joi from "joi";
 import { useDarkMode } from "../../../context/DarkModeContext";
 import axios from "axios";
 
-export default function Contact() {
+export default function Contact({ setActiveId }) {
   const { darkMode } = useDarkMode();
   let [guestMessage, setguestMessage] = useState({
     fullName: "",
@@ -79,7 +79,10 @@ export default function Contact() {
 
     return schema.validate(guestMessage, { abortEarly: false });
   }
-
+  /////////////////
+  useEffect(() => {
+    setActiveId(4);
+  }, []);
   return (
     <div className="LP-section LP-Contact Con-Pat">
       <div

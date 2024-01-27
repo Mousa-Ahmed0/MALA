@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
 import { getAllAnalysis } from "../../../apis/ApisHandale";
-export default function Ganlyses() {
+import { Link } from "react-router-dom";
+export default function Ganlyses({ setActiveId, darkMode }) {
   let navigate = useNavigate();
   let [trendAnlysis, setTrendAnlysis] = useState([]);
   let [apiError, setApiError] = useState(false);
@@ -38,6 +39,7 @@ export default function Ganlyses() {
       }
     }
   }
+  //
   function renderAnlysis() {
     if (!trendAnlysis || trendAnlysis.length === 0) {
       return (
@@ -48,36 +50,43 @@ export default function Ganlyses() {
     }
 
     const renderAnlysis = [];
-    for (let i = 0; trendAnlysis[i] && i < 5; i++) {
+    for (let i = 0; trendAnlysis[i] && i < 8; i++) {
       //const anlyseID = trendAnlysess[i].id;
 
       renderAnlysis.push(
-        <div className="col-12 col-sm-6 col-md-4 col-lg-2 ">
-          <div className="trend-Box d-flex justify-content-center flex-column">
+        <div className="col-12 col-md-6 col-lg-3 ">
+          <div
+            style={{ borderRadius: "7px" }}
+            className={` all-Mid-shadow ${
+              darkMode ? "spic-dark-mode" : "border border-dark"
+            } d-flex justify-content-center flex-column my-2 p-4 `}
+          >
             <div>
               {" "}
-              <h3 className="h5 text-center my-3">{trendAnlysis[i].name}</h3>
+              <h3 className="h5 text-center text-truncate my-3 mid-bold">
+                {trendAnlysis[i].name}
+              </h3>
+              <h6 className="h6 text-center text-truncate my-3">
+                ( {trendAnlysis[i].code})
+              </h6>
             </div>
-            <button onClick={() => goToAnlysess()} className="det-btn mt-3">
+            <Link
+              style={{ transition: "0.5s" }}
+              to={`/AnlyiseDetails/${trendAnlysis[i].code}`}
+              className="btn normal-btn  btn-outline-primary mt-3"
+            >
               Details
-            </button>
+            </Link>
           </div>
         </div>
       );
     }
     return renderAnlysis;
   }
-  let obj = {
-    id: 0,
-    name: "safasf",
-  };
-  function goToAnlysess() {
-    navigate({
-      pathname: "/Anlysis",
-      state: { obj },
-    });
-  }
+
   useEffect(() => {
+    console.log("darkMode", darkMode);
+    setActiveId(3);
     getTrendAnlysis();
   }, []);
   return (
@@ -97,12 +106,12 @@ export default function Ganlyses() {
             <div className="row">{renderAnlysis()}</div>
           </div>
           <div className="more-Anlysis w-25 d-flex align-items-center flex-column">
-            <a
-              onClick={goToAnlysess}
-              className="w-100 btn btn-primary  d-flex justify-content-center BTN-Bold"
+            <Link
+              to={"/Anlysis"}
+              className="w-100 btn btn-primary d-flex justify-content-center BTN-Bold"
             >
               More Tests
-            </a>
+            </Link>
           </div>
         </div>
       )}

@@ -9,7 +9,7 @@ import {
   AdsSection,
 } from "../../componentsLoader/ComponentsLoader";
 
-export default function DoctorHome({ user }) {
+export default function DoctorHome({ user, setActiveId }) {
   const { darkMode } = useDarkMode();
   const [allResults, setAllResults] = useState([]);
   const [loader, setLoader] = useState(false);
@@ -52,6 +52,7 @@ export default function DoctorHome({ user }) {
   //display patient results
   function displayResults() {
     return allResults.map((result, index) => {
+      // console.log(result);
       return (
         <>
           <div
@@ -62,9 +63,16 @@ export default function DoctorHome({ user }) {
               {formatDateWithouHour(result.detailsAnalyze.date)}
             </div>
             <div className="col-7 d-flex align-items-center">
-              {result.usersPatient.firstname +
-                " " +
-                result.usersPatient.lastname}
+              <Link
+                to={`/profile/${result.usersPatient?._id}`}
+                className="btn m-0 nav-link position-relative"
+              >
+                {result.usersPatient
+                  ? result.usersPatient.firstname +
+                    " " +
+                    result.usersPatient.lastname
+                  : "Not Found"}
+              </Link>
             </div>
             <div className="col-3 d-flex justify-content-center align-items-center">
               <Link
@@ -82,6 +90,7 @@ export default function DoctorHome({ user }) {
 
   ///////
   useEffect(() => {
+    setActiveId(1);
     getResults();
   }, []);
   return (

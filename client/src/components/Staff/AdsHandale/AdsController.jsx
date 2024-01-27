@@ -1,8 +1,8 @@
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { UserDashbordNav } from "../../../componentsLoader/ComponentsLoader";
 
-export default function AdsController() {
+export default function AdsController({ setActiveId }) {
   const userDashNavbarValues = [
     {
       id: 1,
@@ -15,6 +15,11 @@ export default function AdsController() {
       path: "/Staff/AdsController/AddNewAdd",
     },
   ];
+
+  ////
+  useEffect(() => {
+    setActiveId(8);
+  }, []);
   return (
     <>
       <div className="d-flex justify-content-center">

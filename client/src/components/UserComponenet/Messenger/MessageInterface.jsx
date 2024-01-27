@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 import { useParams } from "react-router";
 
 import {
@@ -7,7 +7,7 @@ import {
 } from "../../../componentsLoader/ComponentsLoader";
 import BackBtn from "../../BackBtn";
 
-export default function MessageInterface({ user, darkMode }) {
+export default function MessageInterface({ user, darkMode, setActiveId }) {
   const { id } = useParams();
   //formate Date
   const formatDate = (inputDate) => {
@@ -42,6 +42,10 @@ export default function MessageInterface({ user, darkMode }) {
     }
   };
 
+  /////////
+  useEffect(() => {
+    setActiveId(10);
+  }, []);
   return (
     <>
       <div className="ST-section my-5">

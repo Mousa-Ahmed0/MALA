@@ -5,7 +5,7 @@ import { useDarkMode } from "../../context/DarkModeContext";
 import { getAllAnalysis } from "../../apis/ApisHandale";
 import { AnlysisPresintation } from "../../componentsLoader/ComponentsLoader";
 
-export default function AnlysisContainer() {
+export default function AnlysisContainer({ setActiveId }) {
   const { darkMode } = useDarkMode();
   let [allAnlysis, setAllAnlysis] = useState([]);
   let [visibleAnlysis, setVisibleAnlysis] = useState([]);
@@ -110,6 +110,7 @@ export default function AnlysisContainer() {
 
   // initial use Effect
   useEffect(() => {
+    setActiveId(3);
     getAnnysis();
   }, []);
   //use Effect
