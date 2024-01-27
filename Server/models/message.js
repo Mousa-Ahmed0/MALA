@@ -46,10 +46,8 @@ const Massage = mongoose.model("Massage", massSchema);
 //validate Message Model
 function vaildationMessage(obj) {
   const Schema = Joi.object({
-    firstUser: Joi.string().pattern(new RegExp("^[0-9a-fA-F]{24}$")).required(),
-    secondUser: Joi.string()
-      .pattern(new RegExp("^[0-9a-fA-F]{24}$"))
-      .required(),
+    firstUser: Joi.string().pattern(new RegExp("^[0-9a-fA-F]{24}$")),
+    secondUser: Joi.string().pattern(new RegExp("^[0-9a-fA-F]{24}$")),
     ifReadyFirstUser: Joi.boolean().default(false),
     ifReadySecondUser: Joi.boolean().default(false),
     massage: Joi.array().items(

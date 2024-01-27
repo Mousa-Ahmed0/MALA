@@ -101,6 +101,27 @@ module.exports.getAdvert = asyncHandler(async (req, res) => {
 });
 
 /**--------------------------------
+ * @desc   get  advertisements by pages
+ * @router /api/advertisements/getAdvertisPages
+ * @method GET
+ * @access private (only logged in admin)
+ * ------------------------------------------ */
+module.exports.getAdvertisPages = asyncHandler(async (req, res) => {
+  try {
+    const POST_PER_PAGE = 10;
+    const pageNumber = req.query.pageNumber;
+    let allAdv = await Advertisement.find({})
+      .skip((pageNumber - 1) * POST_PER_PAGE)
+      .limit(POST_PER_PAGE);
+    if (allAdv) res.status(201).json({ message: "done.........", allAdv });
+    else return res.status(400).json({ message: "dose not exist" });
+  } catch (error) {
+    // Handle the error here, you can log it or send a specific error response to the client
+    res.status(500).json({ errorMass: "Internal Server Error", error });
+  }
+});
+
+/**--------------------------------
  * @desc   get  advertisements by _id
  * @router /api/advertisements/getAdvertisTd/:id
  * @method GET

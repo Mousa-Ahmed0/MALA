@@ -13,12 +13,14 @@ const {
   deleteAdvert,
   addAdvert,
   getAdvertId,
+  getAdvertisPages,
 } = require("../Controller/advertisements.Controller");
 const router = require("express").Router();
 
 router.get("/getAdvertisId/:id", verifyToken, getAdvertId);
 router.delete("/deleteAdvert/:id", ifAdmin, deleteAdvert);
 router.get("/getAdvertis", verifyToken, getAdvert);
+router.get("/getAdvertisPages", verifyToken, getAdvertisPages);
 router
   .route("/addAdvert")
   .post(ifAdmin, photoUpload.array("images", 10), addAdvert);
