@@ -172,7 +172,9 @@ module.exports.updateAdverti = asyncHandler(async (req, res) => {
           publicId: result.public_id,
         };
         arrayImg.push(imageInfo);
-      });
+      });  
+
+       
       //delete old image
       for (let i = 0; i < oldImag.length; i++) {
         await cloudinaryRemoveImage(oldImag[i].publicId);

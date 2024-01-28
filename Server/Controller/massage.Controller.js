@@ -21,6 +21,7 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
     //   console.log(objectIdString);
     //   return res.status(400).json({ message: "Invalid ID" });
     // }
+<<<<<<< HEAD
     // validation
     const { error } = vaildationMessage(req.body);
     if (error) {
@@ -32,6 +33,17 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
       return res.status(400).json({ message: mesError });
     }
     console.log(objectIdString);
+=======
+    // const { error } = vaildationMessage(req.body);
+    // // validation
+    // if (error) {
+    //   let mesError = [];
+    //   error.details.map((index) => {
+    //     mesError.push(index.message);
+    //   });
+    //   return res.status(400).json({ message: mesError });
+    // }
+>>>>>>> 9a5aa8529924cdec942e45f2f28f7c687d727f59
     let massRecord = await Massage.findOne({
       $or: [
         { firstUser: req.user.id, secondUser: objectIdString },

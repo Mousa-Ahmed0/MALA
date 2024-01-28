@@ -107,7 +107,7 @@ export default function UsersMessages({ user }) {
                   <div className="d-flex align-items-center">
                     <Link
                       style={{ cursor: "pointer" }}
-                      to={`/profile/${user.id}`}
+                      to={`/profile/${user.firstUser.id}`}
                       className="normal-btn btn d-flex justify-content-center align-items-center"
                     >
                       <i
@@ -120,7 +120,7 @@ export default function UsersMessages({ user }) {
                   <div className="d-flex align-items-center">
                     <Link
                       style={{ cursor: "pointer" }}
-                      to={`/profile/${user.id}`}
+                      to={`/Patient/contactLab/${user.id}`}
                       className="normal-btn btn d-flex justify-content-center align-items-center"
                     >
                       {" "}

@@ -67,7 +67,8 @@ export default function UsersMessageInterface({
       <div className={`"message-platform row mx-4" `}>
         <h1 className="col-12 h3 my-0 colorMain">MALM:</h1>
         <div
-          className={`row message-box bottom-shadow my-3 ${
+          style={{ borderRadius: "7px" }}
+          className={`row message-box bottom-shadow my-3 p-4 ${
             darkMode ? " spic-dark-mode" : ""
           }`}
         >
@@ -90,7 +91,11 @@ export default function UsersMessageInterface({
           <hr />
           <div className="col-12">
             <div className="row">
-              <div className="col-10 form-floating gray-color">
+              <div
+                className={`col-10 form-floating gray-color ${
+                  darkMode ? "dark-input border border-white " : ""
+                }`}
+              >
                 <input
                   name="massage"
                   value={message.massage}
@@ -106,9 +111,15 @@ export default function UsersMessageInterface({
               <div className="col-2 d-flex align-items-center">
                 <button
                   onClick={(e) => sendMessage(e)}
-                  className="nav-link position-relative"
+                  className={`nav-link position-relative ${
+                    darkMode ? "text-white" : ""
+                  }`}
                 >
-                  <i className="fa-solid fa-message colorMain mid-bold h3 m-0"></i>
+                  <i
+                    className={`fa-solid fa-message mid-bold h3 m-0 ${
+                      darkMode ? "text-white" : ""
+                    }`}
+                  ></i>
                 </button>
               </div>
             </div>

@@ -185,9 +185,9 @@ export default function ResultsPreviewContainer({}) {
       setUsersCount(response.data.count);
     } catch (error) {
       if (error.response.status === 400) {
-        console.error("error", error);
         setNoResults(true);
         setfillterdResults([]);
+        setVisibleResults([]);
       } else console.error("error", error);
     }
     setLoader(false);
@@ -350,11 +350,11 @@ export default function ResultsPreviewContainer({}) {
             let srchResultsArray = [];
             for (const res of allResults) {
               // console.log(res);
-              const fullName = res.usersDoctor.firstname
+              const fullName = res.usersDoctor?.firstname
                 ? res.usersDoctor.firstname?.toLowerCase() +
                   " " +
                   res.usersDoctor.lastname?.toLowerCase()
-                : res.usersDoctor.toLowerCase();
+                : res.usersDoctor?.toLowerCase();
               const matches = fullName.includes(val);
               if (matches) {
                 srchResultsArray.push(res);
@@ -395,11 +395,11 @@ export default function ResultsPreviewContainer({}) {
             for (const res of allResults) {
               //      console.log(res);
 
-              const fullName = res.usersDoctor.firstname
+              const fullName = res.usersDoctor?.firstname
                 ? res.usersDoctor.firstname?.toLowerCase() +
                   " " +
                   res.usersDoctor.lastname?.toLowerCase()
-                : res.usersDoctor.toLowerCase();
+                : res.usersDoctor?.toLowerCase();
               const matches = fullName && fullName.includes(val);
               if (matches) {
                 srchResultsArray.push(res);
@@ -451,11 +451,11 @@ export default function ResultsPreviewContainer({}) {
             for (const res of allResults) {
               //      console.log(res);
 
-              const fullName = res.usersDoctor.firstname
+              const fullName = res.usersDoctor?.firstname
                 ? res.usersDoctor.firstname?.toLowerCase() +
                   " " +
                   res.usersDoctor.lastname?.toLowerCase()
-                : res.usersDoctor.toLowerCase();
+                : res.usersDoctor?.toLowerCase();
               const matches = fullName && fullName.includes(val);
               if (matches) {
                 srchResultsArray.push(res);
@@ -500,11 +500,11 @@ export default function ResultsPreviewContainer({}) {
             for (const res of fillterdResults) {
               //  console.log(res);
 
-              const fullName = res.usersDoctor.firstname
+              const fullName = res.usersDoctor?.firstname
                 ? res.usersDoctor.firstname?.toLowerCase() +
                   " " +
                   res.usersDoctor.lastname?.toLowerCase()
-                : res.usersDoctor.toLowerCase();
+                : res.usersDoctor?.toLowerCase();
               const matches = fullName && fullName.includes(val);
               if (matches) {
                 srchResultsArray.push(res);
