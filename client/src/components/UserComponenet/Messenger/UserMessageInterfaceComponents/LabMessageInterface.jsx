@@ -64,7 +64,7 @@ export default function LabMessageInterface({
       try {
         await sendMessage(e);
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
       return;
     }

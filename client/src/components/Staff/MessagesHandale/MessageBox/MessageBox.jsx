@@ -26,7 +26,7 @@ export default function MessageBox({ darkMode }) {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         }
       );
-      console.log(response);
+      console.log("response", response);
       if (response.data.newMass) {
         setAllMessages(response.data.newMass);
       } else {
@@ -51,7 +51,7 @@ export default function MessageBox({ darkMode }) {
               <div className="col-3">
                 {" "}
                 <img
-                  src={message.firstUser.profilePhoto.url}
+                  src={message.firstUser?.profilePhoto.url}
                   data-lazy-placeholder="https://placehold.it/1321x583?text=Loading"
                   loading="lazy"
                   className={` img-fluid lazy nav-profile-img mx-2  border ${
@@ -68,14 +68,14 @@ export default function MessageBox({ darkMode }) {
                 >
                   {" "}
                   <Link
-                    to={`/Profile/${message.firstUser.id}`}
+                    to={`/Profile/${message.firstUser?.id}`}
                     className={`nav-item nav-link h6 m-0 text-truncate ${
                       !message.ifReadySecondUser ? "mid-bold" : ""
                     }`}
                   >
-                    {message.firstUser.firstname +
+                    {message.firstUser?.firstname +
                       " " +
-                      message.firstUser.lastname}
+                      message.firstUser?.lastname}
                   </Link>
                 </div>
               </div>
