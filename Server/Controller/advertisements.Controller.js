@@ -173,15 +173,15 @@ module.exports.updateAdverti = asyncHandler(async (req, res) => {
         };
         arrayImg.push(imageInfo);
       });
-
+      //delete old image
+      for (let i = 0; i < oldImag.length; i++) {
+        await cloudinaryRemoveImage(oldImag[i].publicId);
+      }
       // Wait for all uploads to complete before saving the updated advertisement
       await Promise.all(uploadPromises);
     }
     test.advert = arrayImg;
-    //delete old image
-    for (let i = 0; i < oldImag.length; i++) {
-      await cloudinaryRemoveImage(oldImag[i].publicId);
-    }
+
     //save to database
     await test.save();
 

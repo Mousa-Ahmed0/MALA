@@ -24,9 +24,8 @@ const massSchema = new mongoose.Schema(
           type: mongoose.Schema.Types.ObjectId,
           ref: "User",
         },
-        mass: {
+        message: {
           type: String,
-          required: true,
         },
         date: {
           type: Date,
@@ -46,20 +45,19 @@ const Massage = mongoose.model("Massage", massSchema);
 //validate Message Model
 function vaildationMessage(obj) {
   const Schema = Joi.object({
-    firstUser: Joi.string().pattern(new RegExp("^[0-9a-fA-F]{24}$")),
-    secondUser: Joi.string().pattern(new RegExp("^[0-9a-fA-F]{24}$")),
-    ifReadyFirstUser: Joi.boolean().default(false),
-    ifReadySecondUser: Joi.boolean().default(false),
-    massage: Joi.array().items(
-      Joi.object({
-        senderId: Joi.string()
-          .pattern(new RegExp("^[0-9a-fA-F]{24}$"))
-          .required(),
-        mass: Joi.string().required(),
-        date: Joi.date().default(new Date()),
-      })
-    ),
-  });
+    message: Joi.string().required(),
+    // firstUser: Joi.string().pattern(new RegExp("^[0-9a-fA-F]{24}$")),
+    // secondUser: Joi.string().pattern(new RegExp("^[0-9a-fA-F]{24}$")),
+    // ifReadyFirstUser: Joi.boolean().default(false),
+    // ifReadySecondUser: Joi.boolean().default(false),
+    // massage: Joi.array().items(
+    //   Joi.object({
+    //     senderId: Joi.string()
+    //       .pattern(new RegExp("^[0-9a-fA-F]{24}$")),
+    //     date: Joi.date().default(new Date()),
+    //   })
+    // ),
+  }); 
   return Schema.validate(obj, { abortEarly: false });
 }
 module.exports = {

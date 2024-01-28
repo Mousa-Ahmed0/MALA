@@ -12,7 +12,6 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
   try {
     //if Patient must be determain admin _id
     let objectIdString = "659928039f6a2dee27595dcc";
-    console.log(objectIdString);
 
     if (req.user.usertype === "Patient" || req.user.usertype === "Doctor")
       objectIdString = process.env.ADMIN_ID;
@@ -22,15 +21,17 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
     //   console.log(objectIdString);
     //   return res.status(400).json({ message: "Invalid ID" });
     // }
-    const { error } = vaildationMessage(req.body);
     // validation
+    const { error } = vaildationMessage(req.body);
     if (error) {
+      console.log(objectIdString);
       let mesError = [];
       error.details.map((index) => {
         mesError.push(index.message);
       });
       return res.status(400).json({ message: mesError });
     }
+    console.log(objectIdString);
     let massRecord = await Massage.findOne({
       $or: [
         { firstUser: req.user.id, secondUser: objectIdString },
@@ -70,7 +71,7 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
       }
       massRecord.massage.push({
         senderId: req.user.id,
-        mass: req.body.massage,
+        message: req.body.message,
         date: new Date(),
       });
       await massRecord.save();
@@ -85,7 +86,7 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
         massage: [
           {
             senderId: req.user.id,
-            mass: req.body.massage,
+            message: req.body.message,
             date: new Date(),
           },
         ],
@@ -100,6 +101,7 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
     }
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
+    console.log(error);
     res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
@@ -126,7 +128,7 @@ module.exports.getAllMass = asyncHandler(async (req, res) => {
     } else return res.status(400).json({ massage: "Massage dose not exist" });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error", error }); 
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
 
