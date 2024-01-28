@@ -48,9 +48,9 @@ export default function MessageInterface({ user, darkMode, setActiveId }) {
   }, []);
   return (
     <>
-      <div className="ST-section my-5">
+      <div className="ST-section my-2">
         <BackBtn />
-        <div className="Reg-Pat my-5">
+        <div className="Reg-Pat">
           <div className={`page-form ${darkMode ? " border-white" : ""}`}>
             {user.usertype === "Admin" || user.usertype === "Staff" ? (
               <Suspense

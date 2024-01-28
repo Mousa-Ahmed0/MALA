@@ -167,6 +167,23 @@ canvas {
   color: #fff !important;
 }
 
+.dark-input input::-webkit-input-placeholder {
+  /* WebKit browsers */
+  color: #fff !important;
+}
+.dark-input input:-moz-placeholder {
+  /* Mozilla Firefox 4 to 18 */
+  color: #fff !important;
+}
+.dark-input input::-moz-placeholder {
+  /* Mozilla Firefox 19+ */
+  color: #fff !important;
+}
+.dark-input input:-ms-input-placeholder {
+  /* Internet Explorer 10+ */
+  color: #fff !important;
+}
+
 /* bold Section */
 .light-bold {
   font-weight: var(--lowBold);

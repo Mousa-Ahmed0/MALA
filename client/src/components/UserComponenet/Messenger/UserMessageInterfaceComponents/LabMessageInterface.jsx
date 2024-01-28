@@ -112,7 +112,7 @@ export default function LabMessageInterface({
       </div>
       <div className={`"message-platform row mx-4" `}>
         <div
-          className={`row message-box bottom-shadow my-3 ${
+          className={`row message-box bottom-shadow my-3 p-4 ${
             darkMode ? " spic-dark-mode" : ""
           }`}
         >
@@ -136,7 +136,12 @@ export default function LabMessageInterface({
           <hr />
           <div className="col-12">
             <div className="row">
-              <div className="col-10 form-floating gray-color">
+              <div
+                className={`col-10 form-floating gray-color ${
+                  darkMode ? "dark-input border border-white " : ""
+                }`}
+              >
+                {" "}
                 <input
                   name="massage"
                   value={message.massage}
@@ -152,9 +157,15 @@ export default function LabMessageInterface({
               <div className="col-2 d-flex align-items-center">
                 <button
                   onClick={(e) => sendMessage(e)}
-                  className="nav-link position-relative"
+                  className={`nav-link position-relative ${
+                    darkMode ? "text-white" : ""
+                  }`}
                 >
-                  <i className="fa-solid fa-message colorMain mid-bold h3 m-0"></i>
+                  <i
+                    className={`fa-solid fa-message mid-bold h3 m-0 ${
+                      darkMode ? "text-white" : ""
+                    }`}
+                  ></i>
                 </button>
               </div>
             </div>

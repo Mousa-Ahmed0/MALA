@@ -22,15 +22,15 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
     //   console.log(objectIdString);
     //   return res.status(400).json({ message: "Invalid ID" });
     // }
-    const { error } = vaildationMessage(req.body);
-    // validation
-    if (error) {
-      let mesError = [];
-      error.details.map((index) => {
-        mesError.push(index.message);
-      });
-      return res.status(400).json({ message: mesError });
-    }
+    // const { error } = vaildationMessage(req.body);
+    // // validation
+    // if (error) {
+    //   let mesError = [];
+    //   error.details.map((index) => {
+    //     mesError.push(index.message);
+    //   });
+    //   return res.status(400).json({ message: mesError });
+    // }
     let massRecord = await Massage.findOne({
       $or: [
         { firstUser: req.user.id, secondUser: objectIdString },
@@ -126,7 +126,7 @@ module.exports.getAllMass = asyncHandler(async (req, res) => {
     } else return res.status(400).json({ massage: "Massage dose not exist" });
   } catch (error) {
     // Handle the error here, you can log it or send a specific error response to the client
-    res.status(500).json({ errorMess: "Internal Server Error", error }); 
+    res.status(500).json({ errorMess: "Internal Server Error", error });
   }
 });
 

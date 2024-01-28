@@ -25,9 +25,11 @@ export default function AdDetails({ darkMode }) {
       </div>
     </div>
   );
+  const [Loading, setLoading] = useState(false);
 
   //get Ad Details
   async function getAd() {
+    setLoading(true);
     try {
       const response = await axios.get(
         `http://localhost:5000/api/advertisements/getAdvertisId/${id}`,
@@ -47,6 +49,7 @@ export default function AdDetails({ darkMode }) {
       setApiError(true);
       console.error("Error from getAd: ", error);
     }
+    setLoading(false);
   }
 
   //////////////
@@ -59,7 +62,13 @@ export default function AdDetails({ darkMode }) {
   return (
     <div className="ST-section">
       <BackBtn />
-      {Ad ? (
+      {Loading ? (
+        <div className="d-flex justify-content-center align-items-center my-4">
+          <div className="spinner-border text-primary" role="status">
+            <span className="sr-only">Loading...</span>
+          </div>
+        </div>
+      ) : Ad ? (
         <>
           <div className="row mt-4 mb-0">
             <div className="col-12 col-md-9 h3 m-0 high-bold colorMain d-flex align-items-center my-1 text-truncate">

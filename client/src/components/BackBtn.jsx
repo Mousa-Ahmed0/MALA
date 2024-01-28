@@ -12,7 +12,7 @@ export default function BackBtn() {
   };
   return (
     <div
-      className={`back btn bg-transparent m-0 all-light-shadow border border-dark ${
+      className={`back btn bg-transparent my-5 all-light-shadow border border-dark ${
         darkMode ? " spic-dark-mode border-0" : ""
       }`}
     >
