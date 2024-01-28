@@ -71,10 +71,10 @@ export default function AdDetails({ darkMode }) {
       ) : Ad ? (
         <>
           <div className="row mt-4 mb-0">
-            <div className="col-12 col-md-9 h3 m-0 high-bold colorMain d-flex align-items-center my-1 text-truncate">
+            <div className="col-12 col-md-9 h3 m-0 high-bold colorMain d-flex my-1 text-truncate">
               {Ad.title}
             </div>
-            <div className="col-12 col-md-3 h6 m-0 high-bold colorMain my-1">
+            <div className="col-12 col-md-3 h6 m-0 high-bold colorMain my-1 d-flex align-items-center gap-1">
               <span style={{ fontSize: "0.875rem" }} className="text-black">
                 From:
               </span>
@@ -87,22 +87,26 @@ export default function AdDetails({ darkMode }) {
           </div>
           <hr className="mt-0 mb-4" />
           <div style={{}}>
-            <Carousel
-              nextIcon={<span style={arrowStyles}>&#xf30b;</span>}
-              prevIcon={<span style={arrowStyles}>&#xf30a;</span>}
-            >
-              {Ad.advert.map((img, index) => (
-                <Carousel.Item key={index}>
-                  <img
-                    className="d-block w-100 h-100"
-                    src={img.url}
-                    alt={index + 1 + " Slide"}
-                  />
-                </Carousel.Item>
-              ))}
-            </Carousel>
+            {Ad.advert.length > 0 ? (
+              <Carousel
+                nextIcon={<span style={arrowStyles}>&#xf30b;</span>}
+                prevIcon={<span style={arrowStyles}>&#xf30a;</span>}
+              >
+                {Ad.advert.map((img, index) => (
+                  <Carousel.Item key={index}>
+                    <img
+                      className="d-block w-100 h-100"
+                      src={img.url}
+                      alt={index + 1 + " Slide"}
+                    />
+                  </Carousel.Item>
+                ))}
+              </Carousel>
+            ) : (
+              ""
+            )}
           </div>
-          <hr className="my-4" />
+          <hr className={`${Ad.advert.length > 0 ? "" : "d-none"} my-4`} />
           <div
             style={{ lineHeight: "1.75", textAlign: "justify" }}
             className="h5 m-0"

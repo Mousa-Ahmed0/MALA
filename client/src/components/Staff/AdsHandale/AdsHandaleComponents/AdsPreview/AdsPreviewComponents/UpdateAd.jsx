@@ -25,7 +25,7 @@ export default function UpdateAd({
       formDataToSend.append("creDate", ad.creDate);
       formDataToSend.append("expDate", ad.expDate);
 
-      const response = await updateAnAd(ad.id, ad);
+      const response = await updateAnAd(ad._id, formDataToSend);
       console.log(response);
       setApiMessage("Done!");
     } catch (error) {
@@ -127,7 +127,11 @@ export default function UpdateAd({
                       type="date"
                       name="creDate"
                       className="form-control"
-                      value={ad.creDate}
+                      value={
+                        ad
+                          ? new Date(ad.creDate).toISOString().split("T")[0]
+                          : new Date().toISOString().split("T")[0]
+                      }
                       onChange={(e) => getAdData(e)}
                     />
                   </div>
@@ -143,7 +147,11 @@ export default function UpdateAd({
                       type="date"
                       name="expDate"
                       className="form-control"
-                      value={ad.expDate}
+                      value={
+                        ad
+                          ? new Date(ad.expDate).toISOString().split("T")[0]
+                          : new Date().toISOString().split("T")[0]
+                      }
                       onChange={(e) => getAdData(e)}
                     />
                   </div>
