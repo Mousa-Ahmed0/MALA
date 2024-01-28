@@ -16,21 +16,25 @@ export default function UsersMessageInterface({
   async function sendMessage(e) {
     e.preventDefault();
 
-    //try to send message with api
-    try {
-      setIsSent(true);
-      let response = await axios.post(
-        "http://localhost:5000/api/massage/sendMassage",
-        message,
-        {
-          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
-        }
-      );
-      setMessage({
-        massage: "",
-      });
-    } catch (error) {
-      console.error("Error from Sending Message: ", error);
+    if (message && message.massage && message.massage.length > 0) {
+      //try to send message with api
+      try {
+        setIsSent(true);
+        let response = await axios.post(
+          "http://localhost:5000/api/massage/sendMassage",
+          message,
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+          }
+        );
+        setMessage({
+          massage: "",
+        });
+      } catch (error) {
+        console.error("Error from Sending Message: ", error);
+      }
     }
   }
   //get Message Details
