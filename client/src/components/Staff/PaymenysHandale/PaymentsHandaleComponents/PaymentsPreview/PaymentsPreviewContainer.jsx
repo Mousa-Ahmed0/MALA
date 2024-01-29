@@ -165,6 +165,7 @@ export default function PaymentsPreviewContainer({}) {
     } catch (error) {
       if (error.response.status === 400) {
         setfillterdResults([]);
+        setVisiblePayments([]);
       } else console.error("error.response", error.response);
     }
   }
@@ -187,7 +188,11 @@ export default function PaymentsPreviewContainer({}) {
 
   //handale search value filter - patient or IC -
   function searchFilterOption(option) {
-    clearResults();
+    if (fillterdResults.length > 0) {
+      setVisiblePayments(fillterdResults);
+    } else {
+      clearResults();
+    }
     setSrchFilterOption(option);
   }
 
@@ -279,7 +284,11 @@ export default function PaymentsPreviewContainer({}) {
   // get new search bar value
   function handaleSearchVlue(value) {
     if (value === "") {
-      clearResults();
+      if (fillterdResults.length > 0) {
+        setVisiblePayments(fillterdResults);
+      } else {
+        clearResults();
+      }
       setVal("");
     }
     setVal(value);

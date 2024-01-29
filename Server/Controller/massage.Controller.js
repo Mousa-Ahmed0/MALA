@@ -10,6 +10,8 @@ const mongoose = require("mongoose");
  * ------------------------------------------ */
 module.exports.sendMass = asyncHandler(async (req, res) => {
   try {
+    console.log("req.body", req.body.massage);
+
     //if Patient must be determain admin _id
     let objectIdString = "659928039f6a2dee27595dcc";
 
@@ -69,7 +71,7 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
       }
       massRecord.massage.push({
         senderId: req.user.id,
-        message: req.body.message,
+        message: req.body.massage,
         date: new Date(),
       });
       await massRecord.save();
@@ -84,7 +86,7 @@ module.exports.sendMass = asyncHandler(async (req, res) => {
         massage: [
           {
             senderId: req.user.id,
-            message: req.body.message,
+            message: req.body.massage,
             date: new Date(),
           },
         ],

@@ -211,7 +211,11 @@ export default function ResultsPreviewContainer({}) {
 
   //handale search value filter - patient or Doctor -
   function searchFilterOption(option) {
-    clearResults();
+    if (fillterdResults.length > 0) {
+      setVisibleResults(fillterdResults);
+    } else {
+      clearResults();
+    }
     setSrchFilterOption(option);
   }
 
@@ -302,7 +306,11 @@ export default function ResultsPreviewContainer({}) {
   // get new search bar value
   function handaleSearchVlue(value) {
     if (value === "") {
-      clearResults();
+      if (fillterdResults.length > 0) {
+        setVisibleResults(fillterdResults);
+      } else {
+        clearResults();
+      }
       setVal("");
     }
     setVal(value);
