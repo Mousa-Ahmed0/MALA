@@ -62,6 +62,7 @@ export default function MessagesContainer({
   function renderMessages() {
     if (allMessages) {
       return allMessages.massage.map((message, index) => {
+        console.log(message);
         return (
           <div
             key={index}
@@ -79,7 +80,7 @@ export default function MessagesContainer({
                 message.senderId === user.id ? "alert-primary" : "alert-dark"
               }`}
             >
-              {message.mass}{" "}
+              {message.message}{" "}
               <div
                 className={`detailes-size m-0 position-absolute text-center top-0 end-0 bg-light bottom-shadow bg-info w-50 ${
                   mouseOnMsgIndex === index ? "d-block" : "d-none"
