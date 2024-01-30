@@ -71,11 +71,12 @@ module.exports.addAdvert = asyncHandler(async (req, res) => {
           .json({ message: "Images uploaded successfully", newAdver });
       })
       .catch((error) => {
-        if (res.data.message === "Unexpected field") {
-          res.status(400).json({ message: "Unexpected" });
+        if (error.message === "Unexpected field") {
+          return res.status(400).json({ message: "Unexpected" });
         }
-        res.status(500).json({ message: "Internal server error" });
+        return res.status(500).json({ message: "Internal server error" });
       });
+
   } catch (error) {
     console.log(error);
     // Handle the error here, you can log it or send a specific error response to the client
@@ -161,7 +162,8 @@ module.exports.updateAdverti = asyncHandler(async (req, res) => {
     test.creDate = req.body.creDate;
     test.expDate = req.body.expDate;
     //edit image
-    if (req.files || req.files.length > 0) {
+    if (req.files.length > 0) {
+      console.log("edit image");
       const uploadPromises = req.files.map(async (file) => {
         const imagePath = path.join(__dirname, `../images/${file.filename}`);
         const result = await cloudinaryUploadImage(imagePath);
@@ -172,17 +174,17 @@ module.exports.updateAdverti = asyncHandler(async (req, res) => {
           publicId: result.public_id,
         };
         arrayImg.push(imageInfo);
-      });  
+      });
 
-       
+
       //delete old image
       for (let i = 0; i < oldImag.length; i++) {
         await cloudinaryRemoveImage(oldImag[i].publicId);
       }
       // Wait for all uploads to complete before saving the updated advertisement
       await Promise.all(uploadPromises);
+      test.advert = arrayImg;
     }
-    test.advert = arrayImg;
 
     //save to database
     await test.save();
