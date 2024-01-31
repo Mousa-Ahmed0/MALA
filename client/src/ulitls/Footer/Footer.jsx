@@ -6,7 +6,7 @@ export default function Footer() {
 
   return (
     <footer
-      className={`d-flex justify-content-center align-items-center ${
+      className={`d-flex justify-content-center align-items-center mt-4 ${
         darkMode ? " spic-dark-mode border-0" : ""
       }`}
     >

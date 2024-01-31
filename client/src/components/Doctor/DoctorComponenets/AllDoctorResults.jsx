@@ -76,9 +76,11 @@ export default function AllDoctorResults() {
                 </div>
                 <div className="col-5 col-md-2 justify-content-end justify-content-md-start d-flex align-items-center p-0">
                   <p className="mb-0 text-truncate">
-                    {result.usersPatient.firstname +
-                      " " +
-                      result.usersPatient.lastname}
+                    {result.usersPatient
+                      ? result.usersPatient.firstname +
+                        " " +
+                        result.usersPatient.lastname
+                      : "Not Found"}
                   </p>
                 </div>
                 <div className="col-12 col-md-4 d-md-flex d-none align-items-center p-0">
