@@ -189,7 +189,7 @@ export default function UpdateAd({
                         </div>
                       </div>
                     ) : (
-                      "Add"
+                      "Update"
                     )}
                   </button>
                 </div>
