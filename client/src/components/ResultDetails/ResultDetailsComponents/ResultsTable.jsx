@@ -98,15 +98,6 @@ export default function ResultsTable({ user, darkMode, resultDetails }) {
                         </div>
                       )}
                     </div>
-                    <div className="col-12 card card-body d-flex flex-row justify-content-center gap-2 bg-transparent">
-                      <div>
-                        <img
-                          className="img-fluid"
-                          alt="ai-predictation-image"
-                          src={aiResult.urlRes}
-                        />
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>

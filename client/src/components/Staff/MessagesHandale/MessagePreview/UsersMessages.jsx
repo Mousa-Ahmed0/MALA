@@ -126,7 +126,7 @@ export default function UsersMessages({ user }) {
                       {" "}
                       <i
                         className={`h5 m-0 fa-solid  fa-envelope ${
-                          !message.ifReadySecondUser ? "fa-fade" : ""
+                          !user.ifReadySecondUser ? "fa-fade" : ""
                         } mb-0 text-truncate ${darkMode ? " dark-theme" : ""}`}
                       ></i>
                     </Link>

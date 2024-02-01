@@ -119,20 +119,7 @@ module.exports.pythonResults = asyncHandler(async (req, res) => {
         async (result) => {
           // results is an array consisting of result collected during execution
 
-          //1- get the  path to the image
-          const imagePath = path.join(__dirname, `../images/chart.jpg`);
-          if (!imagePath)
-            return res.status(400).json({ message: "No file provided" });
-
-          //2- upload to cloudinary
-          const resultImag = await cloudinaryUploadImage(imagePath);
-          //3- remove image from the server
-          fs.unlinkSync(imagePath);
-          const urlRes = resultImag.secure_url;
-          const publicId = resultImag.public_id;
-          res
-            .status(200)
-            .json({ messag: "done...........", result, urlRes, publicId });
+          res.status(200).json({ messag: "done...........", result });
         }
       );
     } else res.status(404).json({ message: "User not found" });
