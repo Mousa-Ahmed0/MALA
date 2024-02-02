@@ -15,10 +15,12 @@ export default function LabMessageInterface({
     secondUser: "",
   });
   const [isSent, setIsSent] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   //
   async function getStaffMessages() {
     try {
+      setLoading(true);
       let response = await axios.get(
         `http://localhost:5000/api/massage/getUserMassage/${
           messageId ? messageId : ""
@@ -34,6 +36,7 @@ export default function LabMessageInterface({
     } catch (error) {
       console.error("Error from Sending Message: ", error);
     }
+    setLoading(false);
   }
   // send message
   async function sendMessage(e) {
@@ -156,6 +159,7 @@ export default function LabMessageInterface({
                   placeholder="your message ..."
                   onChange={(e) => handaleMessageChange(e)}
                   onKeyDown={(e) => handaleMessageChange(e)}
+                  disabled={loading}
                 />
               </div>
               <div className="col-2 d-flex align-items-center">

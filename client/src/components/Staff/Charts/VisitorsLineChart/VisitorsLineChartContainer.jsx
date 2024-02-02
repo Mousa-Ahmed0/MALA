@@ -47,6 +47,8 @@ export default function VisitorsLineChartContainer({ darkMode }) {
     "Last 6 Months",
     "Last Year",
   ];
+  const [loading, setLoading] = useState(false);
+
   //get past days
   const getPastDayNames = (numberOfDays) => {
     const currentDate = new Date();
@@ -89,6 +91,7 @@ export default function VisitorsLineChartContainer({ darkMode }) {
 
       case "Last Week":
         try {
+          setLoading(true);
           //get data from api
           let response = await axios.get(
             `http://localhost:5000/api/result/getResults/resultDate?number=0&date=${currentDateString}`,
@@ -140,10 +143,12 @@ export default function VisitorsLineChartContainer({ darkMode }) {
             setNoResults(true);
           } else console.error("error", error);
         }
+        setLoading(false);
         break;
 
       case "Last 3 Months":
         try {
+          setLoading(true);
           //get data from api
           let response = await await axios.get(
             `http://localhost:5000/api/result/getResults/resultDate?number=3&date=${currentDateString}`,
@@ -193,10 +198,12 @@ export default function VisitorsLineChartContainer({ darkMode }) {
             setNoResults(true);
           } else console.error("error", error);
         }
+        setLoading(false);
         break;
 
       case "Last 6 Months":
         try {
+          setLoading(true);
           //get data from api
           let response = await await axios.get(
             `http://localhost:5000/api/result/getResults/resultDate?number=6&date=${currentDateString}`,
@@ -248,10 +255,12 @@ export default function VisitorsLineChartContainer({ darkMode }) {
             setNoResults(true);
           } else console.error("error", error);
         }
+        setLoading(false);
         break;
 
       case "Last Year":
         try {
+          setLoading(true);
           //get data from api
           let response = await await axios.get(
             `http://localhost:5000/api/result/getResults/resultDate?number=12&date=${currentDateString}`,
@@ -302,6 +311,7 @@ export default function VisitorsLineChartContainer({ darkMode }) {
             setNoResults(true);
           } else console.error("error", error);
         }
+        setLoading(false);
         break;
 
       default:
@@ -347,8 +357,14 @@ export default function VisitorsLineChartContainer({ darkMode }) {
           </div>
         </div>
       </div>
-      {lineChartPropreties.lineData.length > 0 &&
-      lineChartPropreties.lineLabels.length > 0 ? (
+      {loading ? (
+        <div className="d-flex justify-content-center align-items-center">
+          <div className="spinner-border text-primary" role="status">
+            <span className="sr-only h5 m-0">Loading...</span>
+          </div>
+        </div>
+      ) : lineChartPropreties.lineData.length > 0 &&
+        lineChartPropreties.lineLabels.length > 0 ? (
         <Suspense
           fallback={
             <div className="center-container">

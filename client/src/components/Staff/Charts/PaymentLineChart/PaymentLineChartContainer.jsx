@@ -47,6 +47,8 @@ export default function PaymentLineChartContainer({ darkMode }) {
     "Last 6 Months",
     "Last Year",
   ];
+  const [loading, setLoading] = useState(false);
+
   //get past days
   const getPastDayNames = (numberOfDays) => {
     const currentDate = new Date();
@@ -86,6 +88,7 @@ export default function PaymentLineChartContainer({ darkMode }) {
 
       case "Last Week":
         try {
+          setLoading(true);
           //get data from api
           let response = await getPaymentsForCharts({
             payDate: formatDate(new Date()),
@@ -134,10 +137,12 @@ export default function PaymentLineChartContainer({ darkMode }) {
             setNoResults(true);
           } else console.error("error", error);
         }
+        setLoading(false);
         break;
 
       case "Last 3 Months":
         try {
+          setLoading(true);
           //get data from api
           let response = await getPaymentsForCharts({
             payDate: formatDate(new Date()),
@@ -186,10 +191,12 @@ export default function PaymentLineChartContainer({ darkMode }) {
             setNoResults(true);
           } else console.error("error", error);
         }
+        setLoading(false);
         break;
 
       case "Last 6 Months":
         try {
+          setLoading(true);
           //get data from api
           let response = await getPaymentsForCharts({
             payDate: formatDate(new Date()),
@@ -237,9 +244,11 @@ export default function PaymentLineChartContainer({ darkMode }) {
             setNoResults(true);
           } else console.error("error", error);
         }
+        setLoading(false);
         break;
       case "Last Year":
         try {
+          setLoading(true);
           //get data from api
           let response = await getPaymentsForCharts({
             payDate: formatDate(new Date()),
@@ -288,6 +297,7 @@ export default function PaymentLineChartContainer({ darkMode }) {
             setNoResults(true);
           } else console.error("error", error);
         }
+        setLoading(false);
         break;
 
       default:
@@ -336,8 +346,14 @@ export default function PaymentLineChartContainer({ darkMode }) {
           </div>
         </div>
       </div>
-      {lineChartPropreties.lineData.length > 0 &&
-      lineChartPropreties.lineLabels.length > 0 ? (
+      {loading ? (
+        <div className="d-flex justify-content-center align-items-center">
+          <div className="spinner-border text-primary" role="status">
+            <span className="sr-only h5 m-0">Loading...</span>
+          </div>
+        </div>
+      ) : lineChartPropreties.lineData.length > 0 &&
+        lineChartPropreties.lineLabels.length > 0 ? (
         <Suspense
           fallback={
             <div className="center-container">

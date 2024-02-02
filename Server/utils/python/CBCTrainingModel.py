@@ -23,7 +23,7 @@ y = df['disease']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)  # 20% of the data for testing, and 80% for training.
 
 # Initialize the RandomForestClassifier
-clf = RandomForestClassifier(random_state=42, n_estimators=20)  # RandomForestClassifier algorithm
+clf = RandomForestClassifier(random_state=42, n_estimators=20)  
 
 # Train the model
 clf.fit(X_train, y_train)

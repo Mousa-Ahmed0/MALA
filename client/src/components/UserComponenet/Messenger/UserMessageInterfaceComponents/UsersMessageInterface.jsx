@@ -1,6 +1,7 @@
 import React, { useState, useEffect, Suspense } from "react";
 import axios from "axios";
 import { MessageContainer } from "../../../../componentsLoader/ComponentsLoader";
+import { Fade } from "react-bootstrap";
 export default function UsersMessageInterface({
   user,
   darkMode,
@@ -11,6 +12,7 @@ export default function UsersMessageInterface({
     massage: "",
   });
   const [isSent, setIsSent] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // send message
   async function sendMessage(e) {
@@ -18,6 +20,7 @@ export default function UsersMessageInterface({
 
     if (message && message.massage && message.massage.length > 0) {
       //try to send message with api
+      setLoading(true);
       try {
         setIsSent(true);
         let response = await axios.post(
@@ -35,6 +38,7 @@ export default function UsersMessageInterface({
       } catch (error) {
         console.error("Error from Sending Message: ", error);
       }
+      setLoading(false);
     }
   }
   //get Message Details
@@ -110,6 +114,7 @@ export default function UsersMessageInterface({
                   placeholder="your message ..."
                   onChange={(e) => handaleMessageChange(e)}
                   onKeyDown={(e) => handaleMessageChange(e)}
+                  disabled={loading}
                 />
               </div>
               <div className="col-2 d-flex align-items-center">
