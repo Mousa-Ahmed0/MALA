@@ -21,6 +21,26 @@ export default function DashboardHome({ user, setActiveId }) {
   const [nonReadNo, setNonReadNo] = useState(0);
   const [unpreperdSambles, setunpreperdSambles] = useState(0);
   const [unPaymentResults, setunPaymentResults] = useState(0);
+  const [unGuestMsg, setunGuestMsg] = useState(0);
+
+  //get unread messages from guests
+  async function getunGuestMsg() {
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/api/guest/countIfRead",
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
+      setunGuestMsg(response.data.count);
+    } catch (error) {
+      if (!error?.response.status === 400) {
+        console.error("Error from getunGuestMsg:", error);
+      }
+    }
+  }
 
   //get count of unpreperdSambles
   async function getunpreperdSambles() {
@@ -118,6 +138,7 @@ export default function DashboardHome({ user, setActiveId }) {
     getNonReadMessagesCount();
     getunpreperdSambles();
     getunPaymentResults();
+    getunGuestMsg();
   }, []);
   return (
     <div className="ST-section ST-Dashboard">
@@ -409,6 +430,25 @@ export default function DashboardHome({ user, setActiveId }) {
                     {unPaymentResults}
                   </span>{" "}
                   Samples didnt payed yet!
+                </div>
+                <div className="col-2 d-flex justify-content-end">
+                  <Link
+                    to={"/Staff/PaymentsController/NotPaidPayments"}
+                    className="btn m-0 nav-link position-relative"
+                  >
+                    <i className="fa-solid fa-eye"></i>
+                  </Link>
+                </div>
+              </div>
+            ) : (
+              ""
+            )}{" "}
+            {unGuestMsg !== 0 ? (
+              <div className="row home-size d-flex align-items-center mt-3 mb-4">
+                <div className="col-10">
+                  You Have{" "}
+                  <span className="high-bold colorMain">{unGuestMsg}</span>{" "}
+                  Messages from Guests didnt seen yet!
                 </div>
                 <div className="col-2 d-flex justify-content-end">
                   <Link
