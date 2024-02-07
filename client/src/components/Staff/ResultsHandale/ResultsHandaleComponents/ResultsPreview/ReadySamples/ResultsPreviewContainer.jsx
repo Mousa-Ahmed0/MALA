@@ -127,7 +127,9 @@ export default function ResultsPreviewContainer({}) {
                       </div>
                       <div className="col-6 col-md-5 d-flex justify-content-end align-items-center">
                         <button
-                          onClick={() => {}}
+                          onClick={() => {
+                            deleteResult(result.isDone.id);
+                          }}
                           className="delete-btn btn d-flex justify-content-center align-items-center"
                         >
                           {" "}
@@ -531,7 +533,12 @@ export default function ResultsPreviewContainer({}) {
   }
 
   /** ====================== Delete Section ====================== **/
-  async function deleteUser(id) {}
+  async function deleteResult(id) {
+    try {
+    } catch (error) {
+      console.error("Error from delete result: ", error);
+    }
+  }
   //initial rendring
   useEffect(() => {
     // Fetch Results when the component mounts
@@ -632,7 +639,6 @@ export default function ResultsPreviewContainer({}) {
           handaleSearchVlue={handaleSearchVlue}
           srchFilterOption={srchFilterOption}
           dateRange={dateRange}
-          deleteUser={deleteUser}
           setPageNo={setPageNo}
           pageNo={pageNo}
           usersCount={usersCount}

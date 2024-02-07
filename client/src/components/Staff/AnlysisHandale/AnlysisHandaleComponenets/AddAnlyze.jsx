@@ -171,7 +171,7 @@ export default function AddAnlyze() {
                     onChange={(e) => getNewComponentData(e, i)}
                     type="text"
                     name="nameC"
-                    value={component.nameC}
+                    value={components[i]?.newComponent?.nameC}
                     className="form-control"
                     id="nameC"
                   />
@@ -189,7 +189,7 @@ export default function AddAnlyze() {
                     onChange={(e) => getNewComponentData(e, i)}
                     type="text"
                     name="unit"
-                    value={component.unit}
+                    value={components[i]?.newComponent?.unit}
                     className="form-control"
                     id="unit"
                   />
@@ -207,7 +207,7 @@ export default function AddAnlyze() {
                     onChange={(e) => getNewComponentData(e, i)}
                     type="text"
                     name="healthyValue"
-                    value={component.healthyValue}
+                    value={components[i]?.newComponent?.healthyValue}
                     className="form-control"
                     id="healthyValue"
                   />
@@ -272,7 +272,7 @@ export default function AddAnlyze() {
   }, []);
   useEffect(() => {
     console.log("errorList", errorList);
-    //   console.log(components);
+    console.log(components);
   }, [errorList]);
   return (
     <div className="ST-section my-1">

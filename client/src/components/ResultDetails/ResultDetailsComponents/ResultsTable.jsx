@@ -85,9 +85,9 @@ export default function ResultsTable({ user, darkMode, resultDetails }) {
                           </span>{" "}
                           Owner of this{" "}
                           <span className="colorMain h5 m-0 mid-bold">CBC</span>{" "}
-                          Result Can be have:{" "}
+                          Result Can be:
                           <span className="colorMain h5 m-0 mid-bold">
-                            {aiResult.result[0]} .
+                            {aiResult.result[0]}
                           </span>
                         </>
                       ) : (
