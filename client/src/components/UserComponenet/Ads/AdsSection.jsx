@@ -47,7 +47,10 @@ export default function AdsSection({ darkMode }) {
 
   function renderAds() {
     return allAds.map((ad, index) => (
-      <div key={index} className="row detailes-size d-flex align-items-center">
+      <div
+        key={index}
+        className="row detailes-size d-flex align-items-center my-4"
+      >
         <div className="col-3 d-flex align-items-center text-truncate">
           {ad.title}
         </div>

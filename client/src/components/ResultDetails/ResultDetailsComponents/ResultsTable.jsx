@@ -29,12 +29,15 @@ export default function ResultsTable({ user, darkMode, resultDetails }) {
             <div key={index} className="table-responsive my-5">
               <h1 className="h4 mid-bold">
                 {resultDetails.analyzComponent[index] &&
-                  resultDetails.analyzComponent[index].name && (
-                    <>
-                      {resultDetails.analyzComponent[index].name} ({" "}
-                      {resultDetails.analyzComponent[index].code} )
-                    </>
-                  )}{" "}
+                resultDetails.analyzComponent[index].name &&
+                resultDetails.analyzComponent[index].code ? (
+                  <>
+                    {resultDetails.analyzComponent[index].name} ({" "}
+                    {resultDetails.analyzComponent[index].code} )
+                  </>
+                ) : (
+                  "Anaylze Name"
+                )}{" "}
               </h1>
               <table
                 className={`table table-bordered table-hover table-sm  ${
@@ -53,7 +56,7 @@ export default function ResultsTable({ user, darkMode, resultDetails }) {
               </table>
             </div>
             {/*Ai Pridict if CBC  && User is Doctor*/}
-            {resultDetails.analyzComponent[index].code === "CBC" ? (
+            {resultDetails.analyzComponent[index]?.code === "CBC" ? (
               <div
                 className={`ai-pridict ${
                   user.usertype === "Doctor" ? "" : "d-none"
